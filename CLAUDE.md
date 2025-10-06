@@ -60,6 +60,22 @@ examples/
 ├── contract-testing/        # Pact consumer/provider, OpenAPI validation
 ├── manual-testing/          # Test cases, checklists, test plans
 ├── exploratory-testing/     # Session charters, heuristics, reporting
+├── version-control/         # TBD, GitHub Flow, GitLab Flow pipelines with feature flags
 ├── ci-pipelines/           # GitHub Actions, GitLab CI, Jenkins configs
 └── monitoring-configs/     # Prometheus, Grafana, alerting setups
 ```
+
+## Version Control & CI/CD Methodologies
+This project now includes comprehensive documentation and examples for modern version control workflows optimized for CI/CD:
+
+- **Trunk-Based Development (TBD)**: Recommended for continuous deployment
+- **GitHub Flow**: Simple workflow for web applications
+- **GitLab Flow**: Environment-based deployment progression
+- **GitFlow**: Traditional workflow for scheduled releases
+
+All examples include:
+- Production-ready pipeline configurations
+- Feature flags implementation
+- Canary and blue-green deployment strategies
+- Automated rollback procedures
+- Security scanning integration

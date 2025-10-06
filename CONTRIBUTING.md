@@ -264,7 +264,7 @@ Each module has designated maintainers responsible for:
 | 00-foundations | Standards & Models | TBD |
 | 01-requirements | Requirements Engineering | TBD |
 | 02-agile-planning | Agile Practices | TBD |
-| 03-version-control | Git & Workflows | TBD |
+| 03-version-control | Git & Workflows, CI/CD Integration | TBD |
 | 04-testing-strategy | Test Approaches | TBD |
 | 05-test-levels | Testing Types | TBD |
 | 06-quality-attributes | Non-functionals | TBD |

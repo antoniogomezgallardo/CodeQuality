@@ -34,6 +34,7 @@ graph LR
 
 ### Development Layer
 - **[03 - Version Control](docs/03-version-control/README.md)** - GitFlow, branching, code reviews
+  - **[CI/CD Best Practices](docs/03-version-control/cicd-best-practices/README.md)** - TBD, GitHub Flow, GitLab Flow for CI/CD
 - **[04 - Testing Strategy](docs/04-testing-strategy/README.md)** - Shift-left, shift-right approaches
 - **[05 - Test Levels](docs/05-test-levels/README.md)** - Unit, integration, system, E2E testing
 - **[06 - Quality Attributes](docs/06-quality-attributes/README.md)** - Performance, security, accessibility
@@ -83,6 +84,7 @@ graph LR
 - [Contract Testing](examples/contract-testing/) - Pact consumer/provider, OpenAPI validation
 - [Manual Testing](examples/manual-testing/) - Test cases, checklists, test plans
 - [Exploratory Testing](examples/exploratory-testing/) - Session charters, heuristics, reporting
+- [Version Control & CI/CD](examples/version-control/) - TBD, GitHub Flow, GitLab Flow pipelines with feature flags
 - [CI/CD Pipelines](examples/ci-pipelines/) - GitHub Actions, GitLab CI, Jenkins
 - [Monitoring Configs](examples/monitoring-configs/) - Prometheus, Grafana, alerting
 
@@ -107,9 +109,10 @@ graph LR
 4. Master [Metrics & Monitoring](docs/09-metrics-monitoring/README.md)
 
 ### For DevOps Engineers
-1. Focus on [CI/CD Pipeline](docs/08-cicd-pipeline/README.md)
-2. Implement [Tools Ecosystem](docs/10-tools-ecosystem/README.md)
-3. Configure [Metrics & Monitoring](docs/09-metrics-monitoring/README.md)
+1. Review [Version Control CI/CD Best Practices](docs/03-version-control/cicd-best-practices/README.md)
+2. Focus on [CI/CD Pipeline](docs/08-cicd-pipeline/README.md)
+3. Implement [Tools Ecosystem](docs/10-tools-ecosystem/README.md)
+4. Configure [Metrics & Monitoring](docs/09-metrics-monitoring/README.md)
 
 ### For Team Leads
 1. Understand [Requirements Engineering](docs/01-requirements/README.md)
