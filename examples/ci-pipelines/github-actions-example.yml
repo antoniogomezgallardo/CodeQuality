@@ -1,0 +1,520 @@
+# GitHub Actions CI/CD Pipeline Example
+# This pipeline demonstrates comprehensive quality gates and deployment strategies
+
+name: CI/CD Pipeline
+
+# Trigger conditions
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run nightly builds at 2 AM UTC
+    - cron: '0 2 * * *'
+
+# Environment variables
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================
+  # 1. CODE QUALITY AND SECURITY ANALYSIS
+  # ============================================
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for better analysis
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: |
+          npm run lint:ci
+          npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true
+
+      - name: Upload ESLint results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: eslint-results.sarif
+          wait-for-processing: true
+
+      - name: Run Prettier check
+        run: npm run format:check
+
+      - name: TypeScript type check
+        run: npm run type-check
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          languages: javascript
+
+      - name: Run Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'my-project'
+          path: '.'
+          format: 'SARIF'
+          out: 'dependency-check-reports'
+
+      - name: Upload Dependency Check results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: dependency-check-reports/dependency-check-report.sarif
+
+  # ============================================
+  # 2. COMPREHENSIVE TESTING MATRIX
+  # ============================================
+  test:
+    name: Test Suite
+    runs-on: ${{ matrix.os }}
+    needs: code-analysis
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: ['16', '18', '20']
+        include:
+          - os: ubuntu-latest
+            node-version: '18'
+            coverage: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+        env:
+          CI: true
+
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          CI: true
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+
+      - name: Generate coverage report
+        if: matrix.coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        if: matrix.coverage
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+      - name: SonarCloud Scan
+        if: matrix.coverage
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # ============================================
+  # 3. END-TO-END TESTING
+  # ============================================
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [code-analysis, test]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start application
+        run: |
+          npm start &
+          npx wait-on http://localhost:3000 --timeout 60000
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+          REDIS_URL: redis://localhost:6379
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  # ============================================
+  # 4. SECURITY SCANNING
+  # ============================================
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: code-analysis
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk-results.sarif
+
+      - name: Upload Snyk results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: snyk-results.sarif
+
+  # ============================================
+  # 5. PERFORMANCE TESTING
+  # ============================================
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: [test]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start application
+        run: |
+          npm start &
+          npx wait-on http://localhost:3000 --timeout 60000
+        env:
+          NODE_ENV: production
+
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Run K6 load tests
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/performance/load-test.js
+          flags: --out json=results.json
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-results
+          path: results.json
+
+  # ============================================
+  # 6. BUILD AND PUBLISH DOCKER IMAGE
+  # ============================================
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [test, e2e-tests, security]
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Output image
+        id: image
+        run: |
+          echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+
+  # ============================================
+  # 7. DEPLOY TO STAGING
+  # ============================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: https://staging.example.com
+
+    steps:
+      - name: Deploy to staging
+        run: |
+          echo "Deploying ${{ needs.build.outputs.image }}@${{ needs.build.outputs.digest }} to staging"
+          # Add actual deployment commands here
+          # kubectl set image deployment/app app=${{ needs.build.outputs.image }}@${{ needs.build.outputs.digest }}
+
+      - name: Run smoke tests
+        run: |
+          # Add smoke tests for staging environment
+          npx wait-on https://staging.example.com --timeout 300000
+          curl -f https://staging.example.com/health || exit 1
+
+      - name: Notify deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          text: 'Staging deployment completed'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  # ============================================
+  # 8. DEPLOY TO PRODUCTION
+  # ============================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://example.com
+
+    steps:
+      - name: Deploy to production (Blue-Green)
+        run: |
+          echo "Starting blue-green deployment to production"
+          echo "Image: ${{ needs.build.outputs.image }}@${{ needs.build.outputs.digest }}"
+          # Add blue-green deployment logic here
+
+      - name: Run production smoke tests
+        run: |
+          npx wait-on https://example.com --timeout 300000
+          curl -f https://example.com/health || exit 1
+
+      - name: Complete deployment
+        run: |
+          echo "Switching traffic to new deployment"
+          # Complete the blue-green switch
+
+      - name: Notify production deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#production'
+          text: 'Production deployment completed successfully! 🚀'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  # ============================================
+  # 9. POST-DEPLOYMENT MONITORING
+  # ============================================
+  monitor:
+    name: Post-Deployment Monitoring
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always() && (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+
+    steps:
+      - name: Wait for metrics stabilization
+        run: sleep 300  # Wait 5 minutes for metrics
+
+      - name: Check application health
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            ENVIRONMENT="production"
+            URL="https://example.com"
+          else
+            ENVIRONMENT="staging"
+            URL="https://staging.example.com"
+          fi
+
+          echo "Checking $ENVIRONMENT health..."
+
+          # Health check
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $URL/health)
+          if [ $HTTP_STATUS -ne 200 ]; then
+            echo "Health check failed with status $HTTP_STATUS"
+            exit 1
+          fi
+
+          # Performance check
+          RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" $URL)
+          if (( $(echo "$RESPONSE_TIME > 2.0" | bc -l) )); then
+            echo "Response time too slow: ${RESPONSE_TIME}s"
+            exit 1
+          fi
+
+      - name: Update deployment status
+        if: success()
+        run: |
+          echo "✅ Deployment successful and healthy"
+          # Update monitoring dashboard or send notifications
+
+      - name: Trigger rollback if unhealthy
+        if: failure()
+        run: |
+          echo "❌ Deployment failed health checks - triggering rollback"
+          # Add rollback logic here
+
+# ============================================
+# QUALITY GATES CONFIGURATION
+# ============================================
+
+# Required status checks for branch protection:
+# - code-analysis
+# - test (ubuntu-latest, 18)
+# - e2e-tests
+# - security
+# - build
+
+# ============================================
+# SECRETS REQUIRED
+# ============================================
+
+# Repository secrets needed:
+# - CODECOV_TOKEN
+# - SONAR_TOKEN
+# - SNYK_TOKEN
+# - LHCI_GITHUB_APP_TOKEN
+# - SLACK_WEBHOOK
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+
+# Additional environment-specific variables:
+# - DATABASE_URL (staging/production)
+# - REDIS_URL (staging/production)
+# - API_KEYS (environment-specific)
+# - MONITORING_ENDPOINTS
