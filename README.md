@@ -43,13 +43,13 @@ graph LR
 ### Automation Layer
 - **[08 - CI/CD Pipeline](docs/08-cicd-pipeline/README.md)** - Build, test, deploy automation
 - **[09 - Metrics & Monitoring](docs/09-metrics-monitoring/README.md)** - DORA metrics, dashboards
-- **[10 - Tools Ecosystem](docs/10-tools-ecosystem/README.md)** - Tool selection and integration
 - **[10 - Deployment](docs/10-deployment/README.md)** - Blue-green, canary, rolling deployments
 
 ### Governance Layer
-- **[11 - Governance](docs/11-governance/README.md)** - Quality gates, compliance, risk management
-- **[11 - Incident Management](docs/11-incident-management/README.md)** - Incident response, runbooks, postmortems
-- **[12 - Continuous Improvement](docs/12-continuous-improvement/README.md)** - Retrospectives, Kaizen
+- **[11 - Tools Ecosystem](docs/11-tools-ecosystem/README.md)** - Tool selection and integration
+- **[12 - Governance](docs/12-governance/README.md)** - Quality gates, compliance, risk management
+- **[13 - Incident Management](docs/13-incident-management/README.md)** - Incident response, runbooks, postmortems
+- **[14 - Continuous Improvement](docs/14-continuous-improvement/README.md)** - Retrospectives, Kaizen
 
 ## 📊 Key Metrics Overview
 
@@ -71,30 +71,49 @@ graph LR
 
 ## 🛠️ Templates & Tools
 
-### Templates
+### Templates (15 Production-Ready Templates)
 - [User Story Template](templates/user-story.md)
-- [Code Review Checklist](templates/code-review-checklist.md)
+- [Definition of Ready](templates/definition-of-ready.md)
 - [Definition of Done](templates/definition-of-done.md)
+- [Acceptance Criteria Template](templates/acceptance-criteria-template.md)
+- [Test Case Template (IEEE 829)](templates/test-case-template.md)
+- [Test Plan (IEEE 829)](templates/test-plan-ieee829.md)
+- [Code Review Checklist](templates/code-review-checklist.md)
+- [Pull Request Template](templates/pull-request-template.md)
+- [API Contract (OpenAPI 3.0)](templates/api-contract-template.yaml)
+- [Performance Test Plan](templates/performance-test-plan.md)
+- [Security Test Checklist (OWASP)](templates/security-test-checklist.md)
+- [Accessibility Checklist (WCAG 2.1)](templates/accessibility-checklist.md)
+- [Postmortem Template](templates/postmortem-template.md)
+- [Runbook Template](templates/runbook-template.md)
+- [CI/CD Pipeline Template](templates/pipeline-template.yaml)
 
-### Examples
+### Examples (17 Comprehensive Example Directories)
 - [Unit Test Examples](examples/unit-tests/) - Jest, Vitest, mutation testing
 - [Integration Tests](examples/integration-tests/) - API testing, database integration
+- [API Testing](examples/api-testing/) - Supertest, GraphQL, Pact, performance (9 files, 4,500+ lines)
 - [E2E Test Suites](examples/e2e-tests/) - Cypress, Playwright automation
 - [Component Testing](examples/component-testing/) - React Testing Library, Vue Test Utils
 - [Contract Testing](examples/contract-testing/) - Pact consumer/provider, OpenAPI validation
+- [Visual Testing](examples/visual-testing/) - Percy, Chromatic, BackstopJS, Playwright (8 files)
+- [Load Testing](examples/load-testing/) - k6, JMeter, Artillery, Gatling (11 files)
+- [Accessibility Testing](examples/accessibility-testing/) - axe-core, Pa11y, Lighthouse, WCAG 2.1 (13 files)
+- [Microservices Testing](examples/microservices-testing/) - Pact contracts, chaos engineering (9 files)
 - [Manual Testing](examples/manual-testing/) - Test cases, checklists, test plans
 - [Exploratory Testing](examples/exploratory-testing/) - Session charters, heuristics, reporting
 - [Version Control & CI/CD](examples/version-control/) - TBD, GitHub Flow, GitLab Flow pipelines with feature flags
 - [CI/CD Pipelines](examples/ci-pipelines/) - GitHub Actions, GitLab CI, Jenkins
+- [Deployment Strategies](examples/deployment/) - Blue-Green, Canary, Rolling, Terraform (10 files)
+- [Incident Response](examples/incident-response/) - Runbooks, postmortems, SLI/SLO (10 files)
 - [Monitoring Configs](examples/monitoring-configs/) - Prometheus, Grafana, alerting
 
-## 📚 Resources
-Additional resources are planned for future releases, including:
-- Glossary - Technical terms explained
-- Acronyms - Common abbreviations
-- Recommended Books - Essential reading
-- Online Courses - Learning platforms
-- Certifications - Professional credentials
+## 📚 Resources (6 Reference Files)
+- [Glossary](resources/glossary.md) - Technical terms explained
+- [Acronyms](resources/acronyms.md) - Common abbreviations
+- [Recommended Books](resources/recommended-books.md) - Essential reading
+- [Online Courses](resources/online-courses.md) - Learning platforms
+- [Certifications](resources/certifications.md) - Professional credentials
+- [Industry Reports](resources/industry-reports.md) - DORA State of DevOps, testing reports
 
 ## 🎯 Quick Start Guide
 
