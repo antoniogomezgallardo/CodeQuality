@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "snapshot": {
+    "widths": [375, 768, 1280, 1920],
+    "minHeight": 1024,
+    "percyCSS": "",
+    "enableJavaScript": true,
+    "cliEnableJavaScript": true,
+    "discovery": {
+      "allowedHostnames": [],
+      "disallowedHostnames": [],
+      "requestHeaders": {},
+      "authorization": {},
+      "disableCache": false,
+      "userAgent": "Percy/v2"
+    }
+  },
+  "static": {
+    "baseUrl": "/",
+    "include": "**/*.html",
+    "exclude": "",
+    "cleanUrls": false
+  },
+  "percy": {
+    "defer": false
+  },
+  "agent": {
+    "assetDiscovery": {
+      "allowedHostnames": [],
+      "networkIdleTimeout": 100,
+      "cacheResponses": true,
+      "requestHeaders": {}
+    }
+  },
+  "discovery": {
+    "allowedHostnames": [],
+    "disallowedHostnames": [
+      "*.google-analytics.com",
+      "*.googletagmanager.com",
+      "*.facebook.com",
+      "*.twitter.com",
+      "*.doubleclick.net",
+      "*.ads.com"
+    ],
+    "networkIdleTimeout": 100,
+    "disableCache": false,
+    "requestHeaders": {},
+    "authorization": {},
+    "userAgent": ""
+  }
+}

@@ -1,0 +1,1189 @@
+# CI/CD Pipeline Template
+#
+# This is a comprehensive, production-ready CI/CD pipeline template
+# Primary format: GitHub Actions
+# Alternatives included (commented): GitLab CI, Jenkins
+#
+# Pipeline Stages:
+# 1. Build - Checkout, dependency installation, compilation
+# 2. Test - Unit, integration, E2E tests with coverage
+# 3. Quality - Linting, code quality analysis, security scanning
+# 4. Security - SAST, dependency scanning, container scanning
+# 5. Package - Docker image build and push
+# 6. Deploy - Multi-environment deployment (dev, staging, prod)
+# 7. Verify - Smoke tests and health checks
+# 8. Notify - Status notifications to team
+
+# ============================================================================
+# GITHUB ACTIONS WORKFLOW
+# ============================================================================
+
+name: CI/CD Pipeline
+
+# Trigger conditions
+on:
+  # Run on pushes to main and develop branches
+  push:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+      - 'hotfix/**'
+
+  # Run on pull requests to main and develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  # Run on version tags
+  push:
+    tags:
+      - 'v*.*.*'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      skip_tests:
+        description: 'Skip test execution'
+        required: false
+        default: false
+        type: boolean
+
+# Environment variables available to all jobs
+env:
+  NODE_VERSION: '20.x'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  COVERAGE_THRESHOLD: 80
+
+# Permissions for GitHub token
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+  pull-requests: write
+  issues: write
+
+# Define reusable settings
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # STAGE 1: BUILD
+  # ==========================================================================
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build-number: ${{ github.run_number }}
+
+    steps:
+      # Checkout code from repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      # Setup Node.js environment with caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # Cache node_modules to speed up subsequent builds
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            .next/cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      # Generate version number
+      - name: Generate version
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="0.0.0-${GITHUB_SHA::8}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      # Build application
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          VERSION: ${{ steps.version.outputs.version }}
+
+      # Upload build artifacts for use in later jobs
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            build/
+            .next/
+          retention-days: 7
+
+  # ==========================================================================
+  # STAGE 2: CODE QUALITY & LINTING
+  # ==========================================================================
+
+  lint:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      # Run ESLint
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: false
+
+      # Run Prettier check
+      - name: Check code formatting
+        run: npm run format:check
+        continue-on-error: false
+
+      # Run type checking (TypeScript)
+      - name: Type checking
+        run: npm run type-check
+        continue-on-error: false
+
+      # SonarQube/SonarCloud analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ github.repository_owner }}_${{ github.event.repository.name }}
+            -Dsonar.organization=${{ github.repository_owner }}
+            -Dsonar.sources=src
+            -Dsonar.tests=tests
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.qualitygate.wait=true
+
+  # ==========================================================================
+  # STAGE 3: UNIT TESTS
+  # ==========================================================================
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build
+    if: github.event.inputs.skip_tests != 'true'
+
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x']
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      # Run unit tests with coverage
+      - name: Run unit tests
+        run: npm run test:unit -- --coverage --ci --maxWorkers=2
+        env:
+          CI: true
+
+      # Check coverage thresholds
+      - name: Check coverage threshold
+        run: |
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          echo "Coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < ${{ env.COVERAGE_THRESHOLD }}" | bc -l) )); then
+            echo "Coverage $COVERAGE% is below threshold ${{ env.COVERAGE_THRESHOLD }}%"
+            exit 1
+          fi
+
+      # Upload coverage reports
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: unit-tests
+          name: unit-tests-${{ matrix.os }}-${{ matrix.node-version }}
+          fail_ci_if_error: false
+
+      # Upload coverage artifacts
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-unit-${{ matrix.os }}-${{ matrix.node-version }}
+          path: coverage/
+          retention-days: 7
+
+  # ==========================================================================
+  # STAGE 4: INTEGRATION TESTS
+  # ==========================================================================
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: build
+    if: github.event.inputs.skip_tests != 'true'
+
+    # Service containers for testing (database, cache, etc.)
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      # Run database migrations
+      - name: Run database migrations
+        run: npm run db:migrate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+
+      # Seed test data
+      - name: Seed test data
+        run: npm run db:seed
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+
+      # Run integration tests
+      - name: Run integration tests
+        run: npm run test:integration -- --coverage --ci
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+
+      # Upload coverage
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-integration
+          path: coverage/
+          retention-days: 7
+
+  # ==========================================================================
+  # STAGE 5: E2E TESTS
+  # ==========================================================================
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: build
+    if: github.event.inputs.skip_tests != 'true'
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+        shard: [1, 2, 3]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      # Download build artifacts
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      # Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      # Run E2E tests with Playwright
+      - name: Run E2E tests
+        run: npx playwright test --project=${{ matrix.browser }} --shard=${{ matrix.shard }}/3
+        env:
+          CI: true
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+
+      # Upload test results
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}-${{ matrix.shard }}
+          path: playwright-report/
+          retention-days: 7
+
+      # Upload videos and screenshots on failure
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failures-${{ matrix.browser }}-${{ matrix.shard }}
+          path: |
+            test-results/
+            screenshots/
+            videos/
+          retention-days: 7
+
+  # ==========================================================================
+  # STAGE 6: SECURITY SCANNING
+  # ==========================================================================
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # Dependency vulnerability scanning
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      # Snyk security scanning
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+      # SAST with CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      # Trivy vulnerability scanner
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      # OWASP Dependency Check
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'project-name'
+          path: '.'
+          format: 'HTML'
+          args: >
+            --enableRetired
+            --enableExperimental
+
+      - name: Upload OWASP report
+        uses: actions/upload-artifact@v4
+        with:
+          name: owasp-dependency-check-report
+          path: reports/
+          retention-days: 7
+
+  # ==========================================================================
+  # STAGE 7: BUILD & PUSH DOCKER IMAGE
+  # ==========================================================================
+
+  docker-build:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [lint, unit-tests, integration-tests, security-scan]
+    if: github.event_name != 'pull_request'
+
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up QEMU for multi-platform builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Login to container registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Extract metadata for Docker
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      # Build and push Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ needs.build.outputs.version }}
+            BUILD_NUMBER=${{ github.run_number }}
+            COMMIT_SHA=${{ github.sha }}
+
+      # Scan Docker image for vulnerabilities
+      - name: Scan Docker image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-image-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-image-results.sarif'
+
+  # ==========================================================================
+  # STAGE 8: DEPLOY TO DEV
+  # ==========================================================================
+
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: docker-build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: development
+      url: https://dev.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Deploy to Kubernetes (example)
+      - name: Deploy to Kubernetes
+        uses: azure/k8s-deploy@v4
+        with:
+          manifests: |
+            k8s/deployment.yaml
+            k8s/service.yaml
+            k8s/ingress.yaml
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          namespace: development
+          action: deploy
+
+      # Alternative: Deploy to AWS ECS
+      # - name: Deploy to AWS ECS
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ecs-task-definition.json
+      #     service: dev-service
+      #     cluster: dev-cluster
+      #     wait-for-service-stability: true
+
+      # Wait for deployment to be ready
+      - name: Wait for deployment
+        run: |
+          kubectl rollout status deployment/app-deployment -n development --timeout=5m
+
+      # Run smoke tests
+      - name: Run smoke tests
+        run: |
+          npm run test:smoke -- --env=dev
+        env:
+          BASE_URL: https://dev.example.com
+
+  # ==========================================================================
+  # STAGE 9: DEPLOY TO STAGING
+  # ==========================================================================
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: docker-build
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+    environment:
+      name: staging
+      url: https://staging.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Staging
+        uses: azure/k8s-deploy@v4
+        with:
+          manifests: |
+            k8s/deployment.yaml
+            k8s/service.yaml
+            k8s/ingress.yaml
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          namespace: staging
+          action: deploy
+
+      - name: Wait for deployment
+        run: |
+          kubectl rollout status deployment/app-deployment -n staging --timeout=10m
+
+      # Run comprehensive smoke tests
+      - name: Run smoke tests
+        run: |
+          npm run test:smoke -- --env=staging
+        env:
+          BASE_URL: https://staging.example.com
+
+      # Run load tests
+      - name: Run load tests
+        run: |
+          npm run test:load -- --duration=5m --vus=50
+        env:
+          BASE_URL: https://staging.example.com
+
+  # ==========================================================================
+  # STAGE 10: DEPLOY TO PRODUCTION
+  # ==========================================================================
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [deploy-staging, e2e-tests]
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: production
+      url: https://example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Blue-Green Deployment Strategy
+      - name: Deploy to Production (Blue-Green)
+        run: |
+          # Deploy to green environment
+          kubectl apply -f k8s/deployment-green.yaml -n production
+
+          # Wait for green deployment to be ready
+          kubectl rollout status deployment/app-deployment-green -n production --timeout=10m
+
+          # Run smoke tests on green
+          npm run test:smoke -- --env=production-green
+
+          # Switch traffic to green
+          kubectl patch service app-service -n production -p '{"spec":{"selector":{"version":"green"}}}'
+
+          # Monitor for 5 minutes
+          sleep 300
+
+          # If successful, scale down blue
+          kubectl scale deployment/app-deployment-blue -n production --replicas=0
+
+      # Alternative: Canary Deployment
+      # - name: Canary Deployment
+      #   run: |
+      #     # Deploy canary with 10% traffic
+      #     kubectl apply -f k8s/deployment-canary.yaml -n production
+      #     kubectl set image deployment/app-deployment-canary app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      #
+      #     # Wait and monitor metrics
+      #     sleep 600
+      #
+      #     # If metrics good, roll out to 100%
+      #     kubectl set image deployment/app-deployment app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      # Run production smoke tests
+      - name: Run production smoke tests
+        run: |
+          npm run test:smoke -- --env=production
+        env:
+          BASE_URL: https://example.com
+
+      # Create GitHub release
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## Changes in this Release
+            - See commit history for details
+
+            ## Deployment Information
+            - Build Number: ${{ github.run_number }}
+            - Commit: ${{ github.sha }}
+            - Deployed: ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: false
+
+  # ==========================================================================
+  # STAGE 11: ROLLBACK (Manual Trigger)
+  # ==========================================================================
+
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.rollback == 'true'
+
+    steps:
+      - name: Rollback to previous version
+        run: |
+          kubectl rollout undo deployment/app-deployment -n ${{ github.event.inputs.environment }}
+          kubectl rollout status deployment/app-deployment -n ${{ github.event.inputs.environment }}
+
+      - name: Verify rollback
+        run: |
+          npm run test:smoke -- --env=${{ github.event.inputs.environment }}
+
+  # ==========================================================================
+  # STAGE 12: NOTIFICATIONS
+  # ==========================================================================
+
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [deploy-dev, deploy-staging, deploy-production]
+    if: always()
+
+    steps:
+      # Slack notification
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          text: |
+            Pipeline ${{ job.status }}
+            Branch: ${{ github.ref }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+
+      # Email notification (example)
+      # - name: Send email notification
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 465
+      #     username: ${{ secrets.EMAIL_USERNAME }}
+      #     password: ${{ secrets.EMAIL_PASSWORD }}
+      #     subject: Pipeline ${{ job.status }} - ${{ github.ref }}
+      #     body: |
+      #       Pipeline completed with status: ${{ job.status }}
+      #       Repository: ${{ github.repository }}
+      #       Branch: ${{ github.ref }}
+      #       Commit: ${{ github.sha }}
+      #     to: team@example.com
+      #     from: ci-cd@example.com
+
+      # Microsoft Teams notification
+      # - name: Teams Notification
+      #   uses: jdcargile/ms-teams-notification@v1.3
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK }}
+      #     notification-summary: Pipeline ${{ job.status }}
+      #     notification-color: ${{ job.status == 'success' && '28a745' || 'dc3545' }}
+
+# ============================================================================
+# GITLAB CI/CD ALTERNATIVE
+# ============================================================================
+#
+# To use this pipeline with GitLab CI, create a .gitlab-ci.yml file with:
+#
+# ---
+# stages:
+#   - build
+#   - test
+#   - quality
+#   - security
+#   - package
+#   - deploy-dev
+#   - deploy-staging
+#   - deploy-prod
+#
+# variables:
+#   NODE_VERSION: "20"
+#   COVERAGE_THRESHOLD: "80"
+#   DOCKER_DRIVER: overlay2
+#
+# # Caching configuration
+# cache:
+#   key: ${CI_COMMIT_REF_SLUG}
+#   paths:
+#     - node_modules/
+#     - .npm/
+#
+# # Build job
+# build:
+#   stage: build
+#   image: node:${NODE_VERSION}
+#   script:
+#     - npm ci --cache .npm --prefer-offline
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - dist/
+#       - build/
+#     expire_in: 1 week
+#
+# # Lint job
+# lint:
+#   stage: quality
+#   image: node:${NODE_VERSION}
+#   script:
+#     - npm ci --cache .npm --prefer-offline
+#     - npm run lint
+#     - npm run format:check
+#     - npm run type-check
+#
+# # Unit tests
+# unit-tests:
+#   stage: test
+#   image: node:${NODE_VERSION}
+#   script:
+#     - npm ci --cache .npm --prefer-offline
+#     - npm run test:unit -- --coverage --ci
+#   coverage: '/Lines\s*:\s*(\d+\.\d+)%/'
+#   artifacts:
+#     reports:
+#       coverage_report:
+#         coverage_format: cobertura
+#         path: coverage/cobertura-coverage.xml
+#
+# # Integration tests
+# integration-tests:
+#   stage: test
+#   image: node:${NODE_VERSION}
+#   services:
+#     - postgres:15
+#     - redis:7-alpine
+#   variables:
+#     POSTGRES_DB: test_db
+#     POSTGRES_PASSWORD: postgres
+#     DATABASE_URL: postgresql://postgres:postgres@postgres:5432/test_db
+#     REDIS_URL: redis://redis:6379
+#   script:
+#     - npm ci --cache .npm --prefer-offline
+#     - npm run db:migrate
+#     - npm run test:integration -- --ci
+#
+# # Security scanning
+# security-scan:
+#   stage: security
+#   image: node:${NODE_VERSION}
+#   script:
+#     - npm audit --audit-level=moderate
+#     - npm install -g snyk
+#     - snyk test --severity-threshold=high
+#   allow_failure: true
+#
+# # Docker build and push
+# docker-build:
+#   stage: package
+#   image: docker:24
+#   services:
+#     - docker:24-dind
+#   before_script:
+#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#   script:
+#     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+#     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+#     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+#     - docker push $CI_REGISTRY_IMAGE:latest
+#   only:
+#     - main
+#     - develop
+#     - tags
+#
+# # Deploy to development
+# deploy-dev:
+#   stage: deploy-dev
+#   image: bitnami/kubectl:latest
+#   script:
+#     - kubectl config use-context dev-cluster
+#     - kubectl set image deployment/app app=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -n development
+#     - kubectl rollout status deployment/app -n development
+#   environment:
+#     name: development
+#     url: https://dev.example.com
+#   only:
+#     - develop
+#
+# # Deploy to staging
+# deploy-staging:
+#   stage: deploy-staging
+#   image: bitnami/kubectl:latest
+#   script:
+#     - kubectl config use-context staging-cluster
+#     - kubectl set image deployment/app app=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -n staging
+#     - kubectl rollout status deployment/app -n staging
+#   environment:
+#     name: staging
+#     url: https://staging.example.com
+#   only:
+#     - main
+#   when: manual
+#
+# # Deploy to production
+# deploy-prod:
+#   stage: deploy-prod
+#   image: bitnami/kubectl:latest
+#   script:
+#     - kubectl config use-context prod-cluster
+#     - kubectl set image deployment/app app=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -n production
+#     - kubectl rollout status deployment/app -n production
+#   environment:
+#     name: production
+#     url: https://example.com
+#   only:
+#     - tags
+#   when: manual
+
+# ============================================================================
+# JENKINS PIPELINE ALTERNATIVE
+# ============================================================================
+#
+# To use with Jenkins, create a Jenkinsfile:
+#
+# pipeline {
+#     agent any
+#
+#     environment {
+#         NODE_VERSION = '20'
+#         REGISTRY = 'docker.io'
+#         IMAGE_NAME = 'myapp'
+#         COVERAGE_THRESHOLD = '80'
+#     }
+#
+#     stages {
+#         stage('Checkout') {
+#             steps {
+#                 checkout scm
+#             }
+#         }
+#
+#         stage('Build') {
+#             agent {
+#                 docker {
+#                     image "node:${NODE_VERSION}"
+#                     args '-v $HOME/.npm:/root/.npm'
+#                 }
+#             }
+#             steps {
+#                 sh 'npm ci --prefer-offline'
+#                 sh 'npm run build'
+#                 stash includes: 'dist/**,build/**', name: 'build-artifacts'
+#             }
+#         }
+#
+#         stage('Quality & Tests') {
+#             parallel {
+#                 stage('Lint') {
+#                     agent {
+#                         docker {
+#                             image "node:${NODE_VERSION}"
+#                             args '-v $HOME/.npm:/root/.npm'
+#                         }
+#                     }
+#                     steps {
+#                         sh 'npm ci --prefer-offline'
+#                         sh 'npm run lint'
+#                         sh 'npm run format:check'
+#                     }
+#                 }
+#
+#                 stage('Unit Tests') {
+#                     agent {
+#                         docker {
+#                             image "node:${NODE_VERSION}"
+#                             args '-v $HOME/.npm:/root/.npm'
+#                         }
+#                     }
+#                     steps {
+#                         sh 'npm ci --prefer-offline'
+#                         sh 'npm run test:unit -- --coverage --ci'
+#                         publishHTML([
+#                             reportDir: 'coverage',
+#                             reportFiles: 'index.html',
+#                             reportName: 'Coverage Report'
+#                         ])
+#                     }
+#                 }
+#
+#                 stage('Integration Tests') {
+#                     agent {
+#                         docker {
+#                             image "node:${NODE_VERSION}"
+#                             args '-v $HOME/.npm:/root/.npm --link postgres:postgres --link redis:redis'
+#                         }
+#                     }
+#                     steps {
+#                         sh 'npm ci --prefer-offline'
+#                         sh 'npm run test:integration -- --ci'
+#                     }
+#                 }
+#             }
+#         }
+#
+#         stage('Security Scan') {
+#             agent {
+#                 docker {
+#                     image "node:${NODE_VERSION}"
+#                 }
+#             }
+#             steps {
+#                 sh 'npm audit --audit-level=moderate || true'
+#                 sh 'npx snyk test --severity-threshold=high || true'
+#             }
+#         }
+#
+#         stage('Docker Build') {
+#             when {
+#                 branch pattern: "main|develop|release-.*", comparator: "REGEXP"
+#             }
+#             steps {
+#                 script {
+#                     docker.build("${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}")
+#                     docker.build("${REGISTRY}/${IMAGE_NAME}:latest")
+#                 }
+#             }
+#         }
+#
+#         stage('Deploy to Dev') {
+#             when {
+#                 branch 'develop'
+#             }
+#             steps {
+#                 sh 'kubectl set image deployment/app app=${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} -n development'
+#                 sh 'kubectl rollout status deployment/app -n development'
+#             }
+#         }
+#
+#         stage('Deploy to Staging') {
+#             when {
+#                 branch 'main'
+#             }
+#             steps {
+#                 input 'Deploy to staging?'
+#                 sh 'kubectl set image deployment/app app=${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} -n staging'
+#                 sh 'kubectl rollout status deployment/app -n staging'
+#             }
+#         }
+#
+#         stage('Deploy to Production') {
+#             when {
+#                 tag pattern: "v\\d+\\.\\d+\\.\\d+", comparator: "REGEXP"
+#             }
+#             steps {
+#                 input 'Deploy to production?'
+#                 sh 'kubectl set image deployment/app app=${REGISTRY}/${IMAGE_NAME}:${TAG_NAME} -n production'
+#                 sh 'kubectl rollout status deployment/app -n production'
+#             }
+#         }
+#     }
+#
+#     post {
+#         always {
+#             cleanWs()
+#         }
+#         success {
+#             slackSend color: 'good', message: "Pipeline succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+#         }
+#         failure {
+#             slackSend color: 'danger', message: "Pipeline failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+#         }
+#     }
+# }
+
+# ============================================================================
+# SECRETS REQUIRED
+# ============================================================================
+#
+# Configure the following secrets in your CI/CD platform:
+#
+# GitHub Actions (Settings > Secrets and variables > Actions):
+# - GITHUB_TOKEN (automatically provided)
+# - SONAR_TOKEN (SonarCloud authentication)
+# - SNYK_TOKEN (Snyk security scanning)
+# - SLACK_WEBHOOK (Slack notifications)
+# - KUBECONFIG (Kubernetes configuration, base64 encoded)
+# - AWS_ACCESS_KEY_ID (for AWS deployments)
+# - AWS_SECRET_ACCESS_KEY (for AWS deployments)
+#
+# GitLab CI (Settings > CI/CD > Variables):
+# - CI_REGISTRY_USER (automatically provided)
+# - CI_REGISTRY_PASSWORD (automatically provided)
+# - SNYK_TOKEN
+# - KUBE_CONFIG (base64 encoded)
+#
+# Jenkins (Credentials):
+# - github-token
+# - sonar-token
+# - snyk-token
+# - docker-registry-credentials
+# - kubeconfig
+
+# ============================================================================
+# CUSTOMIZATION NOTES
+# ============================================================================
+#
+# 1. Update NODE_VERSION to match your project
+# 2. Adjust COVERAGE_THRESHOLD based on your requirements
+# 3. Replace image registry (ghcr.io) with your preferred registry
+# 4. Update deployment URLs and namespaces
+# 5. Customize test commands to match your npm scripts
+# 6. Add/remove stages based on your workflow
+# 7. Configure environment-specific variables
+# 8. Adjust timeout values based on your pipeline performance
+# 9. Update notification webhooks with your team channels
+# 10. Modify deployment strategies (blue-green, canary, rolling)
+
+# ============================================================================
+# BEST PRACTICES IMPLEMENTED
+# ============================================================================
+#
+# 1. Fail fast: Run quick checks (lint, unit tests) before expensive operations
+# 2. Parallel execution: Run independent jobs concurrently
+# 3. Caching: Cache dependencies to speed up builds
+# 4. Artifacts: Share build outputs between jobs
+# 5. Security: Scan code, dependencies, and containers
+# 6. Quality gates: Enforce coverage thresholds and code quality
+# 7. Environment progression: Dev → Staging → Production
+# 8. Manual approvals: Production deployments require human approval
+# 9. Rollback capability: Quick rollback mechanism for failures
+# 10. Notifications: Keep team informed of pipeline status
+# 11. Versioning: Semantic versioning with Git tags
+# 12. Immutable artifacts: Use content-addressable Docker tags
+# 13. Test isolation: Use service containers for integration tests
+# 14. Comprehensive testing: Unit, integration, E2E, security, performance
+# 15. Monitoring: Health checks and smoke tests after deployment

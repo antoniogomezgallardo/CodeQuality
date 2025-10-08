@@ -1,0 +1,1355 @@
+openapi: 3.0.3
+info:
+  title: E-Commerce API
+  description: |
+    Complete REST API for e-commerce platform supporting product management,
+    shopping cart, orders, and user authentication.
+
+    ## Authentication
+    This API uses JWT (JSON Web Tokens) for authentication. Include the token in the
+    Authorization header: `Authorization: Bearer <token>`
+
+    ## Rate Limiting
+    - Anonymous users: 100 requests per hour
+    - Authenticated users: 1000 requests per hour
+    - Rate limit headers are included in all responses
+
+    ## Versioning
+    API version is specified in the URL path (e.g., /api/v1/...)
+
+    ## Error Handling
+    All errors follow RFC 7807 Problem Details format
+
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api-support@example.com
+    url: https://developer.example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://example.com/terms
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: https://staging-api.example.com/v1
+    description: Staging server
+  - url: http://localhost:3000/v1
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Users
+    description: User management operations
+  - name: Products
+    description: Product catalog operations
+  - name: Cart
+    description: Shopping cart management
+  - name: Orders
+    description: Order processing and management
+  - name: Payments
+    description: Payment processing
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Authentication Endpoints
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Create a new user account with email and password
+      operationId: registerUser
+      security: []  # No authentication required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              valid:
+                summary: Valid registration
+                value:
+                  email: john.doe@example.com
+                  password: SecureP@ss123
+                  firstName: John
+                  lastName: Doe
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              examples:
+                success:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                    user:
+                      id: 123e4567-e89b-12d3-a456-426614174000
+                      email: john.doe@example.com
+                      firstName: John
+                      lastName: Doe
+                      role: customer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: https://api.example.com/errors/conflict
+                title: Email Already Exists
+                status: 409
+                detail: A user with this email address already exists
+                instance: /auth/register
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user and receive JWT token
+      operationId: loginUser
+      security: []  # No authentication required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              valid:
+                summary: Valid credentials
+                value:
+                  email: john.doe@example.com
+                  password: SecureP@ss123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: https://api.example.com/errors/unauthorized
+                title: Invalid Credentials
+                status: 401
+                detail: Email or password is incorrect
+                instance: /auth/login
+        '423':
+          description: Account locked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: https://api.example.com/errors/locked
+                title: Account Locked
+                status: 423
+                detail: Account has been locked due to multiple failed login attempts
+                instance: /auth/login
+                lockedUntil: 2024-01-15T14:30:00Z
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: User logout
+      description: Invalidate current user session/token
+      operationId: logoutUser
+      responses:
+        '204':
+          description: Logout successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # Product Endpoints
+  /products:
+    get:
+      tags:
+        - Products
+      summary: List products
+      description: |
+        Retrieve a paginated list of products with optional filtering and sorting.
+        Supports search, category filtering, price range, and sorting options.
+      operationId: listProducts
+      security: []  # Public endpoint
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-indexed)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 20
+        - name: search
+          in: query
+          description: Search term for product name or description
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 100
+          example: laptop
+        - name: category
+          in: query
+          description: Filter by category ID
+          schema:
+            type: string
+            format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        - name: minPrice
+          in: query
+          description: Minimum price filter
+          schema:
+            type: number
+            format: float
+            minimum: 0
+          example: 100.00
+        - name: maxPrice
+          in: query
+          description: Maximum price filter
+          schema:
+            type: number
+            format: float
+            minimum: 0
+          example: 1000.00
+        - name: inStock
+          in: query
+          description: Filter by stock availability
+          schema:
+            type: boolean
+          example: true
+        - name: sortBy
+          in: query
+          description: Sort field
+          schema:
+            type: string
+            enum: [name, price, createdAt, popularity]
+            default: createdAt
+          example: price
+        - name: sortOrder
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          example: asc
+      responses:
+        '200':
+          description: List of products
+          headers:
+            X-Total-Count:
+              description: Total number of products matching criteria
+              schema:
+                type: integer
+            X-Page:
+              description: Current page number
+              schema:
+                type: integer
+            X-Per-Page:
+              description: Items per page
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+              examples:
+                products:
+                  value:
+                    data:
+                      - id: 123e4567-e89b-12d3-a456-426614174000
+                        name: Dell XPS 15 Laptop
+                        description: High-performance laptop with 15-inch display
+                        price: 1299.99
+                        currency: USD
+                        stockQuantity: 45
+                        category:
+                          id: cat-001
+                          name: Electronics
+                        images:
+                          - https://cdn.example.com/images/laptop-1.jpg
+                          - https://cdn.example.com/images/laptop-2.jpg
+                        rating: 4.5
+                        reviewCount: 128
+                        createdAt: 2024-01-15T10:30:00Z
+                        updatedAt: 2024-01-20T14:22:00Z
+                    pagination:
+                      currentPage: 1
+                      totalPages: 10
+                      totalItems: 195
+                      itemsPerPage: 20
+                      hasNextPage: true
+                      hasPreviousPage: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      description: Create a new product (Admin only)
+      operationId: createProduct
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+            examples:
+              laptop:
+                summary: Create laptop product
+                value:
+                  name: Dell XPS 15 Laptop
+                  description: High-performance laptop with 15-inch display, Intel i7, 16GB RAM
+                  price: 1299.99
+                  currency: USD
+                  stockQuantity: 45
+                  categoryId: 123e4567-e89b-12d3-a456-426614174000
+                  sku: DELL-XPS-15-2024
+                  images:
+                    - https://cdn.example.com/images/laptop-1.jpg
+                    - https://cdn.example.com/images/laptop-2.jpg
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /products/{productId}:
+    parameters:
+      - name: productId
+        in: path
+        required: true
+        description: Unique product identifier
+        schema:
+          type: string
+          format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+
+    get:
+      tags:
+        - Products
+      summary: Get product details
+      description: Retrieve detailed information about a specific product
+      operationId: getProduct
+      security: []  # Public endpoint
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Products
+      summary: Update product
+      description: Update an existing product (Admin only)
+      operationId: updateProduct
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Products
+      summary: Delete product
+      description: Delete a product (Admin only)
+      operationId: deleteProduct
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Product deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Shopping Cart Endpoints
+  /cart:
+    get:
+      tags:
+        - Cart
+      summary: Get current user's cart
+      description: Retrieve the shopping cart for the authenticated user
+      operationId: getCart
+      responses:
+        '200':
+          description: Shopping cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /cart/items:
+    post:
+      tags:
+        - Cart
+      summary: Add item to cart
+      description: Add a product to the shopping cart
+      operationId: addCartItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: string
+                  format: uuid
+                  description: Product ID to add
+                quantity:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                  description: Quantity to add
+            example:
+              productId: 123e4567-e89b-12d3-a456-426614174000
+              quantity: 2
+      responses:
+        '200':
+          description: Item added to cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Insufficient stock
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: https://api.example.com/errors/insufficient-stock
+                title: Insufficient Stock
+                status: 422
+                detail: Requested quantity (10) exceeds available stock (5)
+                instance: /cart/items
+                availableStock: 5
+
+  /cart/items/{itemId}:
+    parameters:
+      - name: itemId
+        in: path
+        required: true
+        description: Cart item identifier
+        schema:
+          type: string
+          format: uuid
+
+    put:
+      tags:
+        - Cart
+      summary: Update cart item quantity
+      description: Update the quantity of an item in the cart
+      operationId: updateCartItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quantity
+              properties:
+                quantity:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+            example:
+              quantity: 3
+      responses:
+        '200':
+          description: Cart item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Cart
+      summary: Remove item from cart
+      description: Remove an item from the shopping cart
+      operationId: removeCartItem
+      responses:
+        '200':
+          description: Item removed from cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Order Endpoints
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: List user orders
+      description: Retrieve a list of orders for the authenticated user
+      operationId: listOrders
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          description: Filter by order status
+          schema:
+            type: string
+            enum: [pending, processing, shipped, delivered, cancelled]
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Orders
+      summary: Create order
+      description: Create a new order from the current cart
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+            example:
+              shippingAddress:
+                firstName: John
+                lastName: Doe
+                addressLine1: 123 Main St
+                addressLine2: Apt 4B
+                city: New York
+                state: NY
+                postalCode: 10001
+                country: US
+                phone: +1-555-123-4567
+              billingAddress:
+                sameAsShipping: true
+              paymentMethod:
+                type: credit_card
+                token: tok_visa_4242424242424242
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          description: Unable to process order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/{orderId}:
+    parameters:
+      - name: orderId
+        in: path
+        required: true
+        description: Unique order identifier
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags:
+        - Orders
+      summary: Get order details
+      description: Retrieve detailed information about a specific order
+      operationId: getOrder
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Not authorized to view this order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /orders/{orderId}/cancel:
+    parameters:
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      tags:
+        - Orders
+      summary: Cancel order
+      description: Cancel an order (only if not yet shipped)
+      operationId: cancelOrder
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  maxLength: 500
+                  description: Reason for cancellation
+            example:
+              reason: Changed mind, no longer needed
+      responses:
+        '200':
+          description: Order cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: Cannot cancel order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: https://api.example.com/errors/cannot-cancel
+                title: Cannot Cancel Order
+                status: 422
+                detail: Order has already been shipped and cannot be cancelled
+                instance: /orders/123/cancel
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT token obtained from /auth/login or /auth/register endpoint.
+        Token expires after 24 hours.
+
+  schemas:
+    # Authentication Schemas
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          example: john.doe@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+          example: SecureP@ss123
+          description: Must contain uppercase, lowercase, number, and special character
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: John
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: Doe
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        password:
+          type: string
+          format: password
+          example: SecureP@ss123
+
+    AuthResponse:
+      type: object
+      required:
+        - token
+        - user
+      properties:
+        token:
+          type: string
+          description: JWT authentication token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        role:
+          type: string
+          enum: [customer, admin]
+          example: customer
+        createdAt:
+          type: string
+          format: date-time
+          example: 2024-01-15T10:30:00Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2024-01-20T14:22:00Z
+
+    # Product Schemas
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+        - currency
+        - stockQuantity
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: Dell XPS 15 Laptop
+        description:
+          type: string
+          maxLength: 5000
+          example: High-performance laptop with 15-inch display
+        price:
+          type: number
+          format: float
+          minimum: 0
+          example: 1299.99
+        currency:
+          type: string
+          enum: [USD, EUR, GBP]
+          example: USD
+        stockQuantity:
+          type: integer
+          minimum: 0
+          example: 45
+        sku:
+          type: string
+          example: DELL-XPS-15-2024
+        category:
+          $ref: '#/components/schemas/Category'
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+          example:
+            - https://cdn.example.com/images/laptop-1.jpg
+            - https://cdn.example.com/images/laptop-2.jpg
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          example: 4.5
+        reviewCount:
+          type: integer
+          minimum: 0
+          example: 128
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProductInput:
+      type: object
+      required:
+        - name
+        - price
+        - currency
+        - stockQuantity
+        - categoryId
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        price:
+          type: number
+          format: float
+          minimum: 0
+        currency:
+          type: string
+          enum: [USD, EUR, GBP]
+        stockQuantity:
+          type: integer
+          minimum: 0
+        sku:
+          type: string
+        categoryId:
+          type: string
+          format: uuid
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: cat-001
+        name:
+          type: string
+          example: Electronics
+        slug:
+          type: string
+          example: electronics
+
+    # Cart Schemas
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        subtotal:
+          type: number
+          format: float
+          example: 2599.98
+        tax:
+          type: number
+          format: float
+          example: 259.99
+        total:
+          type: number
+          format: float
+          example: 2859.97
+        currency:
+          type: string
+          enum: [USD, EUR, GBP]
+          example: USD
+        itemCount:
+          type: integer
+          example: 2
+        updatedAt:
+          type: string
+          format: date-time
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 10
+          example: 2
+        price:
+          type: number
+          format: float
+          example: 1299.99
+          description: Price at time of adding to cart
+        subtotal:
+          type: number
+          format: float
+          example: 2599.98
+
+    # Order Schemas
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: ord-123e4567
+        orderNumber:
+          type: string
+          example: ORD-2024-001234
+        userId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        subtotal:
+          type: number
+          format: float
+          example: 2599.98
+        tax:
+          type: number
+          format: float
+          example: 259.99
+        shipping:
+          type: number
+          format: float
+          example: 15.00
+        total:
+          type: number
+          format: float
+          example: 2874.97
+        currency:
+          type: string
+          enum: [USD, EUR, GBP]
+          example: USD
+        status:
+          type: string
+          enum: [pending, processing, shipped, delivered, cancelled]
+          example: processing
+        paymentStatus:
+          type: string
+          enum: [pending, paid, failed, refunded]
+          example: paid
+        trackingNumber:
+          type: string
+          example: 1Z999AA10123456784
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrderInput:
+      type: object
+      required:
+        - shippingAddress
+        - paymentMethod
+      properties:
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        billingAddress:
+          oneOf:
+            - $ref: '#/components/schemas/Address'
+            - type: object
+              properties:
+                sameAsShipping:
+                  type: boolean
+                  example: true
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethod'
+
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+          example: Dell XPS 15 Laptop
+        quantity:
+          type: integer
+          example: 2
+        price:
+          type: number
+          format: float
+          example: 1299.99
+        subtotal:
+          type: number
+          format: float
+          example: 2599.98
+
+    Address:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - addressLine1
+        - city
+        - state
+        - postalCode
+        - country
+        - phone
+      properties:
+        firstName:
+          type: string
+          maxLength: 50
+          example: John
+        lastName:
+          type: string
+          maxLength: 50
+          example: Doe
+        addressLine1:
+          type: string
+          maxLength: 100
+          example: 123 Main St
+        addressLine2:
+          type: string
+          maxLength: 100
+          example: Apt 4B
+        city:
+          type: string
+          maxLength: 50
+          example: New York
+        state:
+          type: string
+          maxLength: 50
+          example: NY
+        postalCode:
+          type: string
+          maxLength: 20
+          example: 10001
+        country:
+          type: string
+          pattern: '^[A-Z]{2}$'
+          example: US
+          description: ISO 3166-1 alpha-2 country code
+        phone:
+          type: string
+          pattern: '^\+?[1-9]\d{1,14}$'
+          example: +1-555-123-4567
+
+    PaymentMethod:
+      type: object
+      required:
+        - type
+        - token
+      properties:
+        type:
+          type: string
+          enum: [credit_card, debit_card, paypal]
+          example: credit_card
+        token:
+          type: string
+          example: tok_visa_4242424242424242
+          description: Tokenized payment method from payment processor
+
+    # Utility Schemas
+    Pagination:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          example: 1
+        totalPages:
+          type: integer
+          example: 10
+        totalItems:
+          type: integer
+          example: 195
+        itemsPerPage:
+          type: integer
+          example: 20
+        hasNextPage:
+          type: boolean
+          example: true
+        hasPreviousPage:
+          type: boolean
+          example: false
+
+    ErrorResponse:
+      type: object
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          example: https://api.example.com/errors/validation-error
+          description: URI reference identifying the problem type
+        title:
+          type: string
+          example: Validation Error
+          description: Short, human-readable summary
+        status:
+          type: integer
+          example: 400
+          description: HTTP status code
+        detail:
+          type: string
+          example: The request body contains invalid data
+          description: Human-readable explanation
+        instance:
+          type: string
+          example: /products
+          description: URI reference identifying the specific occurrence
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: email
+              message:
+                type: string
+                example: Email is required
+              code:
+                type: string
+                example: REQUIRED_FIELD
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            type: https://api.example.com/errors/validation-error
+            title: Validation Error
+            status: 400
+            detail: The request contains invalid data
+            instance: /products
+            errors:
+              - field: price
+                message: Price must be greater than 0
+                code: INVALID_VALUE
+
+    Unauthorized:
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            type: https://api.example.com/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Authentication token is missing or invalid
+            instance: /cart
+
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            type: https://api.example.com/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to perform this action
+            instance: /products
+
+    NotFound:
+      description: Not found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            type: https://api.example.com/errors/not-found
+            title: Not Found
+            status: 404
+            detail: The requested resource was not found
+            instance: /products/123
+
+    RateLimitExceeded:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          description: Request limit per hour
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          description: Remaining requests
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          description: Time when limit resets (Unix timestamp)
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            type: https://api.example.com/errors/rate-limit
+            title: Rate Limit Exceeded
+            status: 429
+            detail: Too many requests. Limit is 100 requests per hour for anonymous users.
+            instance: /products
+            retryAfter: 3600

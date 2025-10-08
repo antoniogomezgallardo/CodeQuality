@@ -1,0 +1,596 @@
+# Prometheus Alerting Rules for Incident Response
+#
+# This file contains production-ready alerting rules for common incident scenarios.
+# Deploy these rules to your Prometheus alerting system.
+#
+# Usage:
+#   1. Review and customize thresholds for your environment
+#   2. Update service names and labels to match your infrastructure
+#   3. Deploy to Prometheus: kubectl apply -f monitoring-alerts.yaml
+#   4. Verify rules loaded: curl http://prometheus:9090/api/v1/rules
+#
+# Alert Severity Levels:
+#   - critical: SEV-1/2 incidents, immediate page
+#   - warning: SEV-3 incidents, notify but don't page
+#   - info: Informational, for tracking only
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-alerts
+  namespace: monitoring
+data:
+  alerts.yml: |
+    groups:
+      # ==========================================
+      # Service Availability Alerts
+      # ==========================================
+      - name: service_availability
+        interval: 30s
+        rules:
+          - alert: ServiceDown
+            expr: up{job=~".*-service"} == 0
+            for: 2m
+            labels:
+              severity: critical
+              category: availability
+              page: "true"
+            annotations:
+              summary: "Service {{ $labels.job }} is down"
+              description: "Service {{ $labels.job }} on {{ $labels.instance }} has been down for more than 2 minutes."
+              runbook_url: "https://runbooks.company.com/service-down"
+              dashboard: "https://grafana.company.com/d/service-overview"
+              impact: "Users cannot access {{ $labels.job }}. Immediate investigation required."
+
+          - alert: HighErrorRate
+            expr: |
+              (
+                sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+                /
+                sum(rate(http_requests_total[5m])) by (service)
+              ) > 0.05
+            for: 5m
+            labels:
+              severity: critical
+              category: errors
+              page: "true"
+            annotations:
+              summary: "High error rate on {{ $labels.service }}"
+              description: "{{ $labels.service }} has error rate of {{ $value | humanizePercentage }} (threshold: 5%)"
+              runbook_url: "https://runbooks.company.com/high-error-rate"
+              query: 'rate(http_requests_total{service="{{ $labels.service }}", status=~"5.."}[5m])'
+
+          - alert: ServiceDegraded
+            expr: |
+              (
+                sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+                /
+                sum(rate(http_requests_total[5m])) by (service)
+              ) > 0.01
+            for: 10m
+            labels:
+              severity: warning
+              category: errors
+            annotations:
+              summary: "{{ $labels.service }} is degraded"
+              description: "Error rate is {{ $value | humanizePercentage }} (threshold: 1%)"
+              runbook_url: "https://runbooks.company.com/service-degraded"
+
+      # ==========================================
+      # Latency Alerts
+      # ==========================================
+      - name: latency
+        interval: 30s
+        rules:
+          - alert: HighLatency
+            expr: |
+              histogram_quantile(0.95,
+                sum(rate(http_request_duration_seconds_bucket[5m])) by (service, le)
+              ) > 1.0
+            for: 10m
+            labels:
+              severity: critical
+              category: latency
+              page: "true"
+            annotations:
+              summary: "High latency on {{ $labels.service }}"
+              description: "p95 latency is {{ $value }}s (threshold: 1s)"
+              runbook_url: "https://runbooks.company.com/high-latency"
+              impact: "Users experiencing slow response times"
+
+          - alert: LatencySpike
+            expr: |
+              (
+                histogram_quantile(0.95,
+                  sum(rate(http_request_duration_seconds_bucket[5m])) by (service, le)
+                )
+                /
+                histogram_quantile(0.95,
+                  sum(rate(http_request_duration_seconds_bucket[5m] offset 1h)) by (service, le)
+                )
+              ) > 2.0
+            for: 5m
+            labels:
+              severity: warning
+              category: latency
+            annotations:
+              summary: "Latency spike on {{ $labels.service }}"
+              description: "Current p95 latency is {{ $value }}x higher than 1 hour ago"
+              runbook_url: "https://runbooks.company.com/latency-spike"
+
+          - alert: SlowDatabaseQueries
+            expr: |
+              histogram_quantile(0.95,
+                sum(rate(db_query_duration_seconds_bucket[5m])) by (service, le)
+              ) > 2.0
+            for: 10m
+            labels:
+              severity: warning
+              category: database
+            annotations:
+              summary: "Slow database queries on {{ $labels.service }}"
+              description: "p95 query time is {{ $value }}s (threshold: 2s)"
+              runbook_url: "https://runbooks.company.com/slow-queries"
+
+      # ==========================================
+      # Resource Utilization Alerts
+      # ==========================================
+      - name: resource_utilization
+        interval: 30s
+        rules:
+          - alert: HighCPUUsage
+            expr: |
+              (
+                sum(rate(container_cpu_usage_seconds_total[5m])) by (pod, namespace)
+                /
+                sum(container_spec_cpu_quota/container_spec_cpu_period) by (pod, namespace)
+              ) > 0.9
+            for: 10m
+            labels:
+              severity: warning
+              category: resources
+            annotations:
+              summary: "High CPU usage on {{ $labels.pod }}"
+              description: "CPU usage is {{ $value | humanizePercentage }} of limit"
+              runbook_url: "https://runbooks.company.com/high-cpu"
+              action: "Consider scaling up or investigating CPU-intensive operations"
+
+          - alert: HighMemoryUsage
+            expr: |
+              (
+                container_memory_usage_bytes
+                /
+                container_spec_memory_limit_bytes
+              ) > 0.9
+            for: 10m
+            labels:
+              severity: warning
+              category: resources
+            annotations:
+              summary: "High memory usage on {{ $labels.pod }}"
+              description: "Memory usage is {{ $value | humanizePercentage }} of limit"
+              runbook_url: "https://runbooks.company.com/high-memory"
+              action: "Check for memory leaks or increase memory limits"
+
+          - alert: PodCrashLooping
+            expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+            for: 5m
+            labels:
+              severity: critical
+              category: availability
+              page: "true"
+            annotations:
+              summary: "Pod {{ $labels.pod }} is crash looping"
+              description: "Pod has restarted {{ $value }} times in the last 15 minutes"
+              runbook_url: "https://runbooks.company.com/crash-loop"
+              action: "Check pod logs: kubectl logs {{ $labels.pod }} --previous"
+
+          - alert: PodPending
+            expr: |
+              sum(kube_pod_status_phase{phase="Pending"}) by (pod, namespace) > 0
+            for: 10m
+            labels:
+              severity: warning
+              category: infrastructure
+            annotations:
+              summary: "Pod {{ $labels.pod }} stuck in Pending state"
+              description: "Pod has been pending for more than 10 minutes"
+              runbook_url: "https://runbooks.company.com/pod-pending"
+              action: "Check pod events: kubectl describe pod {{ $labels.pod }}"
+
+      # ==========================================
+      # Database Alerts
+      # ==========================================
+      - name: database
+        interval: 30s
+        rules:
+          - alert: DatabaseConnectionPoolExhausted
+            expr: |
+              (
+                db_connection_pool_active
+                /
+                db_connection_pool_max
+              ) > 0.9
+            for: 5m
+            labels:
+              severity: critical
+              category: database
+              page: "true"
+            annotations:
+              summary: "Database connection pool exhausted for {{ $labels.service }}"
+              description: "Connection pool is {{ $value | humanizePercentage }} utilized"
+              runbook_url: "https://runbooks.company.com/connection-pool"
+              impact: "Service may start rejecting requests due to connection unavailability"
+
+          - alert: DatabaseDown
+            expr: pg_up == 0
+            for: 1m
+            labels:
+              severity: critical
+              category: database
+              page: "true"
+            annotations:
+              summary: "PostgreSQL database is down"
+              description: "Database {{ $labels.instance }} is unreachable"
+              runbook_url: "https://runbooks.company.com/database-down"
+              impact: "All services depending on this database will fail"
+
+          - alert: DatabaseReplicationLag
+            expr: |
+              pg_replication_lag_seconds > 60
+            for: 5m
+            labels:
+              severity: warning
+              category: database
+            annotations:
+              summary: "Database replication lag on {{ $labels.instance }}"
+              description: "Replication lag is {{ $value }}s (threshold: 60s)"
+              runbook_url: "https://runbooks.company.com/replication-lag"
+
+          - alert: DatabaseDiskSpaceLow
+            expr: |
+              (
+                node_filesystem_avail_bytes{mountpoint="/var/lib/postgresql"}
+                /
+                node_filesystem_size_bytes{mountpoint="/var/lib/postgresql"}
+              ) < 0.1
+            for: 5m
+            labels:
+              severity: critical
+              category: database
+              page: "true"
+            annotations:
+              summary: "Database disk space critically low"
+              description: "Only {{ $value | humanizePercentage }} disk space remaining"
+              runbook_url: "https://runbooks.company.com/disk-space"
+              impact: "Database may fail or become read-only"
+
+      # ==========================================
+      # Message Queue Alerts
+      # ==========================================
+      - name: message_queue
+        interval: 30s
+        rules:
+          - alert: MessageQueueBacklog
+            expr: |
+              rabbitmq_queue_messages > 10000
+            for: 15m
+            labels:
+              severity: warning
+              category: messaging
+            annotations:
+              summary: "Large message backlog on queue {{ $labels.queue }}"
+              description: "{{ $value }} messages in queue (threshold: 10000)"
+              runbook_url: "https://runbooks.company.com/queue-backlog"
+
+          - alert: MessageQueueConsumerDown
+            expr: |
+              rabbitmq_queue_consumers == 0
+            for: 5m
+            labels:
+              severity: critical
+              category: messaging
+              page: "true"
+            annotations:
+              summary: "No consumers for queue {{ $labels.queue }}"
+              description: "Queue has no active consumers, messages will not be processed"
+              runbook_url: "https://runbooks.company.com/no-consumers"
+
+          - alert: HighMessagePublishRate
+            expr: |
+              rate(rabbitmq_queue_messages_published_total[5m]) > 1000
+            for: 10m
+            labels:
+              severity: info
+              category: messaging
+            annotations:
+              summary: "High message publish rate on {{ $labels.queue }}"
+              description: "Publishing {{ $value }} messages/sec"
+              runbook_url: "https://runbooks.company.com/high-publish-rate"
+
+      # ==========================================
+      # SLO Alerts (Error Budget)
+      # ==========================================
+      - name: slo_alerts
+        interval: 1m
+        rules:
+          - alert: ErrorBudgetBurnRateFast
+            expr: |
+              (
+                1 - (
+                  sum(rate(http_requests_total{status!~"5.."}[1h])) by (service)
+                  /
+                  sum(rate(http_requests_total[1h])) by (service)
+                )
+              ) > (1 - 0.999) * 14.4
+            for: 2m
+            labels:
+              severity: critical
+              category: slo
+              page: "true"
+            annotations:
+              summary: "Fast error budget burn on {{ $labels.service }}"
+              description: "At current rate, monthly error budget will be exhausted in {{ $value }}h"
+              runbook_url: "https://runbooks.company.com/error-budget"
+              impact: "SLO at risk of being violated this month"
+
+          - alert: ErrorBudgetBurnRateSlow
+            expr: |
+              (
+                1 - (
+                  sum(rate(http_requests_total{status!~"5.."}[6h])) by (service)
+                  /
+                  sum(rate(http_requests_total[6h])) by (service)
+                )
+              ) > (1 - 0.999) * 3
+            for: 15m
+            labels:
+              severity: warning
+              category: slo
+            annotations:
+              summary: "Slow error budget burn on {{ $labels.service }}"
+              description: "Error budget depleting faster than expected"
+              runbook_url: "https://runbooks.company.com/error-budget"
+
+      # ==========================================
+      # Security Alerts
+      # ==========================================
+      - name: security
+        interval: 30s
+        rules:
+          - alert: UnauthorizedAccessAttempts
+            expr: |
+              rate(http_requests_total{status="401"}[5m]) > 10
+            for: 5m
+            labels:
+              severity: warning
+              category: security
+            annotations:
+              summary: "High rate of unauthorized access attempts"
+              description: "{{ $value }} failed auth attempts/sec on {{ $labels.service }}"
+              runbook_url: "https://runbooks.company.com/unauthorized-access"
+
+          - alert: PotentialDDoS
+            expr: |
+              rate(http_requests_total[1m]) > 10000
+            for: 2m
+            labels:
+              severity: critical
+              category: security
+              page: "true"
+            annotations:
+              summary: "Potential DDoS attack on {{ $labels.service }}"
+              description: "Request rate: {{ $value }} req/sec (threshold: 10000)"
+              runbook_url: "https://runbooks.company.com/ddos"
+              action: "Enable rate limiting and investigate traffic source"
+
+          - alert: SSLCertificateExpiringSoon
+            expr: |
+              (probe_ssl_earliest_cert_expiry - time()) / 86400 < 30
+            for: 1h
+            labels:
+              severity: warning
+              category: security
+            annotations:
+              summary: "SSL certificate expiring soon"
+              description: "Certificate for {{ $labels.instance }} expires in {{ $value }} days"
+              runbook_url: "https://runbooks.company.com/ssl-renewal"
+
+      # ==========================================
+      # Business Metrics Alerts
+      # ==========================================
+      - name: business_metrics
+        interval: 1m
+        rules:
+          - alert: PaymentProcessingFailureSpike
+            expr: |
+              (
+                rate(payments_failed_total[5m])
+                /
+                rate(payments_total[5m])
+              ) > 0.05
+            for: 5m
+            labels:
+              severity: critical
+              category: business
+              page: "true"
+            annotations:
+              summary: "Payment processing failure spike"
+              description: "{{ $value | humanizePercentage }} of payments failing (threshold: 5%)"
+              runbook_url: "https://runbooks.company.com/payment-failures"
+              impact: "Direct revenue impact - immediate investigation required"
+
+          - alert: OrderConversionRateDrop
+            expr: |
+              (
+                rate(orders_completed_total[30m])
+                /
+                rate(orders_started_total[30m] offset 1h)
+              ) < 0.3
+            for: 15m
+            labels:
+              severity: warning
+              category: business
+            annotations:
+              summary: "Order conversion rate dropped"
+              description: "Conversion rate: {{ $value | humanizePercentage }} (normal: >30%)"
+              runbook_url: "https://runbooks.company.com/conversion-rate"
+
+      # ==========================================
+      # Infrastructure Alerts
+      # ==========================================
+      - name: infrastructure
+        interval: 30s
+        rules:
+          - alert: NodeDiskPressure
+            expr: |
+              kube_node_status_condition{condition="DiskPressure",status="true"} == 1
+            for: 5m
+            labels:
+              severity: warning
+              category: infrastructure
+            annotations:
+              summary: "Node {{ $labels.node }} has disk pressure"
+              description: "Node disk space is critically low"
+              runbook_url: "https://runbooks.company.com/disk-pressure"
+
+          - alert: NodeMemoryPressure
+            expr: |
+              kube_node_status_condition{condition="MemoryPressure",status="true"} == 1
+            for: 5m
+            labels:
+              severity: warning
+              category: infrastructure
+            annotations:
+              summary: "Node {{ $labels.node }} has memory pressure"
+              description: "Node memory is critically low"
+              runbook_url: "https://runbooks.company.com/memory-pressure"
+
+          - alert: TooManyPods
+            expr: |
+              (
+                sum(kubelet_running_pods) by (node)
+                /
+                sum(kube_node_status_allocatable{resource="pods"}) by (node)
+              ) > 0.9
+            for: 10m
+            labels:
+              severity: warning
+              category: infrastructure
+            annotations:
+              summary: "Node {{ $labels.node }} running too many pods"
+              description: "{{ $value | humanizePercentage }} of pod capacity used"
+              runbook_url: "https://runbooks.company.com/pod-capacity"
+
+---
+# PagerDuty Integration (Optional)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-pagerduty
+  namespace: monitoring
+type: Opaque
+stringData:
+  pagerduty-key: "YOUR_PAGERDUTY_INTEGRATION_KEY"
+
+---
+# Alertmanager Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+      pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+      slack_api_url: 'YOUR_SLACK_WEBHOOK_URL'
+
+    route:
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 12h
+      receiver: 'default'
+      routes:
+        # Critical alerts go to PagerDuty
+        - match:
+            severity: critical
+            page: "true"
+          receiver: pagerduty-critical
+          continue: true
+
+        # Critical alerts also go to Slack
+        - match:
+            severity: critical
+          receiver: slack-critical
+
+        # Warning alerts go to Slack only
+        - match:
+            severity: warning
+          receiver: slack-warnings
+
+        # Business alerts have special routing
+        - match:
+            category: business
+          receiver: slack-business
+
+    receivers:
+      - name: 'default'
+        slack_configs:
+          - channel: '#alerts-default'
+            title: 'Alert: {{ .CommonAnnotations.summary }}'
+            text: '{{ .CommonAnnotations.description }}'
+
+      - name: 'pagerduty-critical'
+        pagerduty_configs:
+          - service_key: '{{ template "pagerduty.default.serviceKey" . }}'
+            description: '{{ .CommonAnnotations.summary }}'
+            details:
+              firing: '{{ template "pagerduty.default.instances" .Alerts.Firing }}'
+              resolved: '{{ template "pagerduty.default.instances" .Alerts.Resolved }}'
+              runbook: '{{ .CommonAnnotations.runbook_url }}'
+
+      - name: 'slack-critical'
+        slack_configs:
+          - channel: '#incidents'
+            color: 'danger'
+            title: ':fire: CRITICAL: {{ .CommonAnnotations.summary }}'
+            text: |
+              *Description:* {{ .CommonAnnotations.description }}
+              *Impact:* {{ .CommonAnnotations.impact }}
+              *Runbook:* {{ .CommonAnnotations.runbook_url }}
+              *Dashboard:* {{ .CommonAnnotations.dashboard }}
+            actions:
+              - type: button
+                text: 'View Runbook'
+                url: '{{ .CommonAnnotations.runbook_url }}'
+              - type: button
+                text: 'View Dashboard'
+                url: '{{ .CommonAnnotations.dashboard }}'
+
+      - name: 'slack-warnings'
+        slack_configs:
+          - channel: '#alerts-warnings'
+            color: 'warning'
+            title: ':warning: {{ .CommonAnnotations.summary }}'
+            text: '{{ .CommonAnnotations.description }}'
+
+      - name: 'slack-business'
+        slack_configs:
+          - channel: '#alerts-business'
+            color: '#764FA5'
+            title: ':chart_with_downwards_trend: {{ .CommonAnnotations.summary }}'
+            text: |
+              *Description:* {{ .CommonAnnotations.description }}
+              *Impact:* {{ .CommonAnnotations.impact }}
+              *Action:* {{ .CommonAnnotations.action }}
+
+    inhibit_rules:
+      # Inhibit warning if critical is firing for same alert
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'service', 'instance']

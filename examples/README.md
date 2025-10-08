@@ -6,11 +6,19 @@ This directory contains practical, working examples demonstrating the concepts a
 
 ```
 /examples
-├── /unit-tests         # Unit testing examples in multiple languages
-├── /integration-tests  # API, database, and service integration tests
-├── /e2e-tests         # End-to-end testing with Selenium, Cypress, Playwright
-├── /ci-pipelines      # CI/CD pipeline configurations for various platforms
-└── /monitoring-configs # Monitoring, alerting, and observability setups
+├── /unit-tests          # Unit testing examples in multiple languages
+├── /integration-tests   # API, database, and service integration tests
+├── /e2e-tests          # End-to-end testing with Selenium, Cypress, Playwright
+├── /component-testing   # Component testing for React, Vue, and Angular
+├── /contract-testing    # Contract testing with Pact and OpenAPI
+├── /manual-testing      # Manual test cases, checklists, and test plans
+├── /exploratory-testing # Exploratory testing session charters and reports
+├── /visual-testing      # Visual regression testing examples
+├── /api-testing         # API testing with REST, GraphQL, and performance
+├── /load-testing        # Load, stress, and performance testing examples
+├── /version-control     # Version control workflows (TBD, GitHub Flow, GitFlow)
+├── /ci-pipelines        # CI/CD pipeline configurations for various platforms
+└── /monitoring-configs  # Monitoring, alerting, and observability setups
 ```
 
 ## 🚀 Quick Start

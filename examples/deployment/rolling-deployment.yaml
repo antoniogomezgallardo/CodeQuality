@@ -1,0 +1,772 @@
+# Rolling Deployment Configuration for Kubernetes
+#
+# This configuration implements a standard rolling update deployment strategy with:
+# - Gradual instance replacement (RollingUpdate strategy)
+# - Zero downtime deployment
+# - Configurable MaxSurge and MaxUnavailable
+# - Comprehensive health checks
+# - PodDisruptionBudget for high availability
+# - Automated rollback capability
+#
+# Rolling updates gradually replace old pods with new ones, ensuring service availability
+# throughout the deployment process. This is the default and most common deployment
+# strategy in Kubernetes.
+#
+# Usage:
+#   1. Deploy initial version: kubectl apply -f rolling-deployment.yaml
+#   2. Update image version in the deployment spec
+#   3. Apply changes: kubectl apply -f rolling-deployment.yaml
+#   4. Monitor rollout: kubectl rollout status deployment/myapp -n production
+#   5. Rollback if needed: kubectl rollout undo deployment/myapp -n production
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    environment: production
+
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+  namespace: production
+data:
+  APP_NAME: "MyApp"
+  LOG_LEVEL: "info"
+  ENVIRONMENT: "production"
+  METRICS_ENABLED: "true"
+  HEALTH_CHECK_INTERVAL: "10s"
+
+---
+# Secret for sensitive configuration
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myapp-secrets
+  namespace: production
+type: Opaque
+data:
+  # Base64 encoded secrets
+  DATABASE_URL: cG9zdGdyZXNxbDovL3VzZXI6cGFzc3dvcmRAbG9jYWxob3N0OjU0MzIvZGI=
+  API_KEY: c2VjcmV0LWFwaS1rZXk=
+  JWT_SECRET: and0LXNlY3JldC1rZXk=
+
+---
+# Main Application Deployment with Rolling Update Strategy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: production
+  labels:
+    app: myapp
+    tier: backend
+    deployment-strategy: rolling
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment v1.0.0"
+spec:
+  # Number of desired pods
+  replicas: 6
+
+  # Revision history limit (for rollback)
+  revisionHistoryLimit: 10
+
+  # Selector to match pods
+  selector:
+    matchLabels:
+      app: myapp
+
+  # Rolling Update Strategy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Maximum number of pods that can be created over the desired number of pods
+      # 25% means: if replicas=6, maxSurge=2 (can have up to 8 pods during rollout)
+      maxSurge: 25%
+
+      # Maximum number of pods that can be unavailable during the update
+      # 25% means: if replicas=6, maxUnavailable=1 (minimum 5 pods must be available)
+      maxUnavailable: 25%
+
+  # Minimum seconds for which a newly created pod should be ready
+  minReadySeconds: 10
+
+  # Maximum time for deployment to make progress
+  progressDeadlineSeconds: 600
+
+  # Pod template
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: v1.0.0  # Update this with each version
+        tier: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+        # Force pod restart on configmap/secret change
+        checksum/config: "{{ include (print $.Template.BasePath \"/configmap.yaml\") . | sha256sum }}"
+
+    spec:
+      # Spread pods across nodes for high availability
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myapp
+              topologyKey: kubernetes.io/hostname
+          # Spread across availability zones
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myapp
+              topologyKey: topology.kubernetes.io/zone
+
+      # Security context for pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      # Init container for pre-flight checks
+      initContainers:
+      - name: init-check
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Running pre-flight checks..."
+          echo "Checking database connectivity..."
+          # Add actual health checks here
+          # nc -zv database-service 5432 || exit 1
+          echo "Pre-flight checks passed"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+
+      # Main application container
+      containers:
+      - name: myapp
+        # Change this image version for rolling updates
+        image: myapp:v1.0.0
+        imagePullPolicy: IfNotPresent
+
+        # Container ports
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        - name: health
+          containerPort: 8081
+          protocol: TCP
+
+        # Environment variables
+        env:
+        - name: VERSION
+          value: "v1.0.0"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+
+        # Environment from ConfigMap and Secret
+        envFrom:
+        - configMapRef:
+            name: myapp-config
+        - secretRef:
+            name: myapp-secrets
+
+        # Resource limits and requests
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+            ephemeral-storage: "1Gi"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+            ephemeral-storage: "2Gi"
+
+        # Liveness probe - restart container if fails
+        # Detects if application is stuck/deadlocked
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: health
+            scheme: HTTP
+            httpHeaders:
+            - name: X-Health-Check
+              value: "liveness"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+
+        # Readiness probe - remove from service endpoints if fails
+        # Detects if application is ready to accept traffic
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: health
+            scheme: HTTP
+            httpHeaders:
+            - name: X-Health-Check
+              value: "readiness"
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+
+        # Startup probe - for slow-starting applications
+        # Gives application time to start before liveness/readiness probes begin
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: health
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30  # 5 minutes total (30 * 10s)
+
+        # Lifecycle hooks
+        lifecycle:
+          # Post-start hook
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                echo "Container started at $(date)" > /tmp/start-time
+
+          # Pre-stop hook - graceful shutdown
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                echo "Initiating graceful shutdown..."
+                # Sleep to allow time for load balancer to remove pod
+                sleep 15
+                # Send SIGTERM to application for graceful shutdown
+                # Application should handle SIGTERM and close connections
+
+        # Security context for container
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+
+        # Volume mounts
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+        - name: logs
+          mountPath: /app/logs
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+
+      # Volumes
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 100Mi
+      - name: cache
+        emptyDir:
+          sizeLimit: 500Mi
+      - name: logs
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: config-volume
+        configMap:
+          name: myapp-config
+
+      # DNS configuration
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
+
+      # Termination grace period (must be >= preStop sleep time)
+      terminationGracePeriodSeconds: 30
+
+      # Image pull secrets (if using private registry)
+      # imagePullSecrets:
+      # - name: regcred
+
+---
+# Service - LoadBalancer for external access
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+  namespace: production
+  labels:
+    app: myapp
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "10"
+spec:
+  type: LoadBalancer
+  selector:
+    app: myapp
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: http
+
+  # Session affinity for sticky sessions
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hours
+
+  # External traffic policy
+  externalTrafficPolicy: Local  # Preserve client IP
+
+---
+# Service - ClusterIP for internal access
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-internal
+  namespace: production
+  labels:
+    app: myapp
+spec:
+  type: ClusterIP
+  selector:
+    app: myapp
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: metrics
+    protocol: TCP
+    port: 9090
+    targetPort: metrics
+
+---
+# Ingress for external access via domain
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    # Connection draining during rolling update
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout http_502 http_503 http_504"
+spec:
+  tls:
+  - hosts:
+    - myapp.example.com
+    secretName: myapp-tls
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
+
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  minReplicas: 6
+  maxReplicas: 20
+  metrics:
+  # CPU-based scaling
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  # Memory-based scaling
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  # Custom metric (requests per second)
+  # Requires metrics-server and custom metrics adapter
+  # - type: Pods
+  #   pods:
+  #     metric:
+  #       name: http_requests_per_second
+  #     target:
+  #       type: AverageValue
+  #       averageValue: "1000"
+
+  # Scaling behavior
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # Wait 5 minutes before scaling down
+      policies:
+      - type: Percent
+        value: 50  # Scale down max 50% of current pods
+        periodSeconds: 60
+      - type: Pods
+        value: 2  # Scale down max 2 pods
+        periodSeconds: 60
+      selectPolicy: Min  # Use the policy that scales down the least
+
+    scaleUp:
+      stabilizationWindowSeconds: 0  # Scale up immediately
+      policies:
+      - type: Percent
+        value: 100  # Scale up max 100% (double)
+        periodSeconds: 15
+      - type: Pods
+        value: 4  # Scale up max 4 pods
+        periodSeconds: 15
+      selectPolicy: Max  # Use the policy that scales up the most
+
+---
+# PodDisruptionBudget - Ensure availability during disruptions
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myapp-pdb
+  namespace: production
+spec:
+  minAvailable: 4  # Always keep at least 4 pods available
+  # Or use maxUnavailable: 2  # Allow max 2 pods to be unavailable
+  selector:
+    matchLabels:
+      app: myapp
+
+---
+# ServiceMonitor for Prometheus metrics collection
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: myapp-metrics
+  namespace: production
+  labels:
+    app: myapp
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - production
+
+---
+# PrometheusRule for alerting
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: myapp-alerts
+  namespace: production
+  labels:
+    app: myapp
+    prometheus: kube-prometheus
+spec:
+  groups:
+  - name: myapp-deployment
+    interval: 30s
+    rules:
+    # Alert on high pod restart rate during rollout
+    - alert: HighPodRestartRate
+      expr: |
+        rate(kube_pod_container_status_restarts_total{namespace="production",pod=~"myapp-.*"}[15m]) > 0.1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High pod restart rate detected"
+        description: "Pod {{ $labels.pod }} is restarting frequently"
+
+    # Alert on deployment rollout stuck
+    - alert: DeploymentRolloutStuck
+      expr: |
+        kube_deployment_status_condition{namespace="production",deployment="myapp",condition="Progressing",status="false"} == 1
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Deployment rollout stuck"
+        description: "Deployment myapp rollout has been stuck for more than 10 minutes"
+
+    # Alert on low available replicas
+    - alert: LowAvailableReplicas
+      expr: |
+        kube_deployment_status_replicas_available{namespace="production",deployment="myapp"} < 4
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Low number of available replicas"
+        description: "Only {{ $value }} replicas are available, minimum is 4"
+
+---
+# NetworkPolicy for security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: myapp-netpol
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: myapp
+  policyTypes:
+  - Ingress
+  - Egress
+
+  # Ingress rules - who can connect to this app
+  ingress:
+  # Allow ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080
+
+  # Allow Prometheus scraping
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 9090
+
+  # Allow from same namespace
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 8080
+
+  # Egress rules - where this app can connect
+  egress:
+  # DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+
+  # External HTTPS
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+
+  # Database
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database
+    ports:
+    - protocol: TCP
+      port: 5432
+
+---
+# ConfigMap for deployment automation scripts
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: deployment-scripts
+  namespace: production
+data:
+  deploy-new-version.sh: |
+    #!/bin/bash
+    set -e
+
+    NEW_VERSION=$1
+
+    if [ -z "$NEW_VERSION" ]; then
+      echo "Usage: $0 <new-version>"
+      echo "Example: $0 v1.1.0"
+      exit 1
+    fi
+
+    echo "=== Rolling Deployment to version $NEW_VERSION ==="
+
+    # Update deployment image
+    echo "Updating deployment to $NEW_VERSION..."
+    kubectl set image deployment/myapp -n production myapp=myapp:$NEW_VERSION
+
+    # Record change cause
+    kubectl annotate deployment/myapp -n production kubernetes.io/change-cause="Upgrade to $NEW_VERSION"
+
+    # Watch rollout progress
+    echo "Watching rollout progress..."
+    kubectl rollout status deployment/myapp -n production --timeout=600s
+
+    # Verify deployment
+    echo "Verifying deployment..."
+    READY_REPLICAS=$(kubectl get deployment myapp -n production -o jsonpath='{.status.readyReplicas}')
+    DESIRED_REPLICAS=$(kubectl get deployment myapp -n production -o jsonpath='{.spec.replicas}')
+
+    if [ "$READY_REPLICAS" = "$DESIRED_REPLICAS" ]; then
+      echo "✓ Deployment successful: $READY_REPLICAS/$DESIRED_REPLICAS replicas ready"
+    else
+      echo "✗ Deployment incomplete: $READY_REPLICAS/$DESIRED_REPLICAS replicas ready"
+      exit 1
+    fi
+
+    echo "=== Deployment Complete ==="
+    echo "Current version: $NEW_VERSION"
+
+  rollback-deployment.sh: |
+    #!/bin/bash
+    set -e
+
+    REVISION=$1
+
+    echo "=== Rolling Back Deployment ==="
+
+    if [ -z "$REVISION" ]; then
+      echo "Rolling back to previous version..."
+      kubectl rollout undo deployment/myapp -n production
+    else
+      echo "Rolling back to revision $REVISION..."
+      kubectl rollout undo deployment/myapp -n production --to-revision=$REVISION
+    fi
+
+    # Watch rollback progress
+    echo "Watching rollback progress..."
+    kubectl rollout status deployment/myapp -n production --timeout=600s
+
+    echo "=== Rollback Complete ==="
+
+  check-rollout-status.sh: |
+    #!/bin/bash
+
+    echo "=== Deployment Status ==="
+
+    # Current status
+    kubectl get deployment myapp -n production
+
+    # Rollout status
+    kubectl rollout status deployment/myapp -n production
+
+    # Recent events
+    echo ""
+    echo "Recent Events:"
+    kubectl get events -n production --field-selector involvedObject.name=myapp --sort-by='.lastTimestamp' | tail -10
+
+    # Pod status
+    echo ""
+    echo "Pod Status:"
+    kubectl get pods -n production -l app=myapp
+
+  view-rollout-history.sh: |
+    #!/bin/bash
+
+    echo "=== Deployment History ==="
+    kubectl rollout history deployment/myapp -n production
+
+    echo ""
+    echo "To view details of a specific revision:"
+    echo "  kubectl rollout history deployment/myapp -n production --revision=<revision-number>"
+
+  pause-rollout.sh: |
+    #!/bin/bash
+
+    echo "Pausing deployment rollout..."
+    kubectl rollout pause deployment/myapp -n production
+    echo "Rollout paused. To resume: kubectl rollout resume deployment/myapp -n production"
+
+  resume-rollout.sh: |
+    #!/bin/bash
+
+    echo "Resuming deployment rollout..."
+    kubectl rollout resume deployment/myapp -n production
+    echo "Rollout resumed"

@@ -1,0 +1,162 @@
+{
+  "name": "deployment-examples",
+  "version": "1.0.0",
+  "description": "Production-ready deployment strategy examples with feature flags, monitoring, and automation",
+  "main": "feature-flag-deployment.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:e2e": "jest --config jest.e2e.config.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "feature-flags:demo": "node feature-flag-deployment.js",
+    "deploy:blue-green": "bash deployment-script.sh --strategy blue-green",
+    "deploy:canary": "bash deployment-script.sh --strategy canary",
+    "deploy:rolling": "bash deployment-script.sh --strategy rolling",
+    "smoke-tests": "bash smoke-tests.sh",
+    "k8s:apply:blue-green": "kubectl apply -f blue-green-deployment.yaml",
+    "k8s:apply:canary": "kubectl apply -f canary-deployment.yaml",
+    "k8s:apply:rolling": "kubectl apply -f rolling-deployment.yaml",
+    "docker:up": "docker-compose -f docker-compose-blue-green.yml up -d",
+    "docker:down": "docker-compose -f docker-compose-blue-green.yml down",
+    "docker:logs": "docker-compose -f docker-compose-blue-green.yml logs -f",
+    "terraform:init": "terraform init",
+    "terraform:plan": "terraform plan -out=tfplan",
+    "terraform:apply": "terraform apply tfplan",
+    "terraform:destroy": "terraform destroy",
+    "prepare": "husky install || true"
+  },
+  "keywords": [
+    "deployment",
+    "blue-green",
+    "canary",
+    "rolling-update",
+    "feature-flags",
+    "kubernetes",
+    "docker",
+    "terraform",
+    "devops",
+    "cicd",
+    "infrastructure",
+    "automation"
+  ],
+  "author": "Your Organization",
+  "license": "MIT",
+  "dependencies": {
+    "launchdarkly-node-server-sdk": "^8.0.0",
+    "unleash-client": "^5.5.0",
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "winston": "^3.11.0",
+    "prom-client": "^15.0.0",
+    "axios": "^1.6.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.10",
+    "@types/node": "^20.10.4",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jest": "^27.6.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.0",
+    "nock": "^13.4.0",
+    "prettier": "^3.1.1",
+    "supertest": "^6.3.3",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/deployment-examples.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/deployment-examples/issues"
+  },
+  "homepage": "https://github.com/your-org/deployment-examples#readme",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!node_modules/**",
+      "!coverage/**",
+      "!jest.config.js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ],
+    "coverageThresholds": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": [
+      "airbnb-base",
+      "plugin:jest/recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2021,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "consistent-return": "off",
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": false
+        }
+      ]
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "always",
+    "endOfLine": "lf"
+  }
+}

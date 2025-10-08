@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Pact files
+pacts/
+.pact/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Performance test results
+performance-baseline.json
+performance-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build outputs
+dist/
+build/
+
+# Jest cache
+.jest/
+
+# Database files (if using SQLite for testing)
+*.sqlite
+*.sqlite3
+*.db
+
+# Mock data
+mock-data/
+
+# Test artifacts
+test-results/
+test-reports/
+
+# CI/CD
+.gitlab-ci-local/
+
+# OS files
+Thumbs.db
+.DS_Store

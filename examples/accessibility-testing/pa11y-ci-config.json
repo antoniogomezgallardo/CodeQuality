@@ -1,0 +1,178 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "level": "error",
+    "timeout": 30000,
+    "wait": 1000,
+    "chromeLaunchConfig": {
+      "args": [
+        "--no-sandbox",
+        "--disable-setuid-sandbox"
+      ]
+    },
+    "runners": [
+      "axe",
+      "htmlcs"
+    ],
+    "reporters": [
+      {
+        "reporter": "cli"
+      },
+      {
+        "reporter": "html",
+        "destination": "./reports/pa11y-report.html"
+      },
+      {
+        "reporter": "json",
+        "destination": "./reports/pa11y-report.json"
+      }
+    ],
+    "includeNotices": false,
+    "includeWarnings": false,
+    "hideElements": "",
+    "ignore": []
+  },
+  "urls": [
+    {
+      "url": "https://example.com",
+      "screenCapture": "./reports/screenshots/homepage.png",
+      "viewport": {
+        "width": 1280,
+        "height": 1024
+      }
+    },
+    {
+      "url": "https://example.com/products",
+      "screenCapture": "./reports/screenshots/products.png",
+      "actions": [
+        "wait for element #product-list to be visible",
+        "screen capture ./reports/screenshots/products-loaded.png"
+      ]
+    },
+    {
+      "url": "https://example.com/product/123",
+      "screenCapture": "./reports/screenshots/product-detail.png",
+      "actions": [
+        "wait for element .product-image to be visible",
+        "click element #size-selector",
+        "wait for element .size-options to be visible"
+      ]
+    },
+    {
+      "url": "https://example.com/cart",
+      "screenCapture": "./reports/screenshots/cart.png",
+      "actions": [
+        "set field #coupon-code to TESTCODE",
+        "click element #apply-coupon",
+        "wait for element .discount-applied to be visible"
+      ]
+    },
+    {
+      "url": "https://example.com/checkout",
+      "screenCapture": "./reports/screenshots/checkout.png",
+      "viewport": {
+        "width": 1280,
+        "height": 1024
+      },
+      "actions": [
+        "wait for element #checkout-form to be visible",
+        "set field #email to test@example.com",
+        "set field #first-name to John",
+        "set field #last-name to Doe"
+      ]
+    },
+    {
+      "url": "https://example.com/contact",
+      "screenCapture": "./reports/screenshots/contact.png",
+      "actions": [
+        "wait for element form[name='contact'] to be visible",
+        "set field #name to Test User",
+        "set field #email to test@example.com",
+        "set field #message to This is a test message for accessibility testing"
+      ]
+    },
+    {
+      "url": "https://example.com/search?q=laptop",
+      "screenCapture": "./reports/screenshots/search-results.png",
+      "actions": [
+        "wait for element .search-results to be visible",
+        "screen capture ./reports/screenshots/search-results-loaded.png"
+      ]
+    },
+    {
+      "url": "https://example.com/login",
+      "screenCapture": "./reports/screenshots/login.png",
+      "actions": [
+        "wait for element #login-form to be visible",
+        "set field #username to testuser",
+        "set field #password to testpass123"
+      ]
+    },
+    {
+      "url": "https://example.com/register",
+      "screenCapture": "./reports/screenshots/register.png",
+      "actions": [
+        "wait for element #register-form to be visible"
+      ]
+    },
+    {
+      "url": "https://example.com/about",
+      "screenCapture": "./reports/screenshots/about.png"
+    },
+    {
+      "url": "https://example.com/faq",
+      "screenCapture": "./reports/screenshots/faq.png",
+      "actions": [
+        "click element .accordion-header",
+        "wait for element .accordion-content to be visible",
+        "screen capture ./reports/screenshots/faq-expanded.png"
+      ]
+    },
+    {
+      "url": "https://example.com",
+      "screenCapture": "./reports/screenshots/homepage-mobile.png",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      }
+    },
+    {
+      "url": "https://example.com/products",
+      "screenCapture": "./reports/screenshots/products-tablet.png",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      }
+    }
+  ],
+  "concurrency": 2,
+  "useIncognitoBrowserContext": true,
+  "wrapWidth": 100,
+  "threshold": 0,
+  "ignoreUrl": [],
+  "customRules": [
+    {
+      "name": "Custom Skip Link Check",
+      "description": "Ensures skip links are present and functional",
+      "selector": "body",
+      "evaluate": "function() { const skipLink = document.querySelector('a[href=\"#main-content\"], a[href=\"#main\"]'); return skipLink !== null; }",
+      "message": "Page should have a skip link to main content"
+    }
+  ],
+  "hideElements": "iframe[src*='ads'], .advertisement, #cookie-banner",
+  "ignore": [
+    "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail;color-contrast",
+    "notice;WCAG2AA.Principle3.Guideline3_1.3_1_1.H57.2"
+  ],
+  "headers": {
+    "Cookie": "acceptance_test=true"
+  },
+  "log": {
+    "debug": false,
+    "error": true,
+    "info": true
+  },
+  "method": "GET",
+  "postData": null,
+  "verifyPage": null
+}

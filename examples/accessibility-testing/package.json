@@ -1,0 +1,64 @@
+{
+  "name": "accessibility-testing-examples",
+  "version": "1.0.0",
+  "description": "Production-ready WCAG 2.1 AA accessibility testing examples",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:axe": "playwright test axe-automated-tests.spec.js",
+    "test:keyboard": "playwright test keyboard-navigation.spec.js",
+    "test:aria": "playwright test aria-validator.spec.js",
+    "test:wcag-a": "playwright test axe-automated-tests.spec.js --grep 'WCAG 2.0 A'",
+    "test:wcag-aa": "playwright test axe-automated-tests.spec.js --grep 'WCAG 2.1 AA'",
+    "test:critical": "playwright test --grep critical",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "pa11y": "pa11y-ci",
+    "pa11y:report": "pa11y-ci --reporter html",
+    "lighthouse": "node lighthouse-accessibility.js",
+    "contrast": "node color-contrast-checker.js",
+    "test:all": "npm run test:axe && npm run pa11y && npm run lighthouse && npm run contrast",
+    "test:ci": "npm run test:axe && npm run pa11y",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "wcag21",
+    "testing",
+    "axe-core",
+    "pa11y",
+    "lighthouse",
+    "playwright",
+    "automation"
+  ],
+  "author": "Code Quality Team",
+  "license": "MIT",
+  "dependencies": {
+    "@axe-core/playwright": "^4.8.2",
+    "@playwright/test": "^1.40.1",
+    "axe-core": "^4.8.3",
+    "chrome-launcher": "^1.1.0",
+    "lighthouse": "^11.4.0",
+    "pa11y": "^7.0.0",
+    "pa11y-ci": "^3.1.0",
+    "puppeteer": "^21.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/code-quality"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/code-quality/issues"
+  },
+  "homepage": "https://github.com/your-org/code-quality#readme"
+}

@@ -1,0 +1,934 @@
+# Blue-Green Deployment Configuration for Kubernetes
+#
+# This configuration implements a complete Blue-Green deployment strategy with:
+# - Separate Blue and Green deployments
+# - Service selector switching for instant traffic cutover
+# - Health checks and readiness probes
+# - Resource limits and requests
+# - Automated rollback capability
+#
+# Usage:
+#   1. Deploy initial Blue environment: kubectl apply -f blue-green-deployment.yaml
+#   2. Update Green deployment image to new version
+#   3. Apply changes: kubectl apply -f blue-green-deployment.yaml
+#   4. Test Green environment: kubectl port-forward svc/myapp-green-test 8080:80
+#   5. Switch traffic: kubectl patch service myapp -p '{"spec":{"selector":{"version":"green"}}}'
+#   6. Rollback if needed: kubectl patch service myapp -p '{"spec":{"selector":{"version":"blue"}}}'
+
+---
+# Namespace for isolation
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    environment: production
+
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+  namespace: production
+data:
+  APP_NAME: "MyApp"
+  LOG_LEVEL: "info"
+  FEATURE_FLAGS_ENABLED: "true"
+  METRICS_ENABLED: "true"
+
+---
+# Secret for sensitive data (base64 encoded)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myapp-secrets
+  namespace: production
+type: Opaque
+data:
+  # echo -n 'your-database-password' | base64
+  DATABASE_PASSWORD: eW91ci1kYXRhYmFzZS1wYXNzd29yZA==
+  # echo -n 'your-api-key' | base64
+  API_KEY: eW91ci1hcGkta2V5
+
+---
+# Blue Deployment (Current/Stable Version)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-blue
+  namespace: production
+  labels:
+    app: myapp
+    version: blue
+    deployment-strategy: blue-green
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    deployment.kubernetes.io/description: "Blue environment - stable version"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      version: blue
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: blue
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Anti-affinity to spread pods across nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myapp
+                - key: version
+                  operator: In
+                  values:
+                  - blue
+              topologyKey: kubernetes.io/hostname
+
+      # Security context for pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+      containers:
+      - name: myapp
+        image: myapp:v1.0.0  # Current stable version
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+
+        # Environment variables from ConfigMap and Secret
+        env:
+        - name: VERSION
+          value: "v1.0.0"
+        - name: ENVIRONMENT
+          value: "blue"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+
+        envFrom:
+        - configMapRef:
+            name: myapp-config
+        - secretRef:
+            name: myapp-secrets
+
+        # Resource limits and requests
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        # Liveness probe - restart container if fails
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+
+        # Readiness probe - remove from service if fails
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+
+        # Startup probe - for slow-starting applications
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30  # 5 minutes to start
+
+        # Lifecycle hooks
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]  # Grace period for connection draining
+
+        # Security context for container
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+
+        # Volume mounts
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+
+      # Volumes
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+
+      # DNS configuration
+      dnsPolicy: ClusterFirst
+
+      # Termination grace period
+      terminationGracePeriodSeconds: 30
+
+---
+# Green Deployment (New Version)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-green
+  namespace: production
+  labels:
+    app: myapp
+    version: green
+    deployment-strategy: blue-green
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+    deployment.kubernetes.io/description: "Green environment - new version"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      version: green
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: green
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myapp
+                - key: version
+                  operator: In
+                  values:
+                  - green
+              topologyKey: kubernetes.io/hostname
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+      containers:
+      - name: myapp
+        image: myapp:v2.0.0  # NEW VERSION - Change this for deployments
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+
+        env:
+        - name: VERSION
+          value: "v2.0.0"
+        - name: ENVIRONMENT
+          value: "green"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+
+        envFrom:
+        - configMapRef:
+            name: myapp-config
+        - secretRef:
+            name: myapp-secrets
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30
+
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+
+---
+# Main Service - Traffic switches between Blue and Green
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+  namespace: production
+  labels:
+    app: myapp
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"  # For AWS
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app: myapp
+    version: blue  # Initially points to blue - CHANGE THIS TO SWITCH TRAFFIC
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: http
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hours
+
+---
+# Blue Test Service - Direct access to Blue environment
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-blue-test
+  namespace: production
+  labels:
+    app: myapp
+    version: blue
+spec:
+  type: ClusterIP
+  selector:
+    app: myapp
+    version: blue
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+
+---
+# Green Test Service - Direct access to Green environment
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-green-test
+  namespace: production
+  labels:
+    app: myapp
+    version: green
+spec:
+  type: ClusterIP
+  selector:
+    app: myapp
+    version: green
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+
+---
+# Ingress Configuration with TLS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+spec:
+  tls:
+  - hosts:
+    - myapp.example.com
+    secretName: myapp-tls
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
+
+---
+# Ingress for Blue Testing (blue.myapp.example.com)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-blue-ingress
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - blue.myapp.example.com
+    secretName: myapp-blue-tls
+  rules:
+  - host: blue.myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp-blue-test
+            port:
+              number: 80
+
+---
+# Ingress for Green Testing (green.myapp.example.com)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-green-ingress
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - green.myapp.example.com
+    secretName: myapp-green-tls
+  rules:
+  - host: green.myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp-green-test
+            port:
+              number: 80
+
+---
+# Horizontal Pod Autoscaler for Blue
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-blue-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-blue
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 15
+      selectPolicy: Max
+
+---
+# Horizontal Pod Autoscaler for Green
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-green-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-green
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 15
+      selectPolicy: Max
+
+---
+# Pod Disruption Budget - Ensure availability during disruptions
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myapp-pdb
+  namespace: production
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: myapp
+
+---
+# ServiceMonitor for Prometheus (if using Prometheus Operator)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: myapp-metrics
+  namespace: production
+  labels:
+    app: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+
+---
+# NetworkPolicy for security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: myapp-netpol
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: myapp
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 9090
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          app: database
+    ports:
+    - protocol: TCP
+      port: 5432
+
+---
+# ConfigMap for automated switching script
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blue-green-switch-script
+  namespace: production
+data:
+  switch-to-green.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=== Blue-Green Deployment: Switching to Green ==="
+
+    # Verify green deployment is ready
+    echo "Checking Green deployment status..."
+    kubectl rollout status deployment/myapp-green -n production --timeout=300s
+
+    # Check green pod health
+    echo "Verifying Green pods are healthy..."
+    GREEN_READY=$(kubectl get pods -n production -l app=myapp,version=green -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | grep -o "True" | wc -l)
+    GREEN_REPLICAS=$(kubectl get deployment myapp-green -n production -o jsonpath='{.spec.replicas}')
+
+    if [ "$GREEN_READY" -lt "$GREEN_REPLICAS" ]; then
+      echo "ERROR: Not all Green pods are ready ($GREEN_READY/$GREEN_REPLICAS)"
+      exit 1
+    fi
+
+    echo "All $GREEN_REPLICAS Green pods are ready"
+
+    # Run smoke tests on green
+    echo "Running smoke tests on Green environment..."
+    GREEN_POD=$(kubectl get pods -n production -l app=myapp,version=green -o jsonpath='{.items[0].metadata.name}')
+    kubectl exec -n production $GREEN_POD -- curl -f http://localhost:8080/health || {
+      echo "ERROR: Green health check failed"
+      exit 1
+    }
+
+    echo "Smoke tests passed"
+
+    # Switch traffic to green
+    echo "Switching traffic to Green..."
+    kubectl patch service myapp -n production -p '{"spec":{"selector":{"version":"green"}}}'
+
+    echo "Traffic switched to Green successfully"
+    echo "Blue environment is now standby for rollback"
+    echo ""
+    echo "To rollback to Blue, run:"
+    echo "  kubectl patch service myapp -n production -p '{\"spec\":{\"selector\":{\"version\":\"blue\"}}}'"
+
+  switch-to-blue.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=== Blue-Green Deployment: Switching to Blue (Rollback) ==="
+
+    # Verify blue deployment is ready
+    echo "Checking Blue deployment status..."
+    kubectl rollout status deployment/myapp-blue -n production --timeout=300s
+
+    # Check blue pod health
+    echo "Verifying Blue pods are healthy..."
+    BLUE_READY=$(kubectl get pods -n production -l app=myapp,version=blue -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | grep -o "True" | wc -l)
+    BLUE_REPLICAS=$(kubectl get deployment myapp-blue -n production -o jsonpath='{.spec.replicas}')
+
+    if [ "$BLUE_READY" -lt "$BLUE_REPLICAS" ]; then
+      echo "ERROR: Not all Blue pods are ready ($BLUE_READY/$BLUE_REPLICAS)"
+      exit 1
+    fi
+
+    echo "All $BLUE_REPLICAS Blue pods are ready"
+
+    # Switch traffic to blue
+    echo "Switching traffic to Blue..."
+    kubectl patch service myapp -n production -p '{"spec":{"selector":{"version":"blue"}}}'
+
+    echo "Traffic switched to Blue successfully (Rollback complete)"
+    echo "Green environment is now standby"
+
+  automated-deployment.sh: |
+    #!/bin/bash
+    set -e
+
+    # Usage: ./automated-deployment.sh <new-version>
+
+    NEW_VERSION=$1
+
+    if [ -z "$NEW_VERSION" ]; then
+      echo "Usage: $0 <new-version>"
+      echo "Example: $0 v2.1.0"
+      exit 1
+    fi
+
+    echo "=== Automated Blue-Green Deployment to version $NEW_VERSION ==="
+
+    # Determine current active version
+    CURRENT_VERSION=$(kubectl get service myapp -n production -o jsonpath='{.spec.selector.version}')
+    echo "Current active version: $CURRENT_VERSION"
+
+    # Determine target version (opposite of current)
+    if [ "$CURRENT_VERSION" = "blue" ]; then
+      TARGET_VERSION="green"
+      TARGET_DEPLOYMENT="myapp-green"
+    else
+      TARGET_VERSION="blue"
+      TARGET_DEPLOYMENT="myapp-blue"
+    fi
+
+    echo "Deploying to $TARGET_VERSION environment..."
+
+    # Update deployment image
+    kubectl set image deployment/$TARGET_DEPLOYMENT -n production myapp=myapp:$NEW_VERSION
+
+    # Wait for rollout
+    echo "Waiting for $TARGET_VERSION deployment to complete..."
+    kubectl rollout status deployment/$TARGET_DEPLOYMENT -n production --timeout=600s
+
+    # Health check
+    echo "Running health checks..."
+    sleep 10
+
+    TARGET_POD=$(kubectl get pods -n production -l app=myapp,version=$TARGET_VERSION -o jsonpath='{.items[0].metadata.name}')
+    kubectl exec -n production $TARGET_POD -- curl -f http://localhost:8080/health || {
+      echo "ERROR: Health check failed on $TARGET_VERSION"
+      echo "Deployment failed - $CURRENT_VERSION remains active"
+      exit 1
+    }
+
+    # Switch traffic
+    echo "All checks passed. Switching traffic to $TARGET_VERSION..."
+    kubectl patch service myapp -n production -p "{\"spec\":{\"selector\":{\"version\":\"$TARGET_VERSION\"}}}"
+
+    echo "=== Deployment Complete ==="
+    echo "Active version: $TARGET_VERSION ($NEW_VERSION)"
+    echo "Standby version: $CURRENT_VERSION (available for instant rollback)"
+    echo ""
+    echo "Monitor the deployment:"
+    echo "  kubectl logs -n production -l app=myapp,version=$TARGET_VERSION -f"
+    echo ""
+    echo "To rollback:"
+    echo "  kubectl patch service myapp -n production -p '{\"spec\":{\"selector\":{\"version\":\"$CURRENT_VERSION\"}}}'"
+
+---
+# Job for deployment validation
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deployment-validation
+  namespace: production
+spec:
+  template:
+    spec:
+      serviceAccountName: deployment-validator
+      restartPolicy: Never
+      containers:
+      - name: validator
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Running deployment validation..."
+
+          # Check both environments are healthy
+          kubectl get pods -n production -l app=myapp
+
+          echo "Validation complete"
+  backoffLimit: 3
+
+---
+# ServiceAccount for deployment scripts
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: deployment-validator
+  namespace: production
+
+---
+# Role for deployment operations
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: deployment-manager
+  namespace: production
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "patch"]
+- apiGroups: [""]
+  resources: ["services", "pods"]
+  verbs: ["get", "list", "watch", "patch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+
+---
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: deployment-validator-binding
+  namespace: production
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: deployment-manager
+subjects:
+- kind: ServiceAccount
+  name: deployment-validator
+  namespace: production

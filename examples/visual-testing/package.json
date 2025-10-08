@@ -1,0 +1,160 @@
+{
+  "name": "visual-testing-examples",
+  "version": "1.0.0",
+  "description": "Production-ready visual testing examples using Percy, Chromatic, BackstopJS, and Playwright",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:visual:all",
+    "test:visual:all": "npm run test:percy && npm run test:playwright-visual && npm run backstop:test",
+    "test:visual:ci": "npm run test:percy:ci && npm run test:playwright-visual && npm run backstop:test:ci",
+    "test:percy": "percy exec -- npx playwright test percy-visual-tests.spec.js",
+    "test:percy:ci": "percy exec -- npx playwright test percy-visual-tests.spec.js --reporter=list",
+    "test:playwright-visual": "npx playwright test playwright-visual.spec.js",
+    "test:playwright-visual:headed": "npx playwright test playwright-visual.spec.js --headed",
+    "test:playwright-visual:debug": "npx playwright test playwright-visual.spec.js --debug",
+    "test:playwright-visual:update": "npx playwright test playwright-visual.spec.js --update-snapshots",
+    "test:playwright-visual:ui": "npx playwright test playwright-visual.spec.js --ui",
+    "test:chromium": "npx playwright test --project=chromium",
+    "test:firefox": "npx playwright test --project=firefox",
+    "test:webkit": "npx playwright test --project=webkit",
+    "backstop:init": "backstop init",
+    "backstop:reference": "backstop reference --config=backstopjs-config.json",
+    "backstop:test": "backstop test --config=backstopjs-config.json",
+    "backstop:test:ci": "backstop test --config=backstopjs-config.json --docker",
+    "backstop:approve": "backstop approve --config=backstopjs-config.json",
+    "backstop:open": "backstop openReport --config=backstopjs-config.json",
+    "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
+    "chromatic:ci": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --exit-zero-on-changes",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "lint": "eslint *.js",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,json,md}\"",
+    "clean": "npm run clean:playwright && npm run clean:backstop && npm run clean:percy",
+    "clean:playwright": "rm -rf test-results playwright-report screenshots",
+    "clean:backstop": "rm -rf backstop_data/bitmaps_test backstop_data/html_report backstop_data/ci_report",
+    "clean:percy": "rm -rf .percy",
+    "report:playwright": "npx playwright show-report",
+    "report:backstop": "npm run backstop:open",
+    "setup": "npm install && npx playwright install",
+    "setup:ci": "npm ci && npx playwright install --with-deps"
+  },
+  "keywords": [
+    "visual-testing",
+    "visual-regression",
+    "percy",
+    "chromatic",
+    "backstopjs",
+    "playwright",
+    "screenshot-testing",
+    "ui-testing",
+    "regression-testing"
+  ],
+  "author": "Code Quality Documentation Project",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@percy/cli": "^1.29.0",
+    "@percy/playwright": "^1.0.5",
+    "@playwright/test": "^1.40.0",
+    "backstopjs": "^6.3.0",
+    "chromatic": "^10.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "@babel/preset-react": "^7.22.0",
+    "@storybook/addon-essentials": "^7.6.0",
+    "@storybook/addon-interactions": "^7.6.0",
+    "@storybook/addon-links": "^7.6.0",
+    "@storybook/react": "^7.6.0",
+    "@storybook/react-webpack5": "^7.6.0",
+    "@storybook/testing-library": "^0.2.2",
+    "babel-loader": "^9.1.3",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-playwright": "^0.20.0",
+    "prettier": "^3.1.0",
+    "storybook": "^7.6.0"
+  },
+  "peerDependencies": {
+    "puppeteer": ">=10.0.0"
+  },
+  "optionalDependencies": {
+    "puppeteer": "^21.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/code-quality-docs.git",
+    "directory": "examples/visual-testing"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/code-quality-docs/issues"
+  },
+  "homepage": "https://github.com/your-org/code-quality-docs/tree/main/examples/visual-testing#readme",
+  "config": {
+    "percy": {
+      "branch": "main"
+    }
+  },
+  "percy": {
+    "version": 2,
+    "static": {
+      "baseUrl": "/"
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:playwright/recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "no-console": "off",
+      "no-unused-vars": [
+        "warn",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ]
+    ]
+  }
+}

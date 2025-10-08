@@ -1,0 +1,579 @@
+# Service Level Indicators (SLI) and Service Level Objectives (SLO) Configuration
+#
+# This file defines SLIs, SLOs, and error budgets for all services.
+# Use this configuration to:
+# - Track service reliability
+# - Calculate error budgets
+# - Alert on SLO violations
+# - Make data-driven reliability decisions
+#
+# Reference: Google SRE Book - https://sre.google/sre-book/service-level-objectives/
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sli-slo-config
+  namespace: monitoring
+data:
+  sli-slo.yaml: |
+    # Global Configuration
+    global:
+      errorBudgetPeriod: "30d"  # Error budget calculated over 30 days
+      alertingWindow: "1h"      # Alert if burning budget too fast in this window
+      minimumRequests: 100      # Minimum requests required for valid SLI measurement
+
+    # ==========================================
+    # Service Definitions
+    # ==========================================
+
+    services:
+      # Order Service
+      - name: order-service
+        tier: critical
+        owner: order-team
+        description: "Handles order creation, updates, and retrieval"
+
+        slis:
+          # Availability SLI
+          - name: availability
+            description: "Percentage of successful requests"
+            type: availability
+            metric:
+              successQuery: |
+                sum(rate(http_requests_total{
+                  service="order-service",
+                  status!~"5.."
+                }[5m]))
+              totalQuery: |
+                sum(rate(http_requests_total{
+                  service="order-service"
+                }[5m]))
+            slo:
+              target: 99.9              # 99.9% availability
+              errorBudget: 0.1          # 0.1% error budget
+              windows:
+                - duration: 30d
+                  target: 99.9
+                - duration: 7d
+                  target: 99.5
+                - duration: 1d
+                  target: 99.0
+
+          # Latency SLI (P95)
+          - name: latency_p95
+            description: "95th percentile request latency"
+            type: latency
+            metric:
+              query: |
+                histogram_quantile(0.95,
+                  sum(rate(http_request_duration_seconds_bucket{
+                    service="order-service"
+                  }[5m])) by (le)
+                )
+            slo:
+              target: 0.5               # 500ms
+              unit: seconds
+              goodRequestsQuery: |
+                sum(rate(http_request_duration_seconds_bucket{
+                  service="order-service",
+                  le="0.5"
+                }[5m]))
+              totalRequestsQuery: |
+                sum(rate(http_request_duration_seconds_count{
+                  service="order-service"
+                }[5m]))
+              windows:
+                - duration: 30d
+                  target: 0.5
+                  targetPercentage: 95
+
+          # Latency SLI (P99)
+          - name: latency_p99
+            description: "99th percentile request latency"
+            type: latency
+            metric:
+              query: |
+                histogram_quantile(0.99,
+                  sum(rate(http_request_duration_seconds_bucket{
+                    service="order-service"
+                  }[5m])) by (le)
+                )
+            slo:
+              target: 1.0               # 1000ms
+              unit: seconds
+              targetPercentage: 99
+              windows:
+                - duration: 30d
+                  target: 1.0
+
+      # Payment Service
+      - name: payment-service
+        tier: critical
+        owner: payment-team
+        description: "Processes payments and refunds"
+
+        slis:
+          # Availability SLI (Higher target for payments)
+          - name: availability
+            description: "Percentage of successful payment requests"
+            type: availability
+            metric:
+              successQuery: |
+                sum(rate(http_requests_total{
+                  service="payment-service",
+                  status!~"5.."
+                }[5m]))
+              totalQuery: |
+                sum(rate(http_requests_total{
+                  service="payment-service"
+                }[5m]))
+            slo:
+              target: 99.95             # 99.95% availability (higher for payments)
+              errorBudget: 0.05
+              windows:
+                - duration: 30d
+                  target: 99.95
+                - duration: 7d
+                  target: 99.9
+
+          # Payment Success Rate SLI
+          - name: payment_success_rate
+            description: "Percentage of successful payment transactions"
+            type: custom
+            metric:
+              successQuery: |
+                sum(rate(payment_transactions_total{
+                  status="completed"
+                }[5m]))
+              totalQuery: |
+                sum(rate(payment_transactions_total[5m]))
+            slo:
+              target: 99.5              # 99.5% of payments should succeed
+              errorBudget: 0.5
+              windows:
+                - duration: 30d
+                  target: 99.5
+
+          # Latency SLI
+          - name: latency_p95
+            description: "95th percentile payment processing latency"
+            type: latency
+            metric:
+              query: |
+                histogram_quantile(0.95,
+                  sum(rate(payment_duration_seconds_bucket[5m])) by (le)
+                )
+            slo:
+              target: 0.3               # 300ms
+              unit: seconds
+              targetPercentage: 95
+              windows:
+                - duration: 30d
+                  target: 0.3
+
+      # Inventory Service
+      - name: inventory-service
+        tier: high
+        owner: inventory-team
+        description: "Manages inventory and reservations"
+
+        slis:
+          - name: availability
+            description: "Percentage of successful requests"
+            type: availability
+            metric:
+              successQuery: |
+                sum(rate(http_requests_total{
+                  service="inventory-service",
+                  status!~"5.."
+                }[5m]))
+              totalQuery: |
+                sum(rate(http_requests_total{
+                  service="inventory-service"
+                }[5m]))
+            slo:
+              target: 99.5              # 99.5% availability
+              errorBudget: 0.5
+              windows:
+                - duration: 30d
+                  target: 99.5
+
+          # Data Freshness SLI
+          - name: data_freshness
+            description: "Inventory data updated within acceptable timeframe"
+            type: custom
+            metric:
+              query: |
+                max(time() - inventory_last_sync_timestamp)
+            slo:
+              target: 300               # Data should be < 5 minutes old
+              unit: seconds
+              comparison: less_than
+              windows:
+                - duration: 30d
+                  target: 300
+
+          # Reservation Success Rate
+          - name: reservation_success_rate
+            description: "Percentage of successful inventory reservations"
+            type: custom
+            metric:
+              successQuery: |
+                sum(rate(inventory_reservations_total{
+                  status="success"
+                }[5m]))
+              totalQuery: |
+                sum(rate(inventory_reservations_total[5m]))
+            slo:
+              target: 99.0              # 99% reservation success
+              errorBudget: 1.0
+              windows:
+                - duration: 30d
+                  target: 99.0
+
+      # Notification Service
+      - name: notification-service
+        tier: medium
+        owner: platform-team
+        description: "Sends email, SMS, and push notifications"
+
+        slis:
+          # Delivery Success Rate
+          - name: delivery_success_rate
+            description: "Percentage of successfully delivered notifications"
+            type: custom
+            metric:
+              successQuery: |
+                sum(rate(notifications_sent_total{
+                  status="delivered"
+                }[5m]))
+              totalQuery: |
+                sum(rate(notifications_sent_total[5m]))
+            slo:
+              target: 95.0              # 95% delivery success
+              errorBudget: 5.0
+              windows:
+                - duration: 30d
+                  target: 95.0
+
+          # Delivery Latency
+          - name: delivery_latency_p95
+            description: "Time from trigger to delivery"
+            type: latency
+            metric:
+              query: |
+                histogram_quantile(0.95,
+                  sum(rate(notification_delivery_duration_seconds_bucket[5m])) by (le)
+                )
+            slo:
+              target: 60                # 60 seconds
+              unit: seconds
+              targetPercentage: 95
+              windows:
+                - duration: 30d
+                  target: 60
+
+    # ==========================================
+    # Error Budget Policies
+    # ==========================================
+
+    errorBudgetPolicies:
+      - name: critical-service-policy
+        description: "Error budget policy for critical services"
+        applicableTo:
+          - tier: critical
+
+        actions:
+          # When 100% of error budget consumed
+          - threshold: 100
+            percentage: true
+            actions:
+              - type: alert
+                severity: critical
+                message: "Error budget fully exhausted for {{ .service }}"
+              - type: freeze
+                target: deployments
+                message: "Deployment freeze until error budget recovered"
+              - type: notify
+                channels: ["slack:#incidents", "pagerduty:critical"]
+
+          # When 90% of error budget consumed
+          - threshold: 90
+            percentage: true
+            actions:
+              - type: alert
+                severity: warning
+                message: "90% of error budget consumed for {{ .service }}"
+              - type: review
+                message: "Review required before further deployments"
+              - type: notify
+                channels: ["slack:#engineering"]
+
+          # When 75% of error budget consumed
+          - threshold: 75
+            percentage: true
+            actions:
+              - type: alert
+                severity: warning
+                message: "75% of error budget consumed for {{ .service }}"
+              - type: notify
+                channels: ["slack:#team-{{ .owner }}"]
+
+      - name: high-service-policy
+        description: "Error budget policy for high-tier services"
+        applicableTo:
+          - tier: high
+
+        actions:
+          - threshold: 100
+            percentage: true
+            actions:
+              - type: alert
+                severity: warning
+              - type: review
+                message: "Deployment review required"
+
+    # ==========================================
+    # Error Budget Burn Rate Alerts
+    # ==========================================
+
+    burnRateAlerts:
+      - name: fast-burn-critical
+        description: "Very fast error budget burn (exhaustion in < 2 hours)"
+        window: 1h
+        longWindow: 6h
+        severity: critical
+        page: true
+        burnRate: 14.4                 # 2% of monthly budget in 1 hour
+        applicableTo:
+          - tier: critical
+        notifications:
+          - type: pagerduty
+            key: critical-service
+
+      - name: fast-burn-warning
+        description: "Fast error budget burn (exhaustion in < 1 day)"
+        window: 6h
+        longWindow: 24h
+        severity: warning
+        burnRate: 6                    # 5% of monthly budget in 6 hours
+        applicableTo:
+          - tier: critical
+          - tier: high
+
+      - name: moderate-burn
+        description: "Moderate error budget burn (exhaustion in < 1 week)"
+        window: 24h
+        longWindow: 7d
+        severity: info
+        burnRate: 3
+        applicableTo:
+          - tier: critical
+          - tier: high
+          - tier: medium
+
+    # ==========================================
+    # SLO Dashboards
+    # ==========================================
+
+    dashboards:
+      - name: service-slo-overview
+        description: "Overview of all service SLOs"
+        panels:
+          - title: "Error Budget Status"
+            type: gauge
+            query: "slo_error_budget_percentage"
+            thresholds:
+              - value: 0
+                color: red
+              - value: 25
+                color: yellow
+              - value: 50
+                color: green
+
+          - title: "SLO Compliance (30d)"
+            type: table
+            columns:
+              - service
+              - sli_type
+              - target
+              - current
+              - status
+              - error_budget_remaining
+
+          - title: "Error Budget Burn Rate"
+            type: graph
+            query: "rate(slo_error_budget_consumed[1h])"
+
+      - name: service-detail-dashboard
+        description: "Detailed SLO dashboard per service"
+        panels:
+          - title: "Availability Over Time"
+            type: graph
+            query: |
+              sum(rate(http_requests_total{status!~"5.."}[5m]))
+              /
+              sum(rate(http_requests_total[5m]))
+
+          - title: "Latency Percentiles"
+            type: graph
+            queries:
+              - label: "p50"
+                query: "histogram_quantile(0.50, ...)"
+              - label: "p95"
+                query: "histogram_quantile(0.95, ...)"
+              - label: "p99"
+                query: "histogram_quantile(0.99, ...)"
+
+          - title: "Error Budget Timeline"
+            type: graph
+            query: "slo_error_budget_remaining"
+
+          - title: "Burn Rate (Multiple Windows)"
+            type: graph
+            queries:
+              - label: "1h"
+                query: "rate(slo_errors[1h])"
+              - label: "6h"
+                query: "rate(slo_errors[6h])"
+              - label: "24h"
+                query: "rate(slo_errors[24h])"
+
+    # ==========================================
+    # SLO Reporting
+    # ==========================================
+
+    reporting:
+      schedule:
+        daily:
+          time: "09:00"
+          timezone: "America/New_York"
+          recipients:
+            - "#daily-slo-report"
+          include:
+            - error_budget_status
+            - slo_violations_last_24h
+            - services_at_risk
+
+        weekly:
+          day: "monday"
+          time: "09:00"
+          timezone: "America/New_York"
+          recipients:
+            - "engineering-leadership@company.com"
+          include:
+            - error_budget_status
+            - weekly_slo_summary
+            - trends
+            - recommendations
+
+        monthly:
+          day: 1
+          time: "09:00"
+          timezone: "America/New_York"
+          recipients:
+            - "engineering@company.com"
+            - "leadership@company.com"
+          include:
+            - monthly_summary
+            - error_budget_analysis
+            - slo_adjustments_needed
+            - improvement_recommendations
+
+      metrics:
+        - name: slo_compliance_percentage
+          description: "Percentage of time within SLO target"
+        - name: error_budget_remaining
+          description: "Remaining error budget"
+        - name: mttr
+          description: "Mean time to recovery from SLO violations"
+        - name: violation_count
+          description: "Number of SLO violations"
+
+---
+# Prometheus Recording Rules for SLO Calculation
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slo-recording-rules
+  namespace: monitoring
+data:
+  slo-rules.yaml: |
+    groups:
+      - name: slo_recording_rules
+        interval: 30s
+        rules:
+          # Availability SLI
+          - record: sli:availability:ratio
+            expr: |
+              sum(rate(http_requests_total{status!~"5.."}[5m])) by (service)
+              /
+              sum(rate(http_requests_total[5m])) by (service)
+
+          # Latency SLI (P95 < 500ms)
+          - record: sli:latency:good_requests_ratio
+            expr: |
+              sum(rate(http_request_duration_seconds_bucket{le="0.5"}[5m])) by (service)
+              /
+              sum(rate(http_request_duration_seconds_count[5m])) by (service)
+
+          # Error budget remaining (30 day window)
+          - record: slo:error_budget:remaining:30d
+            expr: |
+              1 - (
+                (1 - sli:availability:ratio)
+                /
+                (1 - 0.999)  # SLO target
+              )
+
+          # Error budget burn rate (1h window)
+          - record: slo:error_budget:burn_rate:1h
+            expr: |
+              (1 - sli:availability:ratio)
+              /
+              (1 - 0.999) / (30 * 24)  # Hourly budget from 30-day budget
+
+---
+# Example: Using SLO metrics in alerts
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slo-alerts
+  namespace: monitoring
+data:
+  slo-alerts.yaml: |
+    groups:
+      - name: slo_alerts
+        interval: 30s
+        rules:
+          - alert: ErrorBudgetExhausted
+            expr: slo:error_budget:remaining:30d <= 0
+            for: 5m
+            labels:
+              severity: critical
+              slo: "true"
+            annotations:
+              summary: "Error budget exhausted for {{ $labels.service }}"
+              description: "Service {{ $labels.service }} has consumed its entire error budget"
+              action: "Implement deployment freeze and focus on reliability"
+
+          - alert: HighErrorBudgetBurnRate
+            expr: slo:error_budget:burn_rate:1h > 14.4
+            for: 2m
+            labels:
+              severity: critical
+              slo: "true"
+            annotations:
+              summary: "Critical error budget burn rate for {{ $labels.service }}"
+              description: "At current rate, error budget will be exhausted in < 2 hours"
+              action: "Immediate investigation required"
+
+          - alert: SLOViolation
+            expr: sli:availability:ratio < 0.999
+            for: 10m
+            labels:
+              severity: warning
+              slo: "true"
+            annotations:
+              summary: "SLO violation for {{ $labels.service }}"
+              description: "Availability {{ $value }} is below SLO target 99.9%"

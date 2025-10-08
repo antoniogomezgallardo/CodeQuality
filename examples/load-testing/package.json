@@ -1,0 +1,75 @@
+{
+  "name": "load-testing-examples",
+  "version": "1.0.0",
+  "description": "Production-ready load testing examples using k6, JMeter, Artillery, and Gatling",
+  "main": "performance-helpers.js",
+  "scripts": {
+    "test:k6": "k6 run k6-load-test.js",
+    "test:k6:load": "k6 run --env SCENARIO=load k6-load-test.js",
+    "test:k6:stress": "k6 run --env SCENARIO=stress k6-load-test.js",
+    "test:k6:spike": "k6 run --env SCENARIO=spike k6-load-test.js",
+    "test:k6:soak": "k6 run --env SCENARIO=soak k6-load-test.js",
+    "test:k6:smoke": "k6 run --env SCENARIO=smoke k6-load-test.js",
+    "test:k6:cloud": "k6 cloud k6-load-test.js",
+    "test:k6:custom": "k6 run --vus 100 --duration 5m k6-load-test.js",
+    "test:artillery": "artillery run artillery-config.yml",
+    "test:artillery:quick": "artillery quick --count 10 --num 100 https://api.example.com",
+    "test:artillery:report": "artillery run --output results/artillery-results.json artillery-config.yml && artillery report results/artillery-results.json",
+    "test:jmeter": "jmeter -n -t jmeter-test-plan.jmx -l results/jmeter-results.jtl -e -o results/jmeter-report",
+    "test:jmeter:gui": "jmeter -t jmeter-test-plan.jmx",
+    "test:jmeter:custom": "jmeter -n -t jmeter-test-plan.jmx -Jusers=100 -Jrampup=300 -Jduration=600 -l results/jmeter-results.jtl",
+    "test:gatling": "cd ../.. && ./gatling.sh -s LoadTestingSimulation",
+    "test:gatling:smoke": "cd ../.. && ./gatling.sh -s SmokeTestSimulation",
+    "test:gatling:capacity": "cd ../.. && ./gatling.sh -s CapacityTestSimulation",
+    "test:all": "npm run test:k6 && npm run test:artillery",
+    "setup:data": "node scripts/generate-test-data.js",
+    "clean": "rm -rf results/* || true",
+    "report:summary": "node scripts/generate-summary-report.js",
+    "analyze:results": "node scripts/analyze-results.js"
+  },
+  "keywords": [
+    "load-testing",
+    "performance-testing",
+    "k6",
+    "jmeter",
+    "artillery",
+    "gatling",
+    "stress-testing",
+    "sla-validation",
+    "performance-metrics"
+  ],
+  "author": "Your Organization",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.1"
+  },
+  "dependencies": {
+    "artillery": "^2.0.0",
+    "csv-parser": "^3.0.0",
+    "papaparse": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/load-testing-examples.git"
+  },
+  "config": {
+    "k6": {
+      "version": "0.48.0"
+    },
+    "jmeter": {
+      "version": "5.6.3"
+    },
+    "artillery": {
+      "version": "2.0.0"
+    },
+    "gatling": {
+      "version": "3.10.3"
+    }
+  }
+}
