@@ -272,7 +272,9 @@ Each module has designated maintainers responsible for:
 | 08-cicd-pipeline | Automation | TBD |
 | 09-metrics-monitoring | Measurements | TBD |
 | 10-tools-ecosystem | Toolchain | TBD |
+| 10-deployment | Deployment Strategies | TBD |
 | 11-governance | Quality Gates | TBD |
+| 11-incident-management | Incident Response | TBD |
 | 12-continuous-improvement | Kaizen | TBD |
 
 ## Getting Help

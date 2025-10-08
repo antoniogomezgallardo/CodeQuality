@@ -44,9 +44,11 @@ graph LR
 - **[08 - CI/CD Pipeline](docs/08-cicd-pipeline/README.md)** - Build, test, deploy automation
 - **[09 - Metrics & Monitoring](docs/09-metrics-monitoring/README.md)** - DORA metrics, dashboards
 - **[10 - Tools Ecosystem](docs/10-tools-ecosystem/README.md)** - Tool selection and integration
+- **[10 - Deployment](docs/10-deployment/README.md)** - Blue-green, canary, rolling deployments
 
 ### Governance Layer
 - **[11 - Governance](docs/11-governance/README.md)** - Quality gates, compliance, risk management
+- **[11 - Incident Management](docs/11-incident-management/README.md)** - Incident response, runbooks, postmortems
 - **[12 - Continuous Improvement](docs/12-continuous-improvement/README.md)** - Retrospectives, Kaizen
 
 ## 📊 Key Metrics Overview
@@ -71,10 +73,8 @@ graph LR
 
 ### Templates
 - [User Story Template](templates/user-story.md)
-- [Test Plan (IEEE 829)](templates/test-plan-ieee829.md)
 - [Code Review Checklist](templates/code-review-checklist.md)
 - [Definition of Done](templates/definition-of-done.md)
-- [Pipeline Configuration](templates/pipeline-template.yaml)
 
 ### Examples
 - [Unit Test Examples](examples/unit-tests/) - Jest, Vitest, mutation testing
@@ -89,11 +89,12 @@ graph LR
 - [Monitoring Configs](examples/monitoring-configs/) - Prometheus, Grafana, alerting
 
 ## 📚 Resources
-- [Glossary](resources/glossary.md) - Technical terms explained
-- [Acronyms](resources/acronyms.md) - Common abbreviations
-- [Recommended Books](resources/recommended-books.md) - Essential reading
-- [Online Courses](resources/online-courses.md) - Learning platforms
-- [Certifications](resources/certifications.md) - Professional credentials
+Additional resources are planned for future releases, including:
+- Glossary - Technical terms explained
+- Acronyms - Common abbreviations
+- Recommended Books - Essential reading
+- Online Courses - Learning platforms
+- Certifications - Professional credentials
 
 ## 🎯 Quick Start Guide
 

@@ -63,6 +63,12 @@ examples/
 ├── version-control/         # TBD, GitHub Flow, GitLab Flow pipelines with feature flags
 ├── ci-pipelines/           # GitHub Actions, GitLab CI, Jenkins configs
 └── monitoring-configs/     # Prometheus, Grafana, alerting setups
+
+Planned future additions:
+├── api-testing/            # Supertest, REST Assured examples
+├── visual-testing/         # Percy, Chromatic, BackstopJS examples
+├── load-testing/           # k6, JMeter scripts
+└── deployment/             # Blue-green, canary deployment scripts
 ```
 
 ## Version Control & CI/CD Methodologies
