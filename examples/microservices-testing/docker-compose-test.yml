@@ -1,0 +1,411 @@
+version: '3.8'
+
+# Docker Compose configuration for microservices testing environment
+# This sets up all required services for integration and event-driven testing
+#
+# Usage:
+#   Start services:    docker-compose -f docker-compose-test.yml up -d
+#   Stop services:     docker-compose -f docker-compose-test.yml down
+#   View logs:         docker-compose -f docker-compose-test.yml logs -f
+#   Restart service:   docker-compose -f docker-compose-test.yml restart <service>
+
+services:
+  # ==========================================
+  # Application Services
+  # ==========================================
+
+  order-service:
+    build:
+      context: ./services/order-service
+      dockerfile: Dockerfile
+    container_name: test-order-service
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - DATABASE_URL=postgresql://test:test@postgres:5432/orders_test
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - PAYMENT_SERVICE_URL=http://payment-service:3000
+      - INVENTORY_SERVICE_URL=http://inventory-service:3000
+      - LOG_LEVEL=debug
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: test-payment-service
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - DATABASE_URL=postgresql://test:test@postgres:5432/payments_test
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - STRIPE_API_KEY=${STRIPE_TEST_KEY:-test_key}
+      - LOG_LEVEL=debug
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  inventory-service:
+    build:
+      context: ./services/inventory-service
+      dockerfile: Dockerfile
+    container_name: test-inventory-service
+    ports:
+      - "3003:3000"
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - DATABASE_URL=postgresql://test:test@postgres:5432/inventory_test
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=debug
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: test-notification-service
+    ports:
+      - "3004:3000"
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - DATABASE_URL=postgresql://test:test@postgres:5432/notifications_test
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - LOG_LEVEL=debug
+    depends_on:
+      - postgres
+      - rabbitmq
+      - mailhog
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ==========================================
+  # Infrastructure Services
+  # ==========================================
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: test-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_MULTIPLE_DATABASES=orders_test,payments_test,inventory_test,notifications_test
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/create-multiple-databases.sh:/docker-entrypoint-initdb.d/create-multiple-databases.sh
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: test-rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_VHOST=/
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: test-kafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: test-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # Testing & Monitoring Tools
+  # ==========================================
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: test-mailhog
+    ports:
+      - "1025:1025" # SMTP server
+      - "8025:8025" # Web UI
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8025"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  pact-broker:
+    image: pactfoundation/pact-broker:latest
+    container_name: test-pact-broker
+    ports:
+      - "9292:9292"
+    environment:
+      - PACT_BROKER_DATABASE_URL=postgresql://test:test@postgres:5432/pact_broker
+      - PACT_BROKER_BASIC_AUTH_USERNAME=pact
+      - PACT_BROKER_BASIC_AUTH_PASSWORD=pact
+      - PACT_BROKER_ALLOW_PUBLIC_READ=true
+    depends_on:
+      - postgres
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9292/diagnostic/status/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: test-prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: test-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: test-jaeger
+    ports:
+      - "5775:5775/udp"   # Accept zipkin.thrift over compact thrift protocol
+      - "6831:6831/udp"   # Accept jaeger.thrift over compact thrift protocol
+      - "6832:6832/udp"   # Accept jaeger.thrift over binary thrift protocol
+      - "5778:5778"       # Serve configs
+      - "16686:16686"     # Serve frontend
+      - "14268:14268"     # Accept jaeger.thrift directly from clients
+      - "14250:14250"     # Accept model.proto
+      - "9411:9411"       # Zipkin compatible endpoint
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:14269"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+# ==========================================
+# Networks
+# ==========================================
+
+networks:
+  test-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# ==========================================
+# Volumes
+# ==========================================
+
+volumes:
+  postgres-data:
+    driver: local
+  rabbitmq-data:
+    driver: local
+  kafka-data:
+    driver: local
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+# ==========================================
+# Usage Examples
+# ==========================================
+
+# Start all services:
+#   docker-compose -f docker-compose-test.yml up -d
+
+# Start specific services:
+#   docker-compose -f docker-compose-test.yml up -d postgres rabbitmq redis
+
+# View logs for a service:
+#   docker-compose -f docker-compose-test.yml logs -f order-service
+
+# Scale a service:
+#   docker-compose -f docker-compose-test.yml up -d --scale order-service=3
+
+# Run tests:
+#   docker-compose -f docker-compose-test.yml exec order-service npm test
+
+# Access service shell:
+#   docker-compose -f docker-compose-test.yml exec order-service sh
+
+# Stop all services:
+#   docker-compose -f docker-compose-test.yml down
+
+# Stop and remove volumes:
+#   docker-compose -f docker-compose-test.yml down -v
+
+# ==========================================
+# Service URLs
+# ==========================================
+
+# Application Services:
+#   Order Service:         http://localhost:3001
+#   Payment Service:       http://localhost:3002
+#   Inventory Service:     http://localhost:3003
+#   Notification Service:  http://localhost:3004
+
+# Infrastructure:
+#   PostgreSQL:            localhost:5432
+#   RabbitMQ:              localhost:5672
+#   RabbitMQ Management:   http://localhost:15672 (guest/guest)
+#   Kafka:                 localhost:9092
+#   Redis:                 localhost:6379
+
+# Tools:
+#   MailHog UI:            http://localhost:8025
+#   Pact Broker:           http://localhost:9292 (pact/pact)
+#   Prometheus:            http://localhost:9090
+#   Grafana:               http://localhost:3000 (admin/admin)
+#   Jaeger UI:             http://localhost:16686
+
+# ==========================================
+# Health Checks
+# ==========================================
+
+# Check all services health:
+#   docker-compose -f docker-compose-test.yml ps
+
+# Check specific service health:
+#   curl http://localhost:3001/health

@@ -1,0 +1,395 @@
+{
+  "id": "visual_regression_testing",
+  "viewports": [
+    {
+      "label": "phone",
+      "width": 375,
+      "height": 667
+    },
+    {
+      "label": "tablet",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "label": "desktop",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "label": "wide",
+      "width": 2560,
+      "height": 1440
+    }
+  ],
+  "onBeforeScript": "puppet/onBefore.js",
+  "onReadyScript": "puppet/onReady.js",
+  "scenarios": [
+    {
+      "label": "Homepage - Default State",
+      "url": "http://localhost:3000",
+      "referenceUrl": "",
+      "readyEvent": "",
+      "readySelector": "",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='timestamp']",
+        ".advertisement",
+        ".cookie-notice"
+      ],
+      "removeSelectors": [],
+      "hoverSelector": "",
+      "clickSelector": "",
+      "postInteractionWait": 0,
+      "selectors": ["document"],
+      "selectorExpansion": true,
+      "expect": 0,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Homepage - Navigation Open",
+      "url": "http://localhost:3000",
+      "delay": 500,
+      "clickSelector": "[data-testid='menu-toggle']",
+      "postInteractionWait": 500,
+      "hideSelectors": [
+        "[data-testid='timestamp']",
+        ".advertisement"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Homepage - Dark Mode",
+      "url": "http://localhost:3000",
+      "delay": 500,
+      "clickSelector": "[data-testid='theme-toggle']",
+      "postInteractionWait": 1000,
+      "hideSelectors": [
+        "[data-testid='timestamp']"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Login Page - Empty Form",
+      "url": "http://localhost:3000/login",
+      "delay": 500,
+      "hideSelectors": [
+        ".captcha",
+        "[data-testid='timestamp']"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Login Page - Validation Errors",
+      "url": "http://localhost:3000/login",
+      "delay": 500,
+      "clickSelector": "[data-testid='submit-button']",
+      "postInteractionWait": 1000,
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Product Listing - Grid Layout",
+      "url": "http://localhost:3000/products",
+      "delay": 2000,
+      "hideSelectors": [
+        ".promotional-banner",
+        "[data-testid='live-price']"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Product Detail - Component Focus",
+      "url": "http://localhost:3000/products/123",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='view-count']",
+        ".related-products"
+      ],
+      "selectors": [
+        "[data-testid='product-details']",
+        "[data-testid='product-images']",
+        "[data-testid='add-to-cart']"
+      ],
+      "selectorExpansion": true,
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Shopping Cart - Empty State",
+      "url": "http://localhost:3000/cart?empty=true",
+      "delay": 500,
+      "selectors": ["[data-testid='cart-container']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Shopping Cart - With Items",
+      "url": "http://localhost:3000/cart",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='estimated-delivery']",
+        "[data-testid='live-price']"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Checkout - Step 1 Shipping",
+      "url": "http://localhost:3000/checkout/shipping",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='order-summary-price']"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Checkout - Step 2 Payment",
+      "url": "http://localhost:3000/checkout/payment",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='order-summary-price']",
+        ".payment-provider-logo"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "User Profile - Overview Tab",
+      "url": "http://localhost:3000/profile",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='last-login']",
+        "[data-testid='member-since']"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "User Profile - Settings Tab",
+      "url": "http://localhost:3000/profile",
+      "delay": 500,
+      "clickSelector": "[data-testid='settings-tab']",
+      "postInteractionWait": 500,
+      "selectors": ["[data-testid='profile-content']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Dashboard - Main View",
+      "url": "http://localhost:3000/dashboard",
+      "delay": 2000,
+      "hideSelectors": [
+        "[data-testid='current-time']",
+        "[data-testid='live-stats']",
+        ".real-time-chart"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.15,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Search Results - With Results",
+      "url": "http://localhost:3000/search?q=laptop",
+      "delay": 1500,
+      "hideSelectors": [
+        "[data-testid='search-timestamp']",
+        ".sponsored-result"
+      ],
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Search Results - No Results",
+      "url": "http://localhost:3000/search?q=xyzabc123notfound",
+      "delay": 1000,
+      "selectors": ["[data-testid='search-results-container']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "404 Error Page",
+      "url": "http://localhost:3000/non-existent-page",
+      "delay": 500,
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Modal Dialog - Open",
+      "url": "http://localhost:3000",
+      "delay": 500,
+      "clickSelector": "[data-testid='open-modal']",
+      "postInteractionWait": 500,
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Dropdown Menu - Expanded",
+      "url": "http://localhost:3000",
+      "delay": 500,
+      "hoverSelector": "[data-testid='dropdown-trigger']",
+      "postInteractionWait": 300,
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Form - Focus State",
+      "url": "http://localhost:3000/contact",
+      "delay": 500,
+      "clickSelector": "[data-testid='email-input']",
+      "postInteractionWait": 200,
+      "selectors": ["[data-testid='contact-form']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Accordion - First Item Expanded",
+      "url": "http://localhost:3000/faq",
+      "delay": 500,
+      "clickSelector": "[data-testid='accordion-item-1']",
+      "postInteractionWait": 500,
+      "selectors": ["[data-testid='faq-accordion']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Image Gallery - Lightbox Open",
+      "url": "http://localhost:3000/gallery",
+      "delay": 1000,
+      "clickSelector": "[data-testid='gallery-image-1']",
+      "postInteractionWait": 500,
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Blog Post - Long Content Scroll",
+      "url": "http://localhost:3000/blog/sample-post",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='publish-date']",
+        ".comments-section",
+        ".related-posts"
+      ],
+      "scrollToSelector": "[data-testid='article-conclusion']",
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Component Library - Button Showcase",
+      "url": "http://localhost:3000/components/buttons",
+      "delay": 1000,
+      "selectors": ["[data-testid='button-showcase']"],
+      "misMatchThreshold": 0.05,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Component Library - Form Controls",
+      "url": "http://localhost:3000/components/forms",
+      "delay": 1000,
+      "selectors": ["[data-testid='form-showcase']"],
+      "misMatchThreshold": 0.05
+    },
+    {
+      "label": "Responsive Table - Desktop",
+      "url": "http://localhost:3000/data-table",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='last-updated']"
+      ],
+      "selectors": ["[data-testid='data-table']"],
+      "misMatchThreshold": 0.1,
+      "onlyViewports": ["desktop", "wide"]
+    },
+    {
+      "label": "Responsive Table - Mobile Cards",
+      "url": "http://localhost:3000/data-table",
+      "delay": 1000,
+      "hideSelectors": [
+        "[data-testid='last-updated']"
+      ],
+      "selectors": ["[data-testid='data-table']"],
+      "misMatchThreshold": 0.1,
+      "onlyViewports": ["phone"]
+    },
+    {
+      "label": "Loading State - Skeleton Screen",
+      "url": "http://localhost:3000/slow-page",
+      "delay": 100,
+      "selectors": ["document"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Notification Toast - Success",
+      "url": "http://localhost:3000/notifications-demo?type=success",
+      "delay": 500,
+      "selectors": ["[data-testid='toast-container']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Notification Toast - Error",
+      "url": "http://localhost:3000/notifications-demo?type=error",
+      "delay": 500,
+      "selectors": ["[data-testid='toast-container']"],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Multi-step Form - Progress Indicator",
+      "url": "http://localhost:3000/wizard",
+      "delay": 500,
+      "selectors": [
+        "[data-testid='progress-bar']",
+        "[data-testid='wizard-content']"
+      ],
+      "selectorExpansion": true,
+      "misMatchThreshold": 0.1
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "backstop_data/bitmaps_reference",
+    "bitmaps_test": "backstop_data/bitmaps_test",
+    "engine_scripts": "backstop_data/engine_scripts",
+    "html_report": "backstop_data/html_report",
+    "ci_report": "backstop_data/ci_report"
+  },
+  "report": ["browser", "CI"],
+  "engine": "puppeteer",
+  "engineOptions": {
+    "args": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--disable-gpu"
+    ],
+    "headless": true,
+    "ignoreHTTPSErrors": true,
+    "defaultViewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "asyncCaptureLimit": 5,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false,
+  "resembleOutputOptions": {
+    "errorColor": {
+      "red": 255,
+      "green": 0,
+      "blue": 0
+    },
+    "errorType": "movement",
+    "transparency": 0.3,
+    "ignoreAntialiasing": true,
+    "ignoreColors": false,
+    "scaleToSameSize": false
+  },
+  "fileNameTemplate": "{scenarioLabel}_{selectorIndex}_{selectorLabel}_{viewportIndex}_{viewportLabel}",
+  "dynamicTestSampling": false,
+  "CI": {
+    "testSuiteName": "Visual Regression Tests",
+    "testReportFileName": "xunit",
+    "format": "junit"
+  }
+}

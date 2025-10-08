@@ -1,0 +1,58 @@
+# Load Testing Results and Reports
+results/
+*.jtl
+*.log
+summary.html
+summary.json
+report/
+*.json.gz
+
+# JMeter
+jmeter.log
+jmeter-server.log
+
+# k6
+k6-results.json
+*.har
+
+# Artillery
+artillery-results.json
+
+# Gatling
+target/
+.gatling/
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Archives
+*.zip
+*.tar.gz
+*.tgz

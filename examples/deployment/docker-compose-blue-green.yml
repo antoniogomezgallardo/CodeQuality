@@ -1,0 +1,510 @@
+# Docker Compose Blue-Green Deployment Configuration
+#
+# This configuration implements Blue-Green deployment using Docker Compose with:
+# - Separate blue and green services
+# - Nginx load balancer for traffic switching
+# - Health check endpoints
+# - Service switching scripts
+# - Shared database and cache services
+# - Volume persistence
+#
+# This setup is ideal for:
+# - Local development and testing
+# - Small production deployments
+# - CI/CD pipeline testing
+# - Learning blue-green deployment concepts
+#
+# Usage:
+#   1. Start blue environment:
+#      docker-compose -f docker-compose-blue-green.yml up -d blue-app nginx postgres redis
+#
+#   2. Verify blue is running:
+#      curl http://localhost/health
+#
+#   3. Start green environment with new version:
+#      docker-compose -f docker-compose-blue-green.yml up -d green-app
+#
+#   4. Test green environment:
+#      curl http://localhost:8081/health
+#
+#   5. Switch traffic to green:
+#      docker-compose -f docker-compose-blue-green.yml exec nginx /switch-to-green.sh
+#
+#   6. Rollback to blue if needed:
+#      docker-compose -f docker-compose-blue-green.yml exec nginx /switch-to-blue.sh
+#
+#   7. Stop old environment:
+#      docker-compose -f docker-compose-blue-green.yml stop blue-app
+
+version: '3.8'
+
+services:
+  # ========================================
+  # BLUE ENVIRONMENT (Current/Stable)
+  # ========================================
+  blue-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: v1.0.0
+    image: myapp:v1.0.0
+    container_name: myapp-blue
+    environment:
+      - NODE_ENV=production
+      - VERSION=v1.0.0
+      - ENVIRONMENT=blue
+      - PORT=8080
+      - DATABASE_URL=postgresql://user:password@postgres:5432/myapp
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=info
+    ports:
+      - "8080:8080"  # Direct access for testing
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "app=myapp"
+      - "version=blue"
+      - "environment=production"
+
+  # ========================================
+  # GREEN ENVIRONMENT (New/Testing)
+  # ========================================
+  green-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: v2.0.0
+    image: myapp:v2.0.0
+    container_name: myapp-green
+    environment:
+      - NODE_ENV=production
+      - VERSION=v2.0.0
+      - ENVIRONMENT=green
+      - PORT=8080
+      - DATABASE_URL=postgresql://user:password@postgres:5432/myapp
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=info
+    ports:
+      - "8081:8080"  # Direct access for testing
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "app=myapp"
+      - "version=green"
+      - "environment=production"
+    # Green starts in scaled down mode
+    # profiles:
+    #   - green
+
+  # ========================================
+  # NGINX LOAD BALANCER
+  # ========================================
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx-lb
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/scripts:/scripts:ro
+      - nginx-logs:/var/log/nginx
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - blue-app
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    command: ["/bin/sh", "-c", "chmod +x /scripts/*.sh && nginx -g 'daemon off;'"]
+    labels:
+      - "app=nginx"
+      - "role=load-balancer"
+
+  # ========================================
+  # POSTGRESQL DATABASE (Shared)
+  # ========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      - POSTGRES_DB=myapp
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_INITDB_ARGS=--encoding=UTF8
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d myapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    labels:
+      - "app=postgres"
+      - "role=database"
+
+  # ========================================
+  # REDIS CACHE (Shared)
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redispassword
+    labels:
+      - "app=redis"
+      - "role=cache"
+
+  # ========================================
+  # MONITORING - PROMETHEUS
+  # ========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    restart: unless-stopped
+    labels:
+      - "app=prometheus"
+      - "role=monitoring"
+
+  # ========================================
+  # MONITORING - GRAFANA
+  # ========================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    labels:
+      - "app=grafana"
+      - "role=monitoring"
+
+  # ========================================
+  # DEPLOYMENT AUTOMATION TOOL
+  # ========================================
+  deployment-controller:
+    build:
+      context: ./deployment-controller
+      dockerfile: Dockerfile
+    container_name: deployment-controller
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - BLUE_SERVICE=blue-app
+      - GREEN_SERVICE=green-app
+      - NGINX_SERVICE=nginx
+    networks:
+      - app-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./deployment-controller:/app:ro
+    depends_on:
+      - nginx
+    restart: "no"
+    labels:
+      - "app=deployment-controller"
+      - "role=automation"
+
+# ========================================
+# NETWORKS
+# ========================================
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ========================================
+# VOLUMES
+# ========================================
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  nginx-logs:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+# ========================================
+# NGINX CONFIGURATION FILES
+# ========================================
+# Create nginx/nginx.conf:
+---
+# nginx/nginx.conf content would be:
+#
+# user nginx;
+# worker_processes auto;
+# error_log /var/log/nginx/error.log warn;
+# pid /var/run/nginx.pid;
+#
+# events {
+#     worker_connections 1024;
+# }
+#
+# http {
+#     include /etc/nginx/mime.types;
+#     default_type application/octet-stream;
+#
+#     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+#                     '$status $body_bytes_sent "$http_referer" '
+#                     '"$http_user_agent" "$http_x_forwarded_for" '
+#                     'upstream: $upstream_addr';
+#
+#     access_log /var/log/nginx/access.log main;
+#
+#     sendfile on;
+#     tcp_nopush on;
+#     tcp_nodelay on;
+#     keepalive_timeout 65;
+#     types_hash_max_size 2048;
+#
+#     gzip on;
+#     gzip_vary on;
+#     gzip_min_length 1024;
+#     gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+#
+#     include /etc/nginx/conf.d/*.conf;
+# }
+
+# ========================================
+# NGINX UPSTREAM CONFIGURATION
+# ========================================
+# Create nginx/conf.d/upstream.conf:
+#
+# upstream backend {
+#     # Initially point to blue
+#     server blue-app:8080 max_fails=3 fail_timeout=30s;
+#
+#     # Health check
+#     keepalive 32;
+# }
+#
+# server {
+#     listen 80;
+#     server_name localhost;
+#
+#     location / {
+#         proxy_pass http://backend;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#
+#         # Health check
+#         proxy_next_upstream error timeout http_502 http_503 http_504;
+#         proxy_connect_timeout 5s;
+#         proxy_send_timeout 60s;
+#         proxy_read_timeout 60s;
+#     }
+#
+#     location /health {
+#         proxy_pass http://backend/health;
+#         access_log off;
+#     }
+#
+#     # Blue testing endpoint
+#     location /test/blue {
+#         proxy_pass http://blue-app:8080/health;
+#     }
+#
+#     # Green testing endpoint
+#     location /test/green {
+#         proxy_pass http://green-app:8080/health;
+#     }
+# }
+
+# ========================================
+# SWITCHING SCRIPTS
+# ========================================
+# Create nginx/scripts/switch-to-green.sh:
+#
+# #!/bin/sh
+# set -e
+#
+# echo "Switching traffic to GREEN environment..."
+#
+# # Update upstream configuration
+# cat > /etc/nginx/conf.d/upstream.conf <<EOF
+# upstream backend {
+#     server green-app:8080 max_fails=3 fail_timeout=30s;
+#     keepalive 32;
+# }
+# EOF
+#
+# # Test configuration
+# nginx -t
+#
+# # Reload Nginx
+# nginx -s reload
+#
+# echo "Traffic switched to GREEN"
+# echo "BLUE environment is now standby"
+
+# Create nginx/scripts/switch-to-blue.sh:
+#
+# #!/bin/sh
+# set -e
+#
+# echo "Switching traffic to BLUE environment (ROLLBACK)..."
+#
+# # Update upstream configuration
+# cat > /etc/nginx/conf.d/upstream.conf <<EOF
+# upstream backend {
+#     server blue-app:8080 max_fails=3 fail_timeout=30s;
+#     keepalive 32;
+# }
+# EOF
+#
+# # Test configuration
+# nginx -t
+#
+# # Reload Nginx
+# nginx -s reload
+#
+# echo "Traffic switched to BLUE"
+# echo "Rollback complete"
+
+# ========================================
+# DEPLOYMENT AUTOMATION SCRIPT
+# ========================================
+# Create deploy.sh:
+#
+# #!/bin/bash
+# set -e
+#
+# VERSION=$1
+# TARGET_ENV=${2:-green}  # Default to green
+#
+# if [ -z "$VERSION" ]; then
+#   echo "Usage: ./deploy.sh <version> [blue|green]"
+#   exit 1
+# fi
+#
+# echo "=== Blue-Green Deployment ==="
+# echo "Version: $VERSION"
+# echo "Target environment: $TARGET_ENV"
+#
+# # Build new version
+# echo "Building version $VERSION..."
+# docker-compose -f docker-compose-blue-green.yml build ${TARGET_ENV}-app
+#
+# # Start target environment
+# echo "Starting ${TARGET_ENV} environment..."
+# docker-compose -f docker-compose-blue-green.yml up -d ${TARGET_ENV}-app
+#
+# # Wait for health checks
+# echo "Waiting for ${TARGET_ENV} to be healthy..."
+# sleep 10
+#
+# # Health check
+# HEALTH_URL="http://localhost:808$([[ "$TARGET_ENV" == "green" ]] && echo 1 || echo 0)/health"
+# for i in {1..30}; do
+#   if curl -f "$HEALTH_URL" > /dev/null 2>&1; then
+#     echo "${TARGET_ENV} is healthy"
+#     break
+#   fi
+#   if [ $i -eq 30 ]; then
+#     echo "ERROR: ${TARGET_ENV} failed health check"
+#     exit 1
+#   fi
+#   sleep 2
+# done
+#
+# # Switch traffic
+# echo "Switching traffic to ${TARGET_ENV}..."
+# docker-compose -f docker-compose-blue-green.yml exec -T nginx /scripts/switch-to-${TARGET_ENV}.sh
+#
+# echo "=== Deployment Complete ==="
+# echo "Traffic is now on ${TARGET_ENV} environment"
+# echo ""
+# echo "To rollback, run:"
+# if [ "$TARGET_ENV" == "green" ]; then
+#   echo "  docker-compose -f docker-compose-blue-green.yml exec nginx /scripts/switch-to-blue.sh"
+# else
+#   echo "  docker-compose -f docker-compose-blue-green.yml exec nginx /scripts/switch-to-green.sh"
+# fi

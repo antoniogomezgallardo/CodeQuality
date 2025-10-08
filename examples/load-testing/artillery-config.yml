@@ -1,0 +1,472 @@
+# Artillery Load Testing Configuration - Production-Ready Example
+#
+# This configuration demonstrates comprehensive load testing with Artillery including:
+# - Multiple load phases (warm-up, ramp-up, sustained load)
+# - Scenario definitions with weighted user flows
+# - Payload from external data sources
+# - Custom JavaScript functions for dynamic data
+# - Performance expectations and thresholds
+# - Plugin configuration for enhanced reporting
+#
+# Usage:
+#   Basic run:              artillery run artillery-config.yml
+#   Quick test:             artillery quick --count 10 --num 100 https://api.example.com
+#   Custom target:          artillery run -t https://staging.api.com artillery-config.yml
+#   Generate HTML report:   artillery run --output report.json artillery-config.yml && artillery report report.json
+#   With environment:       TARGET=https://prod.api.com artillery run artillery-config.yml
+
+config:
+  # Target server configuration
+  target: "{{ $processEnvironment.TARGET || 'https://api.example.com' }}"
+
+  # Load phases - defines the traffic pattern
+  phases:
+    # Phase 1: Warm-up - gradually introduce load to warm caches
+    - name: "Warm-up Phase"
+      duration: 120  # 2 minutes
+      arrivalRate: 5  # 5 users per second
+      rampTo: 20      # ramp up to 20 users/sec
+
+    # Phase 2: Ramp-up - increase to normal load
+    - name: "Ramp-up Phase"
+      duration: 300  # 5 minutes
+      arrivalRate: 20  # start at 20 users/sec
+      rampTo: 50       # ramp up to 50 users/sec
+
+    # Phase 3: Sustained load - maintain normal traffic
+    - name: "Sustained Load Phase"
+      duration: 600  # 10 minutes
+      arrivalRate: 50  # constant 50 users/sec
+
+    # Phase 4: Peak load - simulate peak traffic
+    - name: "Peak Load Phase"
+      duration: 300  # 5 minutes
+      arrivalRate: 50  # start at 50 users/sec
+      rampTo: 100      # ramp up to 100 users/sec
+
+    # Phase 5: Sustained peak
+    - name: "Sustained Peak Phase"
+      duration: 600  # 10 minutes
+      arrivalRate: 100  # constant 100 users/sec
+
+    # Phase 6: Cool down
+    - name: "Cool Down Phase"
+      duration: 120  # 2 minutes
+      arrivalRate: 100  # start at 100 users/sec
+      rampTo: 10        # ramp down to 10 users/sec
+
+  # HTTP settings
+  http:
+    # Connection timeout (milliseconds)
+    timeout: 30
+
+    # Connection pool settings
+    pool: 50  # max connections per virtual user
+
+    # Enable HTTP/2
+    http2: true
+
+    # Maximum sockets per host
+    maxSockets: 50
+
+  # TLS/SSL settings
+  tls:
+    rejectUnauthorized: false  # Set to true in production
+
+  # Common payload data (CSV files)
+  payload:
+    # Load user credentials from CSV
+    - path: "test-users.csv"
+      fields:
+        - "username"
+        - "password"
+        - "firstName"
+        - "lastName"
+      order: sequence  # or 'random'
+      skipHeader: true
+      cast: true
+
+    # Load product data from CSV
+    - path: "test-products.csv"
+      fields:
+        - "productId"
+        - "productName"
+        - "price"
+      order: random
+      skipHeader: true
+
+  # Global variables
+  variables:
+    baseUrl: "{{ target }}"
+    apiVersion: "v1"
+    contentType: "application/json"
+
+  # Plugin configuration
+  plugins:
+    # Metrics by endpoint plugin
+    metrics-by-endpoint:
+      # Group metrics by endpoint
+      stripQueryString: true
+
+    # Expect plugin for assertions
+    expect: {}
+
+    # Publish metrics plugin (if configured)
+    # publish-metrics:
+    #   - type: "statsd"
+    #     host: "localhost"
+    #     port: 8125
+    #     prefix: "artillery"
+
+  # Default headers for all requests
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+      User-Agent: "Artillery-LoadTest/2.0"
+
+  # Performance expectations (SLA thresholds)
+  ensure:
+    # Overall metrics
+    maxErrorRate: 1  # Less than 1% error rate
+
+    # Response time thresholds (milliseconds)
+    p95: 500   # 95th percentile under 500ms
+    p99: 1000  # 99th percentile under 1000ms
+
+    # Minimum throughput
+    minRate: 100  # At least 100 requests/sec
+
+  # Custom processor for dynamic data generation
+  processor: "./performance-helpers.js"
+
+# Test scenarios - different user behaviors
+scenarios:
+  # Scenario 1: Browser users (60% weight) - just browsing
+  - name: "Browse Products"
+    weight: 60  # 60% of traffic
+    flow:
+      # Visit homepage
+      - get:
+          url: "/"
+          name: "Homepage"
+          beforeRequest: "setCustomHeaders"
+          afterResponse: "validateResponse"
+          expect:
+            - statusCode: 200
+            - contentType: text/html
+            - hasHeader: "cache-control"
+          capture:
+            - json: "$.sessionId"
+              as: "sessionId"
+
+      # Think time - user reads homepage
+      - think:
+          min: 2
+          max: 5
+
+      # View product list
+      - get:
+          url: "/api/products"
+          qs:
+            page: 1
+            limit: 20
+            sort: "popular"
+          name: "Product List"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: "products"
+          capture:
+            - json: "$.products[*].id"
+              as: "productIds"
+              random: true
+
+      # Think time - user reviews products
+      - think:
+          min: 3
+          max: 8
+
+      # View product details
+      - get:
+          url: "/api/products/{{ productIds }}"
+          name: "Product Detail"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: "id"
+            - hasProperty: "price"
+
+      # Think time - user reads product details
+      - think:
+          min: 5
+          max: 15
+
+  # Scenario 2: Shopper users (30% weight) - browse and add to cart
+  - name: "Shopping Journey"
+    weight: 30  # 30% of traffic
+    flow:
+      # Browse products (reuse browser flow)
+      - get:
+          url: "/"
+          name: "Homepage"
+
+      - think: { min: 2, max: 5 }
+
+      - get:
+          url: "/api/products"
+          qs:
+            page: 1
+            limit: 20
+          name: "Product List"
+          capture:
+            - json: "$.products[0].id"
+              as: "productId"
+
+      - think: { min: 3, max: 8 }
+
+      - get:
+          url: "/api/products/{{ productId }}"
+          name: "Product Detail"
+
+      - think: { min: 5, max: 10 }
+
+      # Add item to cart
+      - post:
+          url: "/api/cart/items"
+          name: "Add to Cart"
+          json:
+            productId: "{{ productId }}"
+            quantity: "{{ $randomNumber(1, 3) }}"
+          expect:
+            - statusCode: [200, 201]
+            - hasProperty: "cartId"
+          capture:
+            - json: "$.cartId"
+              as: "cartId"
+
+      - think: { min: 2, max: 5 }
+
+      # View cart
+      - get:
+          url: "/api/cart"
+          name: "View Cart"
+          expect:
+            - statusCode: 200
+            - hasProperty: "items"
+
+      - think: { min: 3, max: 7 }
+
+  # Scenario 3: Buyer users (10% weight) - complete purchase
+  - name: "Purchase Journey"
+    weight: 10  # 10% of traffic
+    flow:
+      # Login
+      - post:
+          url: "/auth/login"
+          name: "Login"
+          json:
+            username: "{{ username }}"
+            password: "{{ password }}"
+          expect:
+            - statusCode: 200
+            - hasProperty: "token"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+
+      - think: { min: 1, max: 3 }
+
+      # Browse products
+      - get:
+          url: "/api/products"
+          name: "Product List"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          capture:
+            - json: "$.products[0].id"
+              as: "product1"
+            - json: "$.products[1].id"
+              as: "product2"
+
+      - think: { min: 2, max: 5 }
+
+      # Add first item
+      - post:
+          url: "/api/cart/items"
+          name: "Add Item 1"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            productId: "{{ product1 }}"
+            quantity: 1
+
+      - think: { min: 1, max: 3 }
+
+      # Add second item
+      - post:
+          url: "/api/cart/items"
+          name: "Add Item 2"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            productId: "{{ product2 }}"
+            quantity: 2
+
+      - think: { min: 2, max: 4 }
+
+      # View cart
+      - get:
+          url: "/api/cart"
+          name: "View Cart"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+
+      - think: { min: 3, max: 5 }
+
+      # Checkout
+      - post:
+          url: "/api/checkout"
+          name: "Checkout"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            paymentMethod: "credit_card"
+            shippingAddress:
+              street: "123 Test St"
+              city: "Test City"
+              zipCode: "12345"
+              country: "US"
+            billingAddress:
+              street: "123 Test St"
+              city: "Test City"
+              zipCode: "12345"
+              country: "US"
+          expect:
+            - statusCode: 201
+            - hasProperty: "orderId"
+            - responseTime: 2000  # Must complete within 2 seconds
+          capture:
+            - json: "$.orderId"
+              as: "orderId"
+
+      - think: { min: 2, max: 5 }
+
+      # View order confirmation
+      - get:
+          url: "/api/orders"
+          name: "Order History"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+            - hasProperty: "orders"
+
+  # Scenario 4: API health checks (continuous monitoring)
+  - name: "Health Check"
+    weight: 5  # 5% of traffic
+    flow:
+      - get:
+          url: "/health"
+          name: "Health Check"
+          expect:
+            - statusCode: 200
+            - responseTime: 100  # Health checks should be fast
+
+  # Scenario 5: Authenticated user actions
+  - name: "Authenticated Actions"
+    weight: 5  # 5% of traffic
+    flow:
+      # Login
+      - post:
+          url: "/auth/login"
+          name: "Login"
+          json:
+            username: "{{ username }}"
+            password: "{{ password }}"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+
+      - think: { min: 1, max: 2 }
+
+      # View profile
+      - get:
+          url: "/api/users/profile"
+          name: "View Profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+
+      - think: { min: 2, max: 4 }
+
+      # Update profile
+      - put:
+          url: "/api/users/profile"
+          name: "Update Profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            firstName: "{{ firstName }}"
+            lastName: "{{ lastName }}"
+            preferences:
+              newsletter: true
+              notifications: true
+          expect:
+            - statusCode: 200
+
+      - think: { min: 1, max: 3 }
+
+      # View order history
+      - get:
+          url: "/api/orders"
+          name: "Order History"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+
+# Alternative configuration for specific test types
+
+# Spike test configuration (uncomment to use)
+# config:
+#   target: "https://api.example.com"
+#   phases:
+#     - name: "Normal Load"
+#       duration: 30
+#       arrivalRate: 50
+#     - name: "Spike!"
+#       duration: 30
+#       arrivalRate: 500  # 10x normal load
+#     - name: "Post-Spike"
+#       duration: 180
+#       arrivalRate: 50
+
+# Stress test configuration (uncomment to use)
+# config:
+#   target: "https://api.example.com"
+#   phases:
+#     - name: "Normal"
+#       duration: 120
+#       arrivalRate: 50
+#     - name: "Stress Level 1"
+#       duration: 120
+#       arrivalRate: 100
+#     - name: "Stress Level 2"
+#       duration: 120
+#       arrivalRate: 200
+#     - name: "Stress Level 3"
+#       duration: 120
+#       arrivalRate: 400
+#     - name: "Breaking Point"
+#       duration: 120
+#       arrivalRate: 800
+
+# Soak test configuration (uncomment to use)
+# config:
+#   target: "https://api.example.com"
+#   phases:
+#     - name: "Soak Test"
+#       duration: 7200  # 2 hours
+#       arrivalRate: 50  # constant moderate load

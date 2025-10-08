@@ -1,0 +1,437 @@
+{
+  "version": "1.0",
+  "organization": "Company Engineering",
+  "lastUpdated": "2024-03-15",
+  "description": "On-call rotation schedule and escalation policies for engineering teams",
+
+  "schedules": [
+    {
+      "id": "primary-oncall",
+      "name": "Primary On-Call",
+      "description": "First responder for all incidents",
+      "timezone": "America/New_York",
+      "type": "weekly",
+      "rotationStart": "2024-01-01T00:00:00Z",
+      "handoffTime": "09:00",
+      "participants": [
+        {
+          "name": "Alice Johnson",
+          "email": "alice.johnson@company.com",
+          "phone": "+1-555-0101",
+          "slack": "@alice",
+          "pagerduty": "alice.johnson",
+          "preferredContact": "slack"
+        },
+        {
+          "name": "Bob Smith",
+          "email": "bob.smith@company.com",
+          "phone": "+1-555-0102",
+          "slack": "@bob",
+          "pagerduty": "bob.smith",
+          "preferredContact": "phone"
+        },
+        {
+          "name": "Carol Williams",
+          "email": "carol.williams@company.com",
+          "phone": "+1-555-0103",
+          "slack": "@carol",
+          "pagerduty": "carol.williams",
+          "preferredContact": "slack"
+        },
+        {
+          "name": "David Chen",
+          "email": "david.chen@company.com",
+          "phone": "+1-555-0104",
+          "slack": "@david",
+          "pagerduty": "david.chen",
+          "preferredContact": "phone"
+        }
+      ],
+      "coverage": {
+        "weekdays": {
+          "start": "00:00",
+          "end": "23:59"
+        },
+        "weekends": {
+          "start": "00:00",
+          "end": "23:59"
+        }
+      }
+    },
+    {
+      "id": "secondary-oncall",
+      "name": "Secondary On-Call (Escalation)",
+      "description": "Escalation path if primary doesn't respond",
+      "timezone": "America/New_York",
+      "type": "weekly",
+      "rotationStart": "2024-01-01T00:00:00Z",
+      "handoffTime": "09:00",
+      "participants": [
+        {
+          "name": "Eve Davis",
+          "email": "eve.davis@company.com",
+          "phone": "+1-555-0105",
+          "slack": "@eve",
+          "pagerduty": "eve.davis",
+          "role": "Senior Engineer",
+          "preferredContact": "phone"
+        },
+        {
+          "name": "Frank Miller",
+          "email": "frank.miller@company.com",
+          "phone": "+1-555-0106",
+          "slack": "@frank",
+          "pagerduty": "frank.miller",
+          "role": "Team Lead",
+          "preferredContact": "phone"
+        }
+      ]
+    },
+    {
+      "id": "manager-oncall",
+      "name": "Manager On-Call",
+      "description": "Manager escalation for critical incidents",
+      "timezone": "America/New_York",
+      "type": "monthly",
+      "rotationStart": "2024-01-01T00:00:00Z",
+      "participants": [
+        {
+          "name": "Grace Taylor",
+          "email": "grace.taylor@company.com",
+          "phone": "+1-555-0201",
+          "slack": "@grace",
+          "role": "Engineering Manager",
+          "preferredContact": "phone"
+        },
+        {
+          "name": "Henry Anderson",
+          "email": "henry.anderson@company.com",
+          "phone": "+1-555-0202",
+          "slack": "@henry",
+          "role": "Engineering Manager",
+          "preferredContact": "phone"
+        }
+      ]
+    }
+  ],
+
+  "escalationPolicies": [
+    {
+      "id": "standard-escalation",
+      "name": "Standard Escalation Policy",
+      "description": "Standard escalation path for all incidents",
+      "rules": [
+        {
+          "level": 1,
+          "schedule": "primary-oncall",
+          "escalationDelay": 5,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["phone", "sms", "push"],
+          "repeatInterval": 2,
+          "repeatIntervalUnit": "minutes",
+          "maxRepeats": 3
+        },
+        {
+          "level": 2,
+          "schedule": "secondary-oncall",
+          "escalationDelay": 15,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["phone", "sms"],
+          "repeatInterval": 2,
+          "repeatIntervalUnit": "minutes",
+          "maxRepeats": 3
+        },
+        {
+          "level": 3,
+          "schedule": "manager-oncall",
+          "escalationDelay": 30,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["phone"],
+          "repeatInterval": 5,
+          "repeatIntervalUnit": "minutes",
+          "maxRepeats": 2
+        }
+      ]
+    },
+    {
+      "id": "critical-escalation",
+      "name": "Critical Incident Escalation",
+      "description": "Immediate escalation for SEV-1 incidents",
+      "rules": [
+        {
+          "level": 1,
+          "schedule": "primary-oncall",
+          "escalationDelay": 0,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["phone", "sms", "push"],
+          "repeatInterval": 1,
+          "repeatIntervalUnit": "minutes",
+          "maxRepeats": 5,
+          "immediate": true
+        },
+        {
+          "level": 2,
+          "schedule": "secondary-oncall",
+          "escalationDelay": 5,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["phone", "sms"],
+          "repeatInterval": 1,
+          "repeatIntervalUnit": "minutes",
+          "maxRepeats": 5,
+          "immediate": true,
+          "parallel": true
+        },
+        {
+          "level": 3,
+          "schedule": "manager-oncall",
+          "escalationDelay": 5,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["phone"],
+          "immediate": true,
+          "parallel": true,
+          "notes": "Manager notified immediately for awareness"
+        }
+      ]
+    },
+    {
+      "id": "business-hours-only",
+      "name": "Business Hours Only",
+      "description": "For non-critical alerts during business hours",
+      "rules": [
+        {
+          "level": 1,
+          "schedule": "primary-oncall",
+          "escalationDelay": 30,
+          "escalationDelayUnit": "minutes",
+          "notificationMethods": ["email", "slack"],
+          "timeRestrictions": {
+            "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+            "startTime": "09:00",
+            "endTime": "17:00",
+            "timezone": "America/New_York"
+          }
+        }
+      ]
+    }
+  ],
+
+  "onCallHandoff": {
+    "process": [
+      "Review active incidents from previous week",
+      "Check for any ongoing issues or concerns",
+      "Review upcoming maintenance windows",
+      "Verify access to all required systems",
+      "Test paging mechanisms",
+      "Acknowledge handoff in Slack channel"
+    ],
+    "checklist": [
+      "PagerDuty app installed and working",
+      "VPN access verified",
+      "AWS console access confirmed",
+      "Kubernetes access confirmed",
+      "Grafana access confirmed",
+      "Slack notifications enabled",
+      "Phone notifications enabled",
+      "Runbooks bookmarked",
+      "Emergency contacts saved"
+    ],
+    "handoffMeeting": {
+      "required": true,
+      "duration": "15 minutes",
+      "participants": ["outgoing on-call", "incoming on-call"],
+      "agenda": [
+        "Review previous week's incidents",
+        "Discuss any ongoing issues",
+        "Review known issues or planned maintenance",
+        "Answer questions",
+        "Official handoff acknowledgment"
+      ]
+    }
+  },
+
+  "onCallExpectations": {
+    "responseTime": {
+      "SEV-1": "5 minutes",
+      "SEV-2": "15 minutes",
+      "SEV-3": "1 hour",
+      "SEV-4": "Next business day"
+    },
+    "availability": {
+      "description": "On-call engineer must be available to respond",
+      "requirements": [
+        "Phone and laptop within reach at all times",
+        "Reliable internet connection",
+        "Able to join incident calls within 5 minutes",
+        "Able to access production systems"
+      ],
+      "restrictions": [
+        "No international travel during on-call week",
+        "Minimize activities that impair judgment (alcohol, etc.)",
+        "No activities preventing immediate response"
+      ]
+    },
+    "responsibilities": [
+      "Acknowledge pages within response time SLA",
+      "Begin investigation immediately",
+      "Follow runbooks and escalation procedures",
+      "Communicate regularly during incidents",
+      "Document all actions taken",
+      "Create follow-up tickets for issues found",
+      "Update runbooks with new learnings"
+    ],
+    "coverage": {
+      "vacation": "Find coverage or swap with team member minimum 1 week in advance",
+      "sick": "Notify team immediately, manager will find coverage",
+      "emergency": "Notify team immediately, secondary on-call takes over"
+    }
+  },
+
+  "compensationAndSupport": {
+    "compensation": {
+      "weekday": "Regular salary",
+      "weekend": "1.5x compensation for hours worked during incidents",
+      "holiday": "2x compensation for hours worked during incidents"
+    },
+    "timeOff": {
+      "postIncident": "If incident lasted > 4 hours overnight, take next day off",
+      "postOnCall": "Encouraged to take day off after on-call week if multiple incidents"
+    },
+    "support": {
+      "backup": "Secondary on-call available for escalation",
+      "manager": "Manager available for support and decision-making",
+      "team": "Team members can be pulled in for expertise",
+      "vendor": "Vendor support numbers available in runbooks"
+    }
+  },
+
+  "toolsAndAccess": {
+    "required": [
+      {
+        "tool": "PagerDuty",
+        "url": "https://company.pagerduty.com",
+        "access": "All on-call engineers",
+        "mobileApp": true
+      },
+      {
+        "tool": "AWS Console",
+        "url": "https://console.aws.amazon.com",
+        "access": "Production read/write",
+        "mfa": true
+      },
+      {
+        "tool": "Kubernetes",
+        "access": "Production cluster admin",
+        "cli": "kubectl"
+      },
+      {
+        "tool": "Grafana",
+        "url": "https://grafana.company.com",
+        "access": "All dashboards"
+      },
+      {
+        "tool": "Prometheus",
+        "url": "https://prometheus.company.com",
+        "access": "Query access"
+      },
+      {
+        "tool": "Kibana",
+        "url": "https://kibana.company.com",
+        "access": "All logs"
+      },
+      {
+        "tool": "Slack",
+        "channels": ["#incidents", "#alerts", "#on-call"],
+        "required": true
+      },
+      {
+        "tool": "Zoom",
+        "url": "https://zoom.us",
+        "purpose": "Incident war rooms"
+      }
+    ]
+  },
+
+  "training": {
+    "required": [
+      {
+        "name": "On-Call Fundamentals",
+        "duration": "2 hours",
+        "frequency": "Once, before first on-call shift"
+      },
+      {
+        "name": "Incident Response Training",
+        "duration": "4 hours",
+        "frequency": "Annually"
+      },
+      {
+        "name": "Runbook Familiarization",
+        "duration": "Self-paced",
+        "frequency": "Before each on-call rotation"
+      },
+      {
+        "name": "Tool Training",
+        "topics": ["PagerDuty", "Kubernetes", "AWS", "Monitoring"],
+        "duration": "Varies",
+        "frequency": "As needed"
+      }
+    ],
+    "optional": [
+      {
+        "name": "Advanced Incident Response",
+        "duration": "1 day workshop",
+        "frequency": "Annually"
+      },
+      {
+        "name": "Chaos Engineering Workshop",
+        "duration": "Half day",
+        "frequency": "Quarterly"
+      }
+    ],
+    "shadowShift": {
+      "required": true,
+      "description": "New on-call engineers shadow experienced engineer for one full rotation",
+      "duration": "1 week",
+      "responsibilities": [
+        "Observe how incidents are handled",
+        "Participate in incident calls",
+        "Review runbooks together",
+        "Ask questions",
+        "Practice using tools"
+      ]
+    }
+  },
+
+  "metrics": {
+    "tracked": [
+      "Time to acknowledge (by severity)",
+      "Time to resolve (by severity)",
+      "Number of incidents per week",
+      "Escalation rate",
+      "False positive rate",
+      "On-call engineer satisfaction"
+    ],
+    "goals": {
+      "acknowledgeTime": {
+        "SEV-1": "< 2 minutes average",
+        "SEV-2": "< 10 minutes average"
+      },
+      "escalationRate": "< 20% of incidents",
+      "falsePositiveRate": "< 10% of alerts",
+      "satisfaction": "> 4.0/5.0"
+    }
+  },
+
+  "feedback": {
+    "channels": [
+      "Weekly on-call retro meetings",
+      "Anonymous feedback form",
+      "1-on-1s with manager",
+      "Quarterly on-call survey"
+    ],
+    "improvements": {
+      "continuous": true,
+      "reviewFrequency": "Monthly",
+      "committee": "On-call working group"
+    }
+  }
+}

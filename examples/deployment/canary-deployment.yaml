@@ -1,0 +1,962 @@
+# Canary Deployment Configuration for Kubernetes with Istio Service Mesh
+#
+# This configuration implements a progressive canary deployment strategy with:
+# - Stable and Canary deployments running simultaneously
+# - Progressive traffic splitting (1% → 5% → 25% → 50% → 100%)
+# - Metrics-based validation and automated rollback
+# - Istio VirtualService for advanced traffic management
+# - Request mirroring for shadow testing
+#
+# Prerequisites:
+#   - Istio installed: istioctl install --set profile=demo
+#   - Enable sidecar injection: kubectl label namespace production istio-injection=enabled
+#
+# Usage:
+#   1. Deploy stable version: kubectl apply -f canary-deployment.yaml
+#   2. Update canary deployment image to new version
+#   3. Apply canary: kubectl apply -f canary-deployment.yaml
+#   4. Monitor metrics and gradually increase canary traffic
+#   5. Promote canary to stable or rollback if issues detected
+
+---
+# Namespace with Istio injection enabled
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    environment: production
+    istio-injection: enabled
+
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+  namespace: production
+data:
+  APP_NAME: "MyApp"
+  LOG_LEVEL: "info"
+  METRICS_ENABLED: "true"
+  TRACING_ENABLED: "true"
+  CANARY_METRICS_THRESHOLD_ERROR_RATE: "1.0"
+  CANARY_METRICS_THRESHOLD_LATENCY_P95: "2000"
+
+---
+# Stable Deployment (Current Production Version)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-stable
+  namespace: production
+  labels:
+    app: myapp
+    version: stable
+    deployment-strategy: canary
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: myapp
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: stable
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+        sidecar.istio.io/inject: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myapp
+                - key: version
+                  operator: In
+                  values:
+                  - stable
+              topologyKey: kubernetes.io/hostname
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+      containers:
+      - name: myapp
+        image: myapp:v1.0.0  # Current stable version
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+
+        env:
+        - name: VERSION
+          value: "v1.0.0"
+        - name: DEPLOYMENT_TYPE
+          value: "stable"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+
+        envFrom:
+        - configMapRef:
+            name: myapp-config
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 30
+
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+
+      terminationGracePeriodSeconds: 30
+
+---
+# Canary Deployment (New Version Being Tested)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-canary
+  namespace: production
+  labels:
+    app: myapp
+    version: canary
+    deployment-strategy: canary
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+spec:
+  replicas: 1  # Start small, scale up as confidence grows
+  selector:
+    matchLabels:
+      app: myapp
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: canary
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+        sidecar.istio.io/inject: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myapp
+                - key: version
+                  operator: In
+                  values:
+                  - canary
+              topologyKey: kubernetes.io/hostname
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+      containers:
+      - name: myapp
+        image: myapp:v2.0.0  # NEW CANARY VERSION - Change this for deployments
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+
+        env:
+        - name: VERSION
+          value: "v2.0.0"
+        - name: DEPLOYMENT_TYPE
+          value: "canary"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+
+        envFrom:
+        - configMapRef:
+            name: myapp-config
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 30
+
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+
+      terminationGracePeriodSeconds: 30
+
+---
+# Kubernetes Service - Routes to both stable and canary
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+  namespace: production
+  labels:
+    app: myapp
+spec:
+  type: ClusterIP
+  selector:
+    app: myapp  # Selects both stable and canary pods
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: metrics
+    protocol: TCP
+    port: 9090
+    targetPort: metrics
+
+---
+# Istio DestinationRule - Defines subsets for stable and canary
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: myapp
+  namespace: production
+spec:
+  host: myapp
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 50
+        http2MaxRequests: 100
+        maxRequestsPerConnection: 2
+    loadBalancer:
+      simple: LEAST_CONN
+    outlierDetection:
+      consecutiveErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+      minHealthPercent: 40
+  subsets:
+  - name: stable
+    labels:
+      version: stable
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 100
+  - name: canary
+    labels:
+      version: canary
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 20  # Limit canary connections initially
+
+---
+# Istio VirtualService - Progressive Traffic Splitting
+# Stage 1: 99% stable, 1% canary (initial canary)
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: myapp
+  namespace: production
+  annotations:
+    description: "Canary deployment - Stage 1: 1% traffic to canary"
+spec:
+  hosts:
+  - myapp
+  - myapp.production.svc.cluster.local
+  http:
+  # Route for canary testing (header-based routing)
+  - match:
+    - headers:
+        x-canary:
+          exact: "true"
+    route:
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 100
+
+  # Route for internal testing (specific users)
+  - match:
+    - headers:
+        x-user-id:
+          regex: "^(internal-tester-.*|admin-.*)"
+    route:
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 100
+
+  # Main traffic split - MODIFY THESE WEIGHTS FOR PROGRESSIVE ROLLOUT
+  - route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 99  # Stable traffic
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 1   # Canary traffic - INCREASE GRADUALLY: 1 → 5 → 25 → 50 → 100
+
+    # Retry policy
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+      retryOn: 5xx,reset,connect-failure,refused-stream
+
+    # Timeout
+    timeout: 10s
+
+    # Fault injection for testing (disable in production)
+    # fault:
+    #   delay:
+    #     percentage:
+    #       value: 0.1
+    #     fixedDelay: 5s
+
+---
+# Istio VirtualService - Request Mirroring (Shadow Traffic)
+# Mirror traffic to canary without affecting production
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: myapp-shadow
+  namespace: production
+  annotations:
+    description: "Shadow traffic to canary for testing"
+spec:
+  hosts:
+  - myapp-shadow.production.svc.cluster.local
+  http:
+  - route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 100
+    mirror:
+      host: myapp
+      subset: canary
+    mirrorPercentage:
+      value: 10.0  # Mirror 10% of traffic to canary for testing
+
+---
+# Gateway for external traffic (if using Istio Gateway)
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: myapp-gateway
+  namespace: production
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "myapp.example.com"
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "myapp.example.com"
+    tls:
+      mode: SIMPLE
+      credentialName: myapp-tls
+
+---
+# VirtualService for Gateway (external traffic)
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: myapp-gateway-vs
+  namespace: production
+spec:
+  hosts:
+  - "myapp.example.com"
+  gateways:
+  - myapp-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 99
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 1
+
+---
+# Horizontal Pod Autoscaler for Stable
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-stable-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-stable
+  minReplicas: 5
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# Horizontal Pod Autoscaler for Canary
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-canary-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-canary
+  minReplicas: 1
+  maxReplicas: 10  # Scale up canary as traffic increases
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+
+---
+# Pod Disruption Budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myapp-stable-pdb
+  namespace: production
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: myapp
+      version: stable
+
+---
+# ServiceMonitor for Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: myapp-metrics
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  endpoints:
+  - port: metrics
+    interval: 15s
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - production
+
+---
+# PrometheusRule for Canary Analysis
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: myapp-canary-analysis
+  namespace: production
+spec:
+  groups:
+  - name: canary-analysis
+    interval: 30s
+    rules:
+    # Error rate comparison
+    - alert: CanaryHighErrorRate
+      expr: |
+        (
+          sum(rate(http_requests_total{app="myapp",version="canary",status=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total{app="myapp",version="canary"}[5m]))
+        )
+        >
+        (
+          sum(rate(http_requests_total{app="myapp",version="stable",status=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total{app="myapp",version="stable"}[5m]))
+        ) * 1.5
+      for: 5m
+      labels:
+        severity: critical
+        deployment: canary
+      annotations:
+        summary: "Canary error rate significantly higher than stable"
+        description: "Canary version has {{ $value | humanizePercentage }} error rate, 50% higher than stable"
+
+    # Latency comparison (p95)
+    - alert: CanaryHighLatency
+      expr: |
+        histogram_quantile(0.95,
+          sum(rate(http_request_duration_seconds_bucket{app="myapp",version="canary"}[5m])) by (le)
+        )
+        >
+        histogram_quantile(0.95,
+          sum(rate(http_request_duration_seconds_bucket{app="myapp",version="stable"}[5m])) by (le)
+        ) * 1.5
+      for: 5m
+      labels:
+        severity: warning
+        deployment: canary
+      annotations:
+        summary: "Canary latency significantly higher than stable"
+        description: "Canary p95 latency is {{ $value | humanizeDuration }}, 50% higher than stable"
+
+    # Canary success rate too low
+    - alert: CanaryLowSuccessRate
+      expr: |
+        (
+          sum(rate(http_requests_total{app="myapp",version="canary",status=~"2.."}[5m]))
+          /
+          sum(rate(http_requests_total{app="myapp",version="canary"}[5m]))
+        ) < 0.95
+      for: 5m
+      labels:
+        severity: critical
+        deployment: canary
+      annotations:
+        summary: "Canary success rate below 95%"
+        description: "Canary version has {{ $value | humanizePercentage }} success rate"
+
+---
+# ConfigMap for Canary Analysis Scripts
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: canary-scripts
+  namespace: production
+data:
+  increase-canary-traffic.sh: |
+    #!/bin/bash
+    # Progressive canary traffic increase: 1% → 5% → 25% → 50% → 100%
+
+    CURRENT_WEIGHT=$1
+    if [ -z "$CURRENT_WEIGHT" ]; then
+      echo "Usage: $0 <current_canary_weight>"
+      echo "Example: $0 1"
+      exit 1
+    fi
+
+    # Determine next weight
+    case $CURRENT_WEIGHT in
+      1)   NEXT_WEIGHT=5 ;;
+      5)   NEXT_WEIGHT=25 ;;
+      25)  NEXT_WEIGHT=50 ;;
+      50)  NEXT_WEIGHT=100 ;;
+      *)
+        echo "Invalid weight. Use: 1, 5, 25, or 50"
+        exit 1
+        ;;
+    esac
+
+    echo "=== Canary Deployment: Increasing traffic from $CURRENT_WEIGHT% to $NEXT_WEIGHT% ==="
+
+    # Calculate stable weight
+    STABLE_WEIGHT=$((100 - NEXT_WEIGHT))
+
+    # Validate canary health
+    echo "Validating canary health..."
+    CANARY_READY=$(kubectl get pods -n production -l app=myapp,version=canary -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | grep -o "True" | wc -l)
+
+    if [ "$CANARY_READY" -lt 1 ]; then
+      echo "ERROR: No healthy canary pods found"
+      exit 1
+    fi
+
+    echo "Found $CANARY_READY healthy canary pod(s)"
+
+    # Check error rates (requires Prometheus)
+    echo "Checking canary metrics..."
+    # Add Prometheus query here to validate error rates
+
+    # Update VirtualService
+    echo "Updating traffic split to $NEXT_WEIGHT% canary, $STABLE_WEIGHT% stable..."
+
+    kubectl patch virtualservice myapp -n production --type merge -p "
+    spec:
+      http:
+      - route:
+        - destination:
+            host: myapp
+            subset: stable
+          weight: $STABLE_WEIGHT
+        - destination:
+            host: myapp
+            subset: canary
+          weight: $NEXT_WEIGHT
+    "
+
+    echo "Traffic updated successfully"
+    echo "Monitor metrics for 10-15 minutes before next increase"
+    echo ""
+    echo "To continue rollout:"
+    echo "  $0 $NEXT_WEIGHT"
+    echo ""
+    echo "To rollback:"
+    echo "  kubectl delete deployment myapp-canary -n production"
+
+  promote-canary.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=== Promoting Canary to Stable ==="
+
+    # Get canary image
+    CANARY_IMAGE=$(kubectl get deployment myapp-canary -n production -o jsonpath='{.spec.template.spec.containers[0].image}')
+    echo "Canary image: $CANARY_IMAGE"
+
+    # Update stable deployment
+    echo "Updating stable deployment to canary image..."
+    kubectl set image deployment/myapp-stable -n production myapp=$CANARY_IMAGE
+
+    # Wait for stable rollout
+    echo "Waiting for stable deployment rollout..."
+    kubectl rollout status deployment/myapp-stable -n production --timeout=600s
+
+    # Route all traffic to stable
+    echo "Routing all traffic to stable..."
+    kubectl patch virtualservice myapp -n production --type merge -p '
+    spec:
+      http:
+      - route:
+        - destination:
+            host: myapp
+            subset: stable
+          weight: 100
+    '
+
+    # Delete canary deployment
+    echo "Removing canary deployment..."
+    kubectl delete deployment myapp-canary -n production
+
+    echo "=== Canary Promotion Complete ==="
+    echo "All traffic now on stable version: $CANARY_IMAGE"
+
+  rollback-canary.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=== Rolling Back Canary Deployment ==="
+
+    # Route all traffic to stable
+    echo "Routing all traffic to stable..."
+    kubectl patch virtualservice myapp -n production --type merge -p '
+    spec:
+      http:
+      - route:
+        - destination:
+            host: myapp
+            subset: stable
+          weight: 100
+    '
+
+    # Delete canary deployment
+    echo "Removing canary deployment..."
+    kubectl delete deployment myapp-canary -n production
+
+    echo "=== Rollback Complete ==="
+    echo "All traffic restored to stable version"
+
+  automated-canary-analysis.sh: |
+    #!/bin/bash
+    # Automated canary analysis with metrics-based decision
+
+    set -e
+
+    PROMETHEUS_URL=${PROMETHEUS_URL:-"http://prometheus:9090"}
+    ERROR_RATE_THRESHOLD=${ERROR_RATE_THRESHOLD:-1.0}  # 1%
+    LATENCY_P95_THRESHOLD=${LATENCY_P95_THRESHOLD:-2000}  # 2 seconds
+    ANALYSIS_DURATION=${ANALYSIS_DURATION:-300}  # 5 minutes
+
+    echo "=== Automated Canary Analysis ==="
+    echo "Analysis duration: ${ANALYSIS_DURATION}s"
+    echo "Error rate threshold: ${ERROR_RATE_THRESHOLD}%"
+    echo "Latency p95 threshold: ${LATENCY_P95_THRESHOLD}ms"
+
+    # Wait for analysis duration
+    echo "Collecting metrics for ${ANALYSIS_DURATION} seconds..."
+    sleep $ANALYSIS_DURATION
+
+    # Query Prometheus for canary error rate
+    CANARY_ERROR_RATE=$(curl -s "${PROMETHEUS_URL}/api/v1/query?query=sum(rate(http_requests_total{app=\"myapp\",version=\"canary\",status=~\"5..\"}[5m]))/sum(rate(http_requests_total{app=\"myapp\",version=\"canary\"}[5m]))*100" | jq -r '.data.result[0].value[1] // "0"')
+
+    # Query for stable error rate
+    STABLE_ERROR_RATE=$(curl -s "${PROMETHEUS_URL}/api/v1/query?query=sum(rate(http_requests_total{app=\"myapp\",version=\"stable\",status=~\"5..\"}[5m]))/sum(rate(http_requests_total{app=\"myapp\",version=\"stable\"}[5m]))*100" | jq -r '.data.result[0].value[1] // "0"')
+
+    echo "Canary error rate: ${CANARY_ERROR_RATE}%"
+    echo "Stable error rate: ${STABLE_ERROR_RATE}%"
+
+    # Compare error rates
+    if (( $(echo "$CANARY_ERROR_RATE > $ERROR_RATE_THRESHOLD" | bc -l) )); then
+      echo "FAILED: Canary error rate exceeds threshold"
+      ./rollback-canary.sh
+      exit 1
+    fi
+
+    if (( $(echo "$CANARY_ERROR_RATE > $STABLE_ERROR_RATE * 1.5" | bc -l) )); then
+      echo "FAILED: Canary error rate 50% higher than stable"
+      ./rollback-canary.sh
+      exit 1
+    fi
+
+    echo "SUCCESS: Canary metrics within acceptable thresholds"
+    echo "Ready for next traffic increase"
+
+---
+# CronJob for automated canary analysis
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: canary-analysis
+  namespace: production
+spec:
+  schedule: "*/10 * * * *"  # Every 10 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: canary-analyzer
+          restartPolicy: Never
+          containers:
+          - name: analyzer
+            image: curlimages/curl:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              # Automated canary health check
+              echo "Running canary analysis..."
+
+              # Check if canary exists
+              CANARY_PODS=$(kubectl get pods -n production -l app=myapp,version=canary --no-headers 2>/dev/null | wc -l)
+
+              if [ "$CANARY_PODS" -eq 0 ]; then
+                echo "No canary deployment found, skipping analysis"
+                exit 0
+              fi
+
+              echo "Found $CANARY_PODS canary pod(s), analyzing..."
+
+              # Add automated decision logic here
+              # - Query Prometheus metrics
+              # - Compare canary vs stable
+              # - Auto-rollback if thresholds exceeded
+              # - Auto-promote if successful for X minutes
+
+---
+# ServiceAccount for canary operations
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: canary-analyzer
+  namespace: production
+
+---
+# Role for canary operations
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: canary-manager
+  namespace: production
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["services", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.istio.io"]
+  resources: ["virtualservices", "destinationrules"]
+  verbs: ["get", "list", "patch"]
+
+---
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: canary-analyzer-binding
+  namespace: production
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: canary-manager
+subjects:
+- kind: ServiceAccount
+  name: canary-analyzer
+  namespace: production
