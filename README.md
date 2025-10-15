@@ -51,6 +51,14 @@ graph LR
 - **[13 - Incident Management](docs/13-incident-management/README.md)** - Incident response, runbooks, postmortems
 - **[14 - Continuous Improvement](docs/14-continuous-improvement/README.md)** - Retrospectives, Kaizen
 
+### AI & Innovation Layer
+- **[15 - AI in Quality Assurance](docs/15-ai-in-quality-assurance/15-README.md)** - AI-powered testing, predictive analytics, custom LLM+RAG assistants
+  - **[AI Fundamentals](docs/15-ai-in-quality-assurance/ai-fundamentals.md)** - LLMs, RAG, embeddings, prompt engineering
+  - **[AI-Assisted Testing](docs/15-ai-in-quality-assurance/ai-assisted-testing.md)** - Automated test generation and enhancement
+  - **[AI Metrics & Analytics](docs/15-ai-in-quality-assurance/ai-metrics-analytics.md)** - Predictive defect detection, anomaly detection
+  - **[Building AI QA Assistant](docs/15-ai-in-quality-assurance/building-ai-qa-assistant.md)** - Complete LLM+RAG implementation guide
+  - **[Implementation Roadmap](docs/15-ai-in-quality-assurance/implementation-roadmap.md)** - Phased AI adoption strategy
+
 ## 📊 Key Metrics Overview
 
 ### DORA Metrics
@@ -127,6 +135,7 @@ graph LR
 2. Practice with [Testing Examples](examples/) - All testing approaches
 3. Explore [Quality Attributes](docs/06-quality-attributes/README.md)
 4. Master [Metrics & Monitoring](docs/09-metrics-monitoring/README.md)
+5. **NEW**: Leverage [AI in Quality Assurance](docs/15-ai-in-quality-assurance/15-README.md) for 10x productivity
 
 ### For DevOps Engineers
 1. Review [Version Control CI/CD Best Practices](docs/03-version-control/cicd-best-practices/README.md)
@@ -183,9 +192,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on maintaining and extendi
 This documentation is created for educational purposes and follows industry best practices.
 
 ## 🔄 Version
-**Version**: 1.0.0
-**Last Updated**: October 2024
-**Next Review**: November 2024
+**Version**: 2.0.0
+**Last Updated**: October 2024 (AI Module Added)
+**Next Review**: January 2025
 
 ---
 

@@ -1,0 +1,189 @@
+name: AI Code Review
+
+# Trigger on pull requests to main/develop branches
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ai-code-review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for diff
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install openai==1.3.0 PyGithub==2.1.1
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: |
+            **/*.py
+            **/*.js
+            **/*.ts
+            **/*.java
+            **/*.go
+          separator: ','
+
+      - name: Run AI Code Review
+        id: review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python .github/scripts/ai_review.py \
+            --files "${{ steps.changed-files.outputs.all_changed_files }}" \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}"
+
+      - name: Post review comment
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('/tmp/review_comment.md', 'utf8');
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: review
+            });
+
+      - name: Add review status check
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            let state = 'success';
+            let description = 'AI review passed';
+
+            try {
+              const result = fs.readFileSync('/tmp/review_result.json', 'utf8');
+              const data = JSON.parse(result);
+
+              if (data.overall_score < 70) {
+                state = 'failure';
+                description = `AI review score: ${data.overall_score}/100 (threshold: 70)`;
+              } else if (data.critical_issues > 0) {
+                state = 'failure';
+                description = `AI review found ${data.critical_issues} critical issue(s)`;
+              } else {
+                description = `AI review score: ${data.overall_score}/100`;
+              }
+            } catch (e) {
+              state = 'error';
+              description = 'AI review failed to complete';
+            }
+
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha,
+              state: state,
+              description: description,
+              context: 'AI Code Review'
+            });
+
+      - name: Fail if critical issues
+        if: success()
+        run: |
+          if [ -f /tmp/review_result.json ]; then
+            CRITICAL=$(cat /tmp/review_result.json | jq -r '.critical_issues')
+            SCORE=$(cat /tmp/review_result.json | jq -r '.overall_score')
+
+            if [ "$CRITICAL" -gt "0" ]; then
+              echo "❌ Critical issues found: $CRITICAL"
+              exit 1
+            fi
+
+            if [ "$SCORE" -lt "70" ]; then
+              echo "❌ Score below threshold: $SCORE/100 (minimum: 70)"
+              exit 1
+            fi
+
+            echo "✅ AI review passed: Score $SCORE/100"
+          fi
+
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install openai==1.3.0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: |
+            **/*.py
+            **/*.js
+            **/*.ts
+
+      - name: Run Security Scan
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python .github/scripts/security_scan.py \
+            --files "${{ steps.changed-files.outputs.all_changed_files }}"
+
+      - name: Upload security report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-scan-report
+          path: /tmp/security_report.md
+
+      - name: Comment security findings
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            if (fs.existsSync('/tmp/security_report.md')) {
+              const report = fs.readFileSync('/tmp/security_report.md', 'utf8');
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '## 🔒 Security Scan Results\n\n' + report
+              });
+            }

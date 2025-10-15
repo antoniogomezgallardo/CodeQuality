@@ -1,0 +1,13 @@
+# AI Test Generation Dependencies
+
+# OpenAI API
+openai==1.3.0
+
+# Testing Frameworks (for running generated tests)
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-asyncio==0.21.1
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1

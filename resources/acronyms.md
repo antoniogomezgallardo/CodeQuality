@@ -1,5 +1,26 @@
 # Acronyms & Abbreviations
 
+## AI & Machine Learning
+
+**AGI** - Artificial General Intelligence
+**AI** - Artificial Intelligence
+**ANI** - Artificial Narrow Intelligence
+**BERT** - Bidirectional Encoder Representations from Transformers
+**CNN** - Convolutional Neural Network
+**DL** - Deep Learning
+**FAISS** - Facebook AI Similarity Search
+**GPT** - Generative Pre-trained Transformer
+**LLM** - Large Language Model
+**ML** - Machine Learning
+**NLP** - Natural Language Processing
+**NLU** - Natural Language Understanding
+**NN** - Neural Network
+**RAG** - Retrieval-Augmented Generation
+**RLHF** - Reinforcement Learning from Human Feedback
+**RNN** - Recurrent Neural Network
+**SFT** - Supervised Fine-Tuning
+**TPU** - Tensor Processing Unit
+
 ## Software Quality & Testing
 
 **ATDD** - Acceptance Test-Driven Development
@@ -137,4 +158,8 @@
 
 ---
 
-*This list includes commonly used acronyms in software development, quality assurance, and related fields. Keep this reference handy for quick lookup during documentation review and team discussions.*
+*This list includes commonly used acronyms in software development, quality assurance, AI/ML, and related fields. Keep this reference handy for quick lookup during documentation review and team discussions.*
+
+**Recent Additions:**
+- AI & Machine Learning acronyms (added October 2024)
+- LLM and RAG-related terminology
