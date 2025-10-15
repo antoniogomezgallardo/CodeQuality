@@ -40,24 +40,26 @@ graph TB
 
 ## Learning Path
 
-### Start Here
-1. **[AI Fundamentals](ai-fundamentals.md)** - Understanding LLMs, RAG, embeddings, and core AI concepts
-2. **[AI Tool Ecosystem](ai-tool-ecosystem.md)** - Overview of available AI tools for QA
+### Start Here (Foundations)
+1. **[AI Fundamentals](ai-fundamentals.md)** ✅ - Understanding LLMs, RAG, embeddings, and core AI concepts
+2. **[AI Tool Ecosystem](ai-tool-ecosystem.md)** ✅ - Overview of available AI tools for QA
 
 ### Core Applications
-3. **[AI-Assisted Testing](ai-assisted-testing.md)** - Automated test generation and maintenance
-4. **[AI Code Quality](ai-code-quality.md)** - AI-powered code reviews and bug detection
-5. **[AI Test Automation](ai-test-automation.md)** - Intelligent test automation strategies
-6. **[AI Metrics & Analytics](ai-metrics-analytics.md)** - Predictive quality analytics
+3. **[AI-Assisted Testing](ai-assisted-testing.md)** ✅ - Automated test generation and maintenance
+4. **[AI Metrics & Analytics](ai-metrics-analytics.md)** ✅ - Predictive quality analytics and defect prediction
+5. **AI Code Quality** 🔜 - AI-powered code reviews and refactoring (*Coming Soon*)
+6. **AI Test Automation** 🔜 - Self-healing tests and smart test selection (*Coming Soon*)
 
 ### Advanced Topics
-7. **[AI Monitoring & Observability](ai-monitoring-observability.md)** - AI-enhanced monitoring
-8. **[AI Requirements & Planning](ai-requirements-planning.md)** - Requirements validation with AI
-9. **[Building AI QA Assistant](building-ai-qa-assistant.md)** - Complete LLM + RAG implementation guide
+7. **[Building AI QA Assistant](building-ai-qa-assistant.md)** ✅ - Complete LLM + RAG implementation guide
+8. **AI Monitoring & Observability** 🔜 - AI-enhanced monitoring and root cause analysis (*Coming Soon*)
+9. **AI Requirements & Planning** 🔜 - Requirements validation with AI (*Coming Soon*)
 
-### Implementation
-10. **[Ethics & Limitations](ethics-limitations.md)** - Responsible AI use in testing
-11. **[Implementation Roadmap](implementation-roadmap.md)** - Phased adoption strategy
+### Responsible Adoption
+10. **[Ethics & Limitations](ethics-limitations.md)** ✅ - Responsible AI use, data privacy, and known limitations
+11. **[Implementation Roadmap](implementation-roadmap.md)** ✅ - Phased 16-week adoption strategy
+
+**Note:** Topics marked with ✅ are complete. Topics marked with 🔜 are planned for future releases but many concepts are covered in existing documents.
 
 ## Why AI in QA?
 
@@ -391,6 +393,8 @@ Success Rate of Recommendation: 95%
 6. **Smart Routing**: Use cheaper models for simple tasks
 
 ### ROI Analysis
+
+**Example Calculation (10-person team):**
 ```yaml
 team_size: 10 developers
 average_salary: $100,000/year
@@ -415,6 +419,22 @@ roi:
   roi_percentage: 1,400%
   payback_period: 2 days
 ```
+
+**Cost Variables:**
+Actual costs vary significantly based on:
+- **Team size**: 5-100 developers
+- **Usage patterns**: Casual vs. intensive use
+- **Model selection**: GPT-4 ($$$) vs. GPT-3.5 ($) vs. local models (free)
+- **Infrastructure**: Cloud-hosted vs. self-hosted
+- **Tool choices**: Commercial tools vs. open-source
+- **API volume**: Number of requests per month
+
+**Typical Cost Ranges:**
+- Small team (5-10 devs): $75-200/month
+- Medium team (10-50 devs): $200-800/month
+- Large team (50+ devs): $800-3,000/month
+
+See individual implementation guides for detailed cost breakdowns and optimization strategies.
 
 ## Best Practices
 
@@ -584,12 +604,59 @@ efficiency_gains:
 - [Tools Ecosystem](../11-tools-ecosystem/README.md) - AI tools integration
 - [Continuous Improvement](../14-continuous-improvement/README.md) - AI-driven insights
 
+## Future Enhancements
+
+The following topics are planned for future releases. Many concepts are already covered in existing documents:
+
+### AI Code Quality (Planned)
+**Status:** 🔜 Coming Soon
+**Current Coverage:** Many topics covered in [AI-Assisted Testing](ai-assisted-testing.md)
+**Planned Topics:**
+- Advanced code review automation patterns
+- AI-powered refactoring suggestions
+- Technical debt detection with ML
+- Code smell identification
+- Automated documentation generation
+
+### AI Test Automation (Planned)
+**Status:** 🔜 Coming Soon
+**Current Coverage:** Basics covered in [AI-Assisted Testing](ai-assisted-testing.md)
+**Planned Topics:**
+- Self-healing test implementation details
+- Visual regression testing with AI
+- Smart test prioritization algorithms
+- Test data generation strategies
+- Flaky test detection and resolution
+
+### AI Monitoring & Observability (Planned)
+**Status:** 🔜 Coming Soon
+**Current Coverage:** Analytics covered in [AI Metrics & Analytics](ai-metrics-analytics.md)
+**Planned Topics:**
+- Real-time anomaly detection systems
+- Intelligent log aggregation and analysis
+- AI-powered incident response
+- Predictive alerting strategies
+- Auto-remediation workflows
+
+### AI Requirements & Planning (Planned)
+**Status:** 🔜 Coming Soon
+**Current Coverage:** Not yet covered
+**Planned Topics:**
+- Requirements validation with NLP
+- User story quality scoring
+- Acceptance criteria generation
+- Requirements traceability automation
+- Conflict detection in requirements
+
+**Want to contribute?** These topics are perfect for community contributions. See the main README for contribution guidelines.
+
 ## Next Steps
 
 1. **Understand the Basics**: Start with [AI Fundamentals](ai-fundamentals.md)
 2. **Explore Tools**: Review [AI Tool Ecosystem](ai-tool-ecosystem.md)
 3. **Try Test Generation**: Follow [AI-Assisted Testing](ai-assisted-testing.md)
 4. **Build Your Assistant**: Complete [Building AI QA Assistant](building-ai-qa-assistant.md)
+5. **See Working Examples**: Explore [AI-Assisted QA Examples](../../examples/ai-assisted-qa/README.md)
 
 ---
 
