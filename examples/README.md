@@ -18,7 +18,8 @@ This directory contains practical, working examples demonstrating the concepts a
 ├── /load-testing        # Load, stress, and performance testing examples
 ├── /version-control     # Version control workflows (TBD, GitHub Flow, GitFlow)
 ├── /ci-pipelines        # CI/CD pipeline configurations for various platforms
-└── /monitoring-configs  # Monitoring, alerting, and observability setups
+├── /monitoring-configs  # Monitoring, alerting, and observability setups
+└── /ai-assisted-qa      # AI-powered testing, RAG systems, code review automation ⭐ NEW
 ```
 
 ## 🚀 Quick Start
@@ -75,11 +76,35 @@ Recommended order for exploring examples:
 4. **Study CI Pipelines** - Automation and integration
 5. **Implement Monitoring** - Production observability
 
+## 🤖 NEW: AI-Assisted Quality Assurance
+
+Explore cutting-edge AI tools for QA automation:
+
+- **[RAG Implementation](ai-assisted-qa/rag-implementation/)** - Build a QA knowledge base assistant
+  - Answer questions about testing practices, CI/CD, SDLC
+  - FastAPI REST API with Docker deployment
+  - Cost: ~$0.024 per query, saves hours of searching
+
+- **[Test Generation](ai-assisted-qa/test-generation/)** - Auto-generate comprehensive test suites
+  - Generate unit, integration, and E2E tests from code
+  - 146-line pytest suite from 30-line function (see examples!)
+  - Cost: ~$0.053 per test suite, saves 30-60 minutes
+
+- **[Code Review Automation](ai-assisted-qa/code-review-automation/)** - AI-powered PR reviews
+  - Detect bugs, security vulnerabilities, performance issues
+  - GitHub Actions integration included
+  - Cost: ~$0.075 per PR, saves 15-30 minutes
+
+**ROI:** ~$25,000/month value for $74/month cost (50-person team)
+
+[→ View Full AI Examples Documentation](ai-assisted-qa/README.md)
+
 ## 📖 Related Documentation
 
 - [Testing Strategy](../docs/04-testing-strategy/README.md)
 - [CI/CD Pipeline](../docs/08-cicd-pipeline/README.md)
 - [Metrics & Monitoring](../docs/09-metrics-monitoring/README.md)
+- [AI in Quality Assurance](../docs/15-ai-in-quality-assurance/15-README.md) ⭐ NEW
 
 ## 🤝 Contributing
 
