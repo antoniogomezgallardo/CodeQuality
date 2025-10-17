@@ -4,6 +4,10 @@
 
 **Acceptance Criteria**: Specific conditions that must be met for a user story to be considered complete and acceptable to the product owner.
 
+**Agent**: An autonomous AI system that can reason, plan, use tools, and take actions to achieve goals without continuous human intervention.
+
+**Agentic Workflow**: A multi-step automated process orchestrated by AI agents that can make decisions, take actions, and adapt based on outcomes.
+
 **Agile**: An iterative approach to software development that emphasizes collaboration, customer feedback, and small, rapid releases.
 
 **AI-Assisted Testing**: The use of artificial intelligence and machine learning to enhance testing processes, including test generation, defect prediction, and test optimization.
@@ -12,7 +16,11 @@
 
 **API (Application Programming Interface)**: A set of protocols, routines, and tools for building software applications that specify how software components should interact.
 
+**AutoGen**: A Microsoft framework for building multi-agent conversational systems where agents collaborate through structured dialogues.
+
 **Automated Testing**: The practice of using software tools to execute tests automatically, compare actual outcomes with predicted outcomes, and report results.
+
+**Autonomy Level**: The degree of independence an AI agent has in making decisions and taking actions, ranging from Level 0 (no autonomy) to Level 5 (full autonomy).
 
 ## B
 
@@ -26,7 +34,7 @@
 
 ## C
 
-**Chainof-Thought Prompting**: A prompting technique where you ask the LLM to show its reasoning step-by-step before providing the final answer, improving accuracy for complex tasks.
+**Chain-of-Thought Prompting**: A prompting technique where you ask the LLM to show its reasoning step-by-step before providing the final answer, improving accuracy for complex tasks.
 
 **ChatGPT**: An AI chatbot developed by OpenAI that uses large language models to generate human-like text responses.
 
@@ -43,6 +51,8 @@
 **Continuous Integration**: The practice of merging all developer working copies to a shared mainline several times a day.
 
 **Copilot**: GitHub's AI pair programmer that suggests code and entire functions in real-time based on context.
+
+**CrewAI**: A framework for building role-based multi-agent systems where each agent has specific responsibilities and expertise.
 
 **Cyclomatic Complexity**: A software metric used to indicate the complexity of a program by measuring the number of linearly independent paths through source code.
 
@@ -100,6 +110,8 @@
 
 **LangChain**: A framework for developing applications powered by language models, providing tools for building RAG systems and AI agents.
 
+**LangGraph**: A framework built on LangChain for creating stateful, multi-actor applications with AI agents using graph-based workflows.
+
 **Large Language Model (LLM)**: A type of AI model trained on vast amounts of text data that can understand and generate human-like text.
 
 **Lead Time**: The time elapsed between when a request is made and when it is fulfilled.
@@ -119,6 +131,8 @@
 **Minimum Viable Product (MVP)**: A development technique where a new product is developed with sufficient features to satisfy early adopters.
 
 **Mock**: A simulated object that mimics the behavior of real objects in controlled ways for testing purposes.
+
+**Multi-Agent System**: A system composed of multiple autonomous agents that interact and collaborate to achieve complex goals that individual agents cannot accomplish alone.
 
 ## N
 
@@ -148,11 +162,17 @@
 
 **RAG (Retrieval-Augmented Generation)**: A technique that combines information retrieval with language model generation to provide more accurate and grounded responses.
 
+**ReAct Pattern**: An agent reasoning pattern that combines Reasoning (thinking about what to do) and Acting (using tools to accomplish tasks) in iterative cycles.
+
+**Reflection**: An agent pattern where the agent reviews its own outputs and reasoning to identify and correct errors, improving quality through self-critique.
+
 **Refactoring**: The process of restructuring existing computer code without changing its external behavior.
 
 **Regression Testing**: Re-running functional and non-functional tests to ensure that previously developed and tested software still performs correctly.
 
 **Requirements Engineering**: The process of defining, documenting, and maintaining requirements in the engineering design process.
+
+**ReWOO (Reasoning WithOut Observation)**: An agent planning strategy that creates a complete plan upfront without intermediate observations, enabling parallel tool execution.
 
 **Risk-Based Testing**: An approach to testing that prioritizes the testing of features and functions based on the risk of failure.
 
@@ -236,3 +256,8 @@
 - AI & Machine Learning terms (added October 2024)
 - LLM and RAG terminology
 - Prompt engineering concepts
+- Agentic Workflows terminology (added October 2024 - Module 16)
+  - Agent, Agentic Workflow, Autonomy Level
+  - LangGraph, AutoGen, CrewAI frameworks
+  - ReAct Pattern, Reflection, ReWOO
+  - Multi-Agent Systems, Hierarchical architectures
