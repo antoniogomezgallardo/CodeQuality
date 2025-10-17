@@ -58,6 +58,16 @@ graph LR
   - **[AI Metrics & Analytics](docs/15-ai-in-quality-assurance/ai-metrics-analytics.md)** - Predictive defect detection, anomaly detection
   - **[Building AI QA Assistant](docs/15-ai-in-quality-assurance/building-ai-qa-assistant.md)** - Complete LLM+RAG implementation guide
   - **[Implementation Roadmap](docs/15-ai-in-quality-assurance/implementation-roadmap.md)** - Phased AI adoption strategy
+- **[16 - Agentic Workflows for QA](docs/16-agentic-workflows/16-README.md)** - Autonomous AI agents that plan, execute, and optimize QA tasks
+  - **[Agentic Fundamentals](docs/16-agentic-workflows/agentic-fundamentals.md)** - ReAct pattern, tool use, planning strategies, agent memory
+  - **[Multi-Agent Systems](docs/16-agentic-workflows/multi-agent-systems.md)** - Agent orchestration, communication, specialized agents
+  - **[Agentic Testing Workflows](docs/16-agentic-workflows/agentic-testing-workflows.md)** - Autonomous test generation and self-healing suites
+  - **[Agentic Code Review](docs/16-agentic-workflows/agentic-code-review.md)** - Multi-agent PR review with specialized experts
+  - **[Agentic CI/CD](docs/16-agentic-workflows/agentic-cicd.md)** - Self-healing pipelines and autonomous deployment decisions
+  - **[Agentic Incident Response](docs/16-agentic-workflows/agentic-incident-response.md)** - Automated detection, analysis, and remediation
+  - **[Building QA Agent Workflows](docs/16-agentic-workflows/building-qa-agent-workflows.md)** - Complete LangGraph implementation guide
+  - **[Agent Frameworks](docs/16-agentic-workflows/agent-frameworks.md)** - LangGraph, AutoGen, CrewAI comparison
+  - **[Ethics & Safety](docs/16-agentic-workflows/ethics-safety.md)** - Responsible autonomy and safety guardrails
 
 ## 📊 Key Metrics Overview
 
@@ -79,7 +89,7 @@ graph LR
 
 ## 🛠️ Templates & Tools
 
-### Templates (15 Production-Ready Templates)
+### Templates (18 Production-Ready Templates)
 - [User Story Template](templates/user-story.md)
 - [Definition of Ready](templates/definition-of-ready.md)
 - [Definition of Done](templates/definition-of-done.md)
@@ -95,8 +105,11 @@ graph LR
 - [Postmortem Template](templates/postmortem-template.md)
 - [Runbook Template](templates/runbook-template.md)
 - [CI/CD Pipeline Template](templates/pipeline-template.yaml)
+- **[Agent Workflow Template](templates/agent-workflow-template.md)** - Complete blueprint for designing agentic workflows
+- **[Agent Prompt Library](templates/agent-prompt-library.md)** - Production-tested prompts for QA agents
+- **[Agent Evaluation Rubric](templates/agent-evaluation-rubric.md)** - Framework for evaluating agent performance
 
-### Examples (17 Comprehensive Example Directories)
+### Examples (19 Comprehensive Example Directories)
 - [Unit Test Examples](examples/unit-tests/) - Jest, Vitest, mutation testing
 - [Integration Tests](examples/integration-tests/) - API testing, database integration
 - [API Testing](examples/api-testing/) - Supertest, GraphQL, Pact, performance (9 files, 4,500+ lines)
@@ -114,6 +127,8 @@ graph LR
 - [Deployment Strategies](examples/deployment/) - Blue-Green, Canary, Rolling, Terraform (10 files)
 - [Incident Response](examples/incident-response/) - Runbooks, postmortems, SLI/SLO (10 files)
 - [Monitoring Configs](examples/monitoring-configs/) - Prometheus, Grafana, alerting
+- [AI-Assisted QA](examples/ai-assisted-qa/) - RAG systems, test generation, code review automation
+- **[Agentic QA Workflows](examples/agentic-qa/)** - 6 production-ready autonomous agent systems (test suite, code review, CI/CD, bug triage, incident response, quality improvement)
 
 ## 📚 Resources (6 Reference Files)
 - [Glossary](resources/glossary.md) - Technical terms explained
@@ -135,7 +150,8 @@ graph LR
 2. Practice with [Testing Examples](examples/) - All testing approaches
 3. Explore [Quality Attributes](docs/06-quality-attributes/README.md)
 4. Master [Metrics & Monitoring](docs/09-metrics-monitoring/README.md)
-5. **NEW**: Leverage [AI in Quality Assurance](docs/15-ai-in-quality-assurance/15-README.md) for 10x productivity
+5. Leverage [AI in Quality Assurance](docs/15-ai-in-quality-assurance/15-README.md) for 10x productivity
+6. **CUTTING EDGE**: Deploy [Agentic Workflows](docs/16-agentic-workflows/16-README.md) for autonomous QA at scale
 
 ### For DevOps Engineers
 1. Review [Version Control CI/CD Best Practices](docs/03-version-control/cicd-best-practices/README.md)
@@ -192,9 +208,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on maintaining and extendi
 This documentation is created for educational purposes and follows industry best practices.
 
 ## 🔄 Version
-**Version**: 2.0.0
-**Last Updated**: October 2024 (AI Module Added)
+**Version**: 3.0.0
+**Last Updated**: October 2024 (Agentic Workflows Module Added)
 **Next Review**: January 2025
+
+**What's New in 3.0:**
+- Complete Agentic Workflows module (10 comprehensive guides)
+- 6 production-ready autonomous agent implementations
+- Agent workflow templates and prompt library
+- Multi-agent system patterns for QA automation
 
 ---
 
