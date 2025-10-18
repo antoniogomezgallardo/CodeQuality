@@ -6,6 +6,7 @@ This directory contains practical, working examples demonstrating the concepts a
 
 ```
 /examples
+├── /quickstarts         # 5-minute setup guides for all major tools ⚡ NEW
 ├── /unit-tests          # Unit testing examples in multiple languages
 ├── /integration-tests   # API, database, and service integration tests
 ├── /e2e-tests          # End-to-end testing with Selenium, Cypress, Playwright
@@ -19,10 +20,38 @@ This directory contains practical, working examples demonstrating the concepts a
 ├── /version-control     # Version control workflows (TBD, GitHub Flow, GitFlow)
 ├── /ci-pipelines        # CI/CD pipeline configurations for various platforms
 ├── /monitoring-configs  # Monitoring, alerting, and observability setups
-└── /ai-assisted-qa      # AI-powered testing, RAG systems, code review automation ⭐ NEW
+├── /ai-assisted-qa      # AI-powered testing, RAG systems, code review automation ⭐
+└── /agentic-qa          # Autonomous AI agents for QA workflows ⭐
 ```
 
-## 🚀 Quick Start
+## ⚡ Quick Start Guides - NEW!
+
+**Get any tool running in 5 minutes or less!**
+
+Never used Jest? New to Cypress? Want to try k6? Our quick start guides get you from zero to running tests in under 5 minutes:
+
+👉 **[Browse All Quick Start Guides](quickstarts/)** 👈
+
+**Featured Quick Starts:**
+- [Jest](quickstarts/jest-quickstart.md) - JavaScript unit testing (3 min)
+- [pytest](quickstarts/pytest-quickstart.md) - Python unit testing (3 min)
+- [JUnit 5](quickstarts/junit-quickstart.md) - Java unit testing (4 min)
+- [Cypress](quickstarts/cypress-quickstart.md) - E2E testing (5 min)
+- [Playwright](quickstarts/playwright-quickstart.md) - Modern E2E (5 min)
+- [k6](quickstarts/k6-quickstart.md) - Load testing (4 min)
+- [GitHub Actions](quickstarts/github-actions-quickstart.md) - CI/CD (5 min)
+- [Snyk](quickstarts/snyk-quickstart.md) - Security scanning (3 min)
+- [axe-core](quickstarts/axe-quickstart.md) - Accessibility testing (3 min)
+
+Each guide includes:
+- Minimal setup (< 1 minute)
+- Hello World example
+- Common troubleshooting
+- Next steps for deep dive
+
+---
+
+## 📚 Full Examples
 
 Each example directory contains:
 - `README.md` - Explanation and setup instructions
@@ -32,10 +61,11 @@ Each example directory contains:
 
 ## 💡 How to Use These Examples
 
-1. **Learning**: Study the examples to understand implementation patterns
-2. **Starting Point**: Copy and adapt examples for your projects
-3. **Reference**: Use as templates when setting up new projects
-4. **Training**: Use in team workshops and onboarding
+1. **Quick Start**: Use [quickstart guides](quickstarts/) to get running in 5 minutes
+2. **Learning**: Study full examples to understand implementation patterns
+3. **Starting Point**: Copy and adapt examples for your projects
+4. **Reference**: Use as templates when setting up new projects
+5. **Training**: Use in team workshops and onboarding
 
 ## 🔧 Prerequisites
 
