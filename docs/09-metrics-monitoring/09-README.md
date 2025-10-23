@@ -1,12 +1,15 @@
 # Metrics & Monitoring
 
 ## Purpose
+
 Establish comprehensive measurement and monitoring practices to track quality, performance, and delivery effectiveness using industry-standard metrics and modern observability techniques.
 
 ## Context
+
 "You can't improve what you don't measure." Metrics provide objective insights into software quality, team performance, and business value delivery, enabling data-driven decisions and continuous improvement.
 
 ## Prerequisites
+
 - Understanding of [Quality Foundations](../00-foundations/README.md)
 - Knowledge of [CI/CD Pipeline](../08-cicd-pipeline/README.md)
 - Familiarity with monitoring concepts
@@ -29,6 +32,7 @@ graph TB
 ## DORA Metrics (DevOps Research & Assessment)
 
 ### Overview
+
 DORA metrics are the industry standard for measuring DevOps performance and predicting organizational success.
 
 ### 1. Deployment Frequency
@@ -36,11 +40,13 @@ DORA metrics are the industry standard for measuring DevOps performance and pred
 **Definition:** How often code deploys to production
 
 **Formula:**
+
 ```
 Deployment Frequency = Number of Production Deployments / Time Period
 ```
 
 **Measurement:**
+
 ```sql
 -- Daily deployment frequency
 SELECT
@@ -67,12 +73,14 @@ FROM (
 ```
 
 **Benchmarks:**
+
 - **Elite**: Multiple deployments per day
 - **High**: Daily to weekly deployments
 - **Medium**: Weekly to monthly deployments
 - **Low**: Monthly to every 6 months
 
 **Implementation Example:**
+
 ```javascript
 // Deployment frequency tracker
 class DeploymentTracker {
@@ -81,7 +89,7 @@ class DeploymentTracker {
       environment,
       version,
       deployedAt: new Date(),
-      ...metadata
+      ...metadata,
     };
 
     await this.database.deployments.create(deployment);
@@ -99,8 +107,8 @@ class DeploymentTracker {
     const deploymentsCount = await this.database.deployments.count({
       where: {
         environment: 'production',
-        deployedAt: { gte: last30Days }
-      }
+        deployedAt: { gte: last30Days },
+      },
     });
 
     const frequency = deploymentsCount / 30; // Per day
@@ -114,11 +122,13 @@ class DeploymentTracker {
 **Definition:** Time from code commit to production deployment
 
 **Formula:**
+
 ```
 Lead Time = Time(Production Deploy) - Time(First Commit)
 ```
 
 **Measurement:**
+
 ```sql
 -- Lead time calculation
 SELECT
@@ -145,12 +155,14 @@ WHERE d.environment = 'production';
 ```
 
 **Benchmarks:**
+
 - **Elite**: Less than 1 hour
 - **High**: 1 day to 1 week
 - **Medium**: 1 week to 1 month
 - **Low**: 1 month to 6 months
 
 **Implementation:**
+
 ```javascript
 // Lead time calculator
 class LeadTimeCalculator {
@@ -162,14 +174,14 @@ class LeadTimeCalculator {
     const leadTime = deployment.deployedAt - firstCommitTime;
 
     await this.metrics.histogram('lead_time.milliseconds', leadTime, {
-      environment: deployment.environment
+      environment: deployment.environment,
     });
 
     return {
       leadTimeMs: leadTime,
       leadTimeHours: leadTime / (1000 * 60 * 60),
       firstCommit: new Date(firstCommitTime),
-      deployment: deployment.deployedAt
+      deployment: deployment.deployedAt,
     };
   }
 
@@ -190,11 +202,13 @@ class LeadTimeCalculator {
 **Definition:** Average time to restore service after an incident
 
 **Formula:**
+
 ```
 MTTR = Total Downtime / Number of Incidents
 ```
 
 **Measurement:**
+
 ```sql
 -- MTTR calculation
 SELECT
@@ -221,12 +235,14 @@ GROUP BY severity;
 ```
 
 **Benchmarks:**
+
 - **Elite**: Less than 1 hour
 - **High**: Less than 1 day
 - **Medium**: 1 day to 1 week
 - **Low**: 1 week to 1 month
 
 **Implementation:**
+
 ```javascript
 // Incident tracker for MTTR
 class IncidentTracker {
@@ -237,7 +253,7 @@ class IncidentTracker {
       severity,
       detectedAt: new Date(),
       status: 'investigating',
-      ...metadata
+      ...metadata,
     };
 
     await this.database.incidents.create(incident);
@@ -255,12 +271,12 @@ class IncidentTracker {
     await this.database.incidents.update(incidentId, {
       status: 'resolved',
       resolvedAt,
-      resolution
+      resolution,
     });
 
     // Record MTTR metric
     await this.metrics.histogram('mttr.milliseconds', mttr, {
-      severity: incident.severity
+      severity: incident.severity,
     });
 
     // Calculate rolling average
@@ -276,13 +292,14 @@ class IncidentTracker {
       where: {
         severity,
         resolvedAt: { gte: last30Days },
-        status: 'resolved'
-      }
+        status: 'resolved',
+      },
     });
 
-    const avgMTTR = incidents.reduce((sum, incident) => {
-      return sum + (incident.resolvedAt - incident.detectedAt);
-    }, 0) / incidents.length;
+    const avgMTTR =
+      incidents.reduce((sum, incident) => {
+        return sum + (incident.resolvedAt - incident.detectedAt);
+      }, 0) / incidents.length;
 
     await this.metrics.gauge('mttr.average_milliseconds', avgMTTR, { severity });
   }
@@ -294,11 +311,13 @@ class IncidentTracker {
 **Definition:** Percentage of deployments that result in degraded service
 
 **Formula:**
+
 ```
 Change Failure Rate = (Failed Deployments / Total Deployments) × 100
 ```
 
 **Measurement:**
+
 ```sql
 -- Change failure rate
 SELECT
@@ -323,12 +342,14 @@ ORDER BY week;
 ```
 
 **Benchmarks:**
+
 - **Elite**: 0-15%
 - **High**: 16-30%
 - **Medium**: 31-45%
 - **Low**: 46-60%
 
 **Implementation:**
+
 ```javascript
 // Change failure rate tracker
 class ChangeFailureTracker {
@@ -336,13 +357,13 @@ class ChangeFailureTracker {
     await this.database.deployments.update(deploymentId, {
       status,
       completedAt: new Date(),
-      ...details
+      ...details,
     });
 
     // Increment counters
     await this.metrics.increment('deployments.total', 1, {
       environment: details.environment,
-      status
+      status,
     });
 
     // Calculate failure rate
@@ -357,8 +378,8 @@ class ChangeFailureTracker {
     const deployments = await this.database.deployments.findMany({
       where: {
         environment: 'production',
-        deployedAt: { gte: last30Days }
-      }
+        deployedAt: { gte: last30Days },
+      },
     });
 
     const totalDeployments = deployments.length;
@@ -370,7 +391,7 @@ class ChangeFailureTracker {
     return {
       totalDeployments,
       failedDeployments,
-      failureRate
+      failureRate,
     };
   }
 
@@ -386,7 +407,7 @@ class ChangeFailureTracker {
         environment: deployment.environment,
         reason: 'automated_detection',
         healthChecks,
-        errorRate
+        errorRate,
       });
     }
   }
@@ -400,18 +421,21 @@ class ChangeFailureTracker {
 **Definition:** Percentage of code exercised by tests
 
 **Types:**
+
 - **Line Coverage:** Percentage of executable lines covered
 - **Branch Coverage:** Percentage of decision branches covered
 - **Function Coverage:** Percentage of functions called
 - **Statement Coverage:** Percentage of statements executed
 
 **Formula:**
+
 ```
 Line Coverage = (Lines Covered by Tests / Total Executable Lines) × 100
 Branch Coverage = (Branches Covered / Total Branches) × 100
 ```
 
 **Measurement:**
+
 ```javascript
 // Coverage analysis
 class CoverageAnalyzer {
@@ -420,16 +444,15 @@ class CoverageAnalyzer {
       lines: this.calculateLineCoverage(testResults),
       branches: this.calculateBranchCoverage(testResults),
       functions: this.calculateFunctionCoverage(testResults),
-      statements: this.calculateStatementCoverage(testResults)
+      statements: this.calculateStatementCoverage(testResults),
     };
 
     // Overall coverage (weighted average)
-    coverage.overall = (
+    coverage.overall =
       coverage.lines * 0.4 +
       coverage.branches * 0.3 +
       coverage.functions * 0.2 +
-      coverage.statements * 0.1
-    );
+      coverage.statements * 0.1;
 
     await this.recordCoverageMetrics(coverage);
     return coverage;
@@ -445,7 +468,7 @@ class CoverageAnalyzer {
       this.metrics.gauge('coverage.lines.percent', coverage.lines),
       this.metrics.gauge('coverage.branches.percent', coverage.branches),
       this.metrics.gauge('coverage.functions.percent', coverage.functions),
-      this.metrics.gauge('coverage.overall.percent', coverage.overall)
+      this.metrics.gauge('coverage.overall.percent', coverage.overall),
     ]);
   }
 
@@ -454,7 +477,7 @@ class CoverageAnalyzer {
       lines: 80,
       branches: 75,
       functions: 80,
-      overall: 80
+      overall: 80,
     };
 
     const violations = [];
@@ -465,7 +488,7 @@ class CoverageAnalyzer {
           type,
           actual: coverage[type],
           threshold,
-          gap: threshold - coverage[type]
+          gap: threshold - coverage[type],
         });
       }
     });
@@ -476,6 +499,7 @@ class CoverageAnalyzer {
 ```
 
 **Target Levels:**
+
 - **Critical Code:** 95%+
 - **Business Logic:** 85%+
 - **General Code:** 80%+
@@ -486,6 +510,7 @@ class CoverageAnalyzer {
 **Definition:** Measure of code complexity based on number of linearly independent paths
 
 **Formula:**
+
 ```
 Cyclomatic Complexity = E - N + 2P
 
@@ -496,13 +521,14 @@ P = Number of connected components
 ```
 
 **Measurement:**
+
 ```javascript
 // Complexity analyzer
 class ComplexityAnalyzer {
   analyzeFunction(functionAst) {
     let complexity = 1; // Base complexity
 
-    this.traverse(functionAst, (node) => {
+    this.traverse(functionAst, node => {
       switch (node.type) {
         case 'IfStatement':
         case 'ConditionalExpression':
@@ -535,14 +561,14 @@ class ComplexityAnalyzer {
       name: func.name,
       complexity: this.analyzeFunction(func.ast),
       startLine: func.startLine,
-      endLine: func.endLine
+      endLine: func.endLine,
     }));
 
     // Record metrics
     results.forEach(result => {
       this.metrics.histogram('complexity.function', result.complexity, {
         file: filePath,
-        function: result.name
+        function: result.name,
       });
     });
 
@@ -550,13 +576,14 @@ class ComplexityAnalyzer {
       file: filePath,
       functions: results,
       averageComplexity: results.reduce((sum, r) => sum + r.complexity, 0) / results.length,
-      maxComplexity: Math.max(...results.map(r => r.complexity))
+      maxComplexity: Math.max(...results.map(r => r.complexity)),
     };
   }
 }
 ```
 
 **Complexity Levels:**
+
 - **1-10:** Simple, low risk
 - **11-20:** Complex, moderate risk
 - **21-50:** Very complex, high risk
@@ -567,11 +594,13 @@ class ComplexityAnalyzer {
 **Definition:** Cost to fix technical debt vs. cost to develop from scratch
 
 **Formula:**
+
 ```
 Technical Debt Ratio = (Remediation Cost / Development Cost) × 100
 ```
 
 **Measurement:**
+
 ```javascript
 // Technical debt calculator
 class TechnicalDebtCalculator {
@@ -590,7 +619,7 @@ class TechnicalDebtCalculator {
       remediationEffort,
       developmentCost,
       debtRatio,
-      issues: this.categorizeIssues(issues)
+      issues: this.categorizeIssues(issues),
     };
   }
 
@@ -603,9 +632,9 @@ class TechnicalDebtCalculator {
 
   getRemediationTime(type, severity) {
     const effortMatrix = {
-      'bug': { 'blocker': 240, 'critical': 120, 'major': 60, 'minor': 30 },
-      'vulnerability': { 'blocker': 480, 'critical': 240, 'major': 120, 'minor': 60 },
-      'code_smell': { 'blocker': 120, 'critical': 60, 'major': 30, 'minor': 15 }
+      bug: { blocker: 240, critical: 120, major: 60, minor: 30 },
+      vulnerability: { blocker: 480, critical: 240, major: 120, minor: 60 },
+      code_smell: { blocker: 120, critical: 60, major: 30, minor: 15 },
     };
 
     return effortMatrix[type]?.[severity] || 30; // minutes
@@ -628,6 +657,7 @@ class TechnicalDebtCalculator {
 ```
 
 **Target Levels:**
+
 - **Excellent:** < 5%
 - **Good:** 5-10%
 - **Acceptable:** 10-20%
@@ -639,11 +669,13 @@ class TechnicalDebtCalculator {
 **Definition:** Percentage of duplicated code in the codebase
 
 **Formula:**
+
 ```
 Code Duplication = (Duplicated Lines / Total Lines) × 100
 ```
 
 **Measurement:**
+
 ```javascript
 // Duplication detector
 class DuplicationDetector {
@@ -668,7 +700,7 @@ class DuplicationDetector {
       totalLines,
       duplicatedLines,
       duplicationPercentage,
-      duplications: duplications.map(this.formatDuplication)
+      duplications: duplications.map(this.formatDuplication),
     };
   }
 
@@ -691,7 +723,7 @@ class DuplicationDetector {
             startLine1: i + 1,
             startLine2: j + 1,
             lines: matchLength,
-            content: lines1.slice(i, i + matchLength)
+            content: lines1.slice(i, i + matchLength),
           });
         }
       }
@@ -703,6 +735,7 @@ class DuplicationDetector {
 ```
 
 **Target Levels:**
+
 - **Excellent:** < 3%
 - **Good:** 3-5%
 - **Acceptable:** 5-10%
@@ -716,11 +749,13 @@ class DuplicationDetector {
 **Definition:** Ability of tests to find defects
 
 **Formula:**
+
 ```
 Test Effectiveness = (Defects Found by Tests / Total Defects) × 100
 ```
 
 **Measurement:**
+
 ```javascript
 // Test effectiveness calculator
 class TestEffectivenessCalculator {
@@ -728,17 +763,15 @@ class TestEffectivenessCalculator {
     const startDate = new Date(Date.now() - timeframe * 24 * 60 * 60 * 1000);
 
     const defects = await this.database.defects.findMany({
-      where: { createdAt: { gte: startDate } }
+      where: { createdAt: { gte: startDate } },
     });
 
-    const testFoundDefects = defects.filter(defect =>
-      defect.discoveredBy === 'automated_test' ||
-      defect.discoveredBy === 'manual_test'
+    const testFoundDefects = defects.filter(
+      defect => defect.discoveredBy === 'automated_test' || defect.discoveredBy === 'manual_test'
     );
 
-    const productionDefects = defects.filter(defect =>
-      defect.discoveredBy === 'user' ||
-      defect.discoveredBy === 'monitoring'
+    const productionDefects = defects.filter(
+      defect => defect.discoveredBy === 'user' || defect.discoveredBy === 'monitoring'
     );
 
     const effectiveness = (testFoundDefects.length / defects.length) * 100;
@@ -749,7 +782,7 @@ class TestEffectivenessCalculator {
       totalDefects: defects.length,
       testFoundDefects: testFoundDefects.length,
       productionDefects: productionDefects.length,
-      effectiveness
+      effectiveness,
     };
   }
 
@@ -757,7 +790,7 @@ class TestEffectivenessCalculator {
     // Track when a defect escapes to production
     await this.metrics.increment('defects.escaped', 1, {
       severity: defect.severity,
-      component: defect.component
+      component: defect.component,
     });
 
     // Calculate escape rate
@@ -769,14 +802,14 @@ class TestEffectivenessCalculator {
     const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
     const allDefects = await this.database.defects.count({
-      where: { createdAt: { gte: last30Days } }
+      where: { createdAt: { gte: last30Days } },
     });
 
     const escapedDefects = await this.database.defects.count({
       where: {
         createdAt: { gte: last30Days },
-        discoveredBy: { in: ['user', 'monitoring'] }
-      }
+        discoveredBy: { in: ['user', 'monitoring'] },
+      },
     });
 
     return (escapedDefects / allDefects) * 100;
@@ -787,16 +820,19 @@ class TestEffectivenessCalculator {
 ### 2. Test Execution Metrics
 
 **Test Pass Rate:**
+
 ```
 Test Pass Rate = (Passed Tests / Total Tests) × 100
 ```
 
 **Test Execution Time:**
+
 ```
 Average Execution Time = Total Execution Time / Number of Tests
 ```
 
 **Implementation:**
+
 ```javascript
 // Test execution tracker
 class TestExecutionTracker {
@@ -805,14 +841,14 @@ class TestExecutionTracker {
 
     await Promise.all([
       this.metrics.gauge('test_pass_rate.percent', metrics.passRate, {
-        suite: testSuite.name
+        suite: testSuite.name,
       }),
       this.metrics.histogram('test_execution_time.milliseconds', metrics.totalTime, {
-        suite: testSuite.name
+        suite: testSuite.name,
       }),
       this.metrics.gauge('test_count.total', metrics.totalTests, {
-        suite: testSuite.name
-      })
+        suite: testSuite.name,
+      }),
     ]);
 
     return metrics;
@@ -834,7 +870,7 @@ class TestExecutionTracker {
       skippedTests,
       passRate: (passedTests / totalTests) * 100,
       totalTime,
-      averageTime
+      averageTime,
     };
   }
 }
@@ -845,12 +881,14 @@ class TestExecutionTracker {
 ### 1. Response Time Metrics
 
 **Key Percentiles:**
+
 - **P50 (Median):** 50% of requests faster than this
 - **P95:** 95% of requests faster than this
 - **P99:** 99% of requests faster than this
 - **P99.9:** 99.9% of requests faster than this
 
 **Measurement:**
+
 ```javascript
 // Response time tracker
 class ResponseTimeTracker {
@@ -864,7 +902,7 @@ class ResponseTimeTracker {
       endpoint,
       duration,
       statusCode,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.responseTimes.push(responseData);
@@ -877,7 +915,7 @@ class ResponseTimeTracker {
     // Record metrics
     this.metrics.histogram('response_time.milliseconds', duration, {
       endpoint,
-      status_code: statusCode
+      status_code: statusCode,
     });
 
     // Calculate percentiles every 100 requests
@@ -898,7 +936,7 @@ class ResponseTimeTracker {
       p50: this.calculatePercentile(endpointData, 50),
       p95: this.calculatePercentile(endpointData, 95),
       p99: this.calculatePercentile(endpointData, 99),
-      p999: this.calculatePercentile(endpointData, 99.9)
+      p999: this.calculatePercentile(endpointData, 99.9),
     };
 
     Object.entries(percentiles).forEach(([percentile, value]) => {
@@ -916,11 +954,13 @@ class ResponseTimeTracker {
 ### 2. Throughput Metrics
 
 **Requests Per Second (RPS):**
+
 ```
 RPS = Number of Requests / Time Period (seconds)
 ```
 
 **Implementation:**
+
 ```javascript
 // Throughput calculator
 class ThroughputCalculator {
@@ -953,7 +993,7 @@ class ThroughputCalculator {
   }
 
   cleanOldWindows(currentTime) {
-    const cutoff = currentTime - (5 * this.windowDuration); // Keep 5 windows
+    const cutoff = currentTime - 5 * this.windowDuration; // Keep 5 windows
 
     for (const [key] of this.requestCounts) {
       const windowTime = parseInt(key.split(':')[1]);
@@ -968,11 +1008,13 @@ class ThroughputCalculator {
 ### 3. Error Rate Metrics
 
 **Error Rate:**
+
 ```
 Error Rate = (Error Responses / Total Responses) × 100
 ```
 
 **Implementation:**
+
 ```javascript
 // Error rate tracker
 class ErrorRateTracker {
@@ -990,7 +1032,7 @@ class ErrorRateTracker {
 
       this.metrics.increment('requests.errors', 1, {
         endpoint,
-        status_code: statusCode
+        status_code: statusCode,
       });
     }
 
@@ -1018,7 +1060,7 @@ class ErrorRateTracker {
       message: `High error rate detected: ${errorRate.toFixed(2)}% on ${endpoint}`,
       metric: 'error_rate',
       value: errorRate,
-      threshold: 5
+      threshold: 5,
     });
   }
 }
@@ -1031,11 +1073,13 @@ class ErrorRateTracker {
 **Definition:** Measure of customer happiness with product/service
 
 **Formula:**
+
 ```
 CSAT = (Positive Responses / Total Responses) × 100
 ```
 
 **Implementation:**
+
 ```javascript
 // CSAT tracker
 class CSATTracker {
@@ -1045,7 +1089,7 @@ class CSATTracker {
       rating, // 1-5 scale
       category,
       comments,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     await this.database.feedback.create(feedback);
@@ -1054,7 +1098,7 @@ class CSATTracker {
     const isPositive = rating >= 4;
     await this.metrics.increment('csat.responses', 1, {
       category,
-      sentiment: isPositive ? 'positive' : 'negative'
+      sentiment: isPositive ? 'positive' : 'negative',
     });
 
     // Calculate rolling CSAT
@@ -1067,8 +1111,8 @@ class CSATTracker {
     const feedback = await this.database.feedback.findMany({
       where: {
         category,
-        timestamp: { gte: last30Days }
-      }
+        timestamp: { gte: last30Days },
+      },
     });
 
     const totalResponses = feedback.length;
@@ -1087,11 +1131,13 @@ class CSATTracker {
 **Definition:** Likelihood of customers to recommend the product
 
 **Formula:**
+
 ```
 NPS = % Promoters (9-10) - % Detractors (0-6)
 ```
 
 **Implementation:**
+
 ```javascript
 // NPS calculator
 class NPSCalculator {
@@ -1100,7 +1146,7 @@ class NPSCalculator {
       userId,
       score, // 0-10 scale
       reason,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     await this.database.npsResponses.create(response);
@@ -1121,7 +1167,7 @@ class NPSCalculator {
     const last90Days = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
 
     const responses = await this.database.npsResponses.findMany({
-      where: { timestamp: { gte: last90Days } }
+      where: { timestamp: { gte: last90Days } },
     });
 
     const totalResponses = responses.length;
@@ -1138,7 +1184,7 @@ class NPSCalculator {
       totalResponses,
       promoters,
       detractors,
-      nps
+      nps,
     };
   }
 }
@@ -1149,11 +1195,13 @@ class NPSCalculator {
 **Definition:** Percentage of users adopting new features
 
 **Formula:**
+
 ```
 Adoption Rate = (Users Using Feature / Total Active Users) × 100
 ```
 
 **Implementation:**
+
 ```javascript
 // Feature adoption tracker
 class FeatureAdoptionTracker {
@@ -1162,14 +1210,14 @@ class FeatureAdoptionTracker {
       userId,
       featureName,
       action,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     await this.database.featureUsage.create(usage);
 
     await this.metrics.increment('feature.usage', 1, {
       feature: featureName,
-      action
+      action,
     });
 
     // Update adoption metrics
@@ -1182,30 +1230,30 @@ class FeatureAdoptionTracker {
     // Get total active users
     const activeUsers = await this.database.users.count({
       where: {
-        lastActive: { gte: last30Days }
-      }
+        lastActive: { gte: last30Days },
+      },
     });
 
     // Get users who used the feature
     const featureUsers = await this.database.featureUsage.findMany({
       where: {
         featureName,
-        timestamp: { gte: last30Days }
+        timestamp: { gte: last30Days },
       },
       select: { userId: true },
-      distinct: ['userId']
+      distinct: ['userId'],
     });
 
     const adoptionRate = (featureUsers.length / activeUsers) * 100;
 
     await this.metrics.gauge('feature.adoption_rate', adoptionRate, {
-      feature: featureName
+      feature: featureName,
     });
 
     return {
       activeUsers,
       featureUsers: featureUsers.length,
-      adoptionRate
+      adoptionRate,
     };
   }
 
@@ -1215,8 +1263,8 @@ class FeatureAdoptionTracker {
     const events = await this.database.featureUsage.findMany({
       where: {
         featureName,
-        timestamp: { gte: last30Days }
-      }
+        timestamp: { gte: last30Days },
+      },
     });
 
     const funnel = events.reduce((acc, event) => {
@@ -1228,7 +1276,7 @@ class FeatureAdoptionTracker {
     // Convert sets to counts
     const funnelCounts = Object.entries(funnel).map(([action, userSet]) => ({
       action,
-      users: userSet.size
+      users: userSet.size,
     }));
 
     return funnelCounts;
@@ -1243,11 +1291,13 @@ class FeatureAdoptionTracker {
 **Definition:** Amount of work completed per sprint (story points)
 
 **Formula:**
+
 ```
 Velocity = Sum of Completed Story Points / Sprint
 ```
 
 **Implementation:**
+
 ```javascript
 // Velocity tracker
 class VelocityTracker {
@@ -1256,8 +1306,8 @@ class VelocityTracker {
     const stories = await this.database.stories.findMany({
       where: {
         sprintId,
-        status: 'completed'
-      }
+        status: 'completed',
+      },
     });
 
     const completedPoints = stories.reduce((sum, story) => sum + story.points, 0);
@@ -1265,12 +1315,12 @@ class VelocityTracker {
 
     await this.database.sprints.update(sprintId, {
       completedPoints,
-      status: 'completed'
+      status: 'completed',
     });
 
     await this.metrics.gauge('velocity.completed_points', completedPoints, {
       team: sprint.teamId,
-      sprint: sprintId
+      sprint: sprintId,
     });
 
     // Calculate rolling average velocity
@@ -1280,7 +1330,7 @@ class VelocityTracker {
       sprintId,
       completedPoints,
       committedPoints,
-      velocityAchievement: (completedPoints / committedPoints) * 100
+      velocityAchievement: (completedPoints / committedPoints) * 100,
     };
   }
 
@@ -1288,18 +1338,17 @@ class VelocityTracker {
     const lastSprints = await this.database.sprints.findMany({
       where: {
         teamId,
-        status: 'completed'
+        status: 'completed',
       },
       orderBy: { endDate: 'desc' },
-      take: 6 // Last 6 sprints
+      take: 6, // Last 6 sprints
     });
 
-    const averageVelocity = lastSprints.reduce((sum, sprint) =>
-      sum + sprint.completedPoints, 0
-    ) / lastSprints.length;
+    const averageVelocity =
+      lastSprints.reduce((sum, sprint) => sum + sprint.completedPoints, 0) / lastSprints.length;
 
     await this.metrics.gauge('velocity.average', averageVelocity, {
-      team: teamId
+      team: teamId,
     });
 
     return averageVelocity;
@@ -1312,11 +1361,13 @@ class VelocityTracker {
 **Definition:** Time from work start to completion
 
 **Formula:**
+
 ```
 Cycle Time = Completion Time - Start Time
 ```
 
 **Implementation:**
+
 ```javascript
 // Cycle time tracker
 class CycleTimeTracker {
@@ -1324,7 +1375,7 @@ class CycleTimeTracker {
     await this.database.workItemHistory.create({
       itemId,
       status,
-      timestamp
+      timestamp,
     });
 
     if (status === 'done') {
@@ -1335,7 +1386,7 @@ class CycleTimeTracker {
   async calculateCycleTime(itemId) {
     const history = await this.database.workItemHistory.findMany({
       where: { itemId },
-      orderBy: { timestamp: 'asc' }
+      orderBy: { timestamp: 'asc' },
     });
 
     const startEvent = history.find(h => h.status === 'in_progress');
@@ -1352,7 +1403,7 @@ class CycleTimeTracker {
         cycleTime,
         cycleTimeHours,
         startTime: startEvent.timestamp,
-        endTime: endEvent.timestamp
+        endTime: endEvent.timestamp,
       };
     }
   }
@@ -1364,8 +1415,8 @@ class CycleTimeTracker {
       where: {
         teamId,
         status: 'done',
-        completedAt: { gte: cutoff }
-      }
+        completedAt: { gte: cutoff },
+      },
     });
 
     const cycleTimes = await Promise.all(
@@ -1373,9 +1424,8 @@ class CycleTimeTracker {
     );
 
     const validCycleTimes = cycleTimes.filter(ct => ct !== null);
-    const averageCycleTime = validCycleTimes.reduce((sum, ct) =>
-      sum + ct.cycleTimeHours, 0
-    ) / validCycleTimes.length;
+    const averageCycleTime =
+      validCycleTimes.reduce((sum, ct) => sum + ct.cycleTimeHours, 0) / validCycleTimes.length;
 
     return averageCycleTime;
   }
@@ -1390,16 +1440,11 @@ class CycleTimeTracker {
 // Executive dashboard data provider
 class ExecutiveDashboard {
   async getDashboardData() {
-    const [
-      doraMetrics,
-      qualityMetrics,
-      businessMetrics,
-      teamMetrics
-    ] = await Promise.all([
+    const [doraMetrics, qualityMetrics, businessMetrics, teamMetrics] = await Promise.all([
       this.getDoraMetrics(),
       this.getQualityMetrics(),
       this.getBusinessMetrics(),
-      this.getTeamMetrics()
+      this.getTeamMetrics(),
     ]);
 
     return {
@@ -1409,7 +1454,7 @@ class ExecutiveDashboard {
       business: businessMetrics,
       team: teamMetrics,
       trends: await this.getTrends(),
-      alerts: await this.getActiveAlerts()
+      alerts: await this.getActiveAlerts(),
     };
   }
 
@@ -1418,7 +1463,7 @@ class ExecutiveDashboard {
       deploymentFrequency: await this.metrics.gauge('deployment_frequency.daily'),
       leadTime: await this.metrics.gauge('lead_time.average_hours'),
       mttr: await this.metrics.gauge('mttr.average_hours'),
-      changeFailureRate: await this.metrics.gauge('change_failure_rate.percent')
+      changeFailureRate: await this.metrics.gauge('change_failure_rate.percent'),
     };
   }
 
@@ -1430,7 +1475,7 @@ class ExecutiveDashboard {
       overallHealth: (doraScore + qualityScore) / 2,
       doraLevel: this.getDoraLevel(doraScore),
       qualityLevel: this.getQualityLevel(qualityScore),
-      recommendations: this.generateRecommendations(dora, quality)
+      recommendations: this.generateRecommendations(dora, quality),
     };
   }
 
@@ -1502,17 +1547,17 @@ class RealTimeMonitoringDashboard {
       system: {
         cpu: await this.getSystemCPU(),
         memory: await this.getSystemMemory(),
-        activeConnections: await this.getActiveConnections()
+        activeConnections: await this.getActiveConnections(),
       },
       application: {
         responseTime: await this.getCurrentResponseTime(),
         errorRate: await this.getCurrentErrorRate(),
-        throughput: await this.getCurrentThroughput()
+        throughput: await this.getCurrentThroughput(),
       },
       business: {
         activeUsers: await this.getActiveUsers(),
-        ongoingTransactions: await this.getOngoingTransactions()
-      }
+        ongoingTransactions: await this.getOngoingTransactions(),
+      },
     };
   }
 
@@ -1527,19 +1572,17 @@ class RealTimeMonitoringDashboard {
   }
 
   async getCurrentResponseTime() {
-    const last5Minutes = Date.now() - (5 * 60 * 1000);
+    const last5Minutes = Date.now() - 5 * 60 * 1000;
     const recentRequests = this.getRecentRequests(last5Minutes);
 
     if (recentRequests.length === 0) return 0;
 
-    const sortedTimes = recentRequests
-      .map(r => r.responseTime)
-      .sort((a, b) => a - b);
+    const sortedTimes = recentRequests.map(r => r.responseTime).sort((a, b) => a - b);
 
     return {
       p50: this.calculatePercentile(sortedTimes, 50),
       p95: this.calculatePercentile(sortedTimes, 95),
-      p99: this.calculatePercentile(sortedTimes, 99)
+      p99: this.calculatePercentile(sortedTimes, 99),
     };
   }
 }
@@ -1562,7 +1605,7 @@ class AlertManager {
     this.rules.set(name, {
       ...rule,
       lastTriggered: null,
-      state: 'OK'
+      state: 'OK',
     });
   }
 
@@ -1588,7 +1631,6 @@ class AlertManager {
       rule.lastTriggered = currentTime;
 
       await this.sendAlert(ruleName, rule, value, labels);
-
     } else if (!isTriggered && rule.state === 'ALERTING') {
       // Alert resolved
       rule.state = 'OK';
@@ -1599,13 +1641,20 @@ class AlertManager {
 
   checkCondition(condition, value) {
     switch (condition.operator) {
-      case '>': return value > condition.threshold;
-      case '<': return value < condition.threshold;
-      case '>=': return value >= condition.threshold;
-      case '<=': return value <= condition.threshold;
-      case '==': return value === condition.threshold;
-      case '!=': return value !== condition.threshold;
-      default: return false;
+      case '>':
+        return value > condition.threshold;
+      case '<':
+        return value < condition.threshold;
+      case '>=':
+        return value >= condition.threshold;
+      case '<=':
+        return value <= condition.threshold;
+      case '==':
+        return value === condition.threshold;
+      case '!=':
+        return value !== condition.threshold;
+      default:
+        return false;
     }
   }
 
@@ -1618,7 +1667,7 @@ class AlertManager {
       severity: rule.severity,
       message: rule.message,
       labels,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Send to configured channels
@@ -1652,7 +1701,7 @@ const alertRules = [
     duration: '2m',
     severity: 'warning',
     message: 'Error rate is above 5%',
-    channels: ['slack', 'email']
+    channels: ['slack', 'email'],
   },
   {
     name: 'high_response_time',
@@ -1661,7 +1710,7 @@ const alertRules = [
     duration: '5m',
     severity: 'critical',
     message: 'P95 response time exceeds 2 seconds',
-    channels: ['slack', 'pagerduty']
+    channels: ['slack', 'pagerduty'],
   },
   {
     name: 'low_deployment_frequency',
@@ -1670,8 +1719,8 @@ const alertRules = [
     duration: '7d',
     severity: 'info',
     message: 'Deployment frequency is below target',
-    channels: ['slack']
-  }
+    channels: ['slack'],
+  },
 ];
 ```
 
@@ -1680,6 +1729,7 @@ const alertRules = [
 ### Metrics Implementation Checklist
 
 **DORA Metrics:**
+
 - [ ] Deployment frequency tracking
 - [ ] Lead time measurement
 - [ ] MTTR calculation
@@ -1688,6 +1738,7 @@ const alertRules = [
 - [ ] Trend analysis
 
 **Quality Metrics:**
+
 - [ ] Code coverage measurement
 - [ ] Complexity analysis
 - [ ] Technical debt tracking
@@ -1695,6 +1746,7 @@ const alertRules = [
 - [ ] Quality gates implementation
 
 **Performance Metrics:**
+
 - [ ] Response time monitoring
 - [ ] Throughput measurement
 - [ ] Error rate tracking
@@ -1702,12 +1754,14 @@ const alertRules = [
 - [ ] SLA compliance
 
 **Business Metrics:**
+
 - [ ] Customer satisfaction tracking
 - [ ] Feature adoption measurement
 - [ ] User engagement metrics
 - [ ] Revenue impact analysis
 
 **Infrastructure:**
+
 - [ ] Metrics collection setup
 - [ ] Dashboard creation
 - [ ] Alert configuration
@@ -1717,11 +1771,13 @@ const alertRules = [
 ## References
 
 ### Standards
+
 - DORA State of DevOps Reports
 - ISO/IEC 25010 - Quality models
 - IEEE 1061 - Software quality metrics
 
 ### Tools
+
 - **Prometheus** - Metrics collection
 - **Grafana** - Visualization
 - **Datadog** - APM and monitoring
@@ -1729,6 +1785,7 @@ const alertRules = [
 - **SonarQube** - Code quality
 
 ### Books
+
 - "Accelerate" - Forsgren, Humble, Kim
 - "The DevOps Handbook" - Kim, Humble, Debois, Willis
 - "Software Metrics: A Rigorous and Practical Approach" - Fenton, Bieman
@@ -1742,4 +1799,4 @@ const alertRules = [
 
 ---
 
-*Next: [DORA Metrics](dora-metrics.md) - Deep dive into DevOps metrics*
+_Next: [DORA Metrics](dora-metrics.md) - Deep dive into DevOps metrics_

@@ -1,9 +1,11 @@
 # Agentic CI/CD Workflows
 
 ## Purpose
+
 Provide comprehensive guidance and production-ready implementations for building autonomous AI agent workflows that manage, optimize, and self-heal CI/CD pipelines with minimal human intervention, transforming deployment from a manual oversight process to an intelligent, self-improving system.
 
 ## Prerequisites
+
 - Understanding of [Agentic Fundamentals](agentic-fundamentals.md) - ReAct pattern, tool use, agent memory
 - Experience with [CI/CD Pipeline](../08-cicd-pipeline/README.md) - Pipeline concepts, deployment strategies
 - Familiarity with [Agent Frameworks](agent-frameworks.md) - LangGraph implementation patterns
@@ -29,13 +31,13 @@ graph LR
 
 **Evolution:**
 
-| Capability | Traditional CI/CD | Agentic CI/CD |
-|------------|-------------------|---------------|
-| **Failure Handling** | Pipeline fails, notify human | **Agent analyzes failure, attempts fix, retries** |
-| **Rollback Decisions** | Manual decision required | **Agent assesses risk, triggers automatic rollback** |
-| **Build Optimization** | Static configuration | **Agent analyzes patterns, suggests optimizations** |
-| **Deployment Strategy** | Pre-configured strategy | **Agent selects strategy based on change risk** |
-| **Learning** | No learning between runs | **Agent learns from successes/failures, improves** |
+| Capability              | Traditional CI/CD            | Agentic CI/CD                                        |
+| ----------------------- | ---------------------------- | ---------------------------------------------------- |
+| **Failure Handling**    | Pipeline fails, notify human | **Agent analyzes failure, attempts fix, retries**    |
+| **Rollback Decisions**  | Manual decision required     | **Agent assesses risk, triggers automatic rollback** |
+| **Build Optimization**  | Static configuration         | **Agent analyzes patterns, suggests optimizations**  |
+| **Deployment Strategy** | Pre-configured strategy      | **Agent selects strategy based on change risk**      |
+| **Learning**            | No learning between runs     | **Agent learns from successes/failures, improves**   |
 
 ### Core Agent Capabilities for CI/CD
 
@@ -77,6 +79,7 @@ autonomous_cicd_agent:
 ## 1. Self-Healing Pipeline Agent
 
 ### Overview
+
 An agent that monitors pipeline execution, detects failures, analyzes logs to determine root cause, and attempts automatic fixes before escalating to humans.
 
 ### Architecture
@@ -303,7 +306,9 @@ def create_incident_issue(pipeline_id: str, error_info: dict) -> str:
 
 ### Error Details
 ```
+
 {error_info.get('error_message', 'No error message available')}
+
 ```
 
 ### Attempted Fix
@@ -540,7 +545,7 @@ on:
   pull_request:
     branches: [main]
   workflow_run:
-    workflows: ["*"]
+    workflows: ['*']
     types: [completed]
 
 env:
@@ -658,7 +663,7 @@ stages:
 
 variables:
   OPENAI_API_KEY: $OPENAI_API_KEY
-  AGENT_ENABLED: "true"
+  AGENT_ENABLED: 'true'
 
 build:
   stage: build
@@ -865,6 +870,7 @@ npm_healer = workflow.compile()
 ## 2. Autonomous Rollback Decisions
 
 ### Overview
+
 An agent that continuously monitors deployment health, assesses risk in real-time, and makes autonomous rollback decisions based on error rates, performance degradation, and user impact.
 
 ### Risk Assessment Model
@@ -1400,6 +1406,7 @@ def request_human_approval(prediction: Dict) -> bool:
 ## 3. Build Optimization Agent
 
 ### Overview
+
 An agent that analyzes build performance, identifies bottlenecks, and automatically suggests or applies optimizations to reduce build times and resource usage.
 
 ### LangGraph Implementation
@@ -1576,7 +1583,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  CACHE_VERSION: v1  # Increment to bust cache
+  CACHE_VERSION: v1 # Increment to bust cache
 
 jobs:
   # Parallel job matrix for faster execution
@@ -1586,12 +1593,12 @@ jobs:
     strategy:
       matrix:
         node-version: [18, 20]
-      fail-fast: false  # Continue other jobs if one fails
+      fail-fast: false # Continue other jobs if one fails
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better caching
+          fetch-depth: 0 # Full history for better caching
 
       # Optimized caching strategy
       - name: Cache dependencies
@@ -1611,7 +1618,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'  # Built-in npm caching
+          cache: 'npm' # Built-in npm caching
 
       # Skip install if cache hit
       - name: Install dependencies
@@ -1659,7 +1666,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [test, lint]  # Run after tests pass
+    needs: [test, lint] # Run after tests pass
 
     steps:
       - uses: actions/checkout@v4
@@ -1751,6 +1758,7 @@ jobs:
 ## 4. Deployment Strategy Agent
 
 ### Overview
+
 An agent that analyzes code changes, assesses risk, and automatically selects the optimal deployment strategy (blue-green, canary, rolling, immediate) based on change complexity and impact.
 
 ### LangGraph Implementation
@@ -2056,25 +2064,25 @@ spec:
         version: v1.0.0
     spec:
       containers:
-      - name: app
-        image: myapp:v1.0.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DEPLOYMENT_STRATEGY
-          value: "rolling"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: app
+          image: myapp:v1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DEPLOYMENT_STRATEGY
+              value: 'rolling'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 # Canary deployment with Istio
@@ -2084,26 +2092,26 @@ metadata:
   name: app-canary
 spec:
   hosts:
-  - myapp.example.com
+    - myapp.example.com
   http:
-  - match:
-    - headers:
-        canary:
-          exact: "true"
-    route:
-    - destination:
-        host: myapp
-        subset: canary
-      weight: 100
-  - route:
-    - destination:
-        host: myapp
-        subset: stable
-      weight: 95
-    - destination:
-        host: myapp
-        subset: canary
-      weight: 5
+    - match:
+        - headers:
+            canary:
+              exact: 'true'
+      route:
+        - destination:
+            host: myapp
+            subset: canary
+          weight: 100
+    - route:
+        - destination:
+            host: myapp
+            subset: stable
+          weight: 95
+        - destination:
+            host: myapp
+            subset: canary
+          weight: 5
 
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -2113,12 +2121,12 @@ metadata:
 spec:
   host: myapp
   subsets:
-  - name: stable
-    labels:
-      version: v1.0.0
-  - name: canary
-    labels:
-      version: v1.1.0
+    - name: stable
+      labels:
+        version: v1.0.0
+    - name: canary
+      labels:
+        version: v1.1.0
 ```
 
 ---
@@ -2714,7 +2722,7 @@ services:
   webhook-handler:
     build: .
     ports:
-      - "5000:5000"
+      - '5000:5000'
     environment:
       - GITHUB_WEBHOOK_SECRET=${GITHUB_WEBHOOK_SECRET}
       - GITLAB_WEBHOOK_TOKEN=${GITLAB_WEBHOOK_TOKEN}
@@ -2727,7 +2735,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis-data:/data
 
@@ -2740,7 +2748,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
 
 volumes:
   redis-data:
@@ -3072,14 +3080,14 @@ print(monitor.export_prometheus_metrics())
 
 ### Monthly Cost Analysis (50-person team)
 
-| Agent Workflow | Runs/Month | Avg Cost/Run | Total Cost | Time Saved | ROI |
-|----------------|------------|--------------|------------|------------|-----|
-| **Self-Healing Pipeline** | 400 | $0.20 | $80 | 80 hrs | $7,920 |
-| **Build Optimization** | 200 | $0.15 | $30 | 40 hrs | $3,970 |
-| **Deployment Strategy** | 300 | $0.10 | $30 | 30 hrs | $2,970 |
-| **Autonomous Rollback** | 100 | $0.25 | $25 | 50 hrs | $4,975 |
-| **Flaky Test Handler** | 500 | $0.12 | $60 | 60 hrs | $5,940 |
-| **Total** | 1,500 | **$0.15** | **$225** | **260 hrs** | **$25,775** |
+| Agent Workflow            | Runs/Month | Avg Cost/Run | Total Cost | Time Saved  | ROI         |
+| ------------------------- | ---------- | ------------ | ---------- | ----------- | ----------- |
+| **Self-Healing Pipeline** | 400        | $0.20        | $80        | 80 hrs      | $7,920      |
+| **Build Optimization**    | 200        | $0.15        | $30        | 40 hrs      | $3,970      |
+| **Deployment Strategy**   | 300        | $0.10        | $30        | 30 hrs      | $2,970      |
+| **Autonomous Rollback**   | 100        | $0.25        | $25        | 50 hrs      | $4,975      |
+| **Flaky Test Handler**    | 500        | $0.12        | $60        | 60 hrs      | $5,940      |
+| **Total**                 | 1,500      | **$0.15**    | **$225**   | **260 hrs** | **$25,775** |
 
 **ROI Calculation**: 260 hours × $100/hr = $26,000 saved, $225 cost = **11,455% ROI**
 
@@ -3088,6 +3096,7 @@ print(monitor.export_prometheus_metrics())
 ## Production Checklist
 
 ### Pre-Deployment
+
 - [ ] All agents tested in staging environment
 - [ ] Budget alerts configured ($500/month limit)
 - [ ] Human approval gates for high-risk decisions
@@ -3100,6 +3109,7 @@ print(monitor.export_prometheus_metrics())
 - [ ] Slack/Teams notifications configured
 
 ### Post-Deployment
+
 - [ ] Monitor agent performance daily (first week)
 - [ ] Track false positive/negative rates
 - [ ] Analyze cost per run and optimize
@@ -3154,4 +3164,4 @@ The key to success is starting small, measuring impact, and gradually expanding 
 
 ---
 
-*Ready to build your agentic CI/CD pipeline? Start with the [self-healing pipeline agent](#1-self-healing-pipeline-agent) and deploy your first autonomous workflow today.*
+_Ready to build your agentic CI/CD pipeline? Start with the [self-healing pipeline agent](#1-self-healing-pipeline-agent) and deploy your first autonomous workflow today._

@@ -54,7 +54,7 @@ expect.extend({
     if (pass) {
       return {
         message: () => `expected ${JSON.stringify(received)} not to be a valid user`,
-        pass: true
+        pass: true,
       };
     } else {
       return {
@@ -67,7 +67,7 @@ expect.extend({
 
           return `expected ${JSON.stringify(received)} to be a valid user. Issues: ${issues.join(', ')}`;
         },
-        pass: false
+        pass: false,
       };
     }
   },
@@ -87,12 +87,12 @@ expect.extend({
     if (pass) {
       return {
         message: () => `expected ${JSON.stringify(received)} not to have valid pagination`,
-        pass: true
+        pass: true,
       };
     } else {
       return {
         message: () => `expected ${JSON.stringify(received)} to have valid pagination structure`,
-        pass: false
+        pass: false,
       };
     }
   },
@@ -108,12 +108,12 @@ expect.extend({
     if (pass) {
       return {
         message: () => `expected ${received}ms not to be within ${maxTime}ms`,
-        pass: true
+        pass: true,
       };
     } else {
       return {
         message: () => `expected response time ${received}ms to be within ${maxTime}ms`,
-        pass: false
+        pass: false,
       };
     }
   },
@@ -131,15 +131,15 @@ expect.extend({
     if (pass) {
       return {
         message: () => `expected ${JSON.stringify(received)} not to be a valid error response`,
-        pass: true
+        pass: true,
       };
     } else {
       return {
         message: () => `expected ${JSON.stringify(received)} to have 'error' and 'message' fields`,
-        pass: false
+        pass: false,
       };
     }
-  }
+  },
 });
 
 // Global test utilities
@@ -149,7 +149,7 @@ global.testUtils = {
    * @param {number} ms - Milliseconds to sleep
    * @returns {Promise<void>}
    */
-  sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+  sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
 
   /**
    * Generate random email for testing
@@ -163,7 +163,9 @@ global.testUtils = {
    * @returns {string} Random string
    */
   randomString: (length = 10) => {
-    return Math.random().toString(36).substring(2, 2 + length);
+    return Math.random()
+      .toString(36)
+      .substring(2, 2 + length);
   },
 
   /**
@@ -174,7 +176,7 @@ global.testUtils = {
    */
   randomInt: (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  },
 };
 
 // Cleanup after all tests

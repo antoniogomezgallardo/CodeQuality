@@ -1,10 +1,13 @@
 # Microservices Testing
 
 ## Purpose
+
 Comprehensive guide to testing microservices architectures—addressing the unique challenges of distributed systems through effective testing strategies at multiple levels.
 
 ## Overview
+
 Microservices testing is:
+
 - Testing distributed, independent services
 - Validating service boundaries and contracts
 - Ensuring system resilience and fault tolerance
@@ -14,6 +17,7 @@ Microservices testing is:
 ## What is Microservices Testing?
 
 ### Definition
+
 Microservices testing validates individual services in isolation and their interactions within a distributed system, ensuring each service functions correctly independently and as part of the larger ecosystem.
 
 ### Microservices Testing Challenges
@@ -80,11 +84,11 @@ describe('UserService', () => {
     mockRepository = {
       findById: jest.fn(),
       save: jest.fn(),
-      delete: jest.fn()
+      delete: jest.fn(),
     };
 
     mockEventBus = {
-      publish: jest.fn()
+      publish: jest.fn(),
     };
 
     userService = new UserService(mockRepository, mockEventBus);
@@ -95,7 +99,7 @@ describe('UserService', () => {
       // Arrange
       const userData = {
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       };
 
       const savedUser = { id: 1, ...userData };
@@ -108,7 +112,7 @@ describe('UserService', () => {
       expect(mockRepository.save).toHaveBeenCalledWith(userData);
       expect(mockEventBus.publish).toHaveBeenCalledWith('user.created', {
         userId: savedUser.id,
-        email: savedUser.email
+        email: savedUser.email,
       });
       expect(result).toEqual(savedUser);
     });
@@ -119,8 +123,7 @@ describe('UserService', () => {
       mockRepository.save.mockRejectedValue(new Error('Database error'));
 
       // Act & Assert
-      await expect(userService.createUser(userData))
-        .rejects.toThrow('Database error');
+      await expect(userService.createUser(userData)).rejects.toThrow('Database error');
 
       expect(mockEventBus.publish).not.toHaveBeenCalled();
     });
@@ -133,14 +136,14 @@ describe('UserService', () => {
       const existingUser = {
         id: userId,
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       };
       const updateData = { name: 'John Smith' };
 
       mockRepository.findById.mockResolvedValue(existingUser);
       mockRepository.save.mockResolvedValue({
         ...existingUser,
-        ...updateData
+        ...updateData,
       });
 
       // Act
@@ -150,7 +153,7 @@ describe('UserService', () => {
       expect(result.name).toBe('John Smith');
       expect(mockEventBus.publish).toHaveBeenCalledWith('user.updated', {
         userId,
-        changes: updateData
+        changes: updateData,
       });
     });
 
@@ -159,8 +162,7 @@ describe('UserService', () => {
       mockRepository.findById.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(userService.updateUser(999, { name: 'Test' }))
-        .rejects.toThrow('User not found');
+      await expect(userService.updateUser(999, { name: 'Test' })).rejects.toThrow('User not found');
 
       expect(mockEventBus.publish).not.toHaveBeenCalled();
     });
@@ -179,7 +181,7 @@ describe('UserService', () => {
       // Assert
       expect(mockRepository.delete).toHaveBeenCalledWith(userId);
       expect(mockEventBus.publish).toHaveBeenCalledWith('user.deleted', {
-        userId
+        userId,
       });
     });
   });
@@ -216,18 +218,15 @@ describe('User Service API', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/users')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/users').send(userData).expect(201);
 
       expect(response.body).toMatchObject({
         id: expect.any(Number),
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
       expect(response.body.password).toBeUndefined();
     });
@@ -236,15 +235,12 @@ describe('User Service API', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       };
 
       await request(app).post('/users').send(userData).expect(201);
 
-      const response = await request(app)
-        .post('/users')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/users').send(userData).expect(409);
 
       expect(response.body.error).toContain('Email already exists');
     });
@@ -254,36 +250,30 @@ describe('User Service API', () => {
     it('should return user by id', async () => {
       const user = await db.users.create({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
 
-      const response = await request(app)
-        .get(`/users/${user.id}`)
-        .expect(200);
+      const response = await request(app).get(`/users/${user.id}`).expect(200);
 
       expect(response.body.id).toBe(user.id);
     });
 
     it('should return 404 for non-existent user', async () => {
-      await request(app)
-        .get('/users/99999')
-        .expect(404);
+      await request(app).get('/users/99999').expect(404);
     });
   });
 
   describe('Health Check', () => {
     it('should return service health status', async () => {
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       expect(response.body).toMatchObject({
         status: 'healthy',
         service: 'user-service',
         timestamp: expect.any(String),
         dependencies: {
-          database: 'healthy'
-        }
+          database: 'healthy',
+        },
       });
     });
   });
@@ -306,7 +296,7 @@ describe('Order Service -> User Service Contract', () => {
   const provider = new PactV3({
     consumer: 'OrderService',
     provider: 'UserService',
-    dir: './pacts'
+    dir: './pacts',
   });
 
   describe('getUserById', () => {
@@ -318,23 +308,23 @@ describe('Order Service -> User Service Contract', () => {
           method: 'GET',
           path: '/users/1',
           headers: {
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
-          }
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
+          },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             id: 1,
             name: like('John Doe'),
             email: like('john@example.com'),
-            status: like('active')
-          }
+            status: like('active'),
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const client = new UserServiceClient(mockServer.url, 'token123');
           const user = await client.getUserById(1);
 
@@ -342,7 +332,7 @@ describe('Order Service -> User Service Contract', () => {
             id: 1,
             name: expect.any(String),
             email: expect.any(String),
-            status: expect.any(String)
+            status: expect.any(String),
           });
         });
     });
@@ -353,23 +343,21 @@ describe('Order Service -> User Service Contract', () => {
         .uponReceiving('a request for user 999')
         .withRequest({
           method: 'GET',
-          path: '/users/999'
+          path: '/users/999',
         })
         .willRespondWith({
           status: 404,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
-            error: like('User not found')
-          }
+            error: like('User not found'),
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const client = new UserServiceClient(mockServer.url);
 
-          await expect(client.getUserById(999))
-            .rejects
-            .toThrow('User not found');
+          await expect(client.getUserById(999)).rejects.toThrow('User not found');
         });
     });
   });
@@ -383,21 +371,21 @@ describe('Order Service -> User Service Contract', () => {
           method: 'POST',
           path: '/users/1/validate',
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             valid: true,
             userId: 1,
-            status: 'active'
-          }
+            status: 'active',
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const client = new UserServiceClient(mockServer.url);
           const validation = await client.validateUser(1);
 
@@ -452,7 +440,7 @@ describe('User Service Provider Verification', () => {
             id: 1,
             name: 'John Doe',
             email: 'john@example.com',
-            status: 'active'
+            status: 'active',
           });
         },
         'user 999 does not exist': async () => {
@@ -464,9 +452,9 @@ describe('User Service Provider Verification', () => {
             id: 1,
             name: 'John Doe',
             email: 'john@example.com',
-            status: 'active'
+            status: 'active',
           });
-        }
+        },
       },
 
       // Request filters
@@ -476,7 +464,7 @@ describe('User Service Provider Verification', () => {
           req.headers.authorization = 'Bearer valid-test-token';
         }
         next();
-      }
+      },
     };
 
     const verifier = new Verifier(opts);
@@ -512,12 +500,10 @@ describe('Order Service -> User Service Integration', () => {
   describe('Create Order Flow', () => {
     it('should create order with valid user', async () => {
       // Create user in user service
-      const userResponse = await request(userServiceUrl)
-        .post('/users')
-        .send({
-          name: 'John Doe',
-          email: 'john@example.com'
-        });
+      const userResponse = await request(userServiceUrl).post('/users').send({
+        name: 'John Doe',
+        email: 'john@example.com',
+      });
 
       const userId = userResponse.body.id;
 
@@ -526,9 +512,7 @@ describe('Order Service -> User Service Integration', () => {
         .post('/orders')
         .send({
           userId,
-          items: [
-            { productId: 1, quantity: 2, price: 100 }
-          ]
+          items: [{ productId: 1, quantity: 2, price: 100 }],
         })
         .expect(201);
 
@@ -536,7 +520,7 @@ describe('Order Service -> User Service Integration', () => {
         id: expect.any(Number),
         userId,
         total: 200,
-        status: 'pending'
+        status: 'pending',
       });
     });
 
@@ -545,7 +529,7 @@ describe('Order Service -> User Service Integration', () => {
         .post('/orders')
         .send({
           userId: 99999,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(400);
 
@@ -560,7 +544,7 @@ describe('Order Service -> User Service Integration', () => {
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(503);
 
@@ -574,19 +558,17 @@ describe('Order Service -> User Service Integration', () => {
   describe('Order Validation Flow', () => {
     it('should validate user status before creating order', async () => {
       // Create suspended user
-      const userResponse = await request(userServiceUrl)
-        .post('/users')
-        .send({
-          name: 'Suspended User',
-          email: 'suspended@example.com',
-          status: 'suspended'
-        });
+      const userResponse = await request(userServiceUrl).post('/users').send({
+        name: 'Suspended User',
+        email: 'suspended@example.com',
+        status: 'suspended',
+      });
 
       const response = await request(orderApp)
         .post('/orders')
         .send({
           userId: userResponse.body.id,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(403);
 
@@ -612,7 +594,7 @@ describe('Order Service with Service Virtualization', () => {
   beforeAll(() => {
     app = createApp({
       userServiceUrl,
-      paymentServiceUrl
+      paymentServiceUrl,
     });
   });
 
@@ -627,33 +609,27 @@ describe('Order Service with Service Virtualization', () => {
   describe('Complete Order Flow', () => {
     it('should process order successfully', async () => {
       // Mock user service
-      nock(userServiceUrl)
-        .get('/users/1')
-        .reply(200, {
-          id: 1,
-          name: 'John Doe',
-          email: 'john@example.com',
-          status: 'active'
-        });
+      nock(userServiceUrl).get('/users/1').reply(200, {
+        id: 1,
+        name: 'John Doe',
+        email: 'john@example.com',
+        status: 'active',
+      });
 
       // Mock payment service
-      nock(paymentServiceUrl)
-        .post('/payments')
-        .reply(200, {
-          transactionId: 'txn_123',
-          status: 'completed',
-          amount: 200
-        });
+      nock(paymentServiceUrl).post('/payments').reply(200, {
+        transactionId: 'txn_123',
+        status: 'completed',
+        amount: 200,
+      });
 
       // Create order
       const response = await request(app)
         .post('/orders')
         .send({
           userId: 1,
-          items: [
-            { productId: 1, quantity: 2, price: 100 }
-          ],
-          paymentMethod: 'credit_card'
+          items: [{ productId: 1, quantity: 2, price: 100 }],
+          paymentMethod: 'credit_card',
         })
         .expect(201);
 
@@ -661,33 +637,29 @@ describe('Order Service with Service Virtualization', () => {
         id: expect.any(Number),
         status: 'completed',
         paymentStatus: 'paid',
-        transactionId: 'txn_123'
+        transactionId: 'txn_123',
       });
     });
 
     it('should handle payment failure', async () => {
       // Mock user service
-      nock(userServiceUrl)
-        .get('/users/1')
-        .reply(200, {
-          id: 1,
-          name: 'John Doe',
-          status: 'active'
-        });
+      nock(userServiceUrl).get('/users/1').reply(200, {
+        id: 1,
+        name: 'John Doe',
+        status: 'active',
+      });
 
       // Mock payment service failure
-      nock(paymentServiceUrl)
-        .post('/payments')
-        .reply(400, {
-          error: 'Insufficient funds'
-        });
+      nock(paymentServiceUrl).post('/payments').reply(400, {
+        error: 'Insufficient funds',
+      });
 
       const response = await request(app)
         .post('/orders')
         .send({
           userId: 1,
           items: [{ productId: 1, quantity: 1, price: 100 }],
-          paymentMethod: 'credit_card'
+          paymentMethod: 'credit_card',
         })
         .expect(400);
 
@@ -696,16 +668,13 @@ describe('Order Service with Service Virtualization', () => {
 
     it('should handle service unavailability', async () => {
       // Mock user service timeout
-      nock(userServiceUrl)
-        .get('/users/1')
-        .delayConnection(5000)
-        .reply(200, {});
+      nock(userServiceUrl).get('/users/1').delayConnection(5000).reply(200, {});
 
       const response = await request(app)
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(503);
 
@@ -723,21 +692,19 @@ describe('Order Service with Service Virtualization', () => {
         .reply(200, {
           id: 1,
           name: 'John Doe',
-          status: 'active'
+          status: 'active',
         });
 
-      nock(paymentServiceUrl)
-        .post('/payments')
-        .reply(200, {
-          transactionId: 'txn_123',
-          status: 'completed'
-        });
+      nock(paymentServiceUrl).post('/payments').reply(200, {
+        transactionId: 'txn_123',
+        status: 'completed',
+      });
 
       const response = await request(app)
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(201);
 
@@ -772,7 +739,7 @@ describe('User Events Integration', () => {
 
     // Setup notification service to listen for events
     notificationService = new NotificationService(channel);
-    await notificationService.subscribe('user.created', (event) => {
+    await notificationService.subscribe('user.created', event => {
       receivedEvents.push(event);
     });
   });
@@ -790,7 +757,7 @@ describe('User Events Integration', () => {
       // Arrange
       const userData = {
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       };
 
       // Act
@@ -805,24 +772,22 @@ describe('User Events Integration', () => {
         type: 'user.created',
         data: {
           name: 'John Doe',
-          email: 'john@example.com'
+          email: 'john@example.com',
         },
-        timestamp: expect.any(String)
+        timestamp: expect.any(String),
       });
     });
 
     it('should handle event processing failure gracefully', async () => {
       // Setup failing event handler
-      const failingHandler = jest.fn().mockRejectedValue(
-        new Error('Processing failed')
-      );
+      const failingHandler = jest.fn().mockRejectedValue(new Error('Processing failed'));
 
       await notificationService.subscribe('user.created', failingHandler);
 
       // Create user
       await userService.createUser({
         name: 'Test User',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
 
       // Wait for retry attempts
@@ -838,19 +803,19 @@ describe('User Events Integration', () => {
       // Create user first
       const user = await userService.createUser({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
 
       receivedEvents = []; // Clear creation event
 
       // Subscribe to update events
-      await notificationService.subscribe('user.updated', (event) => {
+      await notificationService.subscribe('user.updated', event => {
         receivedEvents.push(event);
       });
 
       // Update user
       await userService.updateUser(user.id, {
-        name: 'John Smith'
+        name: 'John Smith',
       });
 
       await waitFor(() => receivedEvents.length > 0, 5000);
@@ -860,9 +825,9 @@ describe('User Events Integration', () => {
         data: {
           userId: user.id,
           changes: {
-            name: 'John Smith'
-          }
-        }
+            name: 'John Smith',
+          },
+        },
       });
     });
   });
@@ -871,14 +836,14 @@ describe('User Events Integration', () => {
     it('should process events in order', async () => {
       const events = [];
 
-      await notificationService.subscribe('user.*', (event) => {
+      await notificationService.subscribe('user.*', event => {
         events.push(event.type);
       });
 
       // Create, update, delete
       const user = await userService.createUser({
         name: 'Test',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
 
       await userService.updateUser(user.id, { name: 'Updated' });
@@ -886,11 +851,7 @@ describe('User Events Integration', () => {
 
       await waitFor(() => events.length === 3, 5000);
 
-      expect(events).toEqual([
-        'user.created',
-        'user.updated',
-        'user.deleted'
-      ]);
+      expect(events).toEqual(['user.created', 'user.updated', 'user.deleted']);
     });
   });
 });
@@ -926,7 +887,7 @@ describe('Order Events via Kafka', () => {
   beforeAll(async () => {
     kafka = new Kafka({
       clientId: 'test-client',
-      brokers: [process.env.KAFKA_BROKER || 'localhost:9092']
+      brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
     });
 
     producer = kafka.producer();
@@ -954,17 +915,17 @@ describe('Order Events via Kafka', () => {
         eachMessage: async ({ topic, partition, message }) => {
           receivedMessages.push({
             topic,
-            value: JSON.parse(message.value.toString())
+            value: JSON.parse(message.value.toString()),
           });
-        }
+        },
       });
 
       // Create order
       await orderService.createOrder({
         items: [
           { productId: 1, quantity: 2 },
-          { productId: 2, quantity: 1 }
-        ]
+          { productId: 2, quantity: 1 },
+        ],
       });
 
       // Wait for inventory update
@@ -974,8 +935,8 @@ describe('Order Events via Kafka', () => {
         topic: 'inventory.updated',
         value: {
           productId: expect.any(Number),
-          quantityChanged: expect.any(Number)
-        }
+          quantityChanged: expect.any(Number),
+        },
       });
     });
   });
@@ -984,14 +945,14 @@ describe('Order Events via Kafka', () => {
     it('should handle duplicate events idempotently', async () => {
       const processedEvents = [];
 
-      await inventoryService.subscribe((event) => {
+      await inventoryService.subscribe(event => {
         processedEvents.push(event.eventId);
       });
 
       const event = {
         eventId: 'event-123',
         type: 'order.created',
-        data: { orderId: 1 }
+        data: { orderId: 1 },
       };
 
       // Send same event twice
@@ -999,8 +960,8 @@ describe('Order Events via Kafka', () => {
         topic: 'orders',
         messages: [
           { key: 'order-1', value: JSON.stringify(event) },
-          { key: 'order-1', value: JSON.stringify(event) }
-        ]
+          { key: 'order-1', value: JSON.stringify(event) },
+        ],
       });
 
       await waitFor(() => processedEvents.length >= 1, 5000);
@@ -1022,7 +983,7 @@ const request = require('supertest');
 const {
   startAllServices,
   stopAllServices,
-  getServiceUrl
+  getServiceUrl,
 } = require('../helpers/service-orchestrator');
 
 describe('E2E: Complete Order Flow', () => {
@@ -1034,7 +995,7 @@ describe('E2E: Complete Order Flow', () => {
       'product-service',
       'order-service',
       'payment-service',
-      'notification-service'
+      'notification-service',
     ]);
   }, 60000); // Allow time for services to start
 
@@ -1049,7 +1010,7 @@ describe('E2E: Complete Order Flow', () => {
       .send({
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       })
       .expect(201);
 
@@ -1061,7 +1022,7 @@ describe('E2E: Complete Order Flow', () => {
       .post('/auth/login')
       .send({
         email: 'john@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       })
       .expect(200);
 
@@ -1085,9 +1046,9 @@ describe('E2E: Complete Order Flow', () => {
           {
             productId: product.id,
             quantity: 2,
-            price: product.price
-          }
-        ]
+            price: product.price,
+          },
+        ],
       })
       .expect(201);
 
@@ -1102,7 +1063,7 @@ describe('E2E: Complete Order Flow', () => {
         orderId,
         amount: orderResponse.body.total,
         method: 'credit_card',
-        cardToken: 'test_card_token'
+        cardToken: 'test_card_token',
       })
       .expect(200);
 
@@ -1125,7 +1086,7 @@ describe('E2E: Complete Order Flow', () => {
     expect(finalOrder.body).toMatchObject({
       id: orderId,
       status: 'confirmed',
-      paymentStatus: 'paid'
+      paymentStatus: 'paid',
     });
 
     // Step 7: Verify notification sent
@@ -1138,27 +1099,23 @@ describe('E2E: Complete Order Flow', () => {
     expect(notifications.body).toContainEqual(
       expect.objectContaining({
         type: 'order_confirmation',
-        orderId
+        orderId,
       })
     );
   });
 
   it('should handle payment failure gracefully', async () => {
     // Create user and login
-    const userResponse = await request(getServiceUrl('user-service'))
-      .post('/users')
-      .send({
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'Pass123!'
-      });
+    const userResponse = await request(getServiceUrl('user-service')).post('/users').send({
+      name: 'Test User',
+      email: 'test@example.com',
+      password: 'Pass123!',
+    });
 
-    const loginResponse = await request(getServiceUrl('user-service'))
-      .post('/auth/login')
-      .send({
-        email: 'test@example.com',
-        password: 'Pass123!'
-      });
+    const loginResponse = await request(getServiceUrl('user-service')).post('/auth/login').send({
+      email: 'test@example.com',
+      password: 'Pass123!',
+    });
 
     const authToken = loginResponse.body.token;
 
@@ -1168,7 +1125,7 @@ describe('E2E: Complete Order Flow', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: userResponse.body.id,
-        items: [{ productId: 1, quantity: 1, price: 100 }]
+        items: [{ productId: 1, quantity: 1, price: 100 }],
       });
 
     const orderId = orderResponse.body.id;
@@ -1181,7 +1138,7 @@ describe('E2E: Complete Order Flow', () => {
         orderId,
         amount: 100,
         method: 'credit_card',
-        cardToken: 'invalid_card_token'
+        cardToken: 'invalid_card_token',
       })
       .expect(400);
 
@@ -1217,20 +1174,15 @@ describe('Circuit Breaker Pattern', () => {
     const options = {
       timeout: 3000,
       errorThresholdPercentage: 50,
-      resetTimeout: 5000
+      resetTimeout: 5000,
     };
 
-    circuitBreaker = new CircuitBreaker(
-      async (userId) => client.getUserById(userId),
-      options
-    );
+    circuitBreaker = new CircuitBreaker(async userId => client.getUserById(userId), options);
   });
 
   it('should open circuit after threshold failures', async () => {
     // Mock service to always fail
-    jest.spyOn(client, 'getUserById').mockRejectedValue(
-      new Error('Service unavailable')
-    );
+    jest.spyOn(client, 'getUserById').mockRejectedValue(new Error('Service unavailable'));
 
     // Trigger failures
     for (let i = 0; i < 10; i++) {
@@ -1257,9 +1209,7 @@ describe('Circuit Breaker Pattern', () => {
 
   it('should close circuit after successful calls', async () => {
     // Open circuit
-    jest.spyOn(client, 'getUserById').mockRejectedValue(
-      new Error('Service unavailable')
-    );
+    jest.spyOn(client, 'getUserById').mockRejectedValue(new Error('Service unavailable'));
 
     for (let i = 0; i < 10; i++) {
       try {
@@ -1277,7 +1227,7 @@ describe('Circuit Breaker Pattern', () => {
     // Mock service to succeed
     jest.spyOn(client, 'getUserById').mockResolvedValue({
       id: 1,
-      name: 'John Doe'
+      name: 'John Doe',
     });
 
     // Circuit should be half-open, test succeeds
@@ -1289,16 +1239,14 @@ describe('Circuit Breaker Pattern', () => {
   });
 
   it('should use fallback when circuit is open', async () => {
-    circuitBreaker.fallback((userId) => ({
+    circuitBreaker.fallback(userId => ({
       id: userId,
       name: 'Fallback User',
-      isFallback: true
+      isFallback: true,
     }));
 
     // Open circuit
-    jest.spyOn(client, 'getUserById').mockRejectedValue(
-      new Error('Service unavailable')
-    );
+    jest.spyOn(client, 'getUserById').mockRejectedValue(new Error('Service unavailable'));
 
     for (let i = 0; i < 10; i++) {
       try {
@@ -1313,7 +1261,7 @@ describe('Circuit Breaker Pattern', () => {
     expect(result).toMatchObject({
       id: 1,
       name: 'Fallback User',
-      isFallback: true
+      isFallback: true,
     });
   });
 });
@@ -1342,7 +1290,7 @@ describe('Chaos Engineering: Network Failures', () => {
     proxy = await client.createProxy({
       name: 'user-service-proxy',
       listen: '0.0.0.0:20001',
-      upstream: 'localhost:3001'
+      upstream: 'localhost:3001',
     });
   });
 
@@ -1357,8 +1305,8 @@ describe('Chaos Engineering: Network Failures', () => {
       await proxy.addToxic({
         type: 'latency',
         attributes: {
-          latency: 2000
-        }
+          latency: 2000,
+        },
       });
 
       const start = Date.now();
@@ -1367,7 +1315,7 @@ describe('Chaos Engineering: Network Failures', () => {
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(201);
 
@@ -1386,15 +1334,15 @@ describe('Chaos Engineering: Network Failures', () => {
       await proxy.addToxic({
         type: 'latency',
         attributes: {
-          latency: 10000
-        }
+          latency: 10000,
+        },
       });
 
       const response = await request(services.orderService)
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(503);
 
@@ -1410,15 +1358,15 @@ describe('Chaos Engineering: Network Failures', () => {
       await proxy.addToxic({
         type: 'bandwidth',
         attributes: {
-          rate: 0 // Zero bandwidth
-        }
+          rate: 0, // Zero bandwidth
+        },
       });
 
       const response = await request(services.orderService)
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         })
         .expect(503);
 
@@ -1433,15 +1381,15 @@ describe('Chaos Engineering: Network Failures', () => {
       await proxy.addToxic({
         type: 'reset_peer',
         attributes: {
-          timeout: 0
-        }
+          timeout: 0,
+        },
       });
 
       const response = await request(services.orderService)
         .post('/orders')
         .send({
           userId: 1,
-          items: [{ productId: 1, quantity: 1, price: 100 }]
+          items: [{ productId: 1, quantity: 1, price: 100 }],
         });
 
       // Should handle gracefully with retry or fallback
@@ -1469,16 +1417,16 @@ describe('Order Saga', () => {
     mockServices = {
       inventory: {
         reserve: jest.fn(),
-        release: jest.fn()
+        release: jest.fn(),
       },
       payment: {
         charge: jest.fn(),
-        refund: jest.fn()
+        refund: jest.fn(),
       },
       shipping: {
         create: jest.fn(),
-        cancel: jest.fn()
-      }
+        cancel: jest.fn(),
+      },
     };
 
     saga = new OrderSaga(mockServices);
@@ -1488,19 +1436,19 @@ describe('Order Saga', () => {
     it('should complete all steps successfully', async () => {
       // Mock successful responses
       mockServices.inventory.reserve.mockResolvedValue({
-        reservationId: 'res-123'
+        reservationId: 'res-123',
       });
       mockServices.payment.charge.mockResolvedValue({
-        transactionId: 'txn-456'
+        transactionId: 'txn-456',
       });
       mockServices.shipping.create.mockResolvedValue({
-        shippingId: 'ship-789'
+        shippingId: 'ship-789',
       });
 
       const orderData = {
         items: [{ productId: 1, quantity: 2 }],
         total: 200,
-        paymentMethod: 'credit_card'
+        paymentMethod: 'credit_card',
       };
 
       const result = await saga.execute(orderData);
@@ -1509,7 +1457,7 @@ describe('Order Saga', () => {
         status: 'completed',
         reservationId: 'res-123',
         transactionId: 'txn-456',
-        shippingId: 'ship-789'
+        shippingId: 'ship-789',
       });
 
       expect(mockServices.inventory.reserve).toHaveBeenCalled();
@@ -1522,19 +1470,16 @@ describe('Order Saga', () => {
     it('should compensate when payment fails', async () => {
       // Mock responses
       mockServices.inventory.reserve.mockResolvedValue({
-        reservationId: 'res-123'
+        reservationId: 'res-123',
       });
-      mockServices.payment.charge.mockRejectedValue(
-        new Error('Payment declined')
-      );
+      mockServices.payment.charge.mockRejectedValue(new Error('Payment declined'));
 
       const orderData = {
         items: [{ productId: 1, quantity: 2 }],
-        total: 200
+        total: 200,
       };
 
-      await expect(saga.execute(orderData))
-        .rejects.toThrow('Payment declined');
+      await expect(saga.execute(orderData)).rejects.toThrow('Payment declined');
 
       // Should compensate by releasing inventory
       expect(mockServices.inventory.release).toHaveBeenCalledWith('res-123');
@@ -1543,22 +1488,19 @@ describe('Order Saga', () => {
 
     it('should compensate when shipping fails', async () => {
       mockServices.inventory.reserve.mockResolvedValue({
-        reservationId: 'res-123'
+        reservationId: 'res-123',
       });
       mockServices.payment.charge.mockResolvedValue({
-        transactionId: 'txn-456'
+        transactionId: 'txn-456',
       });
-      mockServices.shipping.create.mockRejectedValue(
-        new Error('Shipping unavailable')
-      );
+      mockServices.shipping.create.mockRejectedValue(new Error('Shipping unavailable'));
 
       const orderData = {
         items: [{ productId: 1, quantity: 2 }],
-        total: 200
+        total: 200,
       };
 
-      await expect(saga.execute(orderData))
-        .rejects.toThrow('Shipping unavailable');
+      await expect(saga.execute(orderData)).rejects.toThrow('Shipping unavailable');
 
       // Should compensate by refunding and releasing inventory
       expect(mockServices.payment.refund).toHaveBeenCalledWith('txn-456');
@@ -1567,23 +1509,18 @@ describe('Order Saga', () => {
 
     it('should handle partial compensation failures', async () => {
       mockServices.inventory.reserve.mockResolvedValue({
-        reservationId: 'res-123'
+        reservationId: 'res-123',
       });
-      mockServices.payment.charge.mockRejectedValue(
-        new Error('Payment declined')
-      );
-      mockServices.inventory.release.mockRejectedValue(
-        new Error('Release failed')
-      );
+      mockServices.payment.charge.mockRejectedValue(new Error('Payment declined'));
+      mockServices.inventory.release.mockRejectedValue(new Error('Release failed'));
 
       const orderData = {
         items: [{ productId: 1, quantity: 2 }],
-        total: 200
+        total: 200,
       };
 
       // Should log compensation failure for manual intervention
-      await expect(saga.execute(orderData))
-        .rejects.toThrow('Payment declined');
+      await expect(saga.execute(orderData)).rejects.toThrow('Payment declined');
 
       // Verify compensation was attempted
       expect(mockServices.inventory.release).toHaveBeenCalled();
@@ -1637,7 +1574,7 @@ class TestContainer {
     const container = await new GenericContainer('postgres:14')
       .withEnvironment({
         POSTGRES_PASSWORD: 'test',
-        POSTGRES_DB: 'testdb'
+        POSTGRES_DB: 'testdb',
       })
       .withExposedPorts(5432)
       .start();
@@ -1648,7 +1585,7 @@ class TestContainer {
       database: 'testdb',
       username: 'postgres',
       password: 'test',
-      stop: () => container.stop()
+      stop: () => container.stop(),
     };
   }
 
@@ -1659,19 +1596,17 @@ class TestContainer {
 
     return {
       url: `amqp://${container.getHost()}:${container.getMappedPort(5672)}`,
-      stop: () => container.stop()
+      stop: () => container.stop(),
     };
   }
 
   static async startRedis() {
-    const container = await new GenericContainer('redis:7')
-      .withExposedPorts(6379)
-      .start();
+    const container = await new GenericContainer('redis:7').withExposedPorts(6379).start();
 
     return {
       host: container.getHost(),
       port: container.getMappedPort(6379),
-      stop: () => container.stop()
+      stop: () => container.stop(),
     };
   }
 }
@@ -1724,31 +1659,22 @@ describe('Order Service', () => {
 const request = require('supertest');
 
 describe('Service Health Checks', () => {
-  const services = [
-    'user-service',
-    'order-service',
-    'payment-service',
-    'notification-service'
-  ];
+  const services = ['user-service', 'order-service', 'payment-service', 'notification-service'];
 
   services.forEach(serviceName => {
     describe(`${serviceName} Health`, () => {
       it('should respond to health check', async () => {
-        const response = await request(getServiceUrl(serviceName))
-          .get('/health')
-          .expect(200);
+        const response = await request(getServiceUrl(serviceName)).get('/health').expect(200);
 
         expect(response.body).toMatchObject({
           status: 'healthy',
           service: serviceName,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         });
       });
 
       it('should report dependency health', async () => {
-        const response = await request(getServiceUrl(serviceName))
-          .get('/health/ready')
-          .expect(200);
+        const response = await request(getServiceUrl(serviceName)).get('/health/ready').expect(200);
 
         expect(response.body.dependencies).toBeDefined();
         Object.values(response.body.dependencies).forEach(status => {
@@ -1763,15 +1689,12 @@ describe('Service Health Checks', () => {
     await simulateDatabaseFailure('user-service');
 
     // Check user service health
-    const userHealth = await request(getServiceUrl('user-service'))
-      .get('/health')
-      .expect(503);
+    const userHealth = await request(getServiceUrl('user-service')).get('/health').expect(503);
 
     expect(userHealth.body.status).toBe('unhealthy');
 
     // Check dependent service health
-    const orderHealth = await request(getServiceUrl('order-service'))
-      .get('/health/ready');
+    const orderHealth = await request(getServiceUrl('order-service')).get('/health/ready');
 
     expect(orderHealth.body.dependencies['user-service']).toBe('unhealthy');
   });
@@ -1783,6 +1706,7 @@ describe('Service Health Checks', () => {
 ### Microservices Testing Implementation Checklist
 
 **Service Isolation Testing:**
+
 - [ ] Unit tests for service logic
 - [ ] API tests for endpoints
 - [ ] Test data isolation
@@ -1791,6 +1715,7 @@ describe('Service Health Checks', () => {
 - [ ] Validate business rules
 
 **Contract Testing:**
+
 - [ ] Define consumer contracts
 - [ ] Implement provider verification
 - [ ] Publish contracts to broker
@@ -1798,6 +1723,7 @@ describe('Service Health Checks', () => {
 - [ ] Breaking change detection
 
 **Integration Testing:**
+
 - [ ] Service-to-service communication
 - [ ] Database interactions
 - [ ] Message queue integration
@@ -1806,6 +1732,7 @@ describe('Service Health Checks', () => {
 - [ ] Timeout handling
 
 **Asynchronous Testing:**
+
 - [ ] Event publishing
 - [ ] Event consumption
 - [ ] Event ordering
@@ -1814,6 +1741,7 @@ describe('Service Health Checks', () => {
 - [ ] Message replay
 
 **Resilience Testing:**
+
 - [ ] Circuit breaker patterns
 - [ ] Retry logic
 - [ ] Fallback mechanisms
@@ -1822,6 +1750,7 @@ describe('Service Health Checks', () => {
 - [ ] Rate limiting
 
 **Chaos Engineering:**
+
 - [ ] Network latency injection
 - [ ] Service failures
 - [ ] Network partitions
@@ -1829,6 +1758,7 @@ describe('Service Health Checks', () => {
 - [ ] Data corruption
 
 **E2E Testing:**
+
 - [ ] Complete business flows
 - [ ] Multi-service scenarios
 - [ ] Happy path testing
@@ -1836,6 +1766,7 @@ describe('Service Health Checks', () => {
 - [ ] Compensation logic
 
 **Observability:**
+
 - [ ] Distributed tracing
 - [ ] Structured logging
 - [ ] Metrics collection
@@ -1845,12 +1776,14 @@ describe('Service Health Checks', () => {
 ## References
 
 ### Standards and Guidelines
+
 - **ISTQB Advanced Level** - Test Automation Engineer
 - **ISO/IEC 25010** - Software Quality Model
 - **12-Factor App** - Microservices principles
 - **Reactive Manifesto** - Resilient systems
 
 ### Tools and Frameworks
+
 - **Pact** - Consumer-driven contract testing
 - **Testcontainers** - Integration testing with containers
 - **Toxiproxy** - Chaos engineering and fault injection
@@ -1858,6 +1791,7 @@ describe('Service Health Checks', () => {
 - **LocalStack** - AWS service mocking
 
 ### Books and Resources
+
 - "Building Microservices" - Sam Newman
 - "Testing Microservices with Mountebank" - Brandon Byars
 - "Release It!" - Michael Nygard
@@ -1873,4 +1807,4 @@ describe('Service Health Checks', () => {
 
 ---
 
-*Part of: [Test Levels](05-README.md)*
+_Part of: [Test Levels](05-README.md)_

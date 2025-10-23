@@ -1,10 +1,13 @@
 # Integration Testing
 
 ## Purpose
+
 Comprehensive guide to integration testing—verifying that different modules, services, and systems work together correctly.
 
 ## Overview
+
 Integration testing:
+
 - Tests interactions between components
 - Verifies interfaces and data flow
 - Catches integration issues early
@@ -14,6 +17,7 @@ Integration testing:
 ## What is Integration Testing?
 
 ### Definition
+
 Integration testing verifies that multiple units or components work together correctly as a group, focusing on the interfaces and interactions between them.
 
 ### Characteristics
@@ -171,18 +175,15 @@ describe('User API Integration', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/api/users').send(userData).expect(201);
 
       expect(response.body).toMatchObject({
         id: expect.any(Number),
         name: userData.name,
-        email: userData.email
+        email: userData.email,
       });
       expect(response.body.password).toBeUndefined();
     });
@@ -191,13 +192,10 @@ describe('User API Integration', () => {
       const userData = {
         name: 'John Doe',
         email: 'invalid-email',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/api/users').send(userData).expect(400);
 
       expect(response.body.error).toContain('email');
     });
@@ -206,20 +204,14 @@ describe('User API Integration', () => {
       const userData = {
         name: 'Jane Doe',
         email: 'existing@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       };
 
       // Create first user
-      await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(201);
+      await request(app).post('/api/users').send(userData).expect(201);
 
       // Try to create duplicate
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/api/users').send(userData).expect(409);
 
       expect(response.body.error).toContain('already exists');
     });
@@ -228,32 +220,26 @@ describe('User API Integration', () => {
   describe('GET /api/users/:id', () => {
     it('should return user by id', async () => {
       // Create user first
-      const createResponse = await request(app)
-        .post('/api/users')
-        .send({
-          name: 'Test User',
-          email: 'test@example.com',
-          password: 'Pass123!'
-        });
+      const createResponse = await request(app).post('/api/users').send({
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'Pass123!',
+      });
 
       const userId = createResponse.body.id;
 
       // Retrieve user
-      const response = await request(app)
-        .get(`/api/users/${userId}`)
-        .expect(200);
+      const response = await request(app).get(`/api/users/${userId}`).expect(200);
 
       expect(response.body).toMatchObject({
         id: userId,
         name: 'Test User',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
     });
 
     it('should return 404 for non-existent user', async () => {
-      const response = await request(app)
-        .get('/api/users/99999')
-        .expect(404);
+      const response = await request(app).get('/api/users/99999').expect(404);
 
       expect(response.body.error).toContain('not found');
     });
@@ -261,13 +247,11 @@ describe('User API Integration', () => {
 
   describe('PUT /api/users/:id', () => {
     it('should update user', async () => {
-      const createResponse = await request(app)
-        .post('/api/users')
-        .send({
-          name: 'Original Name',
-          email: 'original@example.com',
-          password: 'Pass123!'
-        });
+      const createResponse = await request(app).post('/api/users').send({
+        name: 'Original Name',
+        email: 'original@example.com',
+        password: 'Pass123!',
+      });
 
       const userId = createResponse.body.id;
 
@@ -283,23 +267,17 @@ describe('User API Integration', () => {
 
   describe('DELETE /api/users/:id', () => {
     it('should delete user', async () => {
-      const createResponse = await request(app)
-        .post('/api/users')
-        .send({
-          name: 'To Delete',
-          email: 'delete@example.com',
-          password: 'Pass123!'
-        });
+      const createResponse = await request(app).post('/api/users').send({
+        name: 'To Delete',
+        email: 'delete@example.com',
+        password: 'Pass123!',
+      });
 
       const userId = createResponse.body.id;
 
-      await request(app)
-        .delete(`/api/users/${userId}`)
-        .expect(204);
+      await request(app).delete(`/api/users/${userId}`).expect(204);
 
-      await request(app)
-        .get(`/api/users/${userId}`)
-        .expect(404);
+      await request(app).get(`/api/users/${userId}`).expect(404);
     });
   });
 });
@@ -321,7 +299,7 @@ describe('GraphQL API Integration', () => {
     server = new ApolloServer({
       typeDefs,
       resolvers,
-      context: () => ({ db: testDatabase })
+      context: () => ({ db: testDatabase }),
     });
 
     const testClient = createTestClient(server);
@@ -343,13 +321,13 @@ describe('GraphQL API Integration', () => {
 
       const result = await query({
         query: GET_USER,
-        variables: { id: '1' }
+        variables: { id: '1' },
       });
 
       expect(result.data.user).toMatchObject({
         id: '1',
         name: expect.any(String),
-        email: expect.any(String)
+        email: expect.any(String),
       });
     });
 
@@ -389,15 +367,15 @@ describe('GraphQL API Integration', () => {
           input: {
             name: 'New User',
             email: 'new@example.com',
-            password: 'SecurePass123!'
-          }
-        }
+            password: 'SecurePass123!',
+          },
+        },
       });
 
       expect(result.data.createUser).toMatchObject({
         id: expect.any(String),
         name: 'New User',
-        email: 'new@example.com'
+        email: 'new@example.com',
       });
     });
   });
@@ -422,7 +400,7 @@ export async function setupDatabase() {
     port: process.env.TEST_DB_PORT || 5432,
     database: process.env.TEST_DB_NAME || 'test_db',
     user: process.env.TEST_DB_USER || 'test',
-    password: process.env.TEST_DB_PASSWORD || 'test'
+    password: process.env.TEST_DB_PASSWORD || 'test',
   });
 
   // Run migrations
@@ -475,7 +453,7 @@ describe('UserRepository Integration', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        passwordHash: 'hashed_password'
+        passwordHash: 'hashed_password',
       };
 
       const user = await repository.create(userData);
@@ -484,7 +462,7 @@ describe('UserRepository Integration', () => {
         id: expect.any(Number),
         name: userData.name,
         email: userData.email,
-        createdAt: expect.any(Date)
+        createdAt: expect.any(Date),
       });
     });
 
@@ -492,13 +470,12 @@ describe('UserRepository Integration', () => {
       const userData = {
         name: 'John Doe',
         email: 'duplicate@example.com',
-        passwordHash: 'hashed'
+        passwordHash: 'hashed',
       };
 
       await repository.create(userData);
 
-      await expect(repository.create(userData))
-        .rejects.toThrow('duplicate key');
+      await expect(repository.create(userData)).rejects.toThrow('duplicate key');
     });
   });
 
@@ -507,7 +484,7 @@ describe('UserRepository Integration', () => {
       const created = await repository.create({
         name: 'Jane Doe',
         email: 'jane@example.com',
-        passwordHash: 'hashed'
+        passwordHash: 'hashed',
       });
 
       const found = await repository.findById(created.id);
@@ -515,7 +492,7 @@ describe('UserRepository Integration', () => {
       expect(found).toMatchObject({
         id: created.id,
         name: 'Jane Doe',
-        email: 'jane@example.com'
+        email: 'jane@example.com',
       });
     });
 
@@ -530,11 +507,11 @@ describe('UserRepository Integration', () => {
       const user = await repository.create({
         name: 'Original',
         email: 'original@example.com',
-        passwordHash: 'hashed'
+        passwordHash: 'hashed',
       });
 
       const updated = await repository.update(user.id, {
-        name: 'Updated'
+        name: 'Updated',
       });
 
       expect(updated.name).toBe('Updated');
@@ -547,14 +524,14 @@ describe('UserRepository Integration', () => {
       await repository.create({
         name: 'Search Test',
         email: 'search@example.com',
-        passwordHash: 'hashed'
+        passwordHash: 'hashed',
       });
 
       const found = await repository.findByEmail('search@example.com');
 
       expect(found).toMatchObject({
         name: 'Search Test',
-        email: 'search@example.com'
+        email: 'search@example.com',
       });
     });
 
@@ -562,7 +539,7 @@ describe('UserRepository Integration', () => {
       await repository.create({
         name: 'Case Test',
         email: 'CaSe@ExAmPle.com',
-        passwordHash: 'hashed'
+        passwordHash: 'hashed',
       });
 
       const found = await repository.findByEmail('case@example.com');
@@ -577,11 +554,14 @@ describe('UserRepository Integration', () => {
       try {
         await client.query('BEGIN');
 
-        await repository.create({
-          name: 'Transaction Test',
-          email: 'transaction@example.com',
-          passwordHash: 'hashed'
-        }, client);
+        await repository.create(
+          {
+            name: 'Transaction Test',
+            email: 'transaction@example.com',
+            passwordHash: 'hashed',
+          },
+          client
+        );
 
         // Force an error
         throw new Error('Simulated error');
@@ -616,7 +596,7 @@ describe('PaymentService Integration', () => {
   beforeAll(() => {
     paymentService = new PaymentService({
       apiKey: 'test_key',
-      baseUrl: 'https://api.payment-provider.com'
+      baseUrl: 'https://api.payment-provider.com',
     });
   });
 
@@ -627,24 +607,22 @@ describe('PaymentService Integration', () => {
   describe('processPayment', () => {
     it('should process successful payment', async () => {
       // Mock external API
-      nock('https://api.payment-provider.com')
-        .post('/charges')
-        .reply(200, {
-          id: 'ch_123',
-          status: 'succeeded',
-          amount: 1000
-        });
+      nock('https://api.payment-provider.com').post('/charges').reply(200, {
+        id: 'ch_123',
+        status: 'succeeded',
+        amount: 1000,
+      });
 
       const result = await paymentService.processPayment({
         amount: 1000,
         currency: 'usd',
-        token: 'tok_visa'
+        token: 'tok_visa',
       });
 
       expect(result).toMatchObject({
         id: 'ch_123',
         status: 'succeeded',
-        amount: 1000
+        amount: 1000,
       });
     });
 
@@ -654,15 +632,17 @@ describe('PaymentService Integration', () => {
         .reply(402, {
           error: {
             code: 'card_declined',
-            message: 'Your card was declined'
-          }
+            message: 'Your card was declined',
+          },
         });
 
-      await expect(paymentService.processPayment({
-        amount: 1000,
-        currency: 'usd',
-        token: 'tok_declined'
-      })).rejects.toThrow('card was declined');
+      await expect(
+        paymentService.processPayment({
+          amount: 1000,
+          currency: 'usd',
+          token: 'tok_declined',
+        })
+      ).rejects.toThrow('card was declined');
     });
 
     it('should retry on network error', async () => {
@@ -672,13 +652,13 @@ describe('PaymentService Integration', () => {
         .post('/charges')
         .reply(200, {
           id: 'ch_retry',
-          status: 'succeeded'
+          status: 'succeeded',
         });
 
       const result = await paymentService.processPayment({
         amount: 1000,
         currency: 'usd',
-        token: 'tok_visa'
+        token: 'tok_visa',
       });
 
       expect(result.id).toBe('ch_retry');
@@ -687,20 +667,18 @@ describe('PaymentService Integration', () => {
 
   describe('refundPayment', () => {
     it('should process refund', async () => {
-      nock('https://api.payment-provider.com')
-        .post('/refunds')
-        .reply(200, {
-          id: 're_123',
-          charge: 'ch_123',
-          status: 'succeeded',
-          amount: 1000
-        });
+      nock('https://api.payment-provider.com').post('/refunds').reply(200, {
+        id: 're_123',
+        charge: 'ch_123',
+        status: 'succeeded',
+        amount: 1000,
+      });
 
       const result = await paymentService.refundPayment('ch_123');
 
       expect(result).toMatchObject({
         id: 're_123',
-        status: 'succeeded'
+        status: 'succeeded',
       });
     });
   });
@@ -730,16 +708,16 @@ describe('Order Processing Integration', () => {
   it('should process order message', async () => {
     const orderMessage = {
       orderId: '123',
-      items: [
-        { productId: 'p1', quantity: 2, price: 10 }
-      ],
-      totalAmount: 20
+      items: [{ productId: 'p1', quantity: 2, price: 10 }],
+      totalAmount: 20,
     };
 
     // Send message to queue
-    await queue.sendMessage({
-      MessageBody: JSON.stringify(orderMessage)
-    }).promise();
+    await queue
+      .sendMessage({
+        MessageBody: JSON.stringify(orderMessage),
+      })
+      .promise();
 
     // Start processor
     await processor.start();
@@ -786,7 +764,7 @@ describe('User Registration Integration', () => {
     const userData = {
       name: 'John Doe',
       email: 'john@example.com',
-      password: 'SecurePass123!'
+      password: 'SecurePass123!',
     };
 
     // Register user
@@ -797,7 +775,7 @@ describe('User Registration Integration', () => {
       id: expect.any(String),
       name: userData.name,
       email: userData.email,
-      status: 'pending'
+      status: 'pending',
     });
 
     // Verify email sent
@@ -805,7 +783,7 @@ describe('User Registration Integration', () => {
     expect(emails).toContainEqual(
       expect.objectContaining({
         to: userData.email,
-        subject: expect.stringContaining('Welcome')
+        subject: expect.stringContaining('Welcome'),
       })
     );
 
@@ -814,7 +792,7 @@ describe('User Registration Integration', () => {
     expect(auditLogs).toContainEqual(
       expect.objectContaining({
         action: 'user.registered',
-        userId: user.id
+        userId: user.id,
       })
     );
   });
@@ -826,7 +804,7 @@ describe('User Registration Integration', () => {
     const userData = {
       name: 'Jane Doe',
       email: 'jane@example.com',
-      password: 'SecurePass123!'
+      password: 'SecurePass123!',
     };
 
     const user = await userService.register(userData);
@@ -838,7 +816,7 @@ describe('User Registration Integration', () => {
     const retries = await emailService.getScheduledRetries();
     expect(retries).toContainEqual(
       expect.objectContaining({
-        email: userData.email
+        email: userData.email,
       })
     );
 
@@ -865,7 +843,7 @@ describe('Database Integration with TestContainers', () => {
       .withEnvironment({
         POSTGRES_USER: 'test',
         POSTGRES_PASSWORD: 'test',
-        POSTGRES_DB: 'testdb'
+        POSTGRES_DB: 'testdb',
       })
       .withExposedPorts(5432)
       .start();
@@ -876,7 +854,7 @@ describe('Database Integration with TestContainers', () => {
       port: container.getMappedPort(5432),
       database: 'testdb',
       user: 'test',
-      password: 'test'
+      password: 'test',
     });
 
     // Run migrations
@@ -889,14 +867,14 @@ describe('Database Integration with TestContainers', () => {
   });
 
   it('should perform database operations', async () => {
-    const result = await pool.query(
-      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
-      ['Test User', 'test@example.com']
-    );
+    const result = await pool.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *', [
+      'Test User',
+      'test@example.com',
+    ]);
 
     expect(result.rows[0]).toMatchObject({
       name: 'Test User',
-      email: 'test@example.com'
+      email: 'test@example.com',
     });
   });
 });
@@ -915,7 +893,7 @@ class UserFactory {
       email: faker.internet.email(),
       passwordHash: 'hashed_password',
       createdAt: new Date(),
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -928,7 +906,7 @@ class UserFactory {
 // Usage in tests
 it('should update user email', async () => {
   const user = await UserFactory.create(repository, {
-    email: 'original@example.com'
+    email: 'original@example.com',
   });
 
   await userService.updateEmail(user.id, 'new@example.com');
@@ -1029,12 +1007,14 @@ afterAll(async () => {
 ### Integration Test Quality Checklist
 
 **Setup:**
+
 - [ ] Test database configured
 - [ ] Test data factories created
 - [ ] Cleanup procedures defined
 - [ ] Test containers ready (if needed)
 
 **Test Design:**
+
 - [ ] Tests real integrations
 - [ ] Minimal mocking
 - [ ] Tests complete workflows
@@ -1042,12 +1022,14 @@ afterAll(async () => {
 - [ ] Fast enough for CI
 
 **Coverage:**
+
 - [ ] Happy paths tested
 - [ ] Error scenarios covered
 - [ ] Edge cases included
 - [ ] Transaction behavior verified
 
 **Maintenance:**
+
 - [ ] Tests are reliable
 - [ ] No flakiness
 - [ ] Easy to debug
@@ -1056,10 +1038,12 @@ afterAll(async () => {
 ## References
 
 ### Books
+
 - "Growing Object-Oriented Software, Guided by Tests" - Freeman & Pryce
 - "Continuous Delivery" - Jez Humble & David Farley
 
 ### Tools
+
 - **API Testing**: Supertest, REST-assured, Postman
 - **Test Containers**: Testcontainers, Docker Compose
 - **Database**: pg, mysql2, mongoose
@@ -1074,4 +1058,4 @@ afterAll(async () => {
 
 ---
 
-*Part of: [Test Levels](README.md)*
+_Part of: [Test Levels](README.md)_

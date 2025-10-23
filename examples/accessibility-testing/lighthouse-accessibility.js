@@ -69,12 +69,7 @@ const testUrls = [
  */
 async function runLighthouse(url, config) {
   const chrome = await chromeLauncher.launch({
-    chromeFlags: [
-      '--headless',
-      '--disable-gpu',
-      '--no-sandbox',
-      '--disable-dev-shm-usage',
-    ],
+    chromeFlags: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'],
   });
 
   const options = {
@@ -238,12 +233,12 @@ function generateRecommendations(failedAudits) {
     'document-title': 'Add a descriptive <title> element to the document',
     'html-has-lang': 'Ensure <html> element has a lang attribute',
     'image-alt': 'Add alt text to all images',
-    'label': 'Ensure form elements have associated labels',
+    label: 'Ensure form elements have associated labels',
     'link-name': 'Ensure links have discernible text',
-    'list': 'Ensure lists only contain <li> elements',
-    'listitem': 'Ensure list items are contained within parent lists',
+    list: 'Ensure lists only contain <li> elements',
+    listitem: 'Ensure list items are contained within parent lists',
     'meta-viewport': 'Add a <meta name="viewport"> tag with appropriate zoom settings',
-    'tabindex': 'Avoid using tabindex values greater than 0',
+    tabindex: 'Avoid using tabindex values greater than 0',
   };
 
   failedAudits.forEach(audit => {
@@ -290,7 +285,9 @@ function printSummary(testResult, report) {
   console.log(`URL: ${report.metadata.url}`);
   console.log(`Timestamp: ${report.metadata.timestamp}`);
   console.log('\nScores:');
-  console.log(`  Accessibility: ${report.scores.accessibility}/100 (minimum: ${testResult.minAccessibilityScore})`);
+  console.log(
+    `  Accessibility: ${report.scores.accessibility}/100 (minimum: ${testResult.minAccessibilityScore})`
+  );
   console.log(`  Best Practices: ${report.scores.bestPractices}/100`);
   console.log(`  SEO: ${report.scores.seo}/100`);
   console.log('\nAccessibility Audits:');

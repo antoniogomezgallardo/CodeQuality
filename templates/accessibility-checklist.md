@@ -1,13 +1,14 @@
 # Accessibility Checklist - WCAG 2.1 Level AA Compliance
 
 ## Document Information
+
 - **Project Name**: [Project Name]
 - **Component/Feature**: [Component/Feature Name]
 - **Tested By**: [Name]
 - **Date**: [YYYY-MM-DD]
 - **WCAG Version**: 2.1
 - **Conformance Level**: AA
-- **Testing Tools Used**: [ ] axe DevTools [ ] WAVE [ ] Lighthouse [ ] NVDA [ ] JAWS [ ] Other: ___________
+- **Testing Tools Used**: [ ] axe DevTools [ ] WAVE [ ] Lighthouse [ ] NVDA [ ] JAWS [ ] Other: \***\*\_\_\_\*\***
 
 ---
 
@@ -16,6 +17,7 @@
 This checklist ensures compliance with Web Content Accessibility Guidelines (WCAG) 2.1 Level A and AA success criteria, organized according to the four POUR principles: Perceivable, Operable, Understandable, and Robust.
 
 **Conformance Levels:**
+
 - **Level A**: Minimum level of accessibility (must meet)
 - **Level AA**: Deals with common barriers for disabled users (must meet)
 - **Level AAA**: Highest level of accessibility (optional, but recommended where possible)
@@ -294,10 +296,11 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Re-scan after fixes to verify resolution
 
 **Test Results:**
-- Critical Issues: [ ] 0 [ ] ___ found
-- Serious Issues: [ ] 0 [ ] ___ found
-- Moderate Issues: [ ] 0 [ ] ___ found
-- Minor Issues: [ ] 0 [ ] ___ found
+
+- Critical Issues: [ ] 0 [ ] \_\_\_ found
+- Serious Issues: [ ] 0 [ ] \_\_\_ found
+- Moderate Issues: [ ] 0 [ ] \_\_\_ found
+- Minor Issues: [ ] 0 [ ] \_\_\_ found
 
 ### 5.2 WAVE (Web Accessibility Evaluation Tool)
 
@@ -308,9 +311,10 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Verify proper use of ARIA in Structure tab
 
 **Test Results:**
-- Errors: [ ] 0 [ ] ___ found
-- Contrast Errors: [ ] 0 [ ] ___ found
-- Alerts: [ ] 0 [ ] ___ found
+
+- Errors: [ ] 0 [ ] \_\_\_ found
+- Contrast Errors: [ ] 0 [ ] \_\_\_ found
+- Alerts: [ ] 0 [ ] \_\_\_ found
 
 ### 5.3 Lighthouse Accessibility Audit
 
@@ -319,7 +323,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Fix all identified accessibility issues
 - [ ] Document any issues that can't be automatically detected
 
-**Lighthouse Score:** _____ / 100
+**Lighthouse Score:** **\_** / 100
 
 ### 5.4 Additional Automated Tools
 
@@ -385,6 +389,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 ### 7.1 Screen Reader Setup
 
 **Test with multiple screen readers:**
+
 - [ ] NVDA (Windows, free) - Primary testing
 - [ ] JAWS (Windows, commercial) - Secondary testing
 - [ ] VoiceOver (macOS/iOS, built-in) - Mobile testing
@@ -394,6 +399,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 ### 7.2 Screen Reader Testing Checklist
 
 #### General Navigation
+
 - [ ] All content can be accessed with screen reader
 - [ ] Headings are announced and navigable
 - [ ] Landmarks are announced and navigable
@@ -401,12 +407,14 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Tables are announced with row/column info
 
 #### Images and Media
+
 - [ ] All images have appropriate alt text read aloud
 - [ ] Decorative images are ignored (empty alt)
 - [ ] Complex images have detailed descriptions available
 - [ ] Video captions are accessible
 
 #### Forms
+
 - [ ] All form fields have accessible labels announced
 - [ ] Required fields indicated in announcement
 - [ ] Field instructions read before entering field
@@ -415,6 +423,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Autocomplete suggestions announced
 
 #### Interactive Elements
+
 - [ ] Buttons announced as buttons with clear labels
 - [ ] Links announced as links with descriptive text
 - [ ] Current state of toggles/switches announced
@@ -423,6 +432,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Disabled state announced
 
 #### Dynamic Content
+
 - [ ] Live regions announce updates appropriately
 - [ ] Loading states announced
 - [ ] Success/error messages announced automatically
@@ -430,6 +440,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Modal dialogs announced when opened
 
 #### Custom Components
+
 - [ ] Custom controls have appropriate ARIA roles
 - [ ] States and properties announced correctly
 - [ ] Keyboard instructions provided if non-standard
@@ -550,20 +561,20 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 
 ### 9.1 Text Contrast Ratios
 
-| Element Type | Minimum Ratio (AA) | Enhanced Ratio (AAA) |
-|--------------|-------------------|---------------------|
-| Normal text (< 18pt or < 14pt bold) | 4.5:1 | 7:1 |
-| Large text (≥ 18pt or ≥ 14pt bold) | 3:1 | 4.5:1 |
-| Incidental text (inactive, pure decoration) | No requirement | No requirement |
+| Element Type                                | Minimum Ratio (AA) | Enhanced Ratio (AAA) |
+| ------------------------------------------- | ------------------ | -------------------- |
+| Normal text (< 18pt or < 14pt bold)         | 4.5:1              | 7:1                  |
+| Large text (≥ 18pt or ≥ 14pt bold)          | 3:1                | 4.5:1                |
+| Incidental text (inactive, pure decoration) | No requirement     | No requirement       |
 
 ### 9.2 Non-Text Contrast Ratios
 
-| Element Type | Minimum Ratio (AA) |
-|--------------|-------------------|
-| UI components (buttons, inputs, focus indicators) | 3:1 |
-| Graphical objects (icons, charts, meaningful graphics) | 3:1 |
-| Active UI components vs adjacent colors | 3:1 |
-| UI component states (hover, focus, active) | 3:1 |
+| Element Type                                           | Minimum Ratio (AA) |
+| ------------------------------------------------------ | ------------------ |
+| UI components (buttons, inputs, focus indicators)      | 3:1                |
+| Graphical objects (icons, charts, meaningful graphics) | 3:1                |
+| Active UI components vs adjacent colors                | 3:1                |
+| UI component states (hover, focus, active)             | 3:1                |
 
 ### 9.3 Contrast Testing
 
@@ -615,6 +626,7 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 - [ ] Required owned elements present (e.g., tab requires tabpanel)
 
 **Common roles to verify:**
+
 - [ ] role="navigation" on main navigation
 - [ ] role="main" on main content area (or use main element)
 - [ ] role="banner" on site header (or use header element)
@@ -701,33 +713,37 @@ This checklist ensures compliance with Web Content Accessibility Guidelines (WCA
 
 ### 13.1 Issues Found
 
-| # | Severity | WCAG Criterion | Issue Description | Location | Recommended Fix | Status |
-|---|----------|----------------|-------------------|----------|-----------------|--------|
-| 1 | Critical | 1.1.1 | | | | Open/Fixed |
-| 2 | Serious | 1.4.3 | | | | Open/Fixed |
-| 3 | Moderate | 2.4.4 | | | | Open/Fixed |
+| #   | Severity | WCAG Criterion | Issue Description | Location | Recommended Fix | Status     |
+| --- | -------- | -------------- | ----------------- | -------- | --------------- | ---------- |
+| 1   | Critical | 1.1.1          |                   |          |                 | Open/Fixed |
+| 2   | Serious  | 1.4.3          |                   |          |                 | Open/Fixed |
+| 3   | Moderate | 2.4.4          |                   |          |                 | Open/Fixed |
 
 ### 13.2 Browser/AT Testing Matrix
 
 | Page/Feature | Chrome + NVDA | Firefox + NVDA | Safari + VO | Edge + JAWS | Mobile Safari + VO | Android + TalkBack |
-|--------------|---------------|----------------|-------------|-------------|-------------------|-------------------|
-| Homepage | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass |
-| Navigation | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass |
-| Forms | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass |
-| Checkout | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass | [ ] Pass |
+| ------------ | ------------- | -------------- | ----------- | ----------- | ------------------ | ------------------ |
+| Homepage     | [ ] Pass      | [ ] Pass       | [ ] Pass    | [ ] Pass    | [ ] Pass           | [ ] Pass           |
+| Navigation   | [ ] Pass      | [ ] Pass       | [ ] Pass    | [ ] Pass    | [ ] Pass           | [ ] Pass           |
+| Forms        | [ ] Pass      | [ ] Pass       | [ ] Pass    | [ ] Pass    | [ ] Pass           | [ ] Pass           |
+| Checkout     | [ ] Pass      | [ ] Pass       | [ ] Pass    | [ ] Pass    | [ ] Pass           | [ ] Pass           |
 
 ### 13.3 Notes and Observations
 
 **Positive Findings:**
+
 - [List what's working well]
 
 **Areas for Improvement:**
+
 - [List areas that need work]
 
 **Known Limitations:**
+
 - [List any known limitations or third-party issues]
 
 **Next Steps:**
+
 - [List planned improvements or next testing phase]
 
 ---
@@ -749,11 +765,13 @@ After completing this checklist, consider creating an accessibility statement fo
 ## 15. Resources and References
 
 ### Official Guidelines
+
 - **WCAG 2.1**: https://www.w3.org/WAI/WCAG21/quickref/
 - **WAI-ARIA**: https://www.w3.org/WAI/ARIA/apg/
 - **Section 508**: https://www.section508.gov/
 
 ### Testing Tools
+
 - **axe DevTools**: https://www.deque.com/axe/devtools/
 - **WAVE**: https://wave.webaim.org/
 - **Lighthouse**: Chrome DevTools
@@ -761,6 +779,7 @@ After completing this checklist, consider creating an accessibility statement fo
 - **NVDA Screen Reader**: https://www.nvaccess.org/
 
 ### Learning Resources
+
 - **WebAIM**: https://webaim.org/
 - **A11y Project**: https://www.a11yproject.com/
 - **Inclusive Components**: https://inclusive-components.design/
@@ -770,19 +789,19 @@ After completing this checklist, consider creating an accessibility statement fo
 
 ## Sign-off
 
-**Tester Name**: ___________________________
-**Date**: ___________________________
+**Tester Name**: ****\*\*\*\*****\_\_\_****\*\*\*\*****
+**Date**: ****\*\*\*\*****\_\_\_****\*\*\*\*****
 **Overall Status**: [ ] Pass [ ] Pass with Minor Issues [ ] Fail
 **Conformance Level**: [ ] WCAG 2.1 Level A [ ] WCAG 2.1 Level AA [ ] WCAG 2.1 Level AAA
 
-**Signature**: ___________________________
+**Signature**: ****\*\*\*\*****\_\_\_****\*\*\*\*****
 
 ---
 
 ## Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | [Date] | [Name] | Initial version |
-| | | | |
-| | | | |
+| Version | Date   | Author | Changes         |
+| ------- | ------ | ------ | --------------- |
+| 1.0     | [Date] | [Name] | Initial version |
+|         |        |        |                 |
+|         |        |        |                 |

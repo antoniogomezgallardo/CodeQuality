@@ -44,7 +44,9 @@ class OrderServiceClient {
       return response.data;
     } catch (error) {
       if (error.response) {
-        throw new Error(`Failed to create order: ${error.response.status} - ${error.response.data.message}`);
+        throw new Error(
+          `Failed to create order: ${error.response.status} - ${error.response.data.message}`
+        );
       }
       throw error;
     }
@@ -406,9 +408,9 @@ describe('Order Service Consumer Contract Tests', () => {
       });
 
       it('should return a 400 error for invalid status', async () => {
-        await expect(
-          client.updateOrderStatus(orderId, invalidStatus)
-        ).rejects.toThrow('Failed to update order: 400');
+        await expect(client.updateOrderStatus(orderId, invalidStatus)).rejects.toThrow(
+          'Failed to update order: 400'
+        );
       });
     });
   });
@@ -450,7 +452,7 @@ describe('Order Service Consumer Contract Tests', () => {
         expect(orders).toBeDefined();
         expect(Array.isArray(orders)).toBe(true);
         expect(orders.length).toBeGreaterThan(0);
-        orders.forEach((order) => {
+        orders.forEach(order => {
           expect(order.orderId).toBeDefined();
           expect(order.customerId).toBe(customerId);
           expect(order.status).toBeDefined();

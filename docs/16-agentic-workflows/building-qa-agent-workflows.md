@@ -1,9 +1,11 @@
 # Building QA Agent Workflows with LangGraph
 
 ## Purpose
+
 Provide a comprehensive, production-ready guide for building autonomous QA agent workflows using LangGraph, from foundational concepts through complete deployment. This guide includes a full step-by-step implementation of an autonomous test suite agent with state management, error handling, human-in-the-loop patterns, monitoring, and production deployment strategies.
 
 ## Prerequisites
+
 - Complete understanding of [Agentic Fundamentals](agentic-fundamentals.md)
 - Experience with [Agentic Testing Workflows](agentic-testing-workflows.md)
 - Python 3.10+ with async/await proficiency
@@ -94,6 +96,7 @@ class AgentState(TypedDict):
 ```
 
 **Key Points:**
+
 - `Annotated[Sequence[dict], add_messages]` - Special reducer for message history
 - All fields are optional by default (can be `None`)
 - State persists across node executions
@@ -149,6 +152,7 @@ def analyze_code_node(state: AgentState) -> AgentState:
 ```
 
 **Node Best Practices:**
+
 - Keep nodes **focused** - single responsibility
 - Always return updated state
 - Log progress for debugging
@@ -208,6 +212,7 @@ workflow.add_conditional_edges(
 ```
 
 **Routing Patterns:**
+
 - **Binary decisions**: `"yes"` vs `"no"`
 - **Multi-way routing**: Return different node names
 - **Error handling**: Route to error recovery nodes
@@ -235,6 +240,7 @@ resumed_result = app.invoke(None, config)  # Continues from last checkpoint
 ```
 
 **Checkpoint Use Cases:**
+
 - **Long-running workflows** - Resume if interrupted
 - **Human-in-the-loop** - Pause for approval, resume after
 - **Debugging** - Inspect state at any point
@@ -665,7 +671,7 @@ settings = Settings()
 
 `src/config/prompts.py`:
 
-```python
+````python
 """
 LLM prompts for agent nodes.
 
@@ -682,18 +688,20 @@ LANGUAGE: {language}
 CODE:
 ```{language}
 {code}
-```
+````
 
 EXISTING TESTS:
 {existing_tests}
 
 Identify:
+
 1. **Missing Tests**: Functions/methods without any tests
 2. **Edge Cases**: Boundary conditions, null/empty inputs, error scenarios
 3. **Integration Points**: API calls, database queries, external dependencies
 4. **Security-Sensitive Code**: Authentication, authorization, data validation
 
 For each gap, provide:
+
 - Type: "missing_test" | "edge_case" | "integration" | "security"
 - Severity: "critical" | "high" | "medium" | "low"
 - Function/method name
@@ -714,7 +722,7 @@ Return response as JSON:
         "test_invalid_card_number"
       ]
     }}
-  ]
+]
 }}
 """
 
@@ -727,12 +735,14 @@ COVERAGE GAPS:
 {coverage_gaps}
 
 CODEBASE CONTEXT:
+
 - Language: {language}
 - Testing Framework: {framework}
 - Current Coverage: {current_coverage}%
 - Target Coverage: {target_coverage}%
 
 Create a test plan with:
+
 1. **Priority Order**: Critical → High → Medium → Low
 2. **Test Categories**: Unit, Integration, Edge Cases, Security
 3. **Estimated Effort**: S/M/L for each test
@@ -748,13 +758,13 @@ Return response as JSON:
         "effort": "M",
         "dependencies": []
       }}
-    ],
-    "high_priority_tests": [...],
-    "medium_priority_tests": [...],
-    "low_priority_tests": [...]
-  }},
-  "estimated_total_time": "4 hours",
-  "coverage_improvement": "+15%"
+],
+"high_priority_tests": [...],
+"medium_priority_tests": [...],
+"low_priority_tests": [...]
+}},
+"estimated_total_time": "4 hours",
+"coverage_improvement": "+15%"
 }}
 """
 
@@ -764,16 +774,19 @@ You are an expert test engineer writing {framework} tests.
 Generate complete, production-ready test code:
 
 FUNCTION TO TEST:
+
 ```{language}
 {function_code}
 ```
 
 TEST SPECIFICATION:
+
 - Test Name: {test_name}
 - Test Category: {category}
 - Scenarios to Cover: {scenarios}
 
 REQUIREMENTS:
+
 1. Follow {framework} best practices
 2. Include docstrings explaining what's being tested
 3. Use appropriate assertions
@@ -787,6 +800,7 @@ Return complete test code that can be saved directly to a file:
 ```python
 # Test code here
 ```
+
 """
 
 FAILURE_ANALYSIS_PROMPT = """
@@ -804,20 +818,24 @@ STACK TRACE:
 {stack_trace}
 
 CODE UNDER TEST:
+
 ```{language}
 {code}
 ```
 
 Determine:
+
 1. **Root Cause**: Why did the test fail?
 2. **Issue Type**: "code_bug" | "test_bug" | "flaky_test" | "environment"
 3. **Recommended Fix**: Specific code changes needed
 4. **Confidence**: How certain are you? (0-100%)
 
 If test_bug (test is wrong, code is correct):
+
 - Provide corrected test code
 
 If code_bug (code is wrong, test is correct):
+
 - Flag for human review (don't auto-fix production code)
 
 Return as JSON:
@@ -848,6 +866,7 @@ RISK ASSESSMENT:
 {risk_factors}
 
 Create approval request with:
+
 1. **Summary**: What was done (2-3 sentences)
 2. **Benefits**: Why these tests are valuable
 3. **Risks**: Any potential issues
@@ -855,7 +874,8 @@ Create approval request with:
 
 Format for Slack notification:
 """
-```
+
+````
 
 ### Step 4: Agent Tools
 
@@ -1136,13 +1156,13 @@ ALL_TOOLS = [
     git_commit,
     analyze_code_complexity
 ]
-```
+````
 
 ### Step 5: Agent Nodes
 
 `src/agent/nodes.py`:
 
-```python
+````python
 """
 Agent nodes - core workflow logic.
 
@@ -1629,7 +1649,7 @@ def handle_failure_node(state: AgentState) -> AgentState:
             "status": "failed",
             "errors": state["errors"] + [f"Failure handling error: {str(e)}"]
         }
-```
+````
 
 ### Step 6: Routing Logic
 
@@ -2530,7 +2550,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U agent"]
+      test: ['CMD-SHELL', 'pg_isready -U agent']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -2548,7 +2568,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "8000:8000"
+      - '8000:8000'
     volumes:
       - agent_logs:/app/logs
       - agent_checkpoints:/app/checkpoints
@@ -2561,7 +2581,7 @@ services:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     ports:
-      - "9090:9090"
+      - '9090:9090'
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -2576,7 +2596,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./monitoring/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/agent-dashboard.json
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - prometheus
     restart: unless-stopped
@@ -2611,48 +2631,48 @@ spec:
         app: qa-agent
     spec:
       containers:
-      - name: qa-agent
-        image: your-registry/autonomous-qa-agent:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: agent-secrets
-              key: database-url
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: agent-secrets
-              key: openai-api-key
-        - name: GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: agent-secrets
-              key: github-token
-        envFrom:
-        - configMapRef:
-            name: agent-config
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "2000m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 5
+        - name: qa-agent
+          image: your-registry/autonomous-qa-agent:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: agent-secrets
+                  key: database-url
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: agent-secrets
+                  key: openai-api-key
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: agent-secrets
+                  key: github-token
+          envFrom:
+            - configMapRef:
+                name: agent-config
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '2Gi'
+              cpu: '2000m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -2662,9 +2682,9 @@ spec:
   selector:
     app: qa-agent
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8000
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
   type: LoadBalancer
 ---
 apiVersion: v1
@@ -2672,11 +2692,11 @@ kind: ConfigMap
 metadata:
   name: agent-config
 data:
-  LLM_PROVIDER: "openai"
-  LLM_MODEL: "gpt-4o-2024-08-06"
-  GITHUB_REPO: "your-org/your-repo"
-  MAX_RETRIES: "3"
-  LOG_LEVEL: "INFO"
+  LLM_PROVIDER: 'openai'
+  LLM_MODEL: 'gpt-4o-2024-08-06'
+  GITHUB_REPO: 'your-org/your-repo'
+  MAX_RETRIES: '3'
+  LOG_LEVEL: 'INFO'
 ```
 
 ---
@@ -2685,7 +2705,7 @@ data:
 
 `tests/unit/test_nodes.py`:
 
-```python
+````python
 """
 Unit tests for agent nodes.
 
@@ -2780,7 +2800,7 @@ def test_plan_tests_node(sample_state):
         assert result["status"] == "generating"
         assert "test_plan" in result
         assert "estimated_total_time" in result["test_plan"]
-```
+````
 
 ---
 
@@ -2860,9 +2880,11 @@ This guide provides a **complete, production-ready implementation** of an autono
 - **LangSmith** integration for debugging
 
 **Key Files Created:**
+
 - `c:\Users\User\Documents\Workspaces\CodeQuality\docs\16-agentic-workflows\building-qa-agent-workflows.md` (this guide)
 
 **Next Steps:**
+
 1. Clone the code structure outlined above
 2. Set up environment variables
 3. Deploy with Docker Compose

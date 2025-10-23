@@ -1,12 +1,15 @@
 # Agentic Workflows for Quality Assurance
 
 ## Purpose
+
 Provide comprehensive guidance on building and deploying autonomous AI agent workflows that transform quality assurance from human-driven processes to intelligent, self-improving systems capable of planning, executing, and optimizing testing strategies autonomously.
 
 ## Context
+
 While AI assistants (Module 15) augment human QA engineers, **agentic workflows** represent the next evolution: autonomous systems that can reason, plan, take actions, learn from results, and collaborate with other agents to achieve complex QA objectives. This module bridges from AI-assisted QA to fully autonomous quality management systems.
 
 ## Prerequisites
+
 - Complete understanding of [AI in Quality Assurance](../15-ai-in-quality-assurance/15-README.md)
 - Experience with [Building AI QA Assistant](../15-ai-in-quality-assurance/building-ai-qa-assistant.md)
 - Python 3.10+ and familiarity with async programming
@@ -29,6 +32,7 @@ graph LR
 ```
 
 **Evolution:**
+
 1. **AI Tools** (2022): ChatGPT, Copilot - single-purpose, stateless
 2. **AI Assistants** (2023): RAG systems - conversational, context-aware
 3. **AI Agents** (2024): ReAct pattern - autonomous, goal-seeking with tools
@@ -110,18 +114,19 @@ graph TB
 
 ### Agent vs Traditional Approach
 
-| Task | Traditional QA | AI Assistant | **Agentic Workflow** |
-|------|----------------|--------------|---------------------|
-| **Test Planning** | QA engineer creates plan | AI suggests test cases | **Agent analyzes code, risks, coverage gaps, generates comprehensive plan autonomously** |
-| **Test Creation** | Manual test writing | AI generates tests on request | **Agent continuously creates/updates tests as code changes** |
-| **Test Maintenance** | Manual updates when tests break | AI suggests fixes | **Agent detects failures, analyzes root cause, auto-fixes or adapts tests** |
-| **Code Review** | Human reviewer | AI provides suggestions | **Multi-agent team reviews in parallel (security, performance, etc.), synthesizes report** |
-| **Bug Triage** | Manual priority assignment | AI recommends priority | **Agent analyzes impact, assigns priority, routes to right team, tracks resolution** |
-| **Incident Response** | On-call engineer investigates | AI assists with log analysis | **Agent detects anomaly, investigates, attempts remediation, escalates if needed** |
+| Task                  | Traditional QA                  | AI Assistant                  | **Agentic Workflow**                                                                       |
+| --------------------- | ------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
+| **Test Planning**     | QA engineer creates plan        | AI suggests test cases        | **Agent analyzes code, risks, coverage gaps, generates comprehensive plan autonomously**   |
+| **Test Creation**     | Manual test writing             | AI generates tests on request | **Agent continuously creates/updates tests as code changes**                               |
+| **Test Maintenance**  | Manual updates when tests break | AI suggests fixes             | **Agent detects failures, analyzes root cause, auto-fixes or adapts tests**                |
+| **Code Review**       | Human reviewer                  | AI provides suggestions       | **Multi-agent team reviews in parallel (security, performance, etc.), synthesizes report** |
+| **Bug Triage**        | Manual priority assignment      | AI recommends priority        | **Agent analyzes impact, assigns priority, routes to right team, tracks resolution**       |
+| **Incident Response** | On-call engineer investigates   | AI assists with log analysis  | **Agent detects anomaly, investigates, attempts remediation, escalates if needed**         |
 
 ## Learning Path
 
 ### 🎯 Level 1: Foundations (Zero to Novice)
+
 **Duration**: 1 week | **Goal**: Understand agent concepts and build first agent
 
 1. **[Agentic Fundamentals](agentic-fundamentals.md)** ✅
@@ -142,6 +147,7 @@ graph TB
 ---
 
 ### 🚀 Level 2: Single-Agent Workflows (Novice to Intermediate)
+
 **Duration**: 2 weeks | **Goal**: Deploy production single-agent workflows
 
 3. **[Agentic Testing Workflows](agentic-testing-workflows.md)** ✅
@@ -163,6 +169,7 @@ graph TB
 ---
 
 ### 🤝 Level 3: Multi-Agent Systems (Intermediate to Advanced)
+
 **Duration**: 2 weeks | **Goal**: Orchestrate multiple specialized agents
 
 5. **[Multi-Agent Systems](multi-agent-systems.md)** ✅
@@ -184,6 +191,7 @@ graph TB
 ---
 
 ### 🔥 Level 4: Production Workflows (Advanced)
+
 **Duration**: 3 weeks | **Goal**: Build enterprise-grade agent systems
 
 7. **[Agentic Incident Response](agentic-incident-response.md)** ✅
@@ -206,6 +214,7 @@ graph TB
 ---
 
 ### 🛡️ Level 5: Responsible Agent Systems (Expert)
+
 **Duration**: Ongoing | **Goal**: Ensure safe, ethical, reliable agent deployment
 
 9. **[Ethics & Safety](ethics-safety.md)** ✅
@@ -223,6 +232,7 @@ graph TB
 ## Quick Start Scenarios
 
 ### Scenario 1: Your First Agent (30 minutes)
+
 **Goal**: Build a test generation agent using LangGraph
 
 ```python
@@ -257,9 +267,11 @@ print(result['messages'][-1].content)
 ---
 
 ### Scenario 2: Self-Healing Test Suite (1 day)
+
 **Goal**: Deploy agent that monitors and fixes broken tests
 
 **Agent Workflow:**
+
 ```
 1. Monitor: Detect test failures in CI
 2. Analyze: Determine if failure is test issue or code issue
@@ -274,9 +286,11 @@ print(result['messages'][-1].content)
 ---
 
 ### Scenario 3: Multi-Agent Code Review (3 days)
+
 **Goal**: Deploy specialized agent team for comprehensive PR review
 
 **Agent Team:**
+
 - **Security Agent**: Scans for vulnerabilities (OWASP Top 10)
 - **Performance Agent**: Identifies inefficiencies, N+1 queries
 - **Accessibility Agent**: Checks WCAG 2.1 compliance
@@ -288,9 +302,11 @@ print(result['messages'][-1].content)
 ---
 
 ### Scenario 4: Autonomous Incident Response (1 week)
+
 **Goal**: Deploy agent workflow that handles production incidents
 
 **Workflow:**
+
 ```mermaid
 stateDiagram-v2
     [*] --> Monitoring
@@ -314,12 +330,12 @@ stateDiagram-v2
 
 ### Core Frameworks
 
-| Framework | Best For | Complexity | Cost |
-|-----------|----------|------------|------|
-| **LangGraph** | Complex workflows, state machines | High | Free (OSS) |
-| **AutoGen** | Multi-agent conversations | Medium | Free (OSS) |
-| **CrewAI** | Role-based agent teams | Low | Free (OSS) |
-| **Semantic Kernel** | .NET integration | Medium | Free (OSS) |
+| Framework           | Best For                          | Complexity | Cost       |
+| ------------------- | --------------------------------- | ---------- | ---------- |
+| **LangGraph**       | Complex workflows, state machines | High       | Free (OSS) |
+| **AutoGen**         | Multi-agent conversations         | Medium     | Free (OSS) |
+| **CrewAI**          | Role-based agent teams            | Low        | Free (OSS) |
+| **Semantic Kernel** | .NET integration                  | Medium     | Free (OSS) |
 
 ### Recommended Stack (Python)
 
@@ -350,6 +366,7 @@ deployment: Docker Compose
 ## Architecture Patterns
 
 ### Pattern 1: Single Agent with Tools
+
 **Use Case**: Focused tasks with clear tool requirements
 
 ```python
@@ -367,6 +384,7 @@ result = agent.invoke({"messages": [("user", "Fix failing E2E tests")]})
 ---
 
 ### Pattern 2: Sequential Agent Chain
+
 **Use Case**: Multi-step workflows with dependencies
 
 ```python
@@ -389,6 +407,7 @@ review = review_agent.run(tests, analysis)
 ---
 
 ### Pattern 3: Parallel Multi-Agent
+
 **Use Case**: Multiple independent perspectives needed
 
 ```python
@@ -413,6 +432,7 @@ summary = SummaryAgent().synthesize(results)
 ---
 
 ### Pattern 4: Hierarchical Supervisor
+
 **Use Case**: Complex workflows requiring coordination
 
 ```python
@@ -448,16 +468,16 @@ class SupervisorAgent:
 
 ### Monthly Costs (10-person team)
 
-| Agent Workflow | Requests/Month | LLM Cost | Total Cost | Time Saved | ROI |
-|----------------|----------------|----------|------------|------------|-----|
-| **Test Generation** | 500 | $75 | $75 | 60 hrs | $5,925 |
-| **Self-Healing Tests** | 200 | $40 | $40 | 40 hrs | $3,960 |
-| **Multi-Agent Review** | 400 | $120 | $120 | 80 hrs | $7,880 |
-| **Incident Response** | 50 | $50 | $50 | 30 hrs | $2,950 |
-| **Bug Triage** | 300 | $30 | $30 | 20 hrs | $1,970 |
-| **Total** | 1,450 | **$315** | **$315** | **230 hrs** | **$22,685** |
+| Agent Workflow         | Requests/Month | LLM Cost | Total Cost | Time Saved  | ROI         |
+| ---------------------- | -------------- | -------- | ---------- | ----------- | ----------- |
+| **Test Generation**    | 500            | $75      | $75        | 60 hrs      | $5,925      |
+| **Self-Healing Tests** | 200            | $40      | $40        | 40 hrs      | $3,960      |
+| **Multi-Agent Review** | 400            | $120     | $120       | 80 hrs      | $7,880      |
+| **Incident Response**  | 50             | $50      | $50        | 30 hrs      | $2,950      |
+| **Bug Triage**         | 300            | $30      | $30        | 20 hrs      | $1,970      |
+| **Total**              | 1,450          | **$315** | **$315**   | **230 hrs** | **$22,685** |
 
-*Assumes $100/hr developer rate, GPT-4 pricing*
+_Assumes $100/hr developer rate, GPT-4 pricing_
 
 ### Cost Optimization Strategies
 
@@ -478,34 +498,34 @@ class SupervisorAgent:
 ```yaml
 effectiveness:
   task_completion_rate:
-    metric: "% of tasks completed successfully"
-    target: "> 85%"
+    metric: '% of tasks completed successfully'
+    target: '> 85%'
 
   false_positive_rate:
-    metric: "% of agent actions that were incorrect"
-    target: "< 10%"
+    metric: '% of agent actions that were incorrect'
+    target: '< 10%'
 
   human_intervention_rate:
-    metric: "% of tasks requiring human override"
-    target: "< 15%"
+    metric: '% of tasks requiring human override'
+    target: '< 15%'
 
 efficiency:
   avg_task_time:
-    metric: "Time to complete typical task"
-    target: "< 5 minutes"
+    metric: 'Time to complete typical task'
+    target: '< 5 minutes'
 
   cost_per_task:
-    metric: "LLM API cost per completed task"
-    target: "< $0.50"
+    metric: 'LLM API cost per completed task'
+    target: '< $0.50'
 
 reliability:
   agent_uptime:
-    metric: "% of time agent system is operational"
-    target: "> 99%"
+    metric: '% of time agent system is operational'
+    target: '> 99%'
 
   error_rate:
-    metric: "% of agent runs that throw errors"
-    target: "< 5%"
+    metric: '% of agent runs that throw errors'
+    target: '< 5%'
 ```
 
 ### Business Impact Metrics
@@ -513,34 +533,34 @@ reliability:
 ```yaml
 productivity:
   time_saved:
-    metric: "Developer hours saved per month"
-    target: "> 200 hours"
+    metric: 'Developer hours saved per month'
+    target: '> 200 hours'
 
   deployment_frequency:
-    metric: "Deployments per day"
-    target: "+50% increase"
+    metric: 'Deployments per day'
+    target: '+50% increase'
 
 quality:
   defect_detection:
-    metric: "% increase in bugs found pre-production"
-    target: "+40%"
+    metric: '% increase in bugs found pre-production'
+    target: '+40%'
 
   test_coverage:
-    metric: "Code coverage %"
-    target: "+20%"
+    metric: 'Code coverage %'
+    target: '+20%'
 
   mttr:
-    metric: "Mean time to recovery"
-    target: "-60%"
+    metric: 'Mean time to recovery'
+    target: '-60%'
 
 cost_effectiveness:
   roi:
-    metric: "Return on agent investment"
-    target: "> 2000%"
+    metric: 'Return on agent investment'
+    target: '> 2000%'
 
   automation_rate:
-    metric: "% of QA tasks automated"
-    target: "> 70%"
+    metric: '% of QA tasks automated'
+    target: '> 70%'
 ```
 
 ---
@@ -548,6 +568,7 @@ cost_effectiveness:
 ## Production Checklist
 
 ### Pre-Deployment
+
 - [ ] Agent functionality tested in staging environment
 - [ ] Cost projections validated (set budget alerts)
 - [ ] Human oversight mechanisms implemented
@@ -558,6 +579,7 @@ cost_effectiveness:
 - [ ] Team training completed
 
 ### Post-Deployment
+
 - [ ] Agent performance monitored daily (first week)
 - [ ] False positive rate tracked and optimized
 - [ ] Cost per task analyzed and optimized
@@ -572,9 +594,11 @@ cost_effectiveness:
 ## Common Pitfalls & Solutions
 
 ### Pitfall 1: Over-Autonomy
+
 **Problem**: Agent makes critical decisions without human approval
 
 **Solution**: Implement approval gates
+
 ```python
 if decision.risk_level == "HIGH":
     approval = await request_human_approval(decision)
@@ -585,9 +609,11 @@ if decision.risk_level == "HIGH":
 ---
 
 ### Pitfall 2: Hallucination Cascade
+
 **Problem**: Agent makes up information, subsequent agents compound error
 
 **Solution**: Verification checkpoints
+
 ```python
 # After each agent step, verify outputs
 def verify_output(output, sources):
@@ -598,9 +624,11 @@ def verify_output(output, sources):
 ---
 
 ### Pitfall 3: Runaway Costs
+
 **Problem**: Agent loops indefinitely or makes excessive API calls
 
 **Solution**: Budget controls
+
 ```python
 class CostControlledAgent:
     def __init__(self, max_cost_per_task=1.00):
@@ -616,9 +644,11 @@ class CostControlledAgent:
 ---
 
 ### Pitfall 4: Black Box Decisions
+
 **Problem**: Can't explain why agent took specific action
 
 **Solution**: Reasoning logs and trace visualization
+
 ```python
 # LangGraph automatically provides execution traces
 for event in agent.stream_events():
@@ -635,15 +665,18 @@ for event in agent.stream_events():
 ## Real-World Case Studies
 
 ### Case Study 1: Spotify - Self-Healing Test Suite
+
 **Challenge**: 10,000+ E2E tests, 20% flaky, 40 hours/week maintenance
 
 **Solution**: Deployed self-healing agent that:
+
 - Detects flaky tests automatically
 - Analyzes root cause (timing issues, selectors, data)
 - Updates test code or flags for human review
 - Learns patterns of common failures
 
 **Results**:
+
 - Flaky test rate: 20% → 3%
 - Maintenance time: 40 hrs/week → 8 hrs/week
 - Agent accuracy: 87%
@@ -652,9 +685,11 @@ for event in agent.stream_events():
 ---
 
 ### Case Study 2: Shopify - Multi-Agent Code Review
+
 **Challenge**: 500+ PRs/week, bottleneck on senior reviewers
 
 **Solution**: Deployed 5-agent review system:
+
 - Security Agent: OWASP scanning
 - Performance Agent: Query optimization
 - Accessibility Agent: WCAG 2.1 compliance
@@ -662,6 +697,7 @@ for event in agent.stream_events():
 - Summary Agent: Prioritized findings
 
 **Results**:
+
 - Review time: 2 hours → 15 minutes (88% reduction)
 - Issues found: +35% vs. human-only review
 - False positives: 12% (acceptable with human verify)
@@ -670,15 +706,18 @@ for event in agent.stream_events():
 ---
 
 ### Case Study 3: Netflix - Autonomous Incident Response
+
 **Challenge**: 50+ production alerts/day, 80% false positives
 
 **Solution**: Multi-agent incident response:
+
 - Detection Agent: Anomaly detection (ML)
 - Analysis Agent: Log correlation and root cause
 - Remediation Agent: Auto-scaling, rollback, cache clear
 - Learning Agent: Updates runbooks from incidents
 
 **Results**:
+
 - Incidents auto-resolved: 72%
 - MTTR: 45 min → 12 min (73% reduction)
 - False positive rate: 80% → 15%
@@ -689,21 +728,25 @@ for event in agent.stream_events():
 ## Resources & Community
 
 ### Official Frameworks
+
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [AutoGen GitHub](https://github.com/microsoft/autogen)
 - [CrewAI Documentation](https://docs.crewai.com/)
 
 ### Courses & Tutorials
+
 - [DeepLearning.AI - AI Agents in LangGraph](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/)
 - [DeepLearning.AI - Multi AI Agent Systems](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/)
 - [LangChain Academy - Building Agentic RAG](https://academy.langchain.com/)
 
 ### Research Papers
+
 - "ReAct: Synergizing Reasoning and Acting in Language Models" (Yao et al., 2023)
 - "AutoGPT: An Autonomous GPT-4 Experiment" (2023)
 - "Communicative Agents for Software Development" (Hong et al., 2024)
 
 ### Community
+
 - [LangChain Discord](https://discord.gg/langchain) - #langgraph channel
 - [r/LangChain Reddit](https://reddit.com/r/LangChain)
 - [AI Engineer Community](https://www.latent.space/community)
@@ -723,18 +766,21 @@ for event in agent.stream_events():
 ## Next Steps
 
 ### For Beginners
+
 1. **Read**: [Agentic Fundamentals](agentic-fundamentals.md) to understand core concepts
 2. **Learn**: Complete the ReAct tutorial in the fundamentals doc
 3. **Build**: Create your first test generation agent (30 min exercise)
 4. **Deploy**: Run it locally and observe agent reasoning
 
 ### For Intermediate
+
 1. **Study**: [Multi-Agent Systems](multi-agent-systems.md) for orchestration patterns
 2. **Implement**: [Agentic Code Review](agentic-code-review.md) workflow
 3. **Deploy**: Multi-agent review system in staging
 4. **Measure**: Track performance metrics for 2 weeks
 
 ### For Advanced
+
 1. **Master**: [Building QA Agent Workflows](building-qa-agent-workflows.md) with LangGraph
 2. **Build**: Complete autonomous incident response system
 3. **Scale**: Deploy across multiple teams/products
@@ -753,6 +799,6 @@ for event in agent.stream_events():
 
 ---
 
-*"The future of QA is not AI replacing QA engineers - it's QA engineers orchestrating teams of specialized AI agents to achieve quality at scale impossible for humans alone."*
+_"The future of QA is not AI replacing QA engineers - it's QA engineers orchestrating teams of specialized AI agents to achieve quality at scale impossible for humans alone."_
 
 **Ready to begin?** Start with [Agentic Fundamentals](agentic-fundamentals.md) to build your first autonomous QA agent.

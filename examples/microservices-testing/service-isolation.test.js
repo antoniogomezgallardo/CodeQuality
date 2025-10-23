@@ -85,9 +85,7 @@ class PaymentService {
           break;
         } catch (error) {
           lastError = error;
-          this.logger.error(
-            `Payment attempt ${attempt} failed: ${error.message}`
-          );
+          this.logger.error(`Payment attempt ${attempt} failed: ${error.message}`);
 
           // Check if error is retryable
           if (!this.isRetryableError(error)) {
@@ -234,17 +232,12 @@ class PaymentService {
   }
 
   isRetryableError(error) {
-    const retryableErrors = [
-      'NETWORK_ERROR',
-      'TIMEOUT',
-      'RATE_LIMIT',
-      'TEMPORARY_FAILURE',
-    ];
+    const retryableErrors = ['NETWORK_ERROR', 'TIMEOUT', 'RATE_LIMIT', 'TEMPORARY_FAILURE'];
     return retryableErrors.includes(error.code);
   }
 
   sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
@@ -486,10 +479,7 @@ describe('PaymentService - Isolation Tests', () => {
 
       expect(result.success).toBe(false);
       expect(mockPaymentGateway.charge).toHaveBeenCalledTimes(1);
-      expect(mockEventPublisher.publish).toHaveBeenCalledWith(
-        'payment.failed',
-        expect.any(Object)
-      );
+      expect(mockEventPublisher.publish).toHaveBeenCalledWith('payment.failed', expect.any(Object));
     });
 
     it('should fail after max retries exceeded', async () => {
@@ -547,11 +537,7 @@ describe('PaymentService - Isolation Tests', () => {
       });
 
       // Act
-      const result = await paymentService.processRefund(
-        paymentId,
-        refundAmount,
-        reason
-      );
+      const result = await paymentService.processRefund(paymentId, refundAmount, reason);
 
       // Assert
       expect(result.success).toBe(true);
@@ -577,9 +563,9 @@ describe('PaymentService - Isolation Tests', () => {
     it('should reject refund for non-existent payment', async () => {
       mockDatabase.findPaymentById.mockResolvedValue(null);
 
-      await expect(
-        paymentService.processRefund('payment-999', 99.99, 'Refund')
-      ).rejects.toThrow('Payment not found');
+      await expect(paymentService.processRefund('payment-999', 99.99, 'Refund')).rejects.toThrow(
+        'Payment not found'
+      );
 
       expect(mockPaymentGateway.refund).not.toHaveBeenCalled();
     });
@@ -590,9 +576,9 @@ describe('PaymentService - Isolation Tests', () => {
         status: 'pending',
       });
 
-      await expect(
-        paymentService.processRefund('payment-456', 99.99, 'Refund')
-      ).rejects.toThrow('Can only refund completed payments');
+      await expect(paymentService.processRefund('payment-456', 99.99, 'Refund')).rejects.toThrow(
+        'Can only refund completed payments'
+      );
     });
 
     it('should reject refund exceeding payment amount', async () => {
@@ -602,9 +588,9 @@ describe('PaymentService - Isolation Tests', () => {
         status: 'completed',
       });
 
-      await expect(
-        paymentService.processRefund('payment-456', 100.0, 'Refund')
-      ).rejects.toThrow('Refund amount exceeds payment amount');
+      await expect(paymentService.processRefund('payment-456', 100.0, 'Refund')).rejects.toThrow(
+        'Refund amount exceeds payment amount'
+      );
     });
   });
 });

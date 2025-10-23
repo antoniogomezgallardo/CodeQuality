@@ -26,7 +26,7 @@ import exec from 'k6/execution';
 // ============================================================================
 
 const BASE_URL = __ENV.BASE_URL || 'https://api.example.com';
-const SCENARIO = __ENV.SCENARIO || 'load';  // load, stress, spike, soak
+const SCENARIO = __ENV.SCENARIO || 'load'; // load, stress, spike, soak
 
 // API endpoints
 const ENDPOINTS = {
@@ -39,7 +39,7 @@ const ENDPOINTS = {
   addToCart: '/api/cart/items',
   checkout: '/api/checkout',
   orders: '/api/orders',
-  profile: '/api/users/profile'
+  profile: '/api/users/profile',
 };
 
 // ============================================================================
@@ -47,23 +47,23 @@ const ENDPOINTS = {
 // ============================================================================
 
 // Load test data from CSV/JSON files
-const users = new SharedArray('users', function() {
+const users = new SharedArray('users', function () {
   return [
     { username: 'user1@example.com', password: 'Test123!@#' },
     { username: 'user2@example.com', password: 'Test123!@#' },
     { username: 'user3@example.com', password: 'Test123!@#' },
     { username: 'user4@example.com', password: 'Test123!@#' },
-    { username: 'user5@example.com', password: 'Test123!@#' }
+    { username: 'user5@example.com', password: 'Test123!@#' },
   ];
 });
 
-const products = new SharedArray('products', function() {
+const products = new SharedArray('products', function () {
   return [
     { id: 101, name: 'Laptop', price: 999.99 },
     { id: 102, name: 'Mouse', price: 29.99 },
     { id: 103, name: 'Keyboard', price: 79.99 },
     { id: 104, name: 'Monitor', price: 299.99 },
-    { id: 105, name: 'Headphones', price: 149.99 }
+    { id: 105, name: 'Headphones', price: 149.99 },
   ];
 });
 
@@ -97,19 +97,19 @@ export const options = {
   // Global thresholds (SLA requirements)
   thresholds: {
     // Overall performance
-    'http_req_duration': [
-      'p(50)<200',    // 50% of requests under 200ms
-      'p(90)<400',    // 90% of requests under 400ms
-      'p(95)<500',    // 95% of requests under 500ms
-      'p(99)<1000'    // 99% of requests under 1000ms
+    http_req_duration: [
+      'p(50)<200', // 50% of requests under 200ms
+      'p(90)<400', // 90% of requests under 400ms
+      'p(95)<500', // 95% of requests under 500ms
+      'p(99)<1000', // 99% of requests under 1000ms
     ],
 
     // Error rate must be below 1%
-    'http_req_failed': ['rate<0.01'],
-    'api_errors': ['rate<0.01'],
+    http_req_failed: ['rate<0.01'],
+    api_errors: ['rate<0.01'],
 
     // Minimum throughput requirements
-    'http_reqs': ['rate>100'],  // At least 100 RPS
+    http_reqs: ['rate>100'], // At least 100 RPS
 
     // Endpoint-specific thresholds
     'http_req_duration{endpoint:login}': ['p(95)<300'],
@@ -117,16 +117,16 @@ export const options = {
     'http_req_duration{endpoint:checkout}': ['p(99)<1500'],
 
     // Business metric thresholds
-    'login_success': ['rate>0.99'],      // 99% login success
-    'checkout_success': ['rate>0.98'],   // 98% checkout success
+    login_success: ['rate>0.99'], // 99% login success
+    checkout_success: ['rate>0.98'], // 98% checkout success
 
     // Status code specific
     'http_req_duration{status:200}': ['p(95)<500'],
     'http_req_duration{status:201}': ['p(95)<600'],
 
     // HTTP/2 specific (if enabled)
-    'http_req_connecting': ['p(95)<100'],
-    'http_req_tls_handshaking': ['p(95)<200']
+    http_req_connecting: ['p(95)<100'],
+    http_req_tls_handshaking: ['p(95)<200'],
   },
 
   // HTTP settings
@@ -136,13 +136,13 @@ export const options = {
     // Increase timeout for slow endpoints
     timeout: '30s',
     // Connection pooling
-    keepAlive: true
+    keepAlive: true,
   },
 
   // Tags applied to all requests
   tags: {
     test_type: SCENARIO,
-    environment: 'staging'
+    environment: 'staging',
   },
 
   // Disable built-in summary for custom reporting
@@ -152,9 +152,9 @@ export const options = {
   ext: {
     loadimpact: {
       projectID: 12345,
-      name: `Load Test - ${SCENARIO}`
-    }
-  }
+      name: `Load Test - ${SCENARIO}`,
+    },
+  },
 };
 
 /**
@@ -168,14 +168,14 @@ function getScenarios(scenarioType) {
         executor: 'ramping-vus',
         startVUs: 0,
         stages: [
-          { duration: '2m', target: 50 },    // Warm-up
-          { duration: '5m', target: 200 },   // Ramp-up to normal load
-          { duration: '10m', target: 200 },  // Sustained load
-          { duration: '3m', target: 300 },   // Peak load
-          { duration: '10m', target: 300 },  // Sustained peak
-          { duration: '2m', target: 0 }      // Ramp-down
+          { duration: '2m', target: 50 }, // Warm-up
+          { duration: '5m', target: 200 }, // Ramp-up to normal load
+          { duration: '10m', target: 200 }, // Sustained load
+          { duration: '3m', target: 300 }, // Peak load
+          { duration: '10m', target: 300 }, // Sustained peak
+          { duration: '2m', target: 0 }, // Ramp-down
         ],
-        gracefulRampDown: '30s'
+        gracefulRampDown: '30s',
       },
       // Concurrent scenario for authenticated flows
       authenticated: {
@@ -185,10 +185,10 @@ function getScenarios(scenarioType) {
         stages: [
           { duration: '3m', target: 100 },
           { duration: '10m', target: 100 },
-          { duration: '2m', target: 0 }
+          { duration: '2m', target: 0 },
         ],
-        gracefulRampDown: '30s'
-      }
+        gracefulRampDown: '30s',
+      },
     },
 
     // Stress test - push beyond normal capacity
@@ -197,16 +197,16 @@ function getScenarios(scenarioType) {
         executor: 'ramping-vus',
         startVUs: 0,
         stages: [
-          { duration: '2m', target: 100 },   // Normal load
-          { duration: '5m', target: 200 },   // Above normal
-          { duration: '5m', target: 400 },   // High load
-          { duration: '5m', target: 600 },   // Stress level
-          { duration: '5m', target: 800 },   // Breaking point
-          { duration: '5m', target: 1000 },  // Maximum stress
-          { duration: '5m', target: 0 }      // Recovery
+          { duration: '2m', target: 100 }, // Normal load
+          { duration: '5m', target: 200 }, // Above normal
+          { duration: '5m', target: 400 }, // High load
+          { duration: '5m', target: 600 }, // Stress level
+          { duration: '5m', target: 800 }, // Breaking point
+          { duration: '5m', target: 1000 }, // Maximum stress
+          { duration: '5m', target: 0 }, // Recovery
         ],
-        gracefulRampDown: '1m'
-      }
+        gracefulRampDown: '1m',
+      },
     },
 
     // Spike test - sudden traffic surge
@@ -215,14 +215,14 @@ function getScenarios(scenarioType) {
         executor: 'ramping-vus',
         startVUs: 0,
         stages: [
-          { duration: '30s', target: 50 },   // Normal
+          { duration: '30s', target: 50 }, // Normal
           { duration: '30s', target: 1000 }, // Sudden spike!
-          { duration: '3m', target: 1000 },  // Sustained spike
-          { duration: '30s', target: 50 },   // Recovery
-          { duration: '2m', target: 50 },    // Normal
-          { duration: '30s', target: 0 }     // Ramp-down
-        ]
-      }
+          { duration: '3m', target: 1000 }, // Sustained spike
+          { duration: '30s', target: 50 }, // Recovery
+          { duration: '2m', target: 50 }, // Normal
+          { duration: '30s', target: 0 }, // Ramp-down
+        ],
+      },
     },
 
     // Soak test - endurance testing
@@ -230,9 +230,9 @@ function getScenarios(scenarioType) {
       default: {
         executor: 'constant-vus',
         vus: 200,
-        duration: '2h',  // Run for 2 hours
-        gracefulStop: '1m'
-      }
+        duration: '2h', // Run for 2 hours
+        gracefulStop: '1m',
+      },
     },
 
     // Smoke test - minimal load verification
@@ -240,9 +240,9 @@ function getScenarios(scenarioType) {
       default: {
         executor: 'constant-vus',
         vus: 1,
-        duration: '1m'
-      }
-    }
+        duration: '1m',
+      },
+    },
   };
 
   return scenarios[scenarioType] || scenarios.load;
@@ -289,11 +289,11 @@ function makeRequest(method, url, payload = null, params = {}) {
   const defaultParams = {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'User-Agent': 'k6-load-test/1.0'
+      Accept: 'application/json',
+      'User-Agent': 'k6-load-test/1.0',
     },
     tags: params.tags || {},
-    timeout: '10s'
+    timeout: '10s',
   };
 
   // Merge custom params with defaults
@@ -337,20 +337,25 @@ function makeRequest(method, url, payload = null, params = {}) {
 function login(username, password) {
   const loginStart = new Date();
 
-  const response = makeRequest('POST', `${BASE_URL}${ENDPOINTS.login}`, {
-    username: username,
-    password: password
-  }, {
-    tags: { endpoint: 'login' }
-  });
+  const response = makeRequest(
+    'POST',
+    `${BASE_URL}${ENDPOINTS.login}`,
+    {
+      username: username,
+      password: password,
+    },
+    {
+      tags: { endpoint: 'login' },
+    }
+  );
 
   const duration = new Date() - loginStart;
   loginDuration.add(duration);
 
   const success = check(response, {
-    'login status is 200': (r) => r.status === 200,
-    'login has token': (r) => r.json('token') !== undefined,
-    'login duration < 500ms': () => duration < 500
+    'login status is 200': r => r.status === 200,
+    'login has token': r => r.json('token') !== undefined,
+    'login duration < 500ms': () => duration < 500,
   });
 
   loginSuccessRate.add(success);
@@ -369,18 +374,23 @@ function register() {
   const email = generateUniqueEmail();
   const password = 'Test123!@#';
 
-  const response = makeRequest('POST', `${BASE_URL}${ENDPOINTS.register}`, {
-    email: email,
-    password: password,
-    firstName: 'Load',
-    lastName: 'Test'
-  }, {
-    tags: { endpoint: 'register' }
-  });
+  const response = makeRequest(
+    'POST',
+    `${BASE_URL}${ENDPOINTS.register}`,
+    {
+      email: email,
+      password: password,
+      firstName: 'Load',
+      lastName: 'Test',
+    },
+    {
+      tags: { endpoint: 'register' },
+    }
+  );
 
   check(response, {
-    'registration status is 201': (r) => r.status === 201,
-    'registration has user id': (r) => r.json('userId') !== undefined
+    'registration status is 201': r => r.status === 201,
+    'registration has user id': r => r.json('userId') !== undefined,
   });
 
   return { email, password };
@@ -409,7 +419,7 @@ export function setup() {
   return {
     startTime: new Date().toISOString(),
     baseUrl: BASE_URL,
-    scenario: SCENARIO
+    scenario: SCENARIO,
   };
 }
 
@@ -431,7 +441,7 @@ export function teardown(data) {
 /**
  * Default scenario - Mixed user behavior
  */
-export default function(data) {
+export default function (data) {
   // Track active users
   activeUsers.add(1);
 
@@ -454,32 +464,32 @@ export default function(data) {
  * Browser user journey - Just browsing
  */
 function browseProducts() {
-  group('Browse Products', function() {
+  group('Browse Products', function () {
     // View homepage
     const homepage = makeRequest('GET', `${BASE_URL}/`, null, {
-      tags: { endpoint: 'homepage', journey: 'browse' }
+      tags: { endpoint: 'homepage', journey: 'browse' },
     });
 
     check(homepage, {
-      'homepage loaded': (r) => r.status === 200
+      'homepage loaded': r => r.status === 200,
     });
 
-    randomSleep(2, 5);  // User reads homepage
+    randomSleep(2, 5); // User reads homepage
 
     // View product list
     const productListStart = new Date();
     const productList = makeRequest('GET', `${BASE_URL}${ENDPOINTS.products}`, null, {
-      tags: { endpoint: 'products', journey: 'browse' }
+      tags: { endpoint: 'products', journey: 'browse' },
     });
 
     productListDuration.add(new Date() - productListStart);
 
     check(productList, {
-      'product list loaded': (r) => r.status === 200,
-      'has products': (r) => r.json('products').length > 0
+      'product list loaded': r => r.status === 200,
+      'has products': r => r.json('products').length > 0,
     });
 
-    randomSleep(3, 8);  // User reviews products
+    randomSleep(3, 8); // User reviews products
 
     // View random product details
     const product = randomItem(products);
@@ -491,11 +501,11 @@ function browseProducts() {
     );
 
     check(productDetail, {
-      'product detail loaded': (r) => r.status === 200,
-      'product has price': (r) => r.json('price') !== undefined
+      'product detail loaded': r => r.status === 200,
+      'product has price': r => r.json('price') !== undefined,
     });
 
-    randomSleep(5, 15);  // User reads product details
+    randomSleep(5, 15); // User reads product details
   });
 }
 
@@ -503,22 +513,27 @@ function browseProducts() {
  * Shopper journey - Browse and add to cart
  */
 function shopperJourney() {
-  group('Shopping Journey', function() {
+  group('Shopping Journey', function () {
     // Browse products
     browseProducts();
 
     // Add item to cart (anonymous user)
     const product = randomItem(products);
 
-    const addToCartResponse = makeRequest('POST', `${BASE_URL}${ENDPOINTS.addToCart}`, {
-      productId: product.id,
-      quantity: randomIntBetween(1, 3)
-    }, {
-      tags: { endpoint: 'add_to_cart', journey: 'shop' }
-    });
+    const addToCartResponse = makeRequest(
+      'POST',
+      `${BASE_URL}${ENDPOINTS.addToCart}`,
+      {
+        productId: product.id,
+        quantity: randomIntBetween(1, 3),
+      },
+      {
+        tags: { endpoint: 'add_to_cart', journey: 'shop' },
+      }
+    );
 
     const added = check(addToCartResponse, {
-      'item added to cart': (r) => r.status === 201 || r.status === 200
+      'item added to cart': r => r.status === 201 || r.status === 200,
     });
 
     if (added) {
@@ -529,15 +544,15 @@ function shopperJourney() {
 
     // View cart
     const cart = makeRequest('GET', `${BASE_URL}${ENDPOINTS.cart}`, null, {
-      tags: { endpoint: 'cart', journey: 'shop' }
+      tags: { endpoint: 'cart', journey: 'shop' },
     });
 
     check(cart, {
-      'cart loaded': (r) => r.status === 200,
-      'cart has items': (r) => r.json('items').length > 0
+      'cart loaded': r => r.status === 200,
+      'cart has items': r => r.json('items').length > 0,
     });
 
-    randomSleep(3, 7);  // User reviews cart
+    randomSleep(3, 7); // User reviews cart
   });
 }
 
@@ -547,12 +562,12 @@ function shopperJourney() {
 function buyerJourney() {
   let token = null;
 
-  group('Purchase Journey', function() {
+  group('Purchase Journey', function () {
     // Get user credentials
     const user = randomItem(users);
 
     // Login
-    group('Authentication', function() {
+    group('Authentication', function () {
       token = login(user.username, user.password);
 
       if (!token) {
@@ -564,64 +579,79 @@ function buyerJourney() {
     });
 
     // Browse and add to cart
-    group('Shopping', function() {
+    group('Shopping', function () {
       const product1 = randomItem(products);
       const product2 = randomItem(products);
 
       // Add multiple items
-      makeRequest('POST', `${BASE_URL}${ENDPOINTS.addToCart}`, {
-        productId: product1.id,
-        quantity: 1
-      }, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        tags: { endpoint: 'add_to_cart', journey: 'buy', authenticated: 'true' }
-      });
+      makeRequest(
+        'POST',
+        `${BASE_URL}${ENDPOINTS.addToCart}`,
+        {
+          productId: product1.id,
+          quantity: 1,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          tags: { endpoint: 'add_to_cart', journey: 'buy', authenticated: 'true' },
+        }
+      );
 
       cartItemsAdded.add(1);
       randomSleep(1, 3);
 
-      makeRequest('POST', `${BASE_URL}${ENDPOINTS.addToCart}`, {
-        productId: product2.id,
-        quantity: 2
-      }, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        tags: { endpoint: 'add_to_cart', journey: 'buy', authenticated: 'true' }
-      });
+      makeRequest(
+        'POST',
+        `${BASE_URL}${ENDPOINTS.addToCart}`,
+        {
+          productId: product2.id,
+          quantity: 2,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          tags: { endpoint: 'add_to_cart', journey: 'buy', authenticated: 'true' },
+        }
+      );
 
       cartItemsAdded.add(1);
       randomSleep(2, 4);
     });
 
     // Checkout
-    group('Checkout', function() {
+    group('Checkout', function () {
       const checkoutStart = new Date();
 
-      const checkoutResponse = makeRequest('POST', `${BASE_URL}${ENDPOINTS.checkout}`, {
-        paymentMethod: 'credit_card',
-        shippingAddress: {
-          street: '123 Test St',
-          city: 'Test City',
-          zipCode: '12345',
-          country: 'US'
+      const checkoutResponse = makeRequest(
+        'POST',
+        `${BASE_URL}${ENDPOINTS.checkout}`,
+        {
+          paymentMethod: 'credit_card',
+          shippingAddress: {
+            street: '123 Test St',
+            city: 'Test City',
+            zipCode: '12345',
+            country: 'US',
+          },
+          billingAddress: {
+            street: '123 Test St',
+            city: 'Test City',
+            zipCode: '12345',
+            country: 'US',
+          },
         },
-        billingAddress: {
-          street: '123 Test St',
-          city: 'Test City',
-          zipCode: '12345',
-          country: 'US'
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          tags: { endpoint: 'checkout', journey: 'buy', authenticated: 'true' },
         }
-      }, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        tags: { endpoint: 'checkout', journey: 'buy', authenticated: 'true' }
-      });
+      );
 
       const checkoutTime = new Date() - checkoutStart;
       checkoutDuration.add(checkoutTime);
 
       const success = check(checkoutResponse, {
-        'checkout status is 201': (r) => r.status === 201,
-        'order id received': (r) => r.json('orderId') !== undefined,
-        'checkout duration < 2000ms': () => checkoutTime < 2000
+        'checkout status is 201': r => r.status === 201,
+        'order id received': r => r.json('orderId') !== undefined,
+        'checkout duration < 2000ms': () => checkoutTime < 2000,
       });
 
       checkoutSuccessRate.add(success);
@@ -634,15 +664,15 @@ function buyerJourney() {
     });
 
     // View order history
-    group('Order Confirmation', function() {
+    group('Order Confirmation', function () {
       const orders = makeRequest('GET', `${BASE_URL}${ENDPOINTS.orders}`, null, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        tags: { endpoint: 'orders', journey: 'buy', authenticated: 'true' }
+        headers: { Authorization: `Bearer ${token}` },
+        tags: { endpoint: 'orders', journey: 'buy', authenticated: 'true' },
       });
 
       check(orders, {
-        'orders loaded': (r) => r.status === 200,
-        'has orders': (r) => r.json('orders').length > 0
+        'orders loaded': r => r.status === 200,
+        'has orders': r => r.json('orders').length > 0,
       });
     });
   });
@@ -659,34 +689,39 @@ export function authenticatedUserJourney(data) {
     return;
   }
 
-  group('Authenticated Actions', function() {
+  group('Authenticated Actions', function () {
     // View profile
     const profile = makeRequest('GET', `${BASE_URL}${ENDPOINTS.profile}`, null, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      tags: { endpoint: 'profile', authenticated: 'true' }
+      headers: { Authorization: `Bearer ${token}` },
+      tags: { endpoint: 'profile', authenticated: 'true' },
     });
 
     check(profile, {
-      'profile loaded': (r) => r.status === 200
+      'profile loaded': r => r.status === 200,
     });
 
     randomSleep(2, 4);
 
     // Update profile
-    makeRequest('PUT', `${BASE_URL}${ENDPOINTS.profile}`, {
-      firstName: 'Updated',
-      lastName: 'User'
-    }, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      tags: { endpoint: 'profile_update', authenticated: 'true' }
-    });
+    makeRequest(
+      'PUT',
+      `${BASE_URL}${ENDPOINTS.profile}`,
+      {
+        firstName: 'Updated',
+        lastName: 'User',
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        tags: { endpoint: 'profile_update', authenticated: 'true' },
+      }
+    );
 
     randomSleep(1, 3);
 
     // View orders
     makeRequest('GET', `${BASE_URL}${ENDPOINTS.orders}`, null, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      tags: { endpoint: 'orders', authenticated: 'true' }
+      headers: { Authorization: `Bearer ${token}` },
+      tags: { endpoint: 'orders', authenticated: 'true' },
     });
   });
 }
@@ -701,7 +736,7 @@ export function authenticatedUserJourney(data) {
 export function handleSummary(data) {
   return {
     'summary.html': htmlReport(data),
-    'stdout': textSummary(data, { indent: ' ', enableColors: true }),
-    'summary.json': JSON.stringify(data, null, 2)
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
+    'summary.json': JSON.stringify(data, null, 2),
   };
 }

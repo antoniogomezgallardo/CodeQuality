@@ -17,6 +17,7 @@ GitFlow is a branching model for Git that uses multiple long-lived branches and 
 
 ```markdown
 **✅ GitFlow is suitable for:**
+
 - Scheduled releases (quarterly, monthly)
 - Multiple production versions maintained simultaneously
 - Traditional release cycles
@@ -24,6 +25,7 @@ GitFlow is a branching model for Git that uses multiple long-lived branches and 
 - Enterprise environments with change management
 
 **❌ GitFlow is NOT suitable for:**
+
 - Continuous deployment (multiple deploys per day)
 - SaaS applications with single production version
 - Small teams practicing agile/DevOps
@@ -31,6 +33,7 @@ GitFlow is a branching model for Git that uses multiple long-lived branches and 
 - Mobile apps (app store delays make CD impractical anyway)
 
 **✅ Consider Trunk-Based Development instead when:**
+
 - Deploying multiple times per day
 - Practicing continuous delivery
 - Using feature flags
@@ -171,59 +174,67 @@ git branch -d hotfix/1.2.1
 ## GitFlow vs Trunk-Based Development
 
 ```markdown
-| Aspect | GitFlow | Trunk-Based Development |
-|--------|---------|-------------------------|
-| **Branches** | Multiple long-lived | Single main branch |
-| **Feature branches** | Long-lived (days/weeks) | Short-lived (<1 day) |
-| **Releases** | Scheduled | Continuous |
-| **Complexity** | High | Low |
-| **Merge conflicts** | More frequent | Less frequent |
-| **CI/CD friendly** | Moderate | Excellent |
-| **Team size** | Good for large teams | Better for small/medium |
-| **Deployment frequency** | Low (weekly/monthly) | High (multiple/day) |
-| **Learning curve** | Steeper | Gentler |
-| **Best for** | Versioned products | SaaS/web apps |
+| Aspect                   | GitFlow                 | Trunk-Based Development |
+| ------------------------ | ----------------------- | ----------------------- |
+| **Branches**             | Multiple long-lived     | Single main branch      |
+| **Feature branches**     | Long-lived (days/weeks) | Short-lived (<1 day)    |
+| **Releases**             | Scheduled               | Continuous              |
+| **Complexity**           | High                    | Low                     |
+| **Merge conflicts**      | More frequent           | Less frequent           |
+| **CI/CD friendly**       | Moderate                | Excellent               |
+| **Team size**            | Good for large teams    | Better for small/medium |
+| **Deployment frequency** | Low (weekly/monthly)    | High (multiple/day)     |
+| **Learning curve**       | Steeper                 | Gentler                 |
+| **Best for**             | Versioned products      | SaaS/web apps           |
 ```
 
 ## GitFlow Challenges
 
 ```markdown
 **1. Merge Hell**
+
 - Multiple long-lived branches
 - Frequent merge conflicts
 - Integration issues discovered late
 
 **Solution:**
+
 - Keep feature branches short
 - Merge develop into feature branches frequently
 - Consider feature flags instead
 
 **2. Delayed Integration**
+
 - Features integrated only when complete
 - Integration bugs found late
 - Large merge conflicts
 
 **Solution:**
+
 - Break features into smaller pieces
 - Integrate partially complete features with flags
 - Use continuous integration
 
 **3. Slow Feedback**
+
 - Code not deployed until release
 - User feedback delayed
 - Market changes missed
 
 **Solution:**
+
 - Shorten release cycles
 - Use beta/staging environments
 - Consider trunk-based development
 
 **4. Release Branch Overhead**
+
 - Extra branch to maintain
 - Double merging (main + develop)
 - Version conflicts possible
 
 **Solution:**
+
 - Automate release process
 - Use release automation tools
 - Consider GitHub Flow for simpler flow
@@ -276,4 +287,4 @@ git flow hotfix finish 1.2.1
 
 ---
 
-*Part of: [Version Control](README.md)*
+_Part of: [Version Control](README.md)_

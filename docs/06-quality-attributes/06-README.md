@@ -1,12 +1,15 @@
 # Quality Attributes
 
 ## Purpose
+
 Define, measure, and test non-functional requirements including performance, security, accessibility, and reliability to ensure comprehensive software quality beyond functional correctness.
 
 ## Context
+
 Quality attributes determine how well a system performs its functions. While functional testing verifies what the system does, quality attribute testing verifies how well it does it.
 
 ## Prerequisites
+
 - Understanding of [Quality Foundations](../00-foundations/README.md)
 - Knowledge of [Testing Strategy](../04-testing-strategy/README.md)
 - Familiarity with system architecture
@@ -55,10 +58,10 @@ class ResponseTimeMonitor {
   constructor() {
     this.measurements = [];
     this.thresholds = {
-      excellent: 100,    // ms
-      good: 500,         // ms
-      acceptable: 2000,  // ms
-      poor: 5000        // ms
+      excellent: 100, // ms
+      good: 500, // ms
+      acceptable: 2000, // ms
+      poor: 5000, // ms
     };
   }
 
@@ -70,8 +73,8 @@ class ResponseTimeMonitor {
         method,
         body: payload ? JSON.stringify(payload) : null,
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       const endTime = performance.now();
@@ -83,12 +86,11 @@ class ResponseTimeMonitor {
         responseTime,
         statusCode: response.status,
         timestamp: new Date(),
-        category: this.categorizePerformance(responseTime)
+        category: this.categorizePerformance(responseTime),
       };
 
       this.measurements.push(measurement);
       return measurement;
-
     } catch (error) {
       const endTime = performance.now();
       const responseTime = endTime - startTime;
@@ -99,7 +101,7 @@ class ResponseTimeMonitor {
         responseTime,
         error: error.message,
         timestamp: new Date(),
-        category: 'error'
+        category: 'error',
       };
 
       this.measurements.push(measurement);
@@ -120,14 +122,13 @@ class ResponseTimeMonitor {
       return { error: 'No measurements available' };
     }
 
-    const responseTimes = this.measurements
-      .filter(m => !m.error)
-      .map(m => m.responseTime);
+    const responseTimes = this.measurements.filter(m => !m.error).map(m => m.responseTime);
 
     return {
       totalRequests: this.measurements.length,
       successfulRequests: responseTimes.length,
-      errorRate: ((this.measurements.length - responseTimes.length) / this.measurements.length) * 100,
+      errorRate:
+        ((this.measurements.length - responseTimes.length) / this.measurements.length) * 100,
 
       responseTimeStats: {
         min: Math.min(...responseTimes),
@@ -135,10 +136,10 @@ class ResponseTimeMonitor {
         average: responseTimes.reduce((sum, rt) => sum + rt, 0) / responseTimes.length,
         median: this.calculatePercentile(responseTimes, 50),
         p95: this.calculatePercentile(responseTimes, 95),
-        p99: this.calculatePercentile(responseTimes, 99)
+        p99: this.calculatePercentile(responseTimes, 99),
       },
 
-      categoryDistribution: this.getCategoryDistribution()
+      categoryDistribution: this.getCategoryDistribution(),
     };
   }
 
@@ -172,7 +173,7 @@ describe('API Performance Tests', () => {
   it('should respond to user login within acceptable time', async () => {
     const measurement = await responseMonitor.measureEndpoint('/api/auth/login', 'POST', {
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     });
 
     expect(measurement.responseTime).toBeLessThan(2000); // 2 seconds max
@@ -211,15 +212,15 @@ const loadTestConfig = {
         { duration: '5m', target: 50 },
         { duration: '10m', target: 100 },
         { duration: '5m', target: 50 },
-        { duration: '2m', target: 0 }
-      ]
+        { duration: '2m', target: 0 },
+      ],
     },
 
     // Steady state test
     steady_state: {
       executor: 'constant-vus',
       vus: 100,
-      duration: '30m'
+      duration: '30m',
     },
 
     // Spike test
@@ -230,22 +231,22 @@ const loadTestConfig = {
         { duration: '30s', target: 1000 }, // Sudden spike
         { duration: '2m', target: 1000 },
         { duration: '30s', target: 100 },
-        { duration: '1m', target: 0 }
-      ]
-    }
+        { duration: '1m', target: 0 },
+      ],
+    },
   },
 
   thresholds: {
     // Response time thresholds
-    'http_req_duration': ['p(95)<2000'], // 95% under 2s
+    http_req_duration: ['p(95)<2000'], // 95% under 2s
     'http_req_duration{endpoint:login}': ['p(99)<5000'], // Login 99% under 5s
 
     // Error rate thresholds
-    'http_req_failed': ['rate<0.05'], // Error rate under 5%
+    http_req_failed: ['rate<0.05'], // Error rate under 5%
 
     // Throughput thresholds
-    'http_reqs': ['rate>100'], // At least 100 requests/second
-  }
+    http_reqs: ['rate>100'], // At least 100 requests/second
+  },
 };
 
 // Load test implementation
@@ -297,14 +298,13 @@ class LoadTestRunner {
         this.results.push({
           responseTime: requestEnd - requestStart,
           timestamp: Date.now(),
-          success: true
+          success: true,
         });
-
       } catch (error) {
         this.results.push({
           timestamp: Date.now(),
           success: false,
-          error: error.message
+          error: error.message,
         });
       }
     }
@@ -343,10 +343,10 @@ class ResourceMonitor {
   constructor() {
     this.metrics = [];
     this.thresholds = {
-      cpu: 80,      // % CPU usage
-      memory: 85,   // % Memory usage
-      disk: 90,     // % Disk usage
-      network: 80   // % Network utilization
+      cpu: 80, // % CPU usage
+      memory: 85, // % Memory usage
+      disk: 90, // % Disk usage
+      network: 80, // % Network utilization
     };
   }
 
@@ -356,7 +356,7 @@ class ResourceMonitor {
       cpu: await this.getCPUUsage(),
       memory: await this.getMemoryUsage(),
       disk: await this.getDiskUsage(),
-      network: await this.getNetworkUsage()
+      network: await this.getNetworkUsage(),
     };
 
     this.metrics.push(metrics);
@@ -383,12 +383,12 @@ class ResourceMonitor {
     await new Promise(resolve => setTimeout(resolve, 1000));
     const stat2 = await fs.readFile('/proc/stat', 'utf8');
 
-    const parseStats = (data) => {
+    const parseStats = data => {
       const line = data.split('\n')[0];
       const values = line.split(/\s+/).slice(1).map(Number);
       return {
         idle: values[3],
-        total: values.reduce((sum, val) => sum + val, 0)
+        total: values.reduce((sum, val) => sum + val, 0),
       };
     };
 
@@ -407,9 +407,9 @@ class ResourceMonitor {
     const usedMemory = totalMemory - freeMemory;
 
     return {
-      used: Math.round((usedMemory / 1024 / 1024)), // MB
-      total: Math.round((totalMemory / 1024 / 1024)), // MB
-      percentage: Math.round((usedMemory / totalMemory) * 100)
+      used: Math.round(usedMemory / 1024 / 1024), // MB
+      total: Math.round(totalMemory / 1024 / 1024), // MB
+      percentage: Math.round((usedMemory / totalMemory) * 100),
     };
   }
 
@@ -421,7 +421,7 @@ class ResourceMonitor {
         type: 'cpu',
         value: metrics.cpu,
         threshold: this.thresholds.cpu,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
@@ -430,7 +430,7 @@ class ResourceMonitor {
         type: 'memory',
         value: metrics.memory.percentage,
         threshold: this.thresholds.memory,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
@@ -441,11 +441,14 @@ class ResourceMonitor {
 
   handleAlerts(alerts) {
     alerts.forEach(alert => {
-      console.warn(`Resource alert: ${alert.type} usage ${alert.value}% exceeds threshold ${alert.threshold}%`);
+      console.warn(
+        `Resource alert: ${alert.type} usage ${alert.value}% exceeds threshold ${alert.threshold}%`
+      );
     });
   }
 
-  generateResourceReport(timeframe = 3600000) { // Last hour
+  generateResourceReport(timeframe = 3600000) {
+    // Last hour
     const cutoff = Date.now() - timeframe;
     const recentMetrics = this.metrics.filter(m => m.timestamp >= cutoff);
 
@@ -460,21 +463,19 @@ class ResourceMonitor {
       cpu: {
         average: this.calculateAverage(recentMetrics, 'cpu'),
         peak: Math.max(...recentMetrics.map(m => m.cpu)),
-        violations: recentMetrics.filter(m => m.cpu > this.thresholds.cpu).length
+        violations: recentMetrics.filter(m => m.cpu > this.thresholds.cpu).length,
       },
 
       memory: {
         average: this.calculateAverage(recentMetrics, m => m.memory.percentage),
         peak: Math.max(...recentMetrics.map(m => m.memory.percentage)),
-        violations: recentMetrics.filter(m => m.memory.percentage > this.thresholds.memory).length
-      }
+        violations: recentMetrics.filter(m => m.memory.percentage > this.thresholds.memory).length,
+      },
     };
   }
 
   calculateAverage(metrics, accessor) {
-    const getValue = typeof accessor === 'string'
-      ? (m) => m[accessor]
-      : accessor;
+    const getValue = typeof accessor === 'string' ? m => m[accessor] : accessor;
 
     const sum = metrics.reduce((total, metric) => total + getValue(metric), 0);
     return Math.round(sum / metrics.length);
@@ -508,7 +509,6 @@ describe('Resource Utilization Tests', () => {
       expect(report.cpu.average).toBeLessThan(80);
       expect(report.memory.average).toBeLessThan(85);
       expect(report.cpu.violations).toBeLessThan(5); // Less than 5 violations
-
     } finally {
       clearInterval(monitoringInterval);
     }
@@ -533,7 +533,7 @@ class SecurityTester {
       this.testWeakPasswords(),
       this.testBruteForceProtection(),
       this.testSessionManagement(),
-      this.testPasswordReset()
+      this.testPasswordReset(),
     ];
 
     await Promise.all(tests);
@@ -549,8 +549,8 @@ class SecurityTester {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: 'test@example.com',
-            password: password
-          })
+            password: password,
+          }),
         });
 
         if (response.status === 201) {
@@ -558,10 +558,9 @@ class SecurityTester {
             type: 'weak_password_accepted',
             severity: 'high',
             description: `Weak password "${password}" was accepted`,
-            endpoint: '/api/auth/register'
+            endpoint: '/api/auth/register',
           });
         }
-
       } catch (error) {
         // Network errors are expected in testing
       }
@@ -581,13 +580,12 @@ class SecurityTester {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: 'nonexistent@example.com',
-            password: 'wrongpassword'
-          })
+            password: 'wrongpassword',
+          }),
         });
 
         const duration = Date.now() - start;
         attempts.push({ status: response.status, duration });
-
       } catch (error) {
         attempts.push({ error: error.message, duration: Date.now() - start });
       }
@@ -595,8 +593,8 @@ class SecurityTester {
 
     // Check for rate limiting
     const blockedAttempts = attempts.filter(a => a.status === 429).length;
-    const increasingDelays = attempts.every((attempt, index) =>
-      index === 0 || attempt.duration >= attempts[index - 1].duration
+    const increasingDelays = attempts.every(
+      (attempt, index) => index === 0 || attempt.duration >= attempts[index - 1].duration
     );
 
     if (blockedAttempts === 0 && !increasingDelays) {
@@ -604,7 +602,7 @@ class SecurityTester {
         type: 'no_brute_force_protection',
         severity: 'high',
         description: 'No brute force protection detected',
-        endpoint: '/api/auth/login'
+        endpoint: '/api/auth/login',
       });
     }
   }
@@ -619,12 +617,12 @@ class SecurityTester {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Cookie': `sessionId=${sessionId1}`
+        Cookie: `sessionId=${sessionId1}`,
       },
       body: JSON.stringify({
         email: 'valid@example.com',
-        password: 'validpassword'
-      })
+        password: 'validpassword',
+      }),
     });
 
     const sessionId2 = this.extractSessionId(loginResponse);
@@ -634,7 +632,7 @@ class SecurityTester {
         type: 'session_fixation',
         severity: 'medium',
         description: 'Session ID not regenerated after login',
-        endpoint: '/api/auth/login'
+        endpoint: '/api/auth/login',
       });
     }
   }
@@ -651,7 +649,7 @@ class SecurityTester {
     const endpoints = [
       { url: '/api/users/search', param: 'q' },
       { url: '/api/products', param: 'category' },
-      { url: '/api/feedback', param: 'message' }
+      { url: '/api/feedback', param: 'message' },
     ];
 
     for (const endpoint of endpoints) {
@@ -674,7 +672,7 @@ class SecurityTester {
           severity: 'high',
           description: `Unsanitized input reflected in response`,
           endpoint: endpoint.url,
-          payload: payload
+          payload: payload,
         });
       }
 
@@ -683,7 +681,7 @@ class SecurityTester {
         'mysql_fetch_array',
         'ORA-01756',
         'Microsoft OLE DB Provider',
-        'java.sql.SQLException'
+        'java.sql.SQLException',
       ];
 
       if (sqlErrors.some(error => text.toLowerCase().includes(error.toLowerCase()))) {
@@ -692,10 +690,9 @@ class SecurityTester {
           severity: 'critical',
           description: 'SQL error message detected',
           endpoint: endpoint.url,
-          payload: payload
+          payload: payload,
         });
       }
-
     } catch (error) {
       // Expected in some test cases
     }
@@ -710,7 +707,7 @@ class SecurityTester {
       'X-Frame-Options': ['DENY', 'SAMEORIGIN'],
       'X-XSS-Protection': '1; mode=block',
       'Strict-Transport-Security': /max-age=\d+/,
-      'Content-Security-Policy': /.+/
+      'Content-Security-Policy': /.+/,
     };
 
     Object.entries(requiredHeaders).forEach(([headerName, expectedValue]) => {
@@ -721,7 +718,7 @@ class SecurityTester {
           type: 'missing_security_header',
           severity: 'medium',
           description: `Missing security header: ${headerName}`,
-          endpoint: '/'
+          endpoint: '/',
         });
       } else if (Array.isArray(expectedValue)) {
         if (!expectedValue.includes(headerValue)) {
@@ -729,7 +726,7 @@ class SecurityTester {
             type: 'incorrect_security_header',
             severity: 'low',
             description: `Invalid ${headerName}: ${headerValue}`,
-            endpoint: '/'
+            endpoint: '/',
           });
         }
       } else if (expectedValue instanceof RegExp) {
@@ -738,7 +735,7 @@ class SecurityTester {
             type: 'incorrect_security_header',
             severity: 'low',
             description: `Invalid ${headerName}: ${headerValue}`,
-            endpoint: '/'
+            endpoint: '/',
           });
         }
       }
@@ -749,7 +746,7 @@ class SecurityTester {
     this.vulnerabilities.push({
       ...vulnerability,
       timestamp: new Date(),
-      id: this.generateId()
+      id: this.generateId(),
     });
   }
 
@@ -767,10 +764,10 @@ class SecurityTester {
       summary: {
         totalVulnerabilities: this.vulnerabilities.length,
         severityBreakdown: severityCounts,
-        riskScore: this.calculateRiskScore()
+        riskScore: this.calculateRiskScore(),
       },
       vulnerabilities: this.vulnerabilities,
-      recommendations: this.generateRecommendations()
+      recommendations: this.generateRecommendations(),
     };
   }
 
@@ -788,7 +785,9 @@ class SecurityTester {
     vulnTypes.forEach(type => {
       switch (type) {
         case 'weak_password_accepted':
-          recommendations.push('Implement strong password policy with minimum complexity requirements');
+          recommendations.push(
+            'Implement strong password policy with minimum complexity requirements'
+          );
           break;
         case 'no_brute_force_protection':
           recommendations.push('Add rate limiting and account lockout mechanisms');
@@ -866,14 +865,14 @@ class FaultToleranceTester {
     // Test behavior when external payment service is down
     const testOrder = {
       items: [{ id: 1, quantity: 2 }],
-      paymentMethod: 'credit_card'
+      paymentMethod: 'credit_card',
     };
 
     await this.simulateFault('payment_service', async () => {
       const response = await fetch(`${this.serviceUrl}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testOrder)
+        body: JSON.stringify(testOrder),
       });
 
       // Should either succeed with alternative payment or fail gracefully
@@ -908,7 +907,6 @@ class FaultToleranceTester {
       if (healthCheck.status === 'degraded') {
         expect(healthCheck).toHaveProperty('memoryPressure', true);
       }
-
     } finally {
       // Clean up memory
       memoryHogs.length = 0;
@@ -919,7 +917,7 @@ class FaultToleranceTester {
     // Test behavior during network issues
     const slowNetwork = {
       delay: 5000, // 5 second delay
-      dropRate: 0.1 // Drop 10% of packets
+      dropRate: 0.1, // Drop 10% of packets
     };
 
     await this.simulateNetworkConditions(slowNetwork, async () => {
@@ -927,7 +925,7 @@ class FaultToleranceTester {
 
       try {
         const response = await fetch(`${this.serviceUrl}/api/products`, {
-          timeout: 3000 // 3 second timeout
+          timeout: 3000, // 3 second timeout
         });
 
         const duration = Date.now() - startTime;
@@ -936,7 +934,6 @@ class FaultToleranceTester {
           // If successful, should still be reasonably fast
           expect(duration).toBeLessThan(10000);
         }
-
       } catch (error) {
         // Timeout errors are acceptable under network stress
         expect(error.name).toBe('AbortError');
@@ -956,16 +953,15 @@ class FaultToleranceTester {
         type: faultType,
         duration: Date.now() - faultStart,
         result: 'handled_gracefully',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
-
     } catch (error) {
       this.faultScenarios.push({
         type: faultType,
         duration: Date.now() - faultStart,
         result: 'failed',
         error: error.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       throw error;
@@ -990,10 +986,10 @@ class FaultToleranceTester {
       summary: {
         totalScenarios: this.faultScenarios.length,
         successfullyHandled: successfulTests.length,
-        reliabilityScore: Math.round(reliabilityScore)
+        reliabilityScore: Math.round(reliabilityScore),
       },
       scenarios: this.faultScenarios,
-      recommendations: this.generateReliabilityRecommendations()
+      recommendations: this.generateReliabilityRecommendations(),
     };
   }
 
@@ -1037,7 +1033,7 @@ class RecoveryTester {
     const scenario = {
       name: 'database_recovery',
       startTime: Date.now(),
-      phases: []
+      phases: [],
     };
 
     try {
@@ -1058,7 +1054,6 @@ class RecoveryTester {
 
       scenario.result = 'success';
       scenario.recoveryTime = Date.now() - scenario.startTime;
-
     } catch (error) {
       scenario.result = 'failed';
       scenario.error = error.message;
@@ -1072,15 +1067,11 @@ class RecoveryTester {
     const phase = {
       name: 'normal_operation',
       startTime: Date.now(),
-      checks: []
+      checks: [],
     };
 
     // Test critical endpoints
-    const endpoints = [
-      '/api/health',
-      '/api/users',
-      '/api/products'
-    ];
+    const endpoints = ['/api/health', '/api/users', '/api/products'];
 
     for (const endpoint of endpoints) {
       const check = await this.checkEndpoint(endpoint);
@@ -1097,7 +1088,7 @@ class RecoveryTester {
     const phase = {
       name: 'simulate_failure',
       startTime: Date.now(),
-      action: 'disconnect_database'
+      action: 'disconnect_database',
     };
 
     // In real implementation, this would:
@@ -1118,7 +1109,7 @@ class RecoveryTester {
     const phase = {
       name: 'degraded_operation',
       startTime: Date.now(),
-      checks: []
+      checks: [],
     };
 
     // Service should still respond but with degraded functionality
@@ -1130,7 +1121,7 @@ class RecoveryTester {
     phase.checks.push({
       ...userCheck,
       expectedStatus: [200, 503], // Either cached data or service unavailable
-      success: [200, 503].includes(userCheck.status)
+      success: [200, 503].includes(userCheck.status),
     });
 
     phase.duration = Date.now() - phase.startTime;
@@ -1143,7 +1134,7 @@ class RecoveryTester {
     const phase = {
       name: 'restore_service',
       startTime: Date.now(),
-      action: 'reconnect_database'
+      action: 'reconnect_database',
     };
 
     console.log('Restoring database connection...');
@@ -1159,7 +1150,7 @@ class RecoveryTester {
     const phase = {
       name: 'full_recovery',
       startTime: Date.now(),
-      checks: []
+      checks: [],
     };
 
     // Wait for service to fully recover
@@ -1198,7 +1189,7 @@ class RecoveryTester {
   async checkEndpoint(endpoint) {
     const check = {
       endpoint,
-      startTime: Date.now()
+      startTime: Date.now(),
     };
 
     try {
@@ -1212,7 +1203,6 @@ class RecoveryTester {
       } catch {
         check.body = await response.text();
       }
-
     } catch (error) {
       check.success = false;
       check.error = error.message;
@@ -1233,7 +1223,7 @@ class RecoveryTester {
       failed: 0,
       averageRecoveryTime: 0,
       maxRecoveryTime: 0,
-      minRecoveryTime: Infinity
+      minRecoveryTime: Infinity,
     };
 
     this.recoveryScenarios.forEach(scenario => {
@@ -1268,7 +1258,7 @@ describe('Recovery Tests', () => {
 
   beforeEach(() => {
     recoveryTester = new RecoveryTester({
-      baseUrl: process.env.TEST_BASE_URL
+      baseUrl: process.env.TEST_BASE_URL,
     });
   });
 
@@ -1310,12 +1300,12 @@ class AccessibilityTester {
   async runAccessibilityAudit() {
     // Inject axe-core for accessibility testing
     await this.page.addScriptTag({
-      url: 'https://unpkg.com/axe-core@latest/axe.min.js'
+      url: 'https://unpkg.com/axe-core@latest/axe.min.js',
     });
 
     // Run axe audit
     const results = await this.page.evaluate(() => {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         axe.run((err, results) => {
           if (err) throw err;
           resolve(results);
@@ -1340,9 +1330,9 @@ class AccessibilityTester {
         elements: violation.nodes.map(node => ({
           target: node.target,
           html: node.html,
-          failureSummary: node.failureSummary
+          failureSummary: node.failureSummary,
         })),
-        tags: violation.tags
+        tags: violation.tags,
       });
     });
   }
@@ -1366,7 +1356,8 @@ class AccessibilityTester {
     let tabCount = 0;
     let currentElement = null;
 
-    while (tabCount < focusableElements && tabCount < 50) { // Safety limit
+    while (tabCount < focusableElements && tabCount < 50) {
+      // Safety limit
       await this.page.keyboard.press('Tab');
 
       const newElement = await this.page.evaluate(() => {
@@ -1375,7 +1366,7 @@ class AccessibilityTester {
           tagName: focused.tagName,
           id: focused.id,
           className: focused.className,
-          visible: focused.offsetWidth > 0 && focused.offsetHeight > 0
+          visible: focused.offsetWidth > 0 && focused.offsetHeight > 0,
         };
       });
 
@@ -1388,7 +1379,7 @@ class AccessibilityTester {
           rule: 'keyboard-navigation',
           impact: 'serious',
           description: 'Focused element is not visible',
-          element: newElement
+          element: newElement,
         });
       }
 
@@ -1404,7 +1395,8 @@ class AccessibilityTester {
     // Find all buttons and links
     const interactiveElements = await this.page.$$('button, a, [role="button"]');
 
-    for (const element of interactiveElements.slice(0, 5)) { // Test first 5
+    for (const element of interactiveElements.slice(0, 5)) {
+      // Test first 5
       await element.focus();
 
       // Test Enter key
@@ -1427,7 +1419,7 @@ class AccessibilityTester {
             rule: 'keyboard-navigation',
             impact: 'moderate',
             description: 'Link not activated by Enter key',
-            element: await element.evaluate(el => el.outerHTML)
+            element: await element.evaluate(el => el.outerHTML),
           });
         }
       }
@@ -1439,7 +1431,9 @@ class AccessibilityTester {
 
     const contrastIssues = await this.page.evaluate(() => {
       const issues = [];
-      const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, a, button, label');
+      const textElements = document.querySelectorAll(
+        'p, h1, h2, h3, h4, h5, h6, span, a, button, label'
+      );
 
       textElements.forEach(element => {
         const style = window.getComputedStyle(element);
@@ -1458,7 +1452,7 @@ class AccessibilityTester {
               color,
               backgroundColor,
               contrast: contrast.toFixed(2),
-              required: minContrast
+              required: minContrast,
             });
           }
         }
@@ -1472,7 +1466,7 @@ class AccessibilityTester {
         rule: 'color-contrast',
         impact: 'serious',
         description: `Insufficient color contrast: ${issue.contrast}:1 (required: ${issue.required}:1)`,
-        element: issue.element
+        element: issue.element,
       });
     });
   }
@@ -1484,7 +1478,7 @@ class AccessibilityTester {
       { width: 320, height: 568, name: 'Mobile Portrait' },
       { width: 768, height: 1024, name: 'Tablet Portrait' },
       { width: 1024, height: 768, name: 'Tablet Landscape' },
-      { width: 1200, height: 800, name: 'Desktop' }
+      { width: 1200, height: 800, name: 'Desktop' },
     ];
 
     for (const viewport of viewports) {
@@ -1501,7 +1495,7 @@ class AccessibilityTester {
           rule: 'responsive-design',
           impact: 'moderate',
           description: `Horizontal scrolling detected at ${viewport.name} (${viewport.width}x${viewport.height})`,
-          viewport: viewport.name
+          viewport: viewport.name,
         });
       }
 
@@ -1512,7 +1506,7 @@ class AccessibilityTester {
           rule: 'responsive-design',
           impact: 'serious',
           description: `Overlapping elements detected at ${viewport.name}`,
-          elements: overlaps
+          elements: overlaps,
         });
       }
     }
@@ -1535,7 +1529,7 @@ class AccessibilityTester {
           if (this.rectsOverlap(rect1, rect2) && !this.isParentChild(elements[i], elements[j])) {
             overlaps.push({
               element1: elements[i].tagName + (elements[i].id ? '#' + elements[i].id : ''),
-              element2: elements[j].tagName + (elements[j].id ? '#' + elements[j].id : '')
+              element2: elements[j].tagName + (elements[j].id ? '#' + elements[j].id : ''),
             });
           }
         }
@@ -1555,10 +1549,14 @@ class AccessibilityTester {
       // Check for images without alt text
       const images = document.querySelectorAll('img');
       images.forEach(img => {
-        if (!img.alt && !img.getAttribute('aria-label') && img.getAttribute('role') !== 'presentation') {
+        if (
+          !img.alt &&
+          !img.getAttribute('aria-label') &&
+          img.getAttribute('role') !== 'presentation'
+        ) {
           issues.push({
             type: 'missing-alt-text',
-            element: img.outerHTML.substring(0, 100)
+            element: img.outerHTML.substring(0, 100),
           });
         }
       });
@@ -1566,14 +1564,15 @@ class AccessibilityTester {
       // Check for form inputs without labels
       const inputs = document.querySelectorAll('input, textarea, select');
       inputs.forEach(input => {
-        const hasLabel = document.querySelector(`label[for="${input.id}"]`) ||
-                        input.getAttribute('aria-label') ||
-                        input.getAttribute('aria-labelledby');
+        const hasLabel =
+          document.querySelector(`label[for="${input.id}"]`) ||
+          input.getAttribute('aria-label') ||
+          input.getAttribute('aria-labelledby');
 
         if (!hasLabel && input.type !== 'hidden') {
           issues.push({
             type: 'missing-label',
-            element: input.outerHTML.substring(0, 100)
+            element: input.outerHTML.substring(0, 100),
           });
         }
       });
@@ -1588,7 +1587,7 @@ class AccessibilityTester {
           issues.push({
             type: 'heading-structure',
             element: heading.outerHTML.substring(0, 100),
-            message: `Heading level ${level} follows level ${lastLevel}`
+            message: `Heading level ${level} follows level ${lastLevel}`,
           });
         }
         lastLevel = level;
@@ -1602,7 +1601,7 @@ class AccessibilityTester {
         rule: 'screen-reader-compatibility',
         impact: issue.type === 'missing-alt-text' ? 'serious' : 'moderate',
         description: issue.message || `${issue.type.replace('-', ' ')} detected`,
-        element: issue.element
+        element: issue.element,
       });
     });
   }
@@ -1613,16 +1612,20 @@ class AccessibilityTester {
       critical: this.violations.filter(v => v.impact === 'critical').length,
       serious: this.violations.filter(v => v.impact === 'serious').length,
       moderate: this.violations.filter(v => v.impact === 'moderate').length,
-      minor: this.violations.filter(v => v.impact === 'minor').length
+      minor: this.violations.filter(v => v.impact === 'minor').length,
     };
 
-    const score = Math.max(0, 100 - (summary.critical * 25 + summary.serious * 10 + summary.moderate * 5 + summary.minor * 1));
+    const score = Math.max(
+      0,
+      100 -
+        (summary.critical * 25 + summary.serious * 10 + summary.moderate * 5 + summary.minor * 1)
+    );
 
     return {
       summary,
       score: Math.round(score),
       violations: this.violations,
-      recommendations: this.generateAccessibilityRecommendations()
+      recommendations: this.generateAccessibilityRecommendations(),
     };
   }
 
@@ -1636,7 +1639,9 @@ class AccessibilityTester {
           recommendations.push('Ensure all interactive elements are keyboard accessible');
           break;
         case 'color-contrast':
-          recommendations.push('Improve color contrast to meet WCAG AA standards (4.5:1 for normal text)');
+          recommendations.push(
+            'Improve color contrast to meet WCAG AA standards (4.5:1 for normal text)'
+          );
           break;
         case 'screen-reader-compatibility':
           recommendations.push('Add proper ARIA labels and semantic HTML structure');
@@ -1712,6 +1717,7 @@ describe('Accessibility Tests', () => {
 ### Quality Attributes Testing Checklist
 
 **Performance:**
+
 - [ ] Response time requirements defined and tested
 - [ ] Load testing performed for expected traffic
 - [ ] Resource utilization monitored under load
@@ -1719,6 +1725,7 @@ describe('Accessibility Tests', () => {
 - [ ] Caching strategies implemented and tested
 
 **Security:**
+
 - [ ] Authentication and authorization tested
 - [ ] Input validation implemented and verified
 - [ ] SQL injection prevention tested
@@ -1727,6 +1734,7 @@ describe('Accessibility Tests', () => {
 - [ ] Encryption implemented for sensitive data
 
 **Reliability:**
+
 - [ ] Fault tolerance mechanisms tested
 - [ ] Recovery procedures validated
 - [ ] Backup and restore tested
@@ -1734,6 +1742,7 @@ describe('Accessibility Tests', () => {
 - [ ] Graceful degradation implemented
 
 **Usability:**
+
 - [ ] Accessibility standards (WCAG AA) met
 - [ ] Keyboard navigation functional
 - [ ] Screen reader compatibility verified
@@ -1741,12 +1750,14 @@ describe('Accessibility Tests', () => {
 - [ ] User experience validated
 
 **Compatibility:**
+
 - [ ] Cross-browser testing completed
 - [ ] Mobile device compatibility verified
 - [ ] API backward compatibility maintained
 - [ ] Integration with external systems tested
 
 **Maintainability:**
+
 - [ ] Code complexity within acceptable limits
 - [ ] Documentation comprehensive and current
 - [ ] Modular architecture implemented
@@ -1755,12 +1766,14 @@ describe('Accessibility Tests', () => {
 ## References
 
 ### Standards
+
 - ISO/IEC 25010 - System and software quality models
 - WCAG 2.1 - Web Content Accessibility Guidelines
 - NIST Cybersecurity Framework
 - IEEE 1471 - Architecture description
 
 ### Tools
+
 - **Lighthouse** - Performance and accessibility auditing
 - **axe** - Accessibility testing
 - **k6** - Load testing
@@ -1768,6 +1781,7 @@ describe('Accessibility Tests', () => {
 - **SonarQube** - Code quality analysis
 
 ### Books
+
 - "Release It!" - Michael Nygard
 - "Building Secure and Reliable Systems" - Google
 - "Web Performance in Action" - Jeremy Wagner
@@ -1781,4 +1795,4 @@ describe('Accessibility Tests', () => {
 
 ---
 
-*Next: [Performance Testing](performance-testing.md) - Deep dive into performance*
+_Next: [Performance Testing](performance-testing.md) - Deep dive into performance_

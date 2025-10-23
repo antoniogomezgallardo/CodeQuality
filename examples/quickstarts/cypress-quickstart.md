@@ -19,6 +19,7 @@ npx cypress open
 ```
 
 This creates:
+
 ```
 cypress/
 ├── e2e/          # Test files go here
@@ -68,7 +69,6 @@ Create `cypress/e2e/first-test.cy.js`:
 
 ```javascript
 describe('My First Cypress Test', () => {
-
   beforeEach(() => {
     // Visit page before each test
     cy.visit('/');
@@ -102,9 +102,7 @@ describe('My First Cypress Test', () => {
   });
 
   it('should make an assertion', () => {
-    cy.get('h1')
-      .should('be.visible')
-      .and('contain', 'Kitchen Sink');
+    cy.get('h1').should('be.visible').and('contain', 'Kitchen Sink');
   });
 });
 ```
@@ -130,6 +128,7 @@ npm run cy:run:headed
 ```
 
 **Expected Output:**
+
 ```
   My First Cypress Test
     ✓ should display the correct title (245ms)
@@ -157,17 +156,17 @@ Cypress.Commands.add('login', (email, password) => {
 });
 
 // Custom API request
-Cypress.Commands.add('createUser', (userData) => {
+Cypress.Commands.add('createUser', userData => {
   cy.request({
     method: 'POST',
     url: '/api/users',
-    body: userData
+    body: userData,
   });
 });
 
 // Check local storage
-Cypress.Commands.add('getLocalStorage', (key) => {
-  return cy.window().then((window) => {
+Cypress.Commands.add('getLocalStorage', key => {
+  return cy.window().then(window => {
     return window.localStorage.getItem(key);
   });
 });
@@ -203,7 +202,7 @@ Use fixtures:
 
 ```javascript
 it('should login with fixture data', () => {
-  cy.fixture('users').then((users) => {
+  cy.fixture('users').then(users => {
     cy.login(users.validUser.email, users.validUser.password);
   });
 });
@@ -218,8 +217,8 @@ it('should mock API response', () => {
     statusCode: 200,
     body: [
       { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' }
-    ]
+      { id: 2, name: 'Jane Smith' },
+    ],
   }).as('getUsers');
 
   cy.visit('/users');
@@ -235,7 +234,7 @@ it('should spy on API calls', () => {
 
   cy.wait('@loginRequest').its('request.body').should('deep.equal', {
     email: 'user@example.com',
-    password: 'password'
+    password: 'password',
   });
 });
 ```
@@ -279,15 +278,9 @@ Use Page Object:
 import LoginPage from '../support/pages/LoginPage';
 
 it('should show error with invalid credentials', () => {
-  LoginPage
-    .visit()
-    .fillEmail('invalid@example.com')
-    .fillPassword('wrongpassword')
-    .submit();
+  LoginPage.visit().fillEmail('invalid@example.com').fillPassword('wrongpassword').submit();
 
-  LoginPage.getErrorMessage()
-    .should('be.visible')
-    .and('contain', 'Invalid credentials');
+  LoginPage.getErrorMessage().should('be.visible').and('contain', 'Invalid credentials');
 });
 ```
 
@@ -347,6 +340,7 @@ npx cypress run --env environment=staging
 ## 6. Troubleshooting
 
 ### Issue: "cy.visit() failed"
+
 ```javascript
 // Increase timeout
 cy.visit('/', { timeout: 30000 });
@@ -354,12 +348,13 @@ cy.visit('/', { timeout: 30000 });
 // Or in config
 module.exports = defineConfig({
   e2e: {
-    pageLoadTimeout: 30000
-  }
+    pageLoadTimeout: 30000,
+  },
 });
 ```
 
 ### Issue: Element not found
+
 ```javascript
 // Wait for element to exist
 cy.get('[data-test="button"]', { timeout: 10000 });
@@ -372,6 +367,7 @@ cy.get('[data-test="list"]').should('have.length.gt', 0);
 ```
 
 ### Issue: Flaky tests due to animations
+
 ```javascript
 // Disable animations in config
 module.exports = defineConfig({
@@ -393,31 +389,33 @@ cy.visit('/', {
     const style = win.document.createElement('style');
     style.innerHTML = '* { transition: none !important; animation: none !important; }';
     win.document.head.appendChild(style);
-  }
+  },
 });
 ```
 
 ### Issue: Cross-origin errors
+
 ```javascript
 // Add to cypress.config.js
 module.exports = defineConfig({
   e2e: {
-    chromeWebSecurity: false  // Use with caution!
-  }
+    chromeWebSecurity: false, // Use with caution!
+  },
 });
 ```
 
 ### Issue: "Cannot read property of undefined"
+
 ```javascript
 // Add null checks
-cy.get('[data-test="item"]').then(($el) => {
+cy.get('[data-test="item"]').then($el => {
   if ($el.length > 0) {
     // Element exists
   }
 });
 
 // Or use conditional testing
-cy.get('body').then(($body) => {
+cy.get('body').then($body => {
   if ($body.find('[data-test="item"]').length) {
     cy.get('[data-test="item"]').click();
   }

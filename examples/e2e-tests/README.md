@@ -5,6 +5,7 @@ This directory contains comprehensive E2E testing examples using popular testing
 ## 📋 Examples Included
 
 ### Cypress Tests
+
 - User registration and login flows
 - Shopping cart functionality
 - Form validation
@@ -12,6 +13,7 @@ This directory contains comprehensive E2E testing examples using popular testing
 - Custom commands and utilities
 
 ### Playwright Tests
+
 - Cross-browser testing
 - API mocking and interception
 - Visual regression testing
@@ -19,6 +21,7 @@ This directory contains comprehensive E2E testing examples using popular testing
 - Parallel execution
 
 ### Selenium WebDriver Tests
+
 - Page Object Model pattern
 - Multi-browser support
 - Grid execution
@@ -70,6 +73,7 @@ npm run test:firefox      # Firefox only
 ## 🔧 Test Environment
 
 Each framework includes:
+
 - Configuration files
 - Test data fixtures
 - Page object models
@@ -79,6 +83,7 @@ Each framework includes:
 ## 📊 Test Reporting
 
 All examples include:
+
 - HTML test reports
 - Screenshot capture
 - Video recording (where supported)
@@ -87,4 +92,4 @@ All examples include:
 
 ---
 
-*E2E tests validate complete user workflows from start to finish. These examples show how to write reliable, maintainable tests that catch real user issues.*
+_E2E tests validate complete user workflows from start to finish. These examples show how to write reliable, maintainable tests that catch real user issues._

@@ -1,10 +1,13 @@
 # Component Testing
 
 ## Purpose
+
 Comprehensive guide to component testing—testing UI components in isolation to ensure they render correctly, handle interactions properly, and maintain expected behavior.
 
 ## Overview
+
 Component testing:
+
 - Tests individual UI components
 - Focuses on user interactions
 - Validates rendering and state
@@ -14,6 +17,7 @@ Component testing:
 ## What is Component Testing?
 
 ### Definition
+
 Component testing verifies that individual UI components (React, Vue, Angular, etc.) work correctly in isolation, including rendering, user interactions, and state management.
 
 ### Characteristics
@@ -48,11 +52,7 @@ Speed
 // Button.jsx
 export function Button({ onClick, disabled, children }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className="btn"
-    >
+    <button onClick={onClick} disabled={disabled} className="btn">
       {children}
     </button>
   );
@@ -80,7 +80,11 @@ describe('Button Component', () => {
 
   it('should not call onClick when disabled', () => {
     const handleClick = jest.fn();
-    render(<Button onClick={handleClick} disabled>Click Me</Button>);
+    render(
+      <Button onClick={handleClick} disabled>
+        Click Me
+      </Button>
+    );
 
     fireEvent.click(screen.getByText('Click Me'));
 
@@ -106,7 +110,7 @@ export function LoginForm({ onSubmit }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -125,7 +129,7 @@ export function LoginForm({ onSubmit }) {
           id="email"
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           aria-label="Email"
         />
       </div>
@@ -136,7 +140,7 @@ export function LoginForm({ onSubmit }) {
           id="password"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
           aria-label="Password"
         />
       </div>
@@ -178,7 +182,7 @@ describe('LoginForm Component', () => {
 
     expect(handleSubmit).toHaveBeenCalledWith({
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     });
   });
 
@@ -188,9 +192,7 @@ describe('LoginForm Component', () => {
 
     await user.click(screen.getByRole('button', { name: 'Login' }));
 
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Email and password are required'
-    );
+    expect(screen.getByRole('alert')).toHaveTextContent('Email and password are required');
   });
 
   it('should update input values on change', async () => {
@@ -258,7 +260,7 @@ const server = setupServer(
         id: req.params.userId,
         name: 'John Doe',
         email: 'john@example.com',
-        role: 'admin'
+        role: 'admin',
       })
     );
   })
@@ -314,7 +316,7 @@ describe('UserProfile Component', () => {
             id: '2',
             name: 'Jane Doe',
             email: 'jane@example.com',
-            role: 'user'
+            role: 'user',
           })
         );
       })
@@ -336,11 +338,7 @@ describe('UserProfile Component', () => {
 ```vue
 <!-- Button.vue -->
 <template>
-  <button
-    :disabled="disabled"
-    @click="handleClick"
-    class="btn"
-  >
+  <button :disabled="disabled" @click="handleClick" class="btn">
     <slot />
   </button>
 </template>
@@ -351,15 +349,15 @@ export default {
   props: {
     disabled: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   emits: ['click'],
   methods: {
     handleClick(event) {
       this.$emit('click', event);
-    }
-  }
+    },
+  },
 };
 </script>
 ```
@@ -373,8 +371,8 @@ describe('Button Component', () => {
   it('should render slot content', () => {
     const wrapper = mount(Button, {
       slots: {
-        default: 'Click Me'
-      }
+        default: 'Click Me',
+      },
     });
 
     expect(wrapper.text()).toBe('Click Me');
@@ -392,8 +390,8 @@ describe('Button Component', () => {
   it('should not emit click when disabled', async () => {
     const wrapper = mount(Button, {
       props: {
-        disabled: true
-      }
+        disabled: true,
+      },
     });
 
     await wrapper.trigger('click');
@@ -404,8 +402,8 @@ describe('Button Component', () => {
   it('should have disabled attribute when disabled', () => {
     const wrapper = mount(Button, {
       props: {
-        disabled: true
-      }
+        disabled: true,
+      },
     });
 
     expect(wrapper.attributes('disabled')).toBeDefined();
@@ -431,11 +429,11 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'Counter',
   computed: {
-    ...mapState(['count'])
+    ...mapState(['count']),
   },
   methods: {
-    ...mapActions(['increment', 'decrement'])
-  }
+    ...mapActions(['increment', 'decrement']),
+  },
 };
 </script>
 ```
@@ -453,22 +451,22 @@ describe('Counter Component', () => {
   beforeEach(() => {
     actions = {
       increment: jest.fn(),
-      decrement: jest.fn()
+      decrement: jest.fn(),
     };
 
     store = createStore({
       state: {
-        count: 5
+        count: 5,
       },
-      actions
+      actions,
     });
   });
 
   it('should display count from store', () => {
     const wrapper = mount(Counter, {
       global: {
-        plugins: [store]
-      }
+        plugins: [store],
+      },
     });
 
     expect(wrapper.text()).toContain('Count: 5');
@@ -477,8 +475,8 @@ describe('Counter Component', () => {
   it('should call increment action on button click', async () => {
     const wrapper = mount(Counter, {
       global: {
-        plugins: [store]
-      }
+        plugins: [store],
+      },
     });
 
     await wrapper.find('button').trigger('click');
@@ -489,8 +487,8 @@ describe('Counter Component', () => {
   it('should call decrement action on button click', async () => {
     const wrapper = mount(Counter, {
       global: {
-        plugins: [store]
-      }
+        plugins: [store],
+      },
     });
 
     const buttons = wrapper.findAll('button');
@@ -512,14 +510,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-button',
   template: `
-    <button
-      [disabled]="disabled"
-      (click)="handleClick()"
-      class="btn"
-    >
+    <button [disabled]="disabled" (click)="handleClick()" class="btn">
       <ng-content></ng-content>
     </button>
-  `
+  `,
 })
 export class ButtonComponent {
   @Input() disabled = false;
@@ -540,7 +534,7 @@ describe('ButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ButtonComponent]
+      declarations: [ButtonComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonComponent);
@@ -727,9 +721,7 @@ expect.extend(toHaveNoViolations);
 
 describe('Button Accessibility', () => {
   it('should have no accessibility violations', async () => {
-    const { container } = render(
-      <Button onClick={() => {}}>Click Me</Button>
-    );
+    const { container } = render(<Button onClick={() => {}}>Click Me</Button>);
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -738,8 +730,7 @@ describe('Button Accessibility', () => {
   it('should have accessible name', () => {
     render(<Button>Submit Form</Button>);
 
-    expect(screen.getByRole('button', { name: 'Submit Form' }))
-      .toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Submit Form' })).toBeInTheDocument();
   });
 
   it('should indicate disabled state', () => {
@@ -758,7 +749,7 @@ describe('Button Accessibility', () => {
 // Button.stories.jsx
 export default {
   title: 'Components/Button',
-  component: Button
+  component: Button,
 };
 
 export const Primary = () => <Button>Primary Button</Button>;
@@ -785,16 +776,16 @@ it('should match visual snapshot', async () => {
 
 ```javascript
 // ✅ Accessible to everyone
-screen.getByRole('button', { name: /submit/i })
-screen.getByLabelText('Email address')
-screen.getByPlaceholderText('Enter email')
+screen.getByRole('button', { name: /submit/i });
+screen.getByLabelText('Email address');
+screen.getByPlaceholderText('Enter email');
 
 // ⚠️ Use only if no better option
-screen.getByTestId('submit-button')
+screen.getByTestId('submit-button');
 
 // ❌ Avoid - implementation details
-screen.getByClassName('btn-primary')
-container.querySelector('.submit-button')
+screen.getByClassName('btn-primary');
+container.querySelector('.submit-button');
 ```
 
 ### 2. User-Centric Testing
@@ -868,6 +859,7 @@ const button = screen.getByRole('button');
 ### Component Test Quality Checklist
 
 **Test Design:**
+
 - [ ] Tests user-visible behavior
 - [ ] Uses accessible queries
 - [ ] Simulates real user interactions
@@ -875,6 +867,7 @@ const button = screen.getByRole('button');
 - [ ] Tests error conditions
 
 **Coverage:**
+
 - [ ] Rendering tested
 - [ ] User interactions tested
 - [ ] State changes verified
@@ -882,6 +875,7 @@ const button = screen.getByRole('button');
 - [ ] Accessibility validated
 
 **Best Practices:**
+
 - [ ] No implementation details tested
 - [ ] Proper async handling
 - [ ] Clear test names
@@ -891,12 +885,14 @@ const button = screen.getByRole('button');
 ## References
 
 ### Documentation
+
 - [React Testing Library](https://testing-library.com/react)
 - [Vue Test Utils](https://test-utils.vuejs.org/)
 - [Angular Testing](https://angular.io/guide/testing)
 - [Cypress Component Testing](https://docs.cypress.io/guides/component-testing/overview)
 
 ### Tools
+
 - **React**: React Testing Library, Enzyme (legacy)
 - **Vue**: Vue Test Utils, Vue Testing Library
 - **Angular**: TestBed, Jasmine, Karma
@@ -911,4 +907,4 @@ const button = screen.getByRole('button');
 
 ---
 
-*Part of: [Test Levels](README.md)*
+_Part of: [Test Levels](README.md)_

@@ -5,15 +5,9 @@
     "timeout": 30000,
     "wait": 1000,
     "chromeLaunchConfig": {
-      "args": [
-        "--no-sandbox",
-        "--disable-setuid-sandbox"
-      ]
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
     },
-    "runners": [
-      "axe",
-      "htmlcs"
-    ],
+    "runners": ["axe", "htmlcs"],
     "reporters": [
       {
         "reporter": "cli"
@@ -111,9 +105,7 @@
     {
       "url": "https://example.com/register",
       "screenCapture": "./reports/screenshots/register.png",
-      "actions": [
-        "wait for element #register-form to be visible"
-      ]
+      "actions": ["wait for element #register-form to be visible"]
     },
     {
       "url": "https://example.com/about",

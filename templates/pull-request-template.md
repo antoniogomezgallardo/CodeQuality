@@ -76,18 +76,23 @@ If checked, please describe the breaking changes and migration path:
 [Provide a high-level summary organized by area/module]
 
 **Frontend:**
+
 - [List frontend changes]
 
 **Backend:**
+
 - [List backend changes]
 
 **Database:**
+
 - [List database changes]
 
 **Infrastructure:**
+
 - [List infrastructure changes]
 
 **Documentation:**
+
 - [List documentation changes]
 
 ### Key Implementation Details
@@ -107,11 +112,13 @@ If checked, please describe the breaking changes and migration path:
 [If helpful, include before/after code snippets to illustrate key changes]
 
 **Before:**
+
 ```javascript
 // Old code example
 ```
 
 **After:**
+
 ```javascript
 // New code example
 ```
@@ -149,35 +156,41 @@ If checked, please describe the breaking changes and migration path:
 ### Test Results
 
 **Coverage Report:**
-- Overall Coverage: ___%
-- Lines: ___%
-- Branches: ___%
-- Functions: ___%
-- Statements: ___%
+
+- Overall Coverage: \_\_\_%
+- Lines: \_\_\_%
+- Branches: \_\_\_%
+- Functions: \_\_\_%
+- Statements: \_\_\_%
 
 **Test Execution Results:**
+
 - [ ] All tests passing
-- Total tests: ___
-- Passed: ___
-- Failed: ___
-- Skipped: ___
+- Total tests: \_\_\_
+- Passed: \_\_\_
+- Failed: \_\_\_
+- Skipped: \_\_\_
 
 ### Testing Instructions for Reviewers
 
 [Provide step-by-step instructions for reviewers to test this PR]
 
 **Prerequisites:**
+
 - [Any setup required before testing]
 
 **Test Steps:**
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
 
 **Expected Results:**
+
 - [What reviewers should observe]
 
 **Test Data:**
+
 - [Sample data or test accounts needed]
 
 ---
@@ -230,7 +243,7 @@ If checked, please describe the breaking changes and migration path:
 ### Testing
 
 - [ ] **All new code has unit tests**
-- [ ] **Test coverage meets project standards (minimum __%)**
+- [ ] **Test coverage meets project standards (minimum \_\_%)**
 - [ ] **Tests are meaningful and test behavior, not implementation**
 - [ ] **Tests use descriptive names**
 - [ ] **No flaky tests**
@@ -282,6 +295,7 @@ If checked, please describe the breaking changes and migration path:
 [Describe any performance testing done]
 
 **Metrics:**
+
 - Page load time: [before] → [after]
 - Time to interactive: [before] → [after]
 - API response time: [before] → [after]
@@ -322,6 +336,7 @@ If checked, please describe the breaking changes and migration path:
 [If applicable, describe potential security threats addressed]
 
 **Security Testing:**
+
 - [ ] OWASP Top 10 considered
 - [ ] Security scanning tools run
 - [ ] Penetration testing performed (if needed)
@@ -348,12 +363,13 @@ If checked, please describe the breaking changes and migration path:
 [Describe accessibility testing performed]
 
 **Tools Used:**
+
 - [ ] axe DevTools
 - [ ] WAVE
 - [ ] Lighthouse
 - [ ] Manual testing
 
-**Lighthouse Accessibility Score:** ___ / 100
+**Lighthouse Accessibility Score:** \_\_\_ / 100
 
 ---
 
@@ -366,23 +382,27 @@ If checked, please describe the breaking changes and migration path:
 **Migration Script:** [Link to migration file or describe changes]
 
 **Migration Type:**
+
 - [ ] Schema change (tables, columns, indexes)
 - [ ] Data migration
 - [ ] Seed data update
 - [ ] No migration needed
 
 **Reversibility:**
+
 - [ ] **Migration is reversible** (down migration provided)
 - [ ] **Migration is not reversible** (explain why)
 
 **Migration Testing:**
+
 - [ ] Tested on local database
 - [ ] Tested on staging database
 - [ ] Tested with production-like data volume
 - [ ] Rollback tested
 
 **Performance Impact:**
-- Estimated migration time: ___
+
+- Estimated migration time: \_\_\_
 - Table locking required: Yes / No
 - Downtime required: Yes / No
 - Index rebuilding: Yes / No
@@ -430,6 +450,7 @@ If checked, please describe the breaking changes and migration path:
 ### Configuration Changes
 
 **Environment Variables:**
+
 ```bash
 # Add these to .env or environment configuration
 NEW_VAR_NAME=value
@@ -437,11 +458,13 @@ UPDATED_VAR_NAME=new_value
 ```
 
 **Feature Flags:**
+
 - [ ] Requires feature flag: `[flag_name]`
 - Initial state: ON / OFF
 - Rollout strategy: [describe gradual rollout plan]
 
 **Infrastructure Updates:**
+
 - [ ] New service/container required
 - [ ] Resource scaling needed
 - [ ] DNS changes required
@@ -450,13 +473,16 @@ UPDATED_VAR_NAME=new_value
 ### Monitoring and Alerts
 
 **Metrics to Watch:**
+
 - [Metric 1: expected baseline and thresholds]
 - [Metric 2: expected baseline and thresholds]
 
 **New Alerts:**
+
 - [Describe any new alerts that should be set up]
 
 **Dashboard Updates:**
+
 - [Link to or describe any dashboard changes]
 
 ---
@@ -466,6 +492,7 @@ UPDATED_VAR_NAME=new_value
 ### Rollback Procedure
 
 **Can this change be rolled back?**
+
 - [ ] **Yes - simple rollback** (revert deployment)
 - [ ] **Yes - with steps** (procedure below)
 - [ ] **No - not reversible** (mitigation plan below)
@@ -486,7 +513,7 @@ UPDATED_VAR_NAME=new_value
 ### Rollback Testing
 
 - [ ] Rollback procedure tested in staging
-- [ ] Rollback time estimated: ___
+- [ ] Rollback time estimated: \_\_\_
 
 ---
 
@@ -510,6 +537,7 @@ UPDATED_VAR_NAME=new_value
 | [name] | [old] | [new] | [why] |
 
 **Security Vulnerabilities Fixed:**
+
 - [List any security vulnerabilities fixed by dependency updates]
 
 ### Breaking Dependency Changes
@@ -526,12 +554,14 @@ UPDATED_VAR_NAME=new_value
 ### Depends On
 
 This PR depends on:
+
 - [ ] #[PR number] - [PR title] (must be merged first)
 - [ ] #[PR number] - [PR title]
 
 ### Related PRs
 
 Related or follow-up PRs:
+
 - #[PR number] - [PR title] (parallel work)
 - #[PR number] - [PR title] (follow-up work)
 
@@ -545,6 +575,7 @@ Related or follow-up PRs:
 ### Blocks
 
 This PR blocks:
+
 - #[issue number] - [issue title]
 - #[PR number] - [PR title]
 
@@ -571,6 +602,7 @@ This PR blocks:
 [Guide reviewers to the most critical parts]
 
 **Please pay special attention to:**
+
 - [File/component 1 - reason]
 - [File/component 2 - reason]
 
@@ -598,16 +630,19 @@ This PR blocks:
 [Describe other approaches considered and why this approach was chosen]
 
 **Approach 1:** [Description]
+
 - Pros: [List pros]
 - Cons: [List cons]
 - Why not chosen: [Reason]
 
 **Approach 2:** [Description]
+
 - Pros: [List pros]
 - Cons: [List cons]
 - Why not chosen: [Reason]
 
 **Chosen Approach:** [Description]
+
 - Pros: [List pros]
 - Cons: [List cons]
 - Why chosen: [Reason]
@@ -621,6 +656,7 @@ This PR blocks:
 [Describe any technical debt introduced or reduced]
 
 **Follow-up Issues Created:**
+
 - #[issue number] - [Description of follow-up work]
 
 ### Lessons Learned
@@ -634,6 +670,7 @@ This PR blocks:
 This PR meets the Definition of Done:
 
 **Development:**
+
 - [ ] Code complete and follows project standards
 - [ ] Self-review completed
 - [ ] No known bugs or issues
@@ -641,6 +678,7 @@ This PR meets the Definition of Done:
 - [ ] Logging added for debugging
 
 **Testing:**
+
 - [ ] Unit tests written and passing
 - [ ] Integration tests written and passing
 - [ ] E2E tests updated (if applicable)
@@ -651,12 +689,14 @@ This PR meets the Definition of Done:
 - [ ] Mobile testing (if applicable)
 
 **Code Review:**
+
 - [ ] Peer review completed
 - [ ] All review comments addressed
 - [ ] Approved by required reviewers
 - [ ] No unresolved conversations
 
 **Documentation:**
+
 - [ ] Code documented
 - [ ] API documentation updated
 - [ ] User documentation updated
@@ -664,6 +704,7 @@ This PR meets the Definition of Done:
 - [ ] CHANGELOG updated
 
 **Quality:**
+
 - [ ] Build passing
 - [ ] All tests passing
 - [ ] Linting passing
@@ -673,6 +714,7 @@ This PR meets the Definition of Done:
 - [ ] Accessibility reviewed
 
 **Deployment:**
+
 - [ ] Deployment plan documented
 - [ ] Environment variables documented
 - [ ] Migration scripts tested
@@ -686,7 +728,7 @@ This PR meets the Definition of Done:
 Before merging, ensure:
 
 - [ ] **All CI/CD checks passing**
-- [ ] **Required approvals obtained** (minimum ___ approvals)
+- [ ] **Required approvals obtained** (minimum \_\_\_ approvals)
 - [ ] **All review comments resolved**
 - [ ] **No merge conflicts**
 - [ ] **Branch up to date with target**
@@ -722,6 +764,7 @@ After merging:
 - [ ] **Stakeholders identified and will be notified**
 
 **Notification Channels:**
+
 - [ ] Team Slack channel
 - [ ] Company-wide announcement
 - [ ] Email to customers
@@ -736,12 +779,15 @@ After merging:
 ## Acknowledgments
 
 **Pair Programming / Collaboration:**
+
 - [Name] - [Contribution]
 
 **Special Thanks:**
+
 - [Name] - [What they helped with]
 
 **Reviewers:**
+
 - @[username]
 - @[username]
 

@@ -1,10 +1,13 @@
 # Performance Testing
 
 ## Purpose
+
 Comprehensive guide to performance testing—ensuring systems meet performance requirements for response time, throughput, resource utilization, and scalability under various load conditions.
 
 ## Overview
+
 Performance testing validates:
+
 - Response times meet requirements
 - System handles expected load
 - Resources are utilized efficiently
@@ -14,6 +17,7 @@ Performance testing validates:
 ## What is Performance Testing?
 
 ### Definition
+
 Performance testing is the process of determining the speed, responsiveness, stability, scalability, and resource usage of a system under a particular workload.
 
 ### Performance Testing Goals
@@ -59,14 +63,14 @@ const errorRate = new Rate('errors');
 
 export const options = {
   stages: [
-    { duration: '5m', target: 100 },   // Ramp up to 100 users
-    { duration: '30m', target: 100 },  // Stay at 100 users
-    { duration: '5m', target: 0 },     // Ramp down
+    { duration: '5m', target: 100 }, // Ramp up to 100 users
+    { duration: '30m', target: 100 }, // Stay at 100 users
+    { duration: '5m', target: 0 }, // Ramp down
   ],
   thresholds: {
-    http_req_duration: ['p(95)<500'],  // 95% of requests < 500ms
-    http_req_failed: ['rate<0.01'],    // Error rate < 1%
-    errors: ['rate<0.1'],              // Custom error rate < 10%
+    http_req_duration: ['p(95)<500'], // 95% of requests < 500ms
+    http_req_failed: ['rate<0.01'], // Error rate < 1%
+    errors: ['rate<0.1'], // Custom error rate < 10%
   },
 };
 
@@ -74,8 +78,8 @@ export default function () {
   // Home page
   let res = http.get('https://api.example.com/');
   check(res, {
-    'homepage status is 200': (r) => r.status === 200,
-    'homepage response time < 200ms': (r) => r.timings.duration < 200,
+    'homepage status is 200': r => r.status === 200,
+    'homepage response time < 200ms': r => r.timings.duration < 200,
   }) || errorRate.add(1);
 
   sleep(1);
@@ -83,8 +87,8 @@ export default function () {
   // API endpoint
   res = http.get('https://api.example.com/products');
   check(res, {
-    'products status is 200': (r) => r.status === 200,
-    'products has data': (r) => r.json().length > 0,
+    'products status is 200': r => r.status === 200,
+    'products has data': r => r.json().length > 0,
   }) || errorRate.add(1);
 
   sleep(2);
@@ -100,7 +104,7 @@ export default function () {
   });
 
   check(res, {
-    'order created': (r) => r.status === 201,
+    'order created': r => r.status === 201,
   }) || errorRate.add(1);
 
   sleep(1);
@@ -115,18 +119,18 @@ export default function () {
 // k6 stress test
 export const options = {
   stages: [
-    { duration: '2m', target: 100 },   // Normal load
+    { duration: '2m', target: 100 }, // Normal load
     { duration: '5m', target: 100 },
-    { duration: '2m', target: 200 },   // Increase load
+    { duration: '2m', target: 200 }, // Increase load
     { duration: '5m', target: 200 },
-    { duration: '2m', target: 300 },   // Push beyond capacity
+    { duration: '2m', target: 300 }, // Push beyond capacity
     { duration: '5m', target: 300 },
-    { duration: '2m', target: 400 },   // Breaking point
+    { duration: '2m', target: 400 }, // Breaking point
     { duration: '5m', target: 400 },
-    { duration: '10m', target: 0 },    // Recovery
+    { duration: '10m', target: 0 }, // Recovery
   ],
   thresholds: {
-    http_req_duration: ['p(99)<3000'],  // Relaxed thresholds
+    http_req_duration: ['p(99)<3000'], // Relaxed thresholds
   },
 };
 
@@ -134,7 +138,7 @@ export default function () {
   const res = http.get('https://api.example.com/products');
 
   check(res, {
-    'status is 200 or 503': (r) => r.status === 200 || r.status === 503,
+    'status is 200 or 503': r => r.status === 200 || r.status === 503,
   });
 
   // Log when we start seeing failures
@@ -154,11 +158,11 @@ export default function () {
 // k6 spike test
 export const options = {
   stages: [
-    { duration: '1m', target: 100 },    // Normal load
-    { duration: '10s', target: 2000 },  // Sudden spike!
-    { duration: '3m', target: 2000 },   // Sustain spike
-    { duration: '10s', target: 100 },   // Drop back
-    { duration: '3m', target: 100 },    // Recovery
+    { duration: '1m', target: 100 }, // Normal load
+    { duration: '10s', target: 2000 }, // Sudden spike!
+    { duration: '3m', target: 2000 }, // Sustain spike
+    { duration: '10s', target: 100 }, // Drop back
+    { duration: '3m', target: 100 }, // Recovery
     { duration: '10s', target: 0 },
   ],
 };
@@ -167,8 +171,8 @@ export default function () {
   const res = http.get('https://api.example.com/products');
 
   check(res, {
-    'survived spike': (r) => r.status === 200,
-    'response time acceptable': (r) => r.timings.duration < 5000,
+    'survived spike': r => r.status === 200,
+    'response time acceptable': r => r.timings.duration < 5000,
   });
 
   sleep(Math.random() * 2); // Random think time
@@ -183,9 +187,9 @@ export default function () {
 // k6 endurance test - runs for 8 hours
 export const options = {
   stages: [
-    { duration: '5m', target: 50 },     // Ramp up
-    { duration: '8h', target: 50 },     // Sustained load for 8 hours
-    { duration: '5m', target: 0 },      // Ramp down
+    { duration: '5m', target: 50 }, // Ramp up
+    { duration: '8h', target: 50 }, // Sustained load for 8 hours
+    { duration: '5m', target: 0 }, // Ramp down
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'],
@@ -197,7 +201,7 @@ export default function () {
   const res = http.get('https://api.example.com/products');
 
   check(res, {
-    'status is 200': (r) => r.status === 200,
+    'status is 200': r => r.status === 200,
   });
 
   // Monitor for memory leaks, connection pool exhaustion
@@ -245,7 +249,7 @@ export default function () {
   const res = http.get('https://api.example.com/products');
 
   check(res, {
-    'status is 200': (r) => r.status === 200,
+    'status is 200': r => r.status === 200,
   });
 
   // Analyze: Does response time increase linearly, logarithmically, or exponentially?
@@ -275,25 +279,25 @@ export const options = {
     { duration: '5m', target: 0 },
   ],
   thresholds: {
-    'http_req_duration': ['p(95)<500', 'p(99)<1000'],
-    'http_req_failed': ['rate<0.01'],
-    'checkout_duration': ['p(95)<2000'],
-    'checkout_errors': ['rate<0.05'],
+    http_req_duration: ['p(95)<500', 'p(99)<1000'],
+    http_req_failed: ['rate<0.01'],
+    checkout_duration: ['p(95)<2000'],
+    checkout_errors: ['rate<0.05'],
   },
   ext: {
     loadimpact: {
       projectID: 123456,
-      name: 'E-commerce Load Test'
-    }
-  }
+      name: 'E-commerce Load Test',
+    },
+  },
 };
 
 export default function () {
   group('Browse Products', () => {
     const res = http.get('https://api.example.com/products');
     check(res, {
-      'products loaded': (r) => r.status === 200,
-      'has products': (r) => r.json().length > 0,
+      'products loaded': r => r.status === 200,
+      'has products': r => r.json().length > 0,
     });
   });
 
@@ -303,29 +307,37 @@ export default function () {
     const startTime = Date.now();
 
     // Add to cart
-    let res = http.post('https://api.example.com/cart/add', JSON.stringify({
-      productId: 123,
-      quantity: 2,
-    }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    let res = http.post(
+      'https://api.example.com/cart/add',
+      JSON.stringify({
+        productId: 123,
+        quantity: 2,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
 
     check(res, {
-      'added to cart': (r) => r.status === 200,
+      'added to cart': r => r.status === 200,
     });
 
     sleep(0.5);
 
     // Checkout
-    res = http.post('https://api.example.com/orders', JSON.stringify({
-      cartId: res.json().cartId,
-      paymentMethod: 'credit_card',
-    }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    res = http.post(
+      'https://api.example.com/orders',
+      JSON.stringify({
+        cartId: res.json().cartId,
+        paymentMethod: 'credit_card',
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
 
     const success = check(res, {
-      'checkout successful': (r) => r.status === 201,
+      'checkout successful': r => r.status === 201,
     });
 
     if (!success) {
@@ -500,7 +512,7 @@ class PerformanceAnalyzer {
       p99: this.percentile(responseTimes, 99),
       max: Math.max(...responseTimes),
       min: Math.min(...responseTimes),
-      stdDev: this.standardDeviation(responseTimes)
+      stdDev: this.standardDeviation(responseTimes),
     };
   }
 
@@ -523,8 +535,12 @@ class PerformanceAnalyzer {
 
 // Usage
 const results = [
-  { duration: 120 }, { duration: 150 }, { duration: 180 },
-  { duration: 200 }, { duration: 250 }, { duration: 300 },
+  { duration: 120 },
+  { duration: 150 },
+  { duration: 180 },
+  { duration: 200 },
+  { duration: 250 },
+  { duration: 300 },
   // ... more results
 ];
 
@@ -581,10 +597,10 @@ export const options = {
 // ✅ Realistic: Gradual ramp-up
 export const options = {
   stages: [
-    { duration: '5m', target: 100 },   // Normal ramp
+    { duration: '5m', target: 100 }, // Normal ramp
     { duration: '10m', target: 1000 }, // Gradual increase
     { duration: '30m', target: 1000 }, // Sustain
-    { duration: '5m', target: 0 },     // Ramp down
+    { duration: '5m', target: 0 }, // Ramp down
   ],
 };
 ```
@@ -653,7 +669,7 @@ export default function () {
   const res = http.get('https://api.example.com/products');
 
   check(res, {
-    'status is 200': (r) => r.status === 200,
+    'status is 200': r => r.status === 200,
   });
 
   // Check system metrics endpoint
@@ -723,8 +739,8 @@ performance.mark('end-processing');
 performance.measure('processing-time', 'start-processing', 'end-processing');
 
 // Observe measures
-const obs = new PerformanceObserver((items) => {
-  items.getEntries().forEach((entry) => {
+const obs = new PerformanceObserver(items => {
+  items.getEntries().forEach(entry => {
     console.log(`${entry.name}: ${entry.duration}ms`);
   });
 });
@@ -746,6 +762,7 @@ console.log(process.memoryUsage());
 ## Performance Testing Checklist
 
 ### Pre-Test Checklist
+
 - [ ] Test objectives defined
 - [ ] Success criteria established
 - [ ] Test environment configured
@@ -755,6 +772,7 @@ console.log(process.memoryUsage());
 - [ ] Test scripts validated
 
 ### During Test Checklist
+
 - [ ] System resources monitored
 - [ ] Error logs reviewed
 - [ ] Response times tracked
@@ -764,6 +782,7 @@ console.log(process.memoryUsage());
 - [ ] Test data refreshed as needed
 
 ### Post-Test Checklist
+
 - [ ] Results analyzed
 - [ ] Bottlenecks documented
 - [ ] Recommendations made
@@ -775,6 +794,7 @@ console.log(process.memoryUsage());
 ## References
 
 ### Tools
+
 - **k6**: Modern, developer-friendly load testing
 - **JMeter**: Enterprise standard
 - **Gatling**: Scala-based, high performance
@@ -782,11 +802,13 @@ console.log(process.memoryUsage());
 - **Artillery**: Node.js-based, easy to use
 
 ### Books
+
 - "The Art of Application Performance Testing" - Ian Molyneaux
 - "Performance Testing Guidance for Web Applications" - Microsoft
 - "Web Performance in Action" - Jeremy Wagner
 
 ### Resources
+
 - [k6 Documentation](https://k6.io/docs/)
 - [JMeter Best Practices](https://jmeter.apache.org/usermanual/best-practices.html)
 - [Web Performance Working Group](https://www.w3.org/webperf/)
@@ -800,4 +822,4 @@ console.log(process.memoryUsage());
 
 ---
 
-*Part of: [Quality Attributes](README.md)*
+_Part of: [Quality Attributes](README.md)_

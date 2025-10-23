@@ -33,9 +33,27 @@ const createApp = () => {
 
   // Mock data store
   let users = [
-    { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'admin', createdAt: '2025-01-01T00:00:00Z' },
-    { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'user', createdAt: '2025-01-02T00:00:00Z' },
-    { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', role: 'user', createdAt: '2025-01-03T00:00:00Z' }
+    {
+      id: 1,
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
+      role: 'admin',
+      createdAt: '2025-01-01T00:00:00Z',
+    },
+    {
+      id: 2,
+      name: 'Bob Smith',
+      email: 'bob@example.com',
+      role: 'user',
+      createdAt: '2025-01-02T00:00:00Z',
+    },
+    {
+      id: 3,
+      name: 'Charlie Brown',
+      email: 'charlie@example.com',
+      role: 'user',
+      createdAt: '2025-01-03T00:00:00Z',
+    },
   ];
   let nextId = 4;
 
@@ -67,7 +85,7 @@ const createApp = () => {
       return res.status(429).json({
         error: 'Too many requests',
         message: 'Rate limit exceeded. Please try again later.',
-        retryAfter: 60
+        retryAfter: 60,
       });
     }
 
@@ -113,7 +131,7 @@ const createApp = () => {
       } else {
         return res.status(401).json({
           error: 'Invalid API key',
-          message: 'The provided API key is invalid or expired'
+          message: 'The provided API key is invalid or expired',
         });
       }
     }
@@ -122,7 +140,7 @@ const createApp = () => {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         error: 'Unauthorized',
-        message: 'Missing or invalid authorization header'
+        message: 'Missing or invalid authorization header',
       });
     }
 
@@ -136,7 +154,7 @@ const createApp = () => {
       return res.status(401).json({
         error: 'Invalid token',
         message: 'The provided token is invalid or expired',
-        details: error.message
+        details: error.message,
       });
     }
   };
@@ -150,14 +168,14 @@ const createApp = () => {
       if (!req.user) {
         return res.status(401).json({
           error: 'Unauthorized',
-          message: 'Authentication required'
+          message: 'Authentication required',
         });
       }
 
       if (!roles.includes(req.user.role)) {
         return res.status(403).json({
           error: 'Forbidden',
-          message: `Access denied. Required role: ${roles.join(' or ')}`
+          message: `Access denied. Required role: ${roles.join(' or ')}`,
         });
       }
 
@@ -183,43 +201,39 @@ const createApp = () => {
         message: 'Email and password are required',
         fields: {
           email: !email ? 'Email is required' : null,
-          password: !password ? 'Password is required' : null
-        }
+          password: !password ? 'Password is required' : null,
+        },
       });
     }
 
     // Mock authentication (in production, verify against database)
     if (email === 'admin@example.com' && password === 'admin123') {
-      const token = jwt.sign(
-        { id: 1, email, role: 'admin' },
-        'test-secret-key',
-        { expiresIn: '1h' }
-      );
+      const token = jwt.sign({ id: 1, email, role: 'admin' }, 'test-secret-key', {
+        expiresIn: '1h',
+      });
 
       return res.status(200).json({
         token,
         user: { id: 1, email, role: 'admin' },
-        expiresIn: 3600
+        expiresIn: 3600,
       });
     }
 
     if (email === 'user@example.com' && password === 'user123') {
-      const token = jwt.sign(
-        { id: 2, email, role: 'user' },
-        'test-secret-key',
-        { expiresIn: '1h' }
-      );
+      const token = jwt.sign({ id: 2, email, role: 'user' }, 'test-secret-key', {
+        expiresIn: '1h',
+      });
 
       return res.status(200).json({
         token,
         user: { id: 2, email, role: 'user' },
-        expiresIn: 3600
+        expiresIn: 3600,
       });
     }
 
     return res.status(401).json({
       error: 'Authentication failed',
-      message: 'Invalid email or password'
+      message: 'Invalid email or password',
     });
   });
 
@@ -238,9 +252,10 @@ const createApp = () => {
 
       if (req.query.search) {
         const searchLower = req.query.search.toLowerCase();
-        result = result.filter(user =>
-          user.name.toLowerCase().includes(searchLower) ||
-          user.email.toLowerCase().includes(searchLower)
+        result = result.filter(
+          user =>
+            user.name.toLowerCase().includes(searchLower) ||
+            user.email.toLowerCase().includes(searchLower)
         );
       }
 
@@ -270,14 +285,14 @@ const createApp = () => {
           total,
           totalPages: Math.ceil(total / limit),
           hasNextPage: offset + limit < total,
-          hasPrevPage: page > 1
-        }
+          hasPrevPage: page > 1,
+        },
       });
     } catch (error) {
       res.status(500).json({
         error: 'Internal server error',
         message: 'An unexpected error occurred',
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -292,7 +307,7 @@ const createApp = () => {
     if (isNaN(id)) {
       return res.status(400).json({
         error: 'Validation error',
-        message: 'Invalid user ID format'
+        message: 'Invalid user ID format',
       });
     }
 
@@ -301,7 +316,7 @@ const createApp = () => {
     if (!user) {
       return res.status(404).json({
         error: 'Not found',
-        message: `User with ID ${id} not found`
+        message: `User with ID ${id} not found`,
       });
     }
 
@@ -340,7 +355,7 @@ const createApp = () => {
       return res.status(400).json({
         error: 'Validation error',
         message: 'One or more fields are invalid',
-        fields: errors
+        fields: errors,
       });
     }
 
@@ -349,14 +364,12 @@ const createApp = () => {
       name: name.trim(),
       email: email.trim().toLowerCase(),
       role: role || 'user',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     users.push(newUser);
 
-    res.status(201)
-      .setHeader('Location', `/api/users/${newUser.id}`)
-      .json(newUser);
+    res.status(201).setHeader('Location', `/api/users/${newUser.id}`).json(newUser);
   });
 
   /**
@@ -370,7 +383,7 @@ const createApp = () => {
     if (isNaN(id)) {
       return res.status(400).json({
         error: 'Validation error',
-        message: 'Invalid user ID format'
+        message: 'Invalid user ID format',
       });
     }
 
@@ -379,7 +392,7 @@ const createApp = () => {
     if (userIndex === -1) {
       return res.status(404).json({
         error: 'Not found',
-        message: `User with ID ${id} not found`
+        message: `User with ID ${id} not found`,
       });
     }
 
@@ -406,7 +419,7 @@ const createApp = () => {
       return res.status(400).json({
         error: 'Validation error',
         message: 'One or more fields are invalid',
-        fields: errors
+        fields: errors,
       });
     }
 
@@ -416,7 +429,7 @@ const createApp = () => {
       email: email.trim().toLowerCase(),
       role: role || 'user',
       createdAt: users[userIndex].createdAt,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     users[userIndex] = updatedUser;
@@ -434,7 +447,7 @@ const createApp = () => {
     if (isNaN(id)) {
       return res.status(400).json({
         error: 'Validation error',
-        message: 'Invalid user ID format'
+        message: 'Invalid user ID format',
       });
     }
 
@@ -442,7 +455,7 @@ const createApp = () => {
     if (req.user.role !== 'admin' && req.user.id !== id) {
       return res.status(403).json({
         error: 'Forbidden',
-        message: 'You can only update your own profile'
+        message: 'You can only update your own profile',
       });
     }
 
@@ -451,7 +464,7 @@ const createApp = () => {
     if (userIndex === -1) {
       return res.status(404).json({
         error: 'Not found',
-        message: `User with ID ${id} not found`
+        message: `User with ID ${id} not found`,
       });
     }
 
@@ -490,7 +503,7 @@ const createApp = () => {
       return res.status(400).json({
         error: 'Validation error',
         message: 'One or more fields are invalid',
-        fields: errors
+        fields: errors,
       });
     }
 
@@ -499,7 +512,7 @@ const createApp = () => {
       ...(name && { name: name.trim() }),
       ...(email && { email: email.trim().toLowerCase() }),
       ...(role && { role }),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     users[userIndex] = updatedUser;
@@ -517,7 +530,7 @@ const createApp = () => {
     if (isNaN(id)) {
       return res.status(400).json({
         error: 'Validation error',
-        message: 'Invalid user ID format'
+        message: 'Invalid user ID format',
       });
     }
 
@@ -526,7 +539,7 @@ const createApp = () => {
     if (userIndex === -1) {
       return res.status(404).json({
         error: 'Not found',
-        message: `User with ID ${id} not found`
+        message: `User with ID ${id} not found`,
       });
     }
 
@@ -534,7 +547,7 @@ const createApp = () => {
     if (req.user.id === id) {
       return res.status(400).json({
         error: 'Bad request',
-        message: 'You cannot delete your own account'
+        message: 'You cannot delete your own account',
       });
     }
 
@@ -551,7 +564,7 @@ const createApp = () => {
     res.status(200).json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      uptime: process.uptime()
+      uptime: process.uptime(),
     });
   });
 
@@ -562,13 +575,13 @@ const createApp = () => {
     if (err.type === 'entity.parse.failed') {
       return res.status(400).json({
         error: 'Bad request',
-        message: 'Invalid JSON payload'
+        message: 'Invalid JSON payload',
       });
     }
 
     res.status(500).json({
       error: 'Internal server error',
-      message: 'An unexpected error occurred'
+      message: 'An unexpected error occurred',
     });
   });
 
@@ -578,7 +591,7 @@ const createApp = () => {
   app.use((req, res) => {
     res.status(404).json({
       error: 'Not found',
-      message: `Route ${req.method} ${req.path} not found`
+      message: `Route ${req.method} ${req.path} not found`,
     });
   });
 
@@ -629,7 +642,7 @@ describe('REST API Testing with Supertest', () => {
           .post('/api/auth/login')
           .send({
             email: 'admin@example.com',
-            password: 'admin123'
+            password: 'admin123',
           })
           .expect(200)
           .expect('Content-Type', /json/);
@@ -647,7 +660,7 @@ describe('REST API Testing with Supertest', () => {
           .post('/api/auth/login')
           .send({
             email: 'admin@example.com',
-            password: 'wrongpassword'
+            password: 'wrongpassword',
           })
           .expect(401)
           .expect('Content-Type', /json/);
@@ -661,7 +674,7 @@ describe('REST API Testing with Supertest', () => {
         const response = await request(app)
           .post('/api/auth/login')
           .send({
-            password: 'admin123'
+            password: 'admin123',
           })
           .expect(400)
           .expect('Content-Type', /json/);
@@ -675,7 +688,7 @@ describe('REST API Testing with Supertest', () => {
         const response = await request(app)
           .post('/api/auth/login')
           .send({
-            email: 'admin@example.com'
+            email: 'admin@example.com',
           })
           .expect(400)
           .expect('Content-Type', /json/);
@@ -685,10 +698,7 @@ describe('REST API Testing with Supertest', () => {
       });
 
       it('should return 400 for missing both email and password', async () => {
-        const response = await request(app)
-          .post('/api/auth/login')
-          .send({})
-          .expect(400);
+        const response = await request(app).post('/api/auth/login').send({}).expect(400);
 
         expect(response.body.fields.email).toBeTruthy();
         expect(response.body.fields.password).toBeTruthy();
@@ -729,9 +739,7 @@ describe('REST API Testing with Supertest', () => {
       });
 
       it('should reject missing authorization header', async () => {
-        const response = await request(app)
-          .get('/api/users')
-          .expect(401);
+        const response = await request(app).get('/api/users').expect(401);
 
         expect(response.body.error).toBe('Unauthorized');
         expect(response.body.message).toContain('Missing or invalid authorization header');
@@ -782,7 +790,7 @@ describe('REST API Testing with Supertest', () => {
         .send({
           name: 'New User',
           email: 'newuser@example.com',
-          role: 'user'
+          role: 'user',
         })
         .expect(201);
 
@@ -797,7 +805,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${userToken}`)
         .send({
           name: 'New User',
-          email: 'newuser@example.com'
+          email: 'newuser@example.com',
         })
         .expect(403);
 
@@ -812,7 +820,7 @@ describe('REST API Testing with Supertest', () => {
         .patch('/api/users/2')
         .set('Authorization', `Bearer ${userToken}`)
         .send({
-          name: 'Updated Name'
+          name: 'Updated Name',
         })
         .expect(200);
 
@@ -826,7 +834,7 @@ describe('REST API Testing with Supertest', () => {
         .patch('/api/users/1')
         .set('Authorization', `Bearer ${userToken}`)
         .send({
-          name: 'Hacker'
+          name: 'Hacker',
         })
         .expect(403);
 
@@ -840,7 +848,7 @@ describe('REST API Testing with Supertest', () => {
         .patch('/api/users/2')
         .set('Authorization', `Bearer ${userToken}`)
         .send({
-          role: 'admin'
+          role: 'admin',
         })
         .expect(400);
 
@@ -854,7 +862,7 @@ describe('REST API Testing with Supertest', () => {
         .patch('/api/users/2')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          role: 'admin'
+          role: 'admin',
         })
         .expect(200);
 
@@ -921,9 +929,9 @@ describe('REST API Testing with Supertest', () => {
 
       expect(response.body.users.length).toBeGreaterThan(0);
       expect(
-        response.body.users.some(user =>
-          user.name.toLowerCase().includes('alice') ||
-          user.email.toLowerCase().includes('alice')
+        response.body.users.some(
+          user =>
+            user.name.toLowerCase().includes('alice') || user.email.toLowerCase().includes('alice')
         )
       ).toBe(true);
     });
@@ -967,7 +975,7 @@ describe('REST API Testing with Supertest', () => {
           sortBy: 'name',
           sortOrder: 'asc',
           page: 1,
-          limit: 10
+          limit: 10,
         })
         .expect(200);
 
@@ -1028,7 +1036,7 @@ describe('REST API Testing with Supertest', () => {
       const newUser = {
         name: 'John Doe',
         email: 'john.doe@example.com',
-        role: 'user'
+        role: 'user',
       };
 
       const response = await request(app)
@@ -1056,7 +1064,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Jane Doe',
-          email: 'jane.doe@example.com'
+          email: 'jane.doe@example.com',
         })
         .expect(201);
 
@@ -1085,7 +1093,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Test User',
-          email: 'invalid-email'
+          email: 'invalid-email',
         })
         .expect(400);
 
@@ -1100,7 +1108,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Duplicate User',
-          email: 'alice@example.com' // Already exists
+          email: 'alice@example.com', // Already exists
         })
         .expect(400);
 
@@ -1116,7 +1124,7 @@ describe('REST API Testing with Supertest', () => {
         .send({
           name: 'Test User',
           email: 'test@example.com',
-          role: 'superadmin' // Invalid role
+          role: 'superadmin', // Invalid role
         })
         .expect(400);
 
@@ -1131,7 +1139,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: '  Trimmed Name  ',
-          email: '  TRIMMED@EXAMPLE.COM  '
+          email: '  TRIMMED@EXAMPLE.COM  ',
         })
         .expect(201);
 
@@ -1147,7 +1155,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'A',
-          email: 'test@example.com'
+          email: 'test@example.com',
         })
         .expect(400);
 
@@ -1166,7 +1174,7 @@ describe('REST API Testing with Supertest', () => {
       const updatedData = {
         name: 'Updated Name',
         email: 'updated@example.com',
-        role: 'admin'
+        role: 'admin',
       };
 
       const response = await request(app)
@@ -1189,7 +1197,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Test',
-          email: 'test@example.com'
+          email: 'test@example.com',
         })
         .expect(404);
 
@@ -1203,7 +1211,7 @@ describe('REST API Testing with Supertest', () => {
         .put('/api/users/2')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          name: 'Only Name'
+          name: 'Only Name',
           // Missing email
         })
         .expect(400);
@@ -1224,7 +1232,7 @@ describe('REST API Testing with Supertest', () => {
         .patch('/api/users/2')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          name: 'Partially Updated'
+          name: 'Partially Updated',
         })
         .expect(200);
 
@@ -1241,7 +1249,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'New Name',
-          email: 'newemail@example.com'
+          email: 'newemail@example.com',
         })
         .expect(200);
 
@@ -1256,7 +1264,7 @@ describe('REST API Testing with Supertest', () => {
         .patch('/api/users/2')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          email: 'invalid-email'
+          email: 'invalid-email',
         })
         .expect(400);
 
@@ -1328,10 +1336,7 @@ describe('REST API Testing with Supertest', () => {
 
       // Make 10 requests (should succeed)
       for (let i = 0; i < 10; i++) {
-        await request(app)
-          .get('/api/users')
-          .set('Authorization', `Bearer ${token}`)
-          .expect(200);
+        await request(app).get('/api/users').set('Authorization', `Bearer ${token}`).expect(200);
       }
 
       // 11th request should be rate limited
@@ -1377,9 +1382,7 @@ describe('REST API Testing with Supertest', () => {
     });
 
     it('should handle OPTIONS preflight requests', async () => {
-      const response = await request(app)
-        .options('/api/users')
-        .expect(204);
+      const response = await request(app).options('/api/users').expect(204);
 
       expect(response.headers['access-control-allow-origin']).toBe('*');
       expect(response.headers['access-control-allow-methods']).toContain('GET');
@@ -1446,7 +1449,7 @@ describe('REST API Testing with Supertest', () => {
         .set('Content-Type', 'application/json')
         .send({
           name: 'Test User',
-          email: 'test@example.com'
+          email: 'test@example.com',
         })
         .expect(201);
     });

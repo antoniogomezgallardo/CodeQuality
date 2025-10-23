@@ -9,71 +9,78 @@
 // Example source code to be tested with mutations
 class Calculator {
   add(a, b) {
-    return a + b;  // Potential mutations: -, *, /, a - b, a * b, etc.
+    return a + b; // Potential mutations: -, *, /, a - b, a * b, etc.
   }
 
   subtract(a, b) {
-    return a - b;  // Potential mutations: +, *, /, a + b, a * b, etc.
+    return a - b; // Potential mutations: +, *, /, a + b, a * b, etc.
   }
 
   multiply(a, b) {
-    return a * b;  // Potential mutations: +, -, /, a + b, a - b, etc.
+    return a * b; // Potential mutations: +, -, /, a + b, a - b, etc.
   }
 
   divide(a, b) {
-    if (b === 0) {  // Potential mutations: b !== 0, b == 0, b > 0, b < 0
+    if (b === 0) {
+      // Potential mutations: b !== 0, b == 0, b > 0, b < 0
       throw new Error('Division by zero');
     }
-    return a / b;  // Potential mutations: *, +, -, a * b, a + b, etc.
+    return a / b; // Potential mutations: *, +, -, a * b, a + b, etc.
   }
 
   power(base, exponent) {
-    if (exponent === 0) {  // Potential mutations: !==, >, <, >=, <=
-      return 1;  // Potential mutations: 0, base, exponent
+    if (exponent === 0) {
+      // Potential mutations: !==, >, <, >=, <=
+      return 1; // Potential mutations: 0, base, exponent
     }
-    if (exponent === 1) {  // Potential mutations: 0, 2, >, <
-      return base;  // Potential mutations: 1, exponent, 0
+    if (exponent === 1) {
+      // Potential mutations: 0, 2, >, <
+      return base; // Potential mutations: 1, exponent, 0
     }
-    return Math.pow(base, exponent);  // Potential mutations: base * exponent, base + exponent
+    return Math.pow(base, exponent); // Potential mutations: base * exponent, base + exponent
   }
 
   factorial(n) {
-    if (n < 0) {  // Potential mutations: >, <=, >=, ===
+    if (n < 0) {
+      // Potential mutations: >, <=, >=, ===
       throw new Error('Factorial of negative number');
     }
-    if (n === 0 || n === 1) {  // Potential mutations: &&, n > 0, n < 1
-      return 1;  // Potential mutations: 0, n
+    if (n === 0 || n === 1) {
+      // Potential mutations: &&, n > 0, n < 1
+      return 1; // Potential mutations: 0, n
     }
-    return n * this.factorial(n - 1);  // Potential mutations: +, n + 1, n * 1
+    return n * this.factorial(n - 1); // Potential mutations: +, n + 1, n * 1
   }
 
   isEven(n) {
-    return n % 2 === 0;  // Potential mutations: !==, n % 3, n % 1, n / 2
+    return n % 2 === 0; // Potential mutations: !==, n % 3, n % 1, n / 2
   }
 
   max(a, b) {
-    return a > b ? a : b;  // Potential mutations: <, >=, <=, a < b ? a : b
+    return a > b ? a : b; // Potential mutations: <, >=, <=, a < b ? a : b
   }
 
   min(a, b) {
-    return a < b ? a : b;  // Potential mutations: >, <=, >=, a > b ? a : b
+    return a < b ? a : b; // Potential mutations: >, <=, >=, a > b ? a : b
   }
 
   absoluteValue(n) {
-    return n < 0 ? -n : n;  // Potential mutations: >, <=, >=, n > 0 ? -n : n
+    return n < 0 ? -n : n; // Potential mutations: >, <=, >=, n > 0 ? -n : n
   }
 
   isPrime(n) {
-    if (n <= 1) return false;  // Potential mutations: <, >=, true, n < 1
-    if (n <= 3) return true;   // Potential mutations: <, >=, false, n < 3
-    if (n % 2 === 0 || n % 3 === 0) return false;  // Potential mutations: &&, !==
+    if (n <= 1) return false; // Potential mutations: <, >=, true, n < 1
+    if (n <= 3) return true; // Potential mutations: <, >=, false, n < 3
+    if (n % 2 === 0 || n % 3 === 0) return false; // Potential mutations: &&, !==
 
-    for (let i = 5; i * i <= n; i += 6) {  // Potential mutations: <, >, i + 6, i - 6
-      if (n % i === 0 || n % (i + 2) === 0) {  // Potential mutations: &&, !==, i - 2
-        return false;  // Potential mutations: true
+    for (let i = 5; i * i <= n; i += 6) {
+      // Potential mutations: <, >, i + 6, i - 6
+      if (n % i === 0 || n % (i + 2) === 0) {
+        // Potential mutations: &&, !==, i - 2
+        return false; // Potential mutations: true
       }
     }
-    return true;  // Potential mutations: false
+    return true; // Potential mutations: false
   }
 }
 
@@ -85,95 +92,105 @@ class UserManager {
   }
 
   createUser(userData) {
-    if (!userData || !userData.email) {  // Potential mutations: ||, userData.email
+    if (!userData || !userData.email) {
+      // Potential mutations: ||, userData.email
       throw new Error('Email is required');
     }
 
-    if (!this.isValidEmail(userData.email)) {  // Potential mutations: remove !
+    if (!this.isValidEmail(userData.email)) {
+      // Potential mutations: remove !
       throw new Error('Invalid email format');
     }
 
-    if (this.findUserByEmail(userData.email)) {  // Potential mutations: !this.findUserByEmail
+    if (this.findUserByEmail(userData.email)) {
+      // Potential mutations: !this.findUserByEmail
       throw new Error('User already exists');
     }
 
     const user = {
-      id: this.nextId++,  // Potential mutations: this.nextId--, ++this.nextId
+      id: this.nextId++, // Potential mutations: this.nextId--, ++this.nextId
       email: userData.email,
-      name: userData.name || 'Unknown',  // Potential mutations: &&, userData.name ?? 'Unknown'
-      isActive: userData.isActive !== false,  // Potential mutations: ===, true
+      name: userData.name || 'Unknown', // Potential mutations: &&, userData.name ?? 'Unknown'
+      isActive: userData.isActive !== false, // Potential mutations: ===, true
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    this.users.push(user);  // Potential mutations: unshift, pop, shift
+    this.users.push(user); // Potential mutations: unshift, pop, shift
     return user;
   }
 
   findUserById(id) {
-    return this.users.find(user => user.id === id);  // Potential mutations: !==, filter, user.id == id
+    return this.users.find(user => user.id === id); // Potential mutations: !==, filter, user.id == id
   }
 
   findUserByEmail(email) {
-    return this.users.find(user => user.email === email);  // Potential mutations: !==, user.email == email
+    return this.users.find(user => user.email === email); // Potential mutations: !==, user.email == email
   }
 
   updateUser(id, updates) {
     const user = this.findUserById(id);
-    if (!user) {  // Potential mutations: user
+    if (!user) {
+      // Potential mutations: user
       throw new Error('User not found');
     }
 
-    if (updates.email && updates.email !== user.email) {  // Potential mutations: ||, ===
-      if (!this.isValidEmail(updates.email)) {  // Potential mutations: remove !
+    if (updates.email && updates.email !== user.email) {
+      // Potential mutations: ||, ===
+      if (!this.isValidEmail(updates.email)) {
+        // Potential mutations: remove !
         throw new Error('Invalid email format');
       }
-      if (this.findUserByEmail(updates.email)) {  // Potential mutations: !this.findUserByEmail
+      if (this.findUserByEmail(updates.email)) {
+        // Potential mutations: !this.findUserByEmail
         throw new Error('Email already in use');
       }
     }
 
-    Object.assign(user, updates, { updatedAt: new Date() });  // Potential mutations: user, updates order
+    Object.assign(user, updates, { updatedAt: new Date() }); // Potential mutations: user, updates order
     return user;
   }
 
   deleteUser(id) {
-    const index = this.users.findIndex(user => user.id === id);  // Potential mutations: find, user.id !== id
-    if (index === -1) {  // Potential mutations: !==, index < 0, index > -1
+    const index = this.users.findIndex(user => user.id === id); // Potential mutations: find, user.id !== id
+    if (index === -1) {
+      // Potential mutations: !==, index < 0, index > -1
       throw new Error('User not found');
     }
-    return this.users.splice(index, 1)[0];  // Potential mutations: slice, index + 1, 1 + 1
+    return this.users.splice(index, 1)[0]; // Potential mutations: slice, index + 1, 1 + 1
   }
 
   getActiveUsers() {
-    return this.users.filter(user => user.isActive);  // Potential mutations: !user.isActive
+    return this.users.filter(user => user.isActive); // Potential mutations: !user.isActive
   }
 
   getUserCount() {
-    return this.users.length;  // Potential mutations: this.users.size
+    return this.users.length; // Potential mutations: this.users.size
   }
 
   isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Potential mutations: different regex patterns
-    return emailRegex.test(email);  // Potential mutations: !emailRegex.test
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Potential mutations: different regex patterns
+    return emailRegex.test(email); // Potential mutations: !emailRegex.test
   }
 
   deactivateUser(id) {
     const user = this.findUserById(id);
-    if (!user) {  // Potential mutations: user
+    if (!user) {
+      // Potential mutations: user
       throw new Error('User not found');
     }
-    user.isActive = false;  // Potential mutations: true
+    user.isActive = false; // Potential mutations: true
     user.updatedAt = new Date();
     return user;
   }
 
   activateUser(id) {
     const user = this.findUserById(id);
-    if (!user) {  // Potential mutations: user
+    if (!user) {
+      // Potential mutations: user
       throw new Error('User not found');
     }
-    user.isActive = true;  // Potential mutations: false
+    user.isActive = true; // Potential mutations: false
     user.updatedAt = new Date();
     return user;
   }
@@ -440,7 +457,7 @@ describe('UserManager Mutation Testing', () => {
       const userData = {
         email: 'test@example.com',
         name: 'Test User',
-        isActive: true
+        isActive: true,
       };
 
       const user = userManager.createUser(userData);
@@ -449,7 +466,7 @@ describe('UserManager Mutation Testing', () => {
         id: 1,
         email: 'test@example.com',
         name: 'Test User',
-        isActive: true
+        isActive: true,
       });
       expect(user.createdAt).toBeInstanceOf(Date);
       expect(user.updatedAt).toBeInstanceOf(Date);
@@ -471,19 +488,28 @@ describe('UserManager Mutation Testing', () => {
     });
 
     test('should throw error for invalid email format', () => {
-      expect(() => userManager.createUser({ email: 'invalid-email' })).toThrow('Invalid email format');
-      expect(() => userManager.createUser({ email: '@example.com' })).toThrow('Invalid email format');
+      expect(() => userManager.createUser({ email: 'invalid-email' })).toThrow(
+        'Invalid email format'
+      );
+      expect(() => userManager.createUser({ email: '@example.com' })).toThrow(
+        'Invalid email format'
+      );
       expect(() => userManager.createUser({ email: 'test@' })).toThrow('Invalid email format');
     });
 
     test('should throw error for duplicate email', () => {
       userManager.createUser({ email: 'test@example.com' });
-      expect(() => userManager.createUser({ email: 'test@example.com' })).toThrow('User already exists');
+      expect(() => userManager.createUser({ email: 'test@example.com' })).toThrow(
+        'User already exists'
+      );
     });
 
     test('should handle isActive flag correctly', () => {
       const activeUser = userManager.createUser({ email: 'active@example.com', isActive: true });
-      const inactiveUser = userManager.createUser({ email: 'inactive@example.com', isActive: false });
+      const inactiveUser = userManager.createUser({
+        email: 'inactive@example.com',
+        isActive: false,
+      });
       const defaultUser = userManager.createUser({ email: 'default@example.com' });
 
       expect(activeUser.isActive).toBe(true);
@@ -543,12 +569,16 @@ describe('UserManager Mutation Testing', () => {
     });
 
     test('should validate email when updating', () => {
-      expect(() => userManager.updateUser(1, { email: 'invalid-email' })).toThrow('Invalid email format');
+      expect(() => userManager.updateUser(1, { email: 'invalid-email' })).toThrow(
+        'Invalid email format'
+      );
     });
 
     test('should prevent duplicate email when updating', () => {
       userManager.createUser({ email: 'another@example.com', name: 'Another User' });
-      expect(() => userManager.updateUser(1, { email: 'another@example.com' })).toThrow('Email already in use');
+      expect(() => userManager.updateUser(1, { email: 'another@example.com' })).toThrow(
+        'Email already in use'
+      );
     });
 
     test('should allow updating email to same email', () => {
@@ -596,7 +626,10 @@ describe('UserManager Mutation Testing', () => {
       const activeUsers = userManager.getActiveUsers();
 
       expect(activeUsers).toHaveLength(2);
-      expect(activeUsers.map(user => user.email)).toEqual(['active1@example.com', 'active2@example.com']);
+      expect(activeUsers.map(user => user.email)).toEqual([
+        'active1@example.com',
+        'active2@example.com',
+      ]);
     });
 
     test('should return empty array when no active users', () => {
@@ -680,39 +713,32 @@ const mutationTestingConfig = {
   coverageAnalysis: 'perTest',
 
   // Files to mutate
-  mutate: [
-    'src/**/*.js',
-    '!src/**/*.test.js',
-    '!src/**/*.spec.js'
-  ],
+  mutate: ['src/**/*.js', '!src/**/*.test.js', '!src/**/*.spec.js'],
 
   // Test files
-  testFiles: [
-    'src/**/*.test.js',
-    'src/**/*.spec.js'
-  ],
+  testFiles: ['src/**/*.test.js', 'src/**/*.spec.js'],
 
   // Mutation types to apply
   mutators: [
-    'ArithmeticOperator',    // +, -, *, /, %
-    'ArrayDeclaration',      // [] mutations
-    'BlockStatement',        // {} mutations
-    'BooleanLiteral',        // true/false mutations
+    'ArithmeticOperator', // +, -, *, /, %
+    'ArrayDeclaration', // [] mutations
+    'BlockStatement', // {} mutations
+    'BooleanLiteral', // true/false mutations
     'ConditionalExpression', // ?: mutations
-    'EqualityOperator',      // ==, !=, ===, !==
-    'LogicalOperator',       // &&, ||
-    'MethodExpression',      // Method call mutations
-    'ObjectLiteral',         // {} mutations
-    'StringLiteral',         // String mutations
-    'UnaryOperator',         // !, -, +
-    'UpdateOperator'         // ++, --
+    'EqualityOperator', // ==, !=, ===, !==
+    'LogicalOperator', // &&, ||
+    'MethodExpression', // Method call mutations
+    'ObjectLiteral', // {} mutations
+    'StringLiteral', // String mutations
+    'UnaryOperator', // !, -, +
+    'UpdateOperator', // ++, --
   ],
 
   // Thresholds for mutation score
   thresholds: {
-    high: 90,    // High threshold: 90% mutation score
-    low: 80,     // Low threshold: 80% mutation score
-    break: 70    // Break build if below 70%
+    high: 90, // High threshold: 90% mutation score
+    low: 80, // Low threshold: 80% mutation score
+    break: 70, // Break build if below 70%
   },
 
   // Timeout settings
@@ -725,8 +751,8 @@ const mutationTestingConfig = {
   // Dashboard reporter settings
   dashboard: {
     project: 'github.com/your-org/your-repo',
-    version: 'main'
-  }
+    version: 'main',
+  },
 };
 
 /**
@@ -768,5 +794,5 @@ const mutationTestingConfig = {
 module.exports = {
   Calculator,
   UserManager,
-  mutationTestingConfig
+  mutationTestingConfig,
 };

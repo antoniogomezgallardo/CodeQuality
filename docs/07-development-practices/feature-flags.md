@@ -29,6 +29,7 @@ if (featureFlags.isEnabled('new-checkout-flow', user)) {
 ```
 
 **Characteristics:**
+
 - Short-lived (days to weeks)
 - Removed after feature is fully released
 - Used for gradual rollouts
@@ -47,6 +48,7 @@ if (featureFlags.isEnabled('use-external-recommendation-api')) {
 ```
 
 **Characteristics:**
+
 - Long-lived (months to years)
 - Managed by operations team
 - Performance and reliability focused
@@ -67,6 +69,7 @@ if (variant === 'red-button') {
 ```
 
 **Characteristics:**
+
 - Time-limited (duration of experiment)
 - Tracked with analytics
 - Removed after winner chosen
@@ -85,6 +88,7 @@ if (user.plan === 'premium' || featureFlags.isEnabled('advanced-analytics', user
 ```
 
 **Characteristics:**
+
 - Long-lived (permanent)
 - Part of business logic
 - Managed through user permissions
@@ -100,7 +104,7 @@ class FeatureFlagService {
     this.flags = {
       'new-dashboard': { enabled: true, rolloutPercentage: 100 },
       'beta-feature': { enabled: true, rolloutPercentage: 10 },
-      'experimental-ui': { enabled: false, rolloutPercentage: 0 }
+      'experimental-ui': { enabled: false, rolloutPercentage: 0 },
     };
   }
 
@@ -114,7 +118,7 @@ class FeatureFlagService {
     // Percentage-based rollout
     if (user && flag.rolloutPercentage < 100) {
       const userHash = this.hashUser(user.id);
-      return (userHash % 100) < flag.rolloutPercentage;
+      return userHash % 100 < flag.rolloutPercentage;
     }
 
     return true;
@@ -125,7 +129,7 @@ class FeatureFlagService {
     let hash = 0;
     const str = userId.toString();
     for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash = (hash << 5) - hash + str.charCodeAt(i);
       hash = hash & hash;
     }
     return Math.abs(hash);
@@ -141,11 +145,11 @@ module.exports = new FeatureFlagService();
 // Gradually increase rollout percentage
 const rolloutSchedule = {
   'new-checkout': [
-    { date: '2024-01-01', percentage: 5 },   // 5% of users
-    { date: '2024-01-03', percentage: 25 },  // 25% of users
-    { date: '2024-01-07', percentage: 50 },  // 50% of users
-    { date: '2024-01-10', percentage: 100 }  // All users
-  ]
+    { date: '2024-01-01', percentage: 5 }, // 5% of users
+    { date: '2024-01-03', percentage: 25 }, // 25% of users
+    { date: '2024-01-07', percentage: 50 }, // 50% of users
+    { date: '2024-01-10', percentage: 100 }, // All users
+  ],
 };
 
 class GradualRollout {
@@ -165,7 +169,7 @@ class GradualRollout {
   isEnabled(featureName, user) {
     const percentage = this.getRolloutPercentage(featureName);
     const userHash = this.hashUser(user.id);
-    return (userHash % 100) < percentage;
+    return userHash % 100 < percentage;
   }
 }
 ```
@@ -212,9 +216,9 @@ const flags = {
     enabled: true,
     targetRules: {
       plan: 'premium',
-      country: 'US'
-    }
-  }
+      country: 'US',
+    },
+  },
 };
 ```
 
@@ -230,7 +234,7 @@ class AnalyticsAwareFeatureFlags {
       flagName,
       userId: user.id,
       enabled,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return enabled;
@@ -242,7 +246,7 @@ class AnalyticsAwareFeatureFlags {
       flagName,
       userId: user.id,
       eventName,
-      variant: this.getVariant(flagName, user)
+      variant: this.getVariant(flagName, user),
     });
   }
 }
@@ -262,16 +266,16 @@ if (featureFlags.isEnabled('new-checkout', user)) {
 
 ```javascript
 // ✅ GOOD: Clear, descriptive names
-'enable-dark-mode'
-'new-recommendation-engine'
-'gradual-rollout-mobile-app-v2'
-'experiment-checkout-button-color'
+'enable-dark-mode';
+'new-recommendation-engine';
+'gradual-rollout-mobile-app-v2';
+'experiment-checkout-button-color';
 
 // ❌ BAD: Vague or technical names
-'flag1'
-'test'
-'new-thing'
-'refactor'
+'flag1';
+'test';
+'new-thing';
+'refactor';
 ```
 
 ### 2. Flag Lifecycle Management
@@ -285,8 +289,8 @@ const flagMetadata = {
     jiraTicket: 'PROJ-123',
     expectedRemovalDate: '2024-02-01',
     status: 'active', // active, deprecated, removed
-    type: 'release' // release, ops, experiment, permission
-  }
+    type: 'release', // release, ops, experiment, permission
+  },
 };
 
 // Automated flag cleanup alerts
@@ -325,7 +329,7 @@ const flagLifecycle = {
   week1: 'Create flag, deploy code',
   week2: 'Gradual rollout 5% → 25% → 50%',
   week3: 'Rollout to 100%, monitor',
-  week4: 'Remove flag, clean up code'
+  week4: 'Remove flag, clean up code',
 };
 
 // ⚠️ WARNING: Flags older than 3 months need review
@@ -347,8 +351,8 @@ const user = {
   email: 'user@example.com',
   custom: {
     plan: 'premium',
-    country: 'US'
-  }
+    country: 'US',
+  },
 };
 
 const showNewFeature = await client.variation('new-feature', user, false);
@@ -366,8 +370,8 @@ import { SplitFactory } from '@splitsoftware/splitio';
 const factory = SplitFactory({
   core: {
     authorizationKey: process.env.SPLIT_API_KEY,
-    key: user.id
-  }
+    key: user.id,
+  },
 });
 
 const client = factory.client();
@@ -400,11 +404,11 @@ const FeatureFlag = {
     // Check percentage rollout
     if (flag.rolloutPercentage < 100) {
       const hash = this.hashUser(user.id);
-      return (hash % 100) < flag.rolloutPercentage;
+      return hash % 100 < flag.rolloutPercentage;
     }
 
     return true;
-  }
+  },
 };
 
 // Database schema
@@ -416,7 +420,7 @@ const featureFlagSchema = {
   excludedUserIds: [String],
   targetRules: Object,
   createdAt: Date,
-  expectedRemovalDate: Date
+  expectedRemovalDate: Date,
 };
 ```
 
@@ -454,6 +458,7 @@ describe('Checkout Flow', () => {
 ❌ **Problem:** Flag sprawl, technical debt accumulates
 
 ✅ **Solution:**
+
 - Remove flags after rollout complete
 - Track flag age, alert on old flags
 - Regular cleanup sprints
@@ -484,6 +489,7 @@ if (flags.canAccessPremiumFeatures(user)) {
 ❌ **Problem:** 2^n test combinations for n flags
 
 ✅ **Solution:**
+
 - Test each flag independently
 - Integration tests for critical paths
 - Use flag overrides in tests
@@ -505,4 +511,4 @@ if (flags.canAccessPremiumFeatures(user)) {
 
 ---
 
-*Part of: [Development Practices](README.md)*
+_Part of: [Development Practices](README.md)_

@@ -32,24 +32,21 @@ describe('User API Integration Tests', () => {
       email: 'test@example.com',
       password: 'password123',
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
     };
   });
 
   describe('POST /api/users/register', () => {
     test('should register new user successfully', async () => {
-      const response = await request(app)
-        .post('/api/users/register')
-        .send(testUser)
-        .expect(201);
+      const response = await request(app).post('/api/users/register').send(testUser).expect(201);
 
       expect(response.body).toMatchObject({
         success: true,
         user: {
           email: testUser.email,
           firstName: testUser.firstName,
-          lastName: testUser.lastName
-        }
+          lastName: testUser.lastName,
+        },
       });
 
       // Verify user was created in database
@@ -60,33 +57,24 @@ describe('User API Integration Tests', () => {
 
     test('should reject duplicate email registration', async () => {
       // First registration
-      await request(app)
-        .post('/api/users/register')
-        .send(testUser)
-        .expect(201);
+      await request(app).post('/api/users/register').send(testUser).expect(201);
 
       // Duplicate registration attempt
-      const response = await request(app)
-        .post('/api/users/register')
-        .send(testUser)
-        .expect(400);
+      const response = await request(app).post('/api/users/register').send(testUser).expect(400);
 
       expect(response.body).toMatchObject({
         success: false,
-        error: 'Email already exists'
+        error: 'Email already exists',
       });
     });
 
     test('should validate required fields', async () => {
       const invalidUser = {
         email: 'invalid-email',
-        password: '123' // Too short
+        password: '123', // Too short
       };
 
-      const response = await request(app)
-        .post('/api/users/register')
-        .send(invalidUser)
-        .expect(400);
+      const response = await request(app).post('/api/users/register').send(invalidUser).expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.errors).toHaveLength(3); // email, password, firstName
@@ -96,9 +84,7 @@ describe('User API Integration Tests', () => {
   describe('POST /api/users/login', () => {
     beforeEach(async () => {
       // Register user for login tests
-      await request(app)
-        .post('/api/users/register')
-        .send(testUser);
+      await request(app).post('/api/users/register').send(testUser);
     });
 
     test('should login with valid credentials', async () => {
@@ -106,7 +92,7 @@ describe('User API Integration Tests', () => {
         .post('/api/users/login')
         .send({
           email: testUser.email,
-          password: testUser.password
+          password: testUser.password,
         })
         .expect(200);
 
@@ -114,8 +100,8 @@ describe('User API Integration Tests', () => {
         success: true,
         token: expect.any(String),
         user: {
-          email: testUser.email
-        }
+          email: testUser.email,
+        },
       });
 
       authToken = response.body.token;
@@ -126,13 +112,13 @@ describe('User API Integration Tests', () => {
         .post('/api/users/login')
         .send({
           email: testUser.email,
-          password: 'wrongpassword'
+          password: 'wrongpassword',
         })
         .expect(401);
 
       expect(response.body).toMatchObject({
         success: false,
-        error: 'Invalid credentials'
+        error: 'Invalid credentials',
       });
     });
   });
@@ -140,16 +126,12 @@ describe('User API Integration Tests', () => {
   describe('GET /api/users/profile', () => {
     beforeEach(async () => {
       // Register and login user
-      await request(app)
-        .post('/api/users/register')
-        .send(testUser);
+      await request(app).post('/api/users/register').send(testUser);
 
-      const loginResponse = await request(app)
-        .post('/api/users/login')
-        .send({
-          email: testUser.email,
-          password: testUser.password
-        });
+      const loginResponse = await request(app).post('/api/users/login').send({
+        email: testUser.email,
+        password: testUser.password,
+      });
 
       authToken = loginResponse.body.token;
     });
@@ -165,8 +147,8 @@ describe('User API Integration Tests', () => {
         user: {
           email: testUser.email,
           firstName: testUser.firstName,
-          lastName: testUser.lastName
-        }
+          lastName: testUser.lastName,
+        },
       });
 
       // Sensitive data should not be returned
@@ -174,13 +156,11 @@ describe('User API Integration Tests', () => {
     });
 
     test('should reject request without token', async () => {
-      const response = await request(app)
-        .get('/api/users/profile')
-        .expect(401);
+      const response = await request(app).get('/api/users/profile').expect(401);
 
       expect(response.body).toMatchObject({
         success: false,
-        error: 'No token provided'
+        error: 'No token provided',
       });
     });
 
@@ -192,7 +172,7 @@ describe('User API Integration Tests', () => {
 
       expect(response.body).toMatchObject({
         success: false,
-        error: 'Invalid token'
+        error: 'Invalid token',
       });
     });
   });
@@ -204,13 +184,11 @@ describe('User API Integration Tests', () => {
 
 describe('API Error Handling', () => {
   test('should handle 404 for non-existent endpoints', async () => {
-    const response = await request(app)
-      .get('/api/non-existent')
-      .expect(404);
+    const response = await request(app).get('/api/non-existent').expect(404);
 
     expect(response.body).toMatchObject({
       success: false,
-      error: 'Endpoint not found'
+      error: 'Endpoint not found',
     });
   });
 
@@ -223,7 +201,7 @@ describe('API Error Handling', () => {
 
     expect(response.body).toMatchObject({
       success: false,
-      error: 'Invalid JSON'
+      error: 'Invalid JSON',
     });
   });
 
@@ -231,13 +209,11 @@ describe('API Error Handling', () => {
     // Mock a database connection error
     jest.spyOn(User, 'find').mockRejectedValue(new Error('Database connection failed'));
 
-    const response = await request(app)
-      .get('/api/users')
-      .expect(500);
+    const response = await request(app).get('/api/users').expect(500);
 
     expect(response.body).toMatchObject({
       success: false,
-      error: 'Internal server error'
+      error: 'Internal server error',
     });
 
     // Clean up mock
@@ -254,15 +230,13 @@ describe('Rate Limiting', () => {
     const endpoint = '/api/users/login';
     const invalidCredentials = {
       email: 'test@example.com',
-      password: 'wrongpassword'
+      password: 'wrongpassword',
     };
 
     // Make multiple requests rapidly
-    const requests = Array(6).fill().map(() =>
-      request(app)
-        .post(endpoint)
-        .send(invalidCredentials)
-    );
+    const requests = Array(6)
+      .fill()
+      .map(() => request(app).post(endpoint).send(invalidCredentials));
 
     const responses = await Promise.all(requests);
 
@@ -275,7 +249,7 @@ describe('Rate Limiting', () => {
     expect(responses[5].status).toBe(429);
     expect(responses[5].body).toMatchObject({
       success: false,
-      error: 'Too many requests'
+      error: 'Too many requests',
     });
   }, 10000); // Longer timeout for multiple requests
 });
@@ -287,25 +261,23 @@ describe('Rate Limiting', () => {
 describe('Pagination', () => {
   beforeAll(async () => {
     // Create test data
-    const users = Array(25).fill().map((_, i) => ({
-      email: `user${i}@example.com`,
-      password: 'password123',
-      firstName: `User${i}`,
-      lastName: 'Test'
-    }));
+    const users = Array(25)
+      .fill()
+      .map((_, i) => ({
+        email: `user${i}@example.com`,
+        password: 'password123',
+        firstName: `User${i}`,
+        lastName: 'Test',
+      }));
 
     // Register all users
     for (const user of users) {
-      await request(app)
-        .post('/api/users/register')
-        .send(user);
+      await request(app).post('/api/users/register').send(user);
     }
   });
 
   test('should return paginated results', async () => {
-    const response = await request(app)
-      .get('/api/users?page=1&limit=10')
-      .expect(200);
+    const response = await request(app).get('/api/users?page=1&limit=10').expect(200);
 
     expect(response.body).toMatchObject({
       success: true,
@@ -314,17 +286,15 @@ describe('Pagination', () => {
         currentPage: 1,
         totalPages: expect.any(Number),
         totalItems: expect.any(Number),
-        limit: 10
-      }
+        limit: 10,
+      },
     });
 
     expect(response.body.data).toHaveLength(10);
   });
 
   test('should handle page out of range', async () => {
-    const response = await request(app)
-      .get('/api/users?page=999&limit=10')
-      .expect(200);
+    const response = await request(app).get('/api/users?page=999&limit=10').expect(200);
 
     expect(response.body.data).toHaveLength(0);
     expect(response.body.pagination.currentPage).toBe(999);
@@ -340,21 +310,17 @@ describe('File Upload', () => {
 
   beforeEach(async () => {
     // Login to get auth token
-    await request(app)
-      .post('/api/users/register')
-      .send({
-        email: 'upload@example.com',
-        password: 'password123',
-        firstName: 'Upload',
-        lastName: 'Test'
-      });
+    await request(app).post('/api/users/register').send({
+      email: 'upload@example.com',
+      password: 'password123',
+      firstName: 'Upload',
+      lastName: 'Test',
+    });
 
-    const loginResponse = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: 'upload@example.com',
-        password: 'password123'
-      });
+    const loginResponse = await request(app).post('/api/users/login').send({
+      email: 'upload@example.com',
+      password: 'password123',
+    });
 
     authToken = loginResponse.body.token;
   });
@@ -368,7 +334,7 @@ describe('File Upload', () => {
 
     expect(response.body).toMatchObject({
       success: true,
-      imageUrl: expect.stringContaining('.jpg')
+      imageUrl: expect.stringContaining('.jpg'),
     });
   });
 
@@ -381,7 +347,7 @@ describe('File Upload', () => {
 
     expect(response.body).toMatchObject({
       success: false,
-      error: 'Invalid file type'
+      error: 'Invalid file type',
     });
   });
 
@@ -396,7 +362,7 @@ describe('File Upload', () => {
 
     expect(response.body).toMatchObject({
       success: false,
-      error: 'File too large'
+      error: 'File too large',
     });
   });
 });
@@ -407,9 +373,7 @@ describe('File Upload', () => {
 
 describe('CORS Configuration', () => {
   test('should include CORS headers', async () => {
-    const response = await request(app)
-      .get('/api/users')
-      .expect(200);
+    const response = await request(app).get('/api/users').expect(200);
 
     expect(response.headers['access-control-allow-origin']).toBeTruthy();
     expect(response.headers['access-control-allow-methods']).toBeTruthy();
@@ -440,7 +404,7 @@ async function setupTestDB() {
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(testDBUrl, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
   }
 }
@@ -457,5 +421,5 @@ async function cleanupTestDB() {
 
 module.exports = {
   setupTestDB,
-  cleanupTestDB
+  cleanupTestDB,
 };

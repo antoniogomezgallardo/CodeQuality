@@ -9,18 +9,21 @@ Contract testing is a methodology for ensuring that two separate services can co
 ## 📋 Examples Included
 
 ### Provider Testing (Pact)
+
 - API provider contract verification
 - Schema validation
 - Breaking change detection
 - Consumer-driven contracts
 
 ### Consumer Testing
+
 - Mock service generation from contracts
 - API client testing
 - Integration testing isolation
 - Service virtualization
 
 ### OpenAPI/Swagger Testing
+
 - Schema-based contract testing
 - API specification validation
 - Request/response validation
@@ -74,4 +77,4 @@ npm run test:openapi
 
 ---
 
-*Contract testing is essential for microservices architecture and distributed systems. These examples show how to implement reliable service integration testing.*
+_Contract testing is essential for microservices architecture and distributed systems. These examples show how to implement reliable service integration testing._

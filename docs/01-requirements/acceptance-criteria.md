@@ -1,10 +1,13 @@
 # Acceptance Criteria
 
 ## Purpose
+
 Comprehensive guide to writing effective acceptance criteria that define when a user story is complete, ensure shared understanding, and enable testable requirements.
 
 ## Overview
+
 Acceptance criteria are:
+
 - Conditions of satisfaction
 - Definition of "done" for a story
 - Testable requirements
@@ -14,6 +17,7 @@ Acceptance criteria are:
 ## What Are Acceptance Criteria?
 
 ### Definition
+
 Acceptance criteria are a set of predefined requirements that must be met for a user story to be considered complete and accepted by the product owner.
 
 ### Purpose
@@ -55,6 +59,7 @@ Testable      - Can be verified objectively
 ### 1. Given-When-Then (Gherkin)
 
 **Format:**
+
 ```gherkin
 Given [initial context]
 When [event occurs]
@@ -63,6 +68,7 @@ And [additional outcome]
 ```
 
 **Example 1: Login**
+
 ```gherkin
 Scenario: Successful login with valid credentials
 
@@ -77,6 +83,7 @@ And my session should be active
 ```
 
 **Example 2: Shopping Cart**
+
 ```gherkin
 Scenario: Add product to empty cart
 
@@ -89,6 +96,7 @@ And the product should appear in my cart
 ```
 
 **Example 3: Form Validation**
+
 ```gherkin
 Scenario: Email format validation
 
@@ -101,12 +109,14 @@ And I should remain on the registration form
 ```
 
 **Advantages:**
+
 - ✅ Structured and consistent
 - ✅ Easy to automate with BDD tools
 - ✅ Clear cause and effect
 - ✅ Supports multiple scenarios
 
 **When to Use:**
+
 - Complex workflows
 - Multiple scenarios
 - Automation planned
@@ -115,20 +125,24 @@ And I should remain on the registration form
 ### 2. Checklist Format
 
 **Format:**
+
 ```markdown
 User Story: [Story description]
 
 Acceptance Criteria:
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
 ```
 
 **Example 1: Search Feature**
+
 ```markdown
 User Story: As a user, I want to search for products so that I can quickly find what I need
 
 Acceptance Criteria:
+
 - [ ] Search bar is visible on all pages
 - [ ] Search accepts minimum 2 characters
 - [ ] Search returns results within 2 seconds
@@ -140,10 +154,12 @@ Acceptance Criteria:
 ```
 
 **Example 2: Profile Update**
+
 ```markdown
 User Story: As a user, I want to update my profile information
 
 Acceptance Criteria:
+
 - [ ] All fields are pre-populated with current data
 - [ ] First name is required (max 50 characters)
 - [ ] Last name is required (max 50 characters)
@@ -156,12 +172,14 @@ Acceptance Criteria:
 ```
 
 **Advantages:**
+
 - ✅ Simple and quick
 - ✅ Easy to understand
 - ✅ Good for straightforward features
 - ✅ Clear yes/no verification
 
 **When to Use:**
+
 - Simple features
 - Single scenarios
 - Quick verification
@@ -170,6 +188,7 @@ Acceptance Criteria:
 ### 3. Scenario Outline (Data-Driven)
 
 **Format:**
+
 ```gherkin
 Scenario Outline: [Template description]
 
@@ -184,6 +203,7 @@ Examples:
 ```
 
 **Example: Login Validation**
+
 ```gherkin
 Scenario Outline: Login validation with different inputs
 
@@ -205,6 +225,7 @@ Examples:
 ```
 
 **Example: Discount Calculation**
+
 ```gherkin
 Scenario Outline: Apply discount codes
 
@@ -223,12 +244,14 @@ Examples:
 ```
 
 **Advantages:**
+
 - ✅ Covers multiple test cases
 - ✅ Reduces duplication
 - ✅ Clear data variations
 - ✅ Excellent for testing edge cases
 
 **When to Use:**
+
 - Multiple data variations
 - Same logic, different inputs
 - Boundary testing
@@ -237,71 +260,77 @@ Examples:
 ### 4. Rule-Based Format
 
 **Format:**
+
 ```markdown
 Rule: [Business rule description]
 
 Examples:
+
 - Scenario: [Positive case]
 - Scenario: [Negative case]
 - Scenario: [Edge case]
 ```
 
 **Example: Password Policy**
+
 ```markdown
 Rule: Password must meet security requirements
 
 Scenario: Valid password
-  Given I enter password "SecureP@ss123"
-  Then password should be accepted
+Given I enter password "SecureP@ss123"
+Then password should be accepted
 
 Scenario: Too short
-  Given I enter password "Pass1!"
-  Then I should see "Password must be at least 8 characters"
+Given I enter password "Pass1!"
+Then I should see "Password must be at least 8 characters"
 
 Scenario: No uppercase
-  Given I enter password "securepass123!"
-  Then I should see "Password must contain uppercase letter"
+Given I enter password "securepass123!"
+Then I should see "Password must contain uppercase letter"
 
 Scenario: No number
-  Given I enter password "SecurePass!"
-  Then I should see "Password must contain a number"
+Given I enter password "SecurePass!"
+Then I should see "Password must contain a number"
 
 Scenario: No special character
-  Given I enter password "SecurePass123"
-  Then I should see "Password must contain special character"
+Given I enter password "SecurePass123"
+Then I should see "Password must contain special character"
 ```
 
 **Example: Shipping Cost Rules**
+
 ```markdown
 Rule: Shipping cost based on order value and location
 
 Scenario: Free shipping for orders over $50
-  Given order total is $75
-  And shipping address is in USA
-  Then shipping cost should be $0
+Given order total is $75
+And shipping address is in USA
+Then shipping cost should be $0
 
 Scenario: Standard shipping for orders under $50
-  Given order total is $30
-  And shipping address is in USA
-  Then shipping cost should be $5.99
+Given order total is $30
+And shipping address is in USA
+Then shipping cost should be $5.99
 
 Scenario: International shipping
-  Given order total is $100
-  And shipping address is in Canada
-  Then shipping cost should be $15.99
+Given order total is $100
+And shipping address is in Canada
+Then shipping cost should be $15.99
 
 Scenario: No shipping for digital products
-  Given order contains only digital items
-  Then shipping cost should be $0
+Given order contains only digital items
+Then shipping cost should be $0
 ```
 
 **Advantages:**
+
 - ✅ Focuses on business rules
 - ✅ Clear rule boundaries
 - ✅ Comprehensive scenarios
 - ✅ Easy to extend
 
 **When to Use:**
+
 - Complex business logic
 - Multiple conditions
 - Regulatory compliance
@@ -312,6 +341,7 @@ Scenario: No shipping for digital products
 ### Best Practices
 
 #### 1. Be Specific and Unambiguous
+
 ```
 ❌ Bad:
 - System should be fast
@@ -325,6 +355,7 @@ Scenario: No shipping for digital products
 ```
 
 #### 2. Focus on Outcomes, Not Implementation
+
 ```
 ❌ Bad (Implementation):
 - Use React hooks for state management
@@ -338,6 +369,7 @@ Scenario: No shipping for digital products
 ```
 
 #### 3. Include Both Positive and Negative Cases
+
 ```
 User Story: Password reset
 
@@ -354,6 +386,7 @@ Negative Cases:
 ```
 
 #### 4. Make Criteria Testable
+
 ```
 ❌ Not Testable:
 - Search should work well
@@ -367,6 +400,7 @@ Negative Cases:
 ```
 
 #### 5. Define Clear Boundaries
+
 ```
 User Story: Product search
 
@@ -385,6 +419,7 @@ Out of Scope:
 ### Common Mistakes to Avoid
 
 #### 1. Too Vague
+
 ```
 ❌ Problem:
 - System should handle errors gracefully
@@ -398,6 +433,7 @@ Out of Scope:
 ```
 
 #### 2. Too Technical
+
 ```
 ❌ Problem:
 - JWT token should expire in 3600 seconds
@@ -411,6 +447,7 @@ Out of Scope:
 ```
 
 #### 3. Too Many Criteria
+
 ```
 ❌ Problem:
 Single story with 25 acceptance criteria
@@ -424,6 +461,7 @@ Story 3: Search results display (4 criteria)
 ```
 
 #### 4. Missing Edge Cases
+
 ```
 ❌ Incomplete:
 - [ ] User can upload profile picture
@@ -444,6 +482,7 @@ Story 3: Search results display (4 criteria)
 ## Create [Entity]
 
 Acceptance Criteria:
+
 - [ ] All required fields have validation
 - [ ] Optional fields are clearly marked
 - [ ] Success message displays after creation
@@ -455,6 +494,7 @@ Acceptance Criteria:
 ## Read [Entity]
 
 Acceptance Criteria:
+
 - [ ] All [entity] fields display correctly
 - [ ] Related data loads properly
 - [ ] Loading state shows while fetching
@@ -465,6 +505,7 @@ Acceptance Criteria:
 ## Update [Entity]
 
 Acceptance Criteria:
+
 - [ ] Form pre-populates with current values
 - [ ] Only changed fields are saved
 - [ ] Success message displays after update
@@ -476,6 +517,7 @@ Acceptance Criteria:
 ## Delete [Entity]
 
 Acceptance Criteria:
+
 - [ ] Confirmation dialog displays before delete
 - [ ] Success message displays after deletion
 - [ ] [Entity] removed from lists immediately
@@ -491,16 +533,19 @@ Acceptance Criteria:
 ## [Form Name] Validation
 
 Field-Level Validation:
+
 - [ ] [Field 1]: [Validation rule]
 - [ ] [Field 2]: [Validation rule]
 - [ ] [Field 3]: [Validation rule]
 
 Form-Level Validation:
+
 - [ ] At least one [required combination] provided
 - [ ] [Cross-field validation rule]
 - [ ] [Business rule validation]
 
 User Experience:
+
 - [ ] Validation triggers on blur
 - [ ] Error messages display near field
 - [ ] Error messages are specific and helpful
@@ -509,6 +554,7 @@ User Experience:
 - [ ] Field requirements stated upfront
 
 Error Handling:
+
 - [ ] Invalid field highlighted
 - [ ] Focus moves to first error
 - [ ] Multiple errors shown together
@@ -521,6 +567,7 @@ Error Handling:
 ## [API Name] Integration
 
 Request:
+
 - [ ] Correct endpoint called
 - [ ] Required headers included
 - [ ] Request body properly formatted
@@ -528,6 +575,7 @@ Request:
 - [ ] Timeout set to [X] seconds
 
 Response Handling:
+
 - [ ] Success (2xx): [Expected behavior]
 - [ ] Client Error (4xx): [Error handling]
 - [ ] Server Error (5xx): [Error handling]
@@ -535,6 +583,7 @@ Response Handling:
 - [ ] Network Error: [Fallback behavior]
 
 Data Processing:
+
 - [ ] Response data validated
 - [ ] Data transformed correctly
 - [ ] State updated appropriately
@@ -542,6 +591,7 @@ Data Processing:
 - [ ] Loading states shown
 
 Error Display:
+
 - [ ] User-friendly error messages
 - [ ] Retry option available
 - [ ] Error logged for debugging
@@ -554,6 +604,7 @@ Error Display:
 ## Accessibility Requirements
 
 Keyboard Navigation:
+
 - [ ] All interactive elements keyboard accessible
 - [ ] Tab order is logical
 - [ ] Focus indicators clearly visible
@@ -561,6 +612,7 @@ Keyboard Navigation:
 - [ ] Skip navigation links provided
 
 Screen Reader Support:
+
 - [ ] All images have alt text
 - [ ] Form labels properly associated
 - [ ] ARIA labels for custom controls
@@ -568,6 +620,7 @@ Screen Reader Support:
 - [ ] Page title describes content
 
 Visual Design:
+
 - [ ] Color contrast ratio ≥ 4.5:1 (normal text)
 - [ ] Color contrast ratio ≥ 3:1 (large text)
 - [ ] Information not conveyed by color alone
@@ -575,6 +628,7 @@ Visual Design:
 - [ ] Touch targets ≥ 44x44 pixels
 
 WCAG Compliance:
+
 - [ ] Level A compliance achieved
 - [ ] Level AA compliance achieved
 - [ ] Automated tests pass
@@ -591,6 +645,7 @@ User Story: As a shopper, I want to view product details so I can make informed 
 Acceptance Criteria:
 
 Product Information:
+
 - [ ] Product name displays prominently
 - [ ] Price shows with currency symbol
 - [ ] Availability status is clear (In Stock/Out of Stock)
@@ -599,6 +654,7 @@ Product Information:
 - [ ] SKU and model number shown
 
 Product Images:
+
 - [ ] Main product image displays (800x800px minimum)
 - [ ] 4-6 alternate images available
 - [ ] Click image to open full-screen view
@@ -607,6 +663,7 @@ Product Images:
 - [ ] Image thumbnails show below main image
 
 Product Options:
+
 - [ ] All variants shown (size, color, etc.)
 - [ ] Selected variant highlights
 - [ ] Out of stock variants disabled
@@ -614,6 +671,7 @@ Product Options:
 - [ ] Availability updates when variant selected
 
 Actions:
+
 - [ ] Add to Cart button prominent and functional
 - [ ] Quantity selector (min 1, max available stock)
 - [ ] Add to Wishlist option available
@@ -621,6 +679,7 @@ Actions:
 - [ ] "Notify when available" for out of stock
 
 Additional Information:
+
 - [ ] Customer reviews display (rating + count)
 - [ ] Shipping information shown
 - [ ] Return policy linked
@@ -636,18 +695,21 @@ User Story: As a user, I want a personalized dashboard to see my account overvie
 Acceptance Criteria:
 
 Header Section:
+
 - [ ] User name and avatar display
 - [ ] Last login time shown
 - [ ] Quick actions accessible (Settings, Help, Logout)
 - [ ] Notifications icon with unread count
 
 Key Metrics (Widget):
+
 - [ ] Current usage vs plan limit
 - [ ] Usage percentage visualized
 - [ ] Upgrade prompt if >80% usage
 - [ ] Metrics update in real-time
 
 Recent Activity (Widget):
+
 - [ ] Last 10 activities listed
 - [ ] Activity type, timestamp, and details shown
 - [ ] Click activity to see details
@@ -655,18 +717,21 @@ Recent Activity (Widget):
 - [ ] Empty state if no activity
 
 Quick Access (Widget):
+
 - [ ] Most frequently used features shown
 - [ ] Custom shortcuts can be added
 - [ ] Reorder shortcuts via drag-drop
 - [ ] Icons and labels clear
 
 Performance (Widget):
+
 - [ ] Key performance indicators shown
 - [ ] Trend arrows (up/down/stable)
 - [ ] Click for detailed analytics
 - [ ] Data refreshes every 5 minutes
 
 Customization:
+
 - [ ] Widgets can be shown/hidden
 - [ ] Widget order can be changed
 - [ ] Layout persists across sessions
@@ -681,6 +746,7 @@ User Story: As a new user, I want guided onboarding to learn key features
 Acceptance Criteria:
 
 Onboarding Flow:
+
 - [ ] Welcome screen shows app value proposition
 - [ ] 3-5 screens highlighting key features
 - [ ] Simple, clear visuals for each feature
@@ -688,6 +754,7 @@ Onboarding Flow:
 - [ ] Progress indicator shows (e.g., 1/4, 2/4)
 
 Screen Content:
+
 - [ ] One main message per screen
 - [ ] Supporting image/animation
 - [ ] 2-3 sentences maximum per screen
@@ -695,6 +762,7 @@ Screen Content:
 - [ ] Next/Previous navigation
 
 User Interaction:
+
 - [ ] Swipe left/right to navigate (mobile)
 - [ ] Click arrows to navigate (desktop)
 - [ ] "Get Started" on final screen
@@ -702,6 +770,7 @@ User Interaction:
 - [ ] Onboarding shown only once
 
 Completion:
+
 - [ ] Marked as complete in user profile
 - [ ] User taken to main app screen
 - [ ] Optional account setup prompt
@@ -717,6 +786,7 @@ User Story: As an analyst, I want to generate custom reports
 Acceptance Criteria:
 
 Report Configuration:
+
 - [ ] Date range selector (predefined + custom)
 - [ ] Metric selection (multi-select dropdown)
 - [ ] Dimension selection (group by options)
@@ -724,6 +794,7 @@ Report Configuration:
 - [ ] Comparison toggle (vs previous period)
 
 Report Preview:
+
 - [ ] Preview generates in <5 seconds
 - [ ] Data displays in table format
 - [ ] Sortable columns
@@ -731,6 +802,7 @@ Report Preview:
 - [ ] Summary statistics at top
 
 Data Validation:
+
 - [ ] Date range validated (max 365 days)
 - [ ] At least one metric required
 - [ ] Invalid combinations prevented
@@ -738,6 +810,7 @@ Data Validation:
 - [ ] Estimated processing time shown
 
 Export Options:
+
 - [ ] Export to CSV format
 - [ ] Export to PDF format
 - [ ] Export to Excel format
@@ -745,6 +818,7 @@ Export Options:
 - [ ] Schedule recurring report
 
 Performance:
+
 - [ ] Small reports (<1000 rows) load in <3 seconds
 - [ ] Large reports show progress indicator
 - [ ] Timeout at 60 seconds with error message
@@ -759,6 +833,7 @@ Performance:
 Before Finalizing Acceptance Criteria:
 
 Completeness:
+
 - [ ] All functional requirements covered
 - [ ] Non-functional requirements included
 - [ ] Happy path defined
@@ -767,6 +842,7 @@ Completeness:
 - [ ] Boundary conditions tested
 
 Clarity:
+
 - [ ] No ambiguous terms
 - [ ] Consistent terminology
 - [ ] No assumptions
@@ -774,6 +850,7 @@ Clarity:
 - [ ] Measurable outcomes
 
 Testability:
+
 - [ ] Each criterion verifiable
 - [ ] Clear pass/fail conditions
 - [ ] Test data identifiable
@@ -781,6 +858,7 @@ Testability:
 - [ ] Automation possible
 
 Stakeholder Agreement:
+
 - [ ] Product Owner approved
 - [ ] Development team understood
 - [ ] QA team can test
@@ -870,23 +948,23 @@ Actions:
 
 ```javascript
 // Cucumber (JavaScript)
-Given('I am on the login page', function() {
+Given('I am on the login page', function () {
   return this.visit('/login');
 });
 
-When('I enter username {string}', function(username) {
+When('I enter username {string}', function (username) {
   return this.fillIn('#username', username);
 });
 
-When('I enter password {string}', function(password) {
+When('I enter password {string}', function (password) {
   return this.fillIn('#password', password);
 });
 
-When('I click {string}', function(buttonText) {
+When('I click {string}', function (buttonText) {
   return this.click(`button:contains('${buttonText}')`);
 });
 
-Then('I should see {string}', function(message) {
+Then('I should see {string}', function (message) {
   return this.see(message);
 });
 ```
@@ -921,11 +999,13 @@ Acceptance Criteria Status:
 ⏸️ Criterion 5: Blocked by [Dependency]
 
 Test Results:
+
 - Manual Tests: 12/15 passed
 - Automated Tests: 45/45 passed
 - Exploratory: 3 issues found
 
 Acceptance Decision:
+
 - [ ] Accepted
 - [ ] Accepted with known issues
 - [ ] Rejected - needs rework
@@ -936,6 +1016,7 @@ Acceptance Decision:
 ### Acceptance Criteria Checklist
 
 **Writing Phase:**
+
 - [ ] Derived from user story
 - [ ] Format selected (Given-When-Then, Checklist, etc.)
 - [ ] Positive scenarios included
@@ -946,6 +1027,7 @@ Acceptance Decision:
 - [ ] No implementation details
 
 **Review Phase:**
+
 - [ ] Product Owner reviewed
 - [ ] Development team understands
 - [ ] QA can test
@@ -954,6 +1036,7 @@ Acceptance Decision:
 - [ ] Complete set of criteria
 
 **Testing Phase:**
+
 - [ ] Test cases written
 - [ ] Test data prepared
 - [ ] Tests executed
@@ -964,15 +1047,18 @@ Acceptance Decision:
 ## References
 
 ### Books
+
 - "Specification by Example" - Gojko Adzic
 - "User Story Mapping" - Jeff Patton
 - "The BDD Books: Discovery" - Gáspár Nagy & Seb Rose
 
 ### Articles
+
 - [Writing Great Acceptance Criteria](https://www.atlassian.com/agile/project-management/user-stories) - Atlassian
 - [Acceptance Criteria Guide](https://www.productplan.com/glossary/acceptance-criteria/) - ProductPlan
 
 ### Tools
+
 - [Cucumber](https://cucumber.io/) - BDD framework
 - [SpecFlow](https://specflow.org/) - .NET BDD
 - [Behave](https://behave.readthedocs.io/) - Python BDD
@@ -988,4 +1074,4 @@ Acceptance Decision:
 
 ---
 
-*Part of: [Requirements Engineering](README.md)*
+_Part of: [Requirements Engineering](README.md)_

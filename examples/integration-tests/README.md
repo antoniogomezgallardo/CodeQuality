@@ -5,6 +5,7 @@ This directory contains integration testing examples demonstrating how to test c
 ## 📋 Examples Included
 
 ### API Integration Tests
+
 - REST API endpoint testing
 - GraphQL integration tests
 - Authentication and authorization
@@ -12,6 +13,7 @@ This directory contains integration testing examples demonstrating how to test c
 - Response validation
 
 ### Database Integration Tests
+
 - CRUD operations testing
 - Transaction testing
 - Connection pooling
@@ -19,6 +21,7 @@ This directory contains integration testing examples demonstrating how to test c
 - Data integrity checks
 
 ### Service Integration Tests
+
 - Microservices communication
 - Message queue integration
 - Third-party service mocking
@@ -65,6 +68,7 @@ npm run test:services
 ## 🔧 Test Environment Setup
 
 Each example includes:
+
 - Docker Compose for dependencies
 - Test data seeders
 - Environment configuration
@@ -72,4 +76,4 @@ Each example includes:
 
 ---
 
-*Integration tests verify that different parts of the system work correctly together. These examples show how to test real component interactions while maintaining test isolation and speed.*
+_Integration tests verify that different parts of the system work correctly together. These examples show how to test real component interactions while maintaining test isolation and speed._

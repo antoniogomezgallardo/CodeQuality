@@ -21,7 +21,7 @@ describe('User Service Contract Tests', () => {
       log: path.resolve(process.cwd(), 'logs', 'pact.log'),
       dir: path.resolve(process.cwd(), 'pacts'),
       logLevel: 'INFO',
-      spec: 2
+      spec: 2,
     });
 
     await provider.setup();
@@ -45,7 +45,7 @@ describe('User Service Contract Tests', () => {
         email: 'john.doe@example.com',
         role: 'admin',
         createdAt: '2023-01-15T10:30:00Z',
-        isActive: true
+        isActive: true,
       };
 
       await provider.addInteraction({
@@ -55,33 +55,33 @@ describe('User Service Contract Tests', () => {
           method: 'GET',
           path: '/api/users/123',
           headers: {
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
-          }
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
+          },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             id: like(123),
             name: like('John Doe'),
             email: term({
               matcher: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-              generate: 'john.doe@example.com'
+              generate: 'john.doe@example.com',
             }),
             role: term({
               matcher: '^(admin|user|moderator)$',
-              generate: 'admin'
+              generate: 'admin',
             }),
             createdAt: term({
               matcher: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$',
-              generate: '2023-01-15T10:30:00Z'
+              generate: '2023-01-15T10:30:00Z',
             }),
-            isActive: like(true)
-          }
-        }
+            isActive: like(true),
+          },
+        },
       });
 
       // Execute the consumer request
@@ -104,25 +104,26 @@ describe('User Service Contract Tests', () => {
           method: 'GET',
           path: '/api/users/999',
           headers: {
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
-          }
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
+          },
         },
         willRespondWith: {
           status: 404,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             error: 'User not found',
             code: 'USER_NOT_FOUND',
-            message: like('User with ID 999 does not exist')
-          }
-        }
+            message: like('User with ID 999 does not exist'),
+          },
+        },
       });
 
-      await expect(userService.getUserById(999, 'Bearer token123'))
-        .rejects.toThrow('User not found');
+      await expect(userService.getUserById(999, 'Bearer token123')).rejects.toThrow(
+        'User not found'
+      );
     });
 
     test('should return 401 when unauthorized', async () => {
@@ -133,24 +134,23 @@ describe('User Service Contract Tests', () => {
           method: 'GET',
           path: '/api/users/123',
           headers: {
-            'Accept': 'application/json'
-          }
+            Accept: 'application/json',
+          },
         },
         willRespondWith: {
           status: 401,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             error: 'Unauthorized',
             code: 'INVALID_TOKEN',
-            message: like('Authentication token is required')
-          }
-        }
+            message: like('Authentication token is required'),
+          },
+        },
       });
 
-      await expect(userService.getUserById(123))
-        .rejects.toThrow('Unauthorized');
+      await expect(userService.getUserById(123)).rejects.toThrow('Unauthorized');
     });
   });
 
@@ -165,49 +165,55 @@ describe('User Service Contract Tests', () => {
           query: {
             page: '1',
             limit: '10',
-            sort: 'name'
+            sort: 'name',
           },
           headers: {
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
-          }
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
+          },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
-            users: eachLike({
-              id: like(1),
-              name: like('John Doe'),
-              email: term({
-                matcher: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-                generate: 'user@example.com'
-              }),
-              role: term({
-                matcher: '^(admin|user|moderator)$',
-                generate: 'user'
-              }),
-              isActive: like(true)
-            }, { min: 1 }),
+            users: eachLike(
+              {
+                id: like(1),
+                name: like('John Doe'),
+                email: term({
+                  matcher: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+                  generate: 'user@example.com',
+                }),
+                role: term({
+                  matcher: '^(admin|user|moderator)$',
+                  generate: 'user',
+                }),
+                isActive: like(true),
+              },
+              { min: 1 }
+            ),
             pagination: {
               page: like(1),
               limit: like(10),
               total: like(50),
               totalPages: like(5),
               hasNext: like(true),
-              hasPrev: like(false)
-            }
-          }
-        }
+              hasPrev: like(false),
+            },
+          },
+        },
       });
 
-      const result = await userService.getUsers({
-        page: 1,
-        limit: 10,
-        sort: 'name'
-      }, 'Bearer token123');
+      const result = await userService.getUsers(
+        {
+          page: 1,
+          limit: 10,
+          sort: 'name',
+        },
+        'Bearer token123'
+      );
 
       expect(result.users).toBeDefined();
       expect(Array.isArray(result.users)).toBe(true);
@@ -223,7 +229,7 @@ describe('User Service Contract Tests', () => {
       const newUser = {
         name: 'Jane Smith',
         email: 'jane.smith@example.com',
-        role: 'user'
+        role: 'user',
       };
 
       await provider.addInteraction({
@@ -234,26 +240,26 @@ describe('User Service Contract Tests', () => {
           path: '/api/users',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
           },
           body: {
             name: like('Jane Smith'),
             email: term({
               matcher: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-              generate: 'jane.smith@example.com'
+              generate: 'jane.smith@example.com',
             }),
             role: term({
               matcher: '^(admin|user|moderator)$',
-              generate: 'user'
-            })
-          }
+              generate: 'user',
+            }),
+          },
         },
         willRespondWith: {
           status: 201,
           headers: {
             'Content-Type': 'application/json',
-            'Location': like('/api/users/124')
+            Location: like('/api/users/124'),
           },
           body: {
             id: like(124),
@@ -262,11 +268,11 @@ describe('User Service Contract Tests', () => {
             role: like('user'),
             createdAt: term({
               matcher: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$',
-              generate: '2023-01-15T10:30:00Z'
+              generate: '2023-01-15T10:30:00Z',
             }),
-            isActive: like(true)
-          }
-        }
+            isActive: like(true),
+          },
+        },
       });
 
       const createdUser = await userService.createUser(newUser, 'Bearer token123');
@@ -283,7 +289,7 @@ describe('User Service Contract Tests', () => {
       const invalidUser = {
         name: 'Invalid User',
         email: 'invalid-email',
-        role: 'user'
+        role: 'user',
       };
 
       await provider.addInteraction({
@@ -294,15 +300,15 @@ describe('User Service Contract Tests', () => {
           path: '/api/users',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
           },
-          body: invalidUser
+          body: invalidUser,
         },
         willRespondWith: {
           status: 400,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             error: 'Validation Error',
@@ -311,14 +317,15 @@ describe('User Service Contract Tests', () => {
             details: {
               field: 'email',
               value: 'invalid-email',
-              constraint: 'must be a valid email address'
-            }
-          }
-        }
+              constraint: 'must be a valid email address',
+            },
+          },
+        },
       });
 
-      await expect(userService.createUser(invalidUser, 'Bearer token123'))
-        .rejects.toThrow('Validation Error');
+      await expect(userService.createUser(invalidUser, 'Bearer token123')).rejects.toThrow(
+        'Validation Error'
+      );
     });
   });
 
@@ -326,7 +333,7 @@ describe('User Service Contract Tests', () => {
     test('should update user successfully', async () => {
       const updateData = {
         name: 'John Updated',
-        role: 'moderator'
+        role: 'moderator',
       };
 
       await provider.addInteraction({
@@ -337,15 +344,15 @@ describe('User Service Contract Tests', () => {
           path: '/api/users/123',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': like('Bearer token123')
+            Accept: 'application/json',
+            Authorization: like('Bearer token123'),
           },
-          body: updateData
+          body: updateData,
         },
         willRespondWith: {
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             id: like(123),
@@ -355,11 +362,11 @@ describe('User Service Contract Tests', () => {
             createdAt: like('2023-01-15T10:30:00Z'),
             updatedAt: term({
               matcher: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$',
-              generate: '2023-01-15T11:30:00Z'
+              generate: '2023-01-15T11:30:00Z',
             }),
-            isActive: like(true)
-          }
-        }
+            isActive: like(true),
+          },
+        },
       });
 
       const updatedUser = await userService.updateUser(123, updateData, 'Bearer token123');
@@ -381,16 +388,15 @@ describe('User Service Contract Tests', () => {
           method: 'DELETE',
           path: '/api/users/123',
           headers: {
-            'Authorization': like('Bearer token123')
-          }
+            Authorization: like('Bearer token123'),
+          },
         },
         willRespondWith: {
-          status: 204
-        }
+          status: 204,
+        },
       });
 
-      await expect(userService.deleteUser(123, 'Bearer token123'))
-        .resolves.toBeUndefined();
+      await expect(userService.deleteUser(123, 'Bearer token123')).resolves.toBeUndefined();
     });
 
     test('should return 404 when trying to delete non-existent user', async () => {
@@ -401,24 +407,25 @@ describe('User Service Contract Tests', () => {
           method: 'DELETE',
           path: '/api/users/999',
           headers: {
-            'Authorization': like('Bearer token123')
-          }
+            Authorization: like('Bearer token123'),
+          },
         },
         willRespondWith: {
           status: 404,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             error: 'User not found',
             code: 'USER_NOT_FOUND',
-            message: like('User with ID 999 does not exist')
-          }
-        }
+            message: like('User with ID 999 does not exist'),
+          },
+        },
       });
 
-      await expect(userService.deleteUser(999, 'Bearer token123'))
-        .rejects.toThrow('User not found');
+      await expect(userService.deleteUser(999, 'Bearer token123')).rejects.toThrow(
+        'User not found'
+      );
     });
   });
 });
@@ -435,7 +442,7 @@ async function publishPact() {
     pactBroker: 'https://your-pact-broker.com',
     pactBrokerToken: process.env.PACT_BROKER_TOKEN,
     consumerVersion: process.env.GIT_COMMIT || '1.0.0',
-    tags: ['main', 'production']
+    tags: ['main', 'production'],
   };
 
   return pact.publishPacts(opts);

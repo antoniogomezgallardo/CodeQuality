@@ -122,7 +122,7 @@ test.describe('Component-Level Accessibility', () => {
 
     // Check for skip link
     const skipLink = await page.locator('a[href="#main-content"]');
-    if (await skipLink.count() > 0) {
+    if ((await skipLink.count()) > 0) {
       await expect(skipLink).toHaveAttribute('class', /skip-link/);
     }
   });
@@ -191,9 +191,7 @@ test.describe('WCAG Tag-Based Testing', () => {
   test('test WCAG 2.0 Level A only', async ({ page }) => {
     await page.goto('https://example.com');
 
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(['wcag2a'])
-      .analyze();
+    const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2a']).analyze();
 
     expect(accessibilityScanResults.violations).toHaveNoAccessibilityViolations();
   });
@@ -218,7 +216,8 @@ test.describe('WCAG Tag-Based Testing', () => {
 
     // Best practices may have violations - log them but don't fail
     if (accessibilityScanResults.violations.length > 0) {
-      console.log('Best practice suggestions:',
+      console.log(
+        'Best practice suggestions:',
         accessibilityScanResults.violations.map(v => ({
           id: v.id,
           description: v.description,
@@ -429,7 +428,7 @@ test.describe('Form Accessibility', () => {
       const ariaLabelledBy = await input.getAttribute('aria-labelledby');
 
       // Input must have one of: associated label, aria-label, or aria-labelledby
-      const hasLabel = id && await page.locator(`label[for="${id}"]`).count() > 0;
+      const hasLabel = id && (await page.locator(`label[for="${id}"]`).count()) > 0;
       expect(hasLabel || ariaLabel || ariaLabelledBy).toBeTruthy();
     }
   });
@@ -463,9 +462,7 @@ test.describe('Image Accessibility', () => {
   test('all content images should have alt text', async ({ page }) => {
     await page.goto('https://example.com');
 
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(['wcag2a'])
-      .analyze();
+    const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2a']).analyze();
 
     // Check specifically for image-alt rule
     const imageAltViolations = accessibilityScanResults.violations.filter(
@@ -525,8 +522,5 @@ async function saveAccessibilityReport(results, filename) {
     fs.mkdirSync(reportDir, { recursive: true });
   }
 
-  fs.writeFileSync(
-    path.join(reportDir, filename),
-    JSON.stringify(report, null, 2)
-  );
+  fs.writeFileSync(path.join(reportDir, filename), JSON.stringify(report, null, 2));
 }

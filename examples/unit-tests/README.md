@@ -5,6 +5,7 @@ This directory contains unit testing examples in multiple programming languages,
 ## 📋 Examples Included
 
 ### JavaScript/TypeScript
+
 - Basic assertions and matchers
 - Mocking and stubbing
 - Async testing
@@ -12,6 +13,7 @@ This directory contains unit testing examples in multiple programming languages,
 - Code coverage configuration
 
 ### Java
+
 - JUnit 5 features
 - Mockito integration
 - Parameterized tests
@@ -19,6 +21,7 @@ This directory contains unit testing examples in multiple programming languages,
 - AssertJ assertions
 
 ### Python
+
 - pytest basics and fixtures
 - Mock and patch usage
 - Property-based testing
@@ -64,4 +67,4 @@ pytest --cov=src --cov-report=html
 
 ---
 
-*Unit tests are the foundation of the testing pyramid. These examples show how to write fast, reliable, and maintainable unit tests.*
+_Unit tests are the foundation of the testing pyramid. These examples show how to write fast, reliable, and maintainable unit tests._

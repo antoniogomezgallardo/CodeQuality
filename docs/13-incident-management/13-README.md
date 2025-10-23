@@ -18,6 +18,7 @@ Incident management is the process of identifying, responding to, resolving, and
 
 ```markdown
 **SEV-1 (Critical):**
+
 - Complete service outage
 - Data loss or corruption
 - Security breach
@@ -26,6 +27,7 @@ Incident management is the process of identifying, responding to, resolving, and
 - Update frequency: Every 30 minutes
 
 **SEV-2 (High):**
+
 - Significant feature degradation
 - Affecting >50% of users
 - Performance severely degraded
@@ -34,6 +36,7 @@ Incident management is the process of identifying, responding to, resolving, and
 - Update frequency: Every hour
 
 **SEV-3 (Medium):**
+
 - Minor feature degradation
 - Affecting <50% of users
 - Workaround available
@@ -42,6 +45,7 @@ Incident management is the process of identifying, responding to, resolving, and
 - Update frequency: Every 4 hours
 
 **SEV-4 (Low):**
+
 - Cosmetic issues
 - Minimal user impact
 - No revenue impact
@@ -60,26 +64,28 @@ class IncidentDetector {
     const metrics = await this.getMetrics();
 
     // Error rate threshold
-    if (metrics.errorRate > 0.05) {  // >5% errors
+    if (metrics.errorRate > 0.05) {
+      // >5% errors
       await this.createIncident({
         title: 'High Error Rate Detected',
         severity: 'SEV-2',
         metrics: {
           errorRate: metrics.errorRate,
-          affectedUsers: metrics.affectedUsers
-        }
+          affectedUsers: metrics.affectedUsers,
+        },
       });
     }
 
     // Latency threshold
-    if (metrics.latencyP99 > 5000) {  // >5s p99 latency
+    if (metrics.latencyP99 > 5000) {
+      // >5s p99 latency
       await this.createIncident({
         title: 'High Latency Detected',
         severity: 'SEV-2',
         metrics: {
           latencyP99: metrics.latencyP99,
-          latencyP95: metrics.latencyP95
-        }
+          latencyP95: metrics.latencyP95,
+        },
       });
     }
 
@@ -91,8 +97,8 @@ class IncidentDetector {
         severity: 'SEV-1',
         metrics: {
           current: metrics.requestsPerMinute,
-          expected: expectedTraffic
-        }
+          expected: expectedTraffic,
+        },
       });
     }
   }
@@ -105,7 +111,7 @@ class IncidentDetector {
     await this.pagerDuty.trigger({
       title: incident.title,
       severity: incident.severity,
-      details: incident.metrics
+      details: incident.metrics,
     });
 
     // Post to incident channel
@@ -118,10 +124,10 @@ class IncidentDetector {
           fields: Object.entries(incident.metrics).map(([key, value]) => ({
             title: key,
             value: value.toString(),
-            short: true
-          }))
-        }
-      ]
+            short: true,
+          })),
+        },
+      ],
     });
   }
 }
@@ -131,6 +137,7 @@ class IncidentDetector {
 
 ```markdown
 **Immediate Actions (First 5 Minutes):**
+
 1. Acknowledge incident in PagerDuty
 2. Join incident Zoom/Slack channel
 3. Assign incident commander
@@ -138,6 +145,7 @@ class IncidentDetector {
 5. Begin status page updates
 
 **Initial Investigation (5-15 Minutes):**
+
 1. Check recent deployments
 2. Review error logs
 3. Examine monitoring dashboards
@@ -145,6 +153,7 @@ class IncidentDetector {
 5. Determine root cause hypothesis
 
 **Mitigation (15-30 Minutes):**
+
 1. Implement immediate fix (if known)
 2. Rollback recent changes (if applicable)
 3. Scale resources (if capacity issue)
@@ -163,16 +172,16 @@ class IncidentCommunication {
     // Update status page
     await this.statusPage.postUpdate({
       incident: incident.id,
-      status: update.status,  // investigating, identified, monitoring, resolved
+      status: update.status, // investigating, identified, monitoring, resolved
       message: update.message,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Notify stakeholders
     if (incident.severity === 'SEV-1' || incident.severity === 'SEV-2') {
       await this.slack.postMessage({
         channel: '#incidents',
-        text: `Update on ${incident.title}:\n${update.message}`
+        text: `Update on ${incident.title}:\n${update.message}`,
       });
 
       // Email executives for SEV-1
@@ -180,7 +189,7 @@ class IncidentCommunication {
         await this.email.send({
           to: 'executives@example.com',
           subject: `SEV-1 Update: ${incident.title}`,
-          body: this.formatIncidentEmail(incident, update)
+          body: this.formatIncidentEmail(incident, update),
         });
       }
     }
@@ -189,7 +198,7 @@ class IncidentCommunication {
     await this.updateTimeline(incidentId, {
       timestamp: new Date(),
       event: 'status_update',
-      details: update
+      details: update,
     });
   }
 
@@ -234,7 +243,7 @@ class IncidentResolution {
       status: 'resolved',
       resolvedAt: new Date(),
       resolution: resolution.description,
-      rootCause: resolution.rootCause
+      rootCause: resolution.rootCause,
     });
 
     // Close status page incident
@@ -243,16 +252,13 @@ class IncidentResolution {
     // Notify team
     await this.slack.postMessage({
       channel: '#incidents',
-      text: `✅ Resolved: ${incident.title}\n\nDuration: ${this.calculateDuration(incident)}\nResolution: ${resolution.description}`
+      text: `✅ Resolved: ${incident.title}\n\nDuration: ${this.calculateDuration(incident)}\nResolution: ${resolution.description}`,
     });
 
     // Schedule postmortem
     await this.schedulePostmortem(incidentId, {
       daysAfter: 2,
-      attendees: [
-        ...incident.responders,
-        'engineering-leads@example.com'
-      ]
+      attendees: [...incident.responders, 'engineering-leads@example.com'],
     });
   }
 
@@ -260,21 +266,17 @@ class IncidentResolution {
     // Check metrics returned to normal
     const metrics = await this.getMetrics();
 
-    const checksPass = (
+    const checksPass =
       metrics.errorRate < 0.01 &&
       metrics.latencyP99 < 1000 &&
-      metrics.requestsPerMinute > this.getExpectedTraffic() * 0.9
-    );
+      metrics.requestsPerMinute > this.getExpectedTraffic() * 0.9;
 
     // Monitor for 15 minutes
     if (checksPass) {
       await this.sleep(15 * 60 * 1000);
       const metricsAfter = await this.getMetrics();
 
-      return (
-        metricsAfter.errorRate < 0.01 &&
-        metricsAfter.latencyP99 < 1000
-      );
+      return metricsAfter.errorRate < 0.01 && metricsAfter.latencyP99 < 1000;
     }
 
     return false;
@@ -296,8 +298,8 @@ const onCallSchedule = {
     schedule: [
       { week: 1, primary: 'alice@example.com', secondary: 'bob@example.com' },
       { week: 2, primary: 'bob@example.com', secondary: 'carol@example.com' },
-      { week: 3, primary: 'carol@example.com', secondary: 'alice@example.com' }
-    ]
+      { week: 3, primary: 'carol@example.com', secondary: 'alice@example.com' },
+    ],
   },
 
   escalation: {
@@ -306,19 +308,19 @@ const onCallSchedule = {
     level3: 'Engineering Manager',
     level4: 'VP Engineering',
     timeout: {
-      level1: 5,   // minutes
+      level1: 5, // minutes
       level2: 10,
       level3: 15,
-      level4: 20
-    }
+      level4: 20,
+    },
   },
 
   expectations: {
     responseTime: '15 minutes',
     acknowledgmentTime: '5 minutes',
     availabilityRequirement: '24/7',
-    compensationType: 'Time off + stipend'
-  }
+    compensationType: 'Time off + stipend',
+  },
 };
 ```
 
@@ -326,6 +328,7 @@ const onCallSchedule = {
 
 ```markdown
 **Before Your On-Call Week:**
+
 - [ ] Review recent incidents
 - [ ] Test pager/alerting system
 - [ ] Ensure laptop charged and accessible
@@ -334,6 +337,7 @@ const onCallSchedule = {
 - [ ] Set up remote access if traveling
 
 **During On-Call:**
+
 - [ ] Acknowledge alerts within 5 minutes
 - [ ] Respond to incidents within 15 minutes
 - [ ] Keep laptop nearby 24/7
@@ -342,6 +346,7 @@ const onCallSchedule = {
 - [ ] Update runbooks with learnings
 
 **After On-Call:**
+
 - [ ] Hand off open incidents
 - [ ] Document any new issues discovered
 - [ ] Update runbooks
@@ -353,21 +358,24 @@ const onCallSchedule = {
 
 ### Runbook Template
 
-```markdown
+````markdown
 # Runbook: High API Latency
 
 ## Symptoms
+
 - P99 latency > 2s
 - Increased timeout errors
 - User complaints about slow responses
 
 ## Impact
+
 - SEV-2: Significant user experience degradation
 - Affects all API consumers
 
 ## Investigation Steps
 
 ### 1. Check Application Metrics
+
 ```bash
 # View current latency
 curl https://grafana.example.com/api/dashboards/api-latency
@@ -375,8 +383,10 @@ curl https://grafana.example.com/api/dashboards/api-latency
 # Check error rates
 curl https://grafana.example.com/api/dashboards/error-rates
 ```
+````
 
 ### 2. Check Infrastructure
+
 ```bash
 # CPU usage
 kubectl top nodes
@@ -391,6 +401,7 @@ traceroute api.example.com
 ```
 
 ### 3. Check Dependencies
+
 ```bash
 # Database latency
 psql -h db.example.com -c "SELECT * FROM pg_stat_activity;"
@@ -405,6 +416,7 @@ curl https://status.external-api.com
 ## Resolution Steps
 
 ### Option 1: Scale Application
+
 ```bash
 # Increase replicas
 kubectl scale deployment/api --replicas=20 -n production
@@ -414,6 +426,7 @@ kubectl get pods -n production -w
 ```
 
 ### Option 2: Restart Pods
+
 ```bash
 # Rolling restart
 kubectl rollout restart deployment/api -n production
@@ -423,6 +436,7 @@ kubectl rollout status deployment/api -n production
 ```
 
 ### Option 3: Disable Expensive Features
+
 ```bash
 # Disable recommendation engine
 curl -X POST https://api.example.com/admin/features \
@@ -430,6 +444,7 @@ curl -X POST https://api.example.com/admin/features \
 ```
 
 ### Option 4: Rollback Recent Deployment
+
 ```bash
 # Rollback to previous version
 kubectl rollout undo deployment/api -n production
@@ -439,19 +454,23 @@ kubectl rollout status deployment/api -n production
 ```
 
 ## Escalation
+
 - Primary: Platform Team (#platform-oncall)
 - Secondary: Database Team (#database-oncall)
 - Escalation Manager: VP Engineering
 
 ## Related Runbooks
+
 - [Database Performance Issues](database-performance.md)
 - [Cache Issues](cache-issues.md)
 - [Rollback Procedures](rollback.md)
 
 ## Postmortem Links
+
 - [2024-01-15 API Latency](postmortems/2024-01-15-api-latency.md)
 - [2024-02-03 Database Slowdown](postmortems/2024-02-03-db-slow.md)
-```
+
+````
 
 ## Postmortem Process
 
@@ -527,7 +546,7 @@ Database connection pool size (100 connections) was insufficient for traffic spi
 ## Related Incidents
 - [2023-11-03: Similar connection pool issue](postmortems/2023-11-03.md)
 - [2023-12-15: Traffic spike during Black Friday](postmortems/2023-12-15.md)
-```
+````
 
 ## SLIs, SLOs, and SLAs
 
@@ -539,22 +558,22 @@ const slis = {
   availability: {
     description: 'Percentage of successful requests',
     measurement: '(successful_requests / total_requests) * 100',
-    current: 99.95  // %
+    current: 99.95, // %
   },
 
   // Request latency
   latency: {
     description: 'Time to process requests',
     measurement: 'p99 response time',
-    current: 450  // ms
+    current: 450, // ms
   },
 
   // Error rate
   errorRate: {
     description: 'Percentage of failed requests',
     measurement: '(failed_requests / total_requests) * 100',
-    current: 0.05  // %
-  }
+    current: 0.05, // %
+  },
 };
 ```
 
@@ -563,32 +582,32 @@ const slis = {
 ```javascript
 const slos = {
   availability: {
-    target: 99.9,     // %
+    target: 99.9, // %
     window: '30 days',
-    errorBudget: 0.1  // % (100% - 99.9%)
+    errorBudget: 0.1, // % (100% - 99.9%)
   },
 
   latency: {
-    target: 500,      // ms (p99)
-    window: '30 days'
+    target: 500, // ms (p99)
+    window: '30 days',
   },
 
   errorRate: {
-    target: 0.1,      // %
-    window: '30 days'
-  }
+    target: 0.1, // %
+    window: '30 days',
+  },
 };
 
 // Error budget calculation
 function calculateErrorBudget(slo) {
-  const totalMinutes = 30 * 24 * 60;  // 30 days
+  const totalMinutes = 30 * 24 * 60; // 30 days
   const allowedDowntime = totalMinutes * (slo.errorBudget / 100);
 
   return {
     totalMinutes,
     allowedDowntimeMinutes: allowedDowntime,
     allowedDowntimeHours: allowedDowntime / 60,
-    remainingBudget: calculateRemainingBudget(slo)
+    remainingBudget: calculateRemainingBudget(slo),
   };
 }
 ```
@@ -599,17 +618,20 @@ function calculateErrorBudget(slo) {
 ## SLA Commitments
 
 **Availability:** 99.9% uptime
+
 - Measurement Period: Monthly
 - Credit: 10% for each 0.1% below SLA
 - Maximum Credit: 100% of monthly fees
 
 **Support Response Times:**
+
 - SEV-1: 15 minutes
 - SEV-2: 1 hour
 - SEV-3: 4 hours
 - SEV-4: Next business day
 
 **Data Backup:**
+
 - Frequency: Daily
 - Retention: 30 days
 - Recovery Time Objective (RTO): 4 hours
@@ -626,29 +648,29 @@ const incidentMetrics = {
     sev1: 2,
     sev2: 8,
     sev3: 20,
-    sev4: 15
+    sev4: 15,
   },
 
   // MTTR (Mean Time To Repair)
   mttr: {
-    sev1: 45,   // minutes
+    sev1: 45, // minutes
     sev2: 90,
     sev3: 240,
-    sev4: 1440
+    sev4: 1440,
   },
 
   // MTTD (Mean Time To Detect)
   mttd: {
-    automated: 2,  // minutes
-    manual: 15
+    automated: 2, // minutes
+    manual: 15,
   },
 
   // MTTA (Mean Time To Acknowledge)
-  mtta: 4,  // minutes
+  mtta: 4, // minutes
 
   // Repeat incidents
-  repeatIncidents: 8,  // Same root cause
-  repeatRate: 17.7     // %
+  repeatIncidents: 8, // Same root cause
+  repeatRate: 17.7, // %
 };
 ```
 
@@ -668,4 +690,4 @@ const incidentMetrics = {
 
 ---
 
-*Part of: Incident Management*
+_Part of: Incident Management_

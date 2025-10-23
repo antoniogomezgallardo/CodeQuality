@@ -1,10 +1,13 @@
 # Measurement Fundamentals
 
 ## Purpose
+
 Comprehensive guide to software quality measurement, covering principles, methodologies, metrics selection, data collection, analysis, and actionable insights.
 
 ## Overview
+
 Quality measurement enables:
+
 - Objective assessment
 - Data-driven decisions
 - Process improvement
@@ -16,11 +19,13 @@ Quality measurement enables:
 ### The Measurement Paradigm
 
 **Why Measure?**
+
 - **Can't manage what you can't measure**
 - **Can't improve what you can't measure**
 - **Can't prove what you can't measure**
 
 **What to Measure:**
+
 - Product quality
 - Process efficiency
 - Team productivity
@@ -28,6 +33,7 @@ Quality measurement enables:
 - Business value
 
 **How to Measure:**
+
 - Define clear objectives
 - Select appropriate metrics
 - Collect reliable data
@@ -96,6 +102,7 @@ GOAL: Improve Software Reliability
 ## Metrics
 
 ### Metric 1: [Name]
+
 - **Definition**: What is measured
 - **Purpose**: Why measured
 - **Collection**: How collected
@@ -109,47 +116,57 @@ GOAL: Improve Software Reliability
 **Metrics Should Be:**
 
 #### Specific
+
 - **Clear definition**: Everyone understands the same thing
 - **Unambiguous**: No room for interpretation
 - **Well-defined scope**: What's included/excluded
 
 **Example:**
+
 - ❌ "Code quality should be good"
 - ✅ "Code coverage should be ≥ 80% for all new features"
 
 #### Measurable
+
 - **Quantifiable**: Expressed numerically
 - **Objective**: Based on data, not opinion
 - **Reproducible**: Consistent across measurements
 
 **Example:**
+
 - ❌ "Fast response time"
 - ✅ "95th percentile response time < 200ms"
 
 #### Achievable
+
 - **Realistic**: Can be accomplished with available resources
 - **Challenging**: Encourages improvement
 - **Balanced**: Not too easy, not impossible
 
 **Example:**
+
 - ❌ "Zero defects ever"
 - ✅ "< 5 defects per 1000 lines of code"
 
 #### Relevant
+
 - **Aligned with goals**: Supports business objectives
 - **Meaningful**: Provides actionable insights
 - **Contextual**: Appropriate for the situation
 
 **Example:**
+
 - ❌ "Total lines of code written" (not quality indicator)
 - ✅ "Defect density per module" (quality indicator)
 
 #### Time-bound
+
 - **Specific timeframe**: When to achieve
 - **Regular review**: Periodic assessment
 - **Trend analysis**: Over time tracking
 
 **Example:**
+
 - ❌ "Improve test coverage"
 - ✅ "Increase test coverage from 60% to 80% by Q4 2024"
 
@@ -158,6 +175,7 @@ GOAL: Improve Software Reliability
 #### Leading Indicators (Predictive)
 
 **Characteristics:**
+
 - Predict future outcomes
 - Actionable in present
 - Enable proactive management
@@ -165,19 +183,20 @@ GOAL: Improve Software Reliability
 
 **Examples:**
 
-| Indicator | Predicts | Action |
-|-----------|----------|--------|
-| Code review coverage | Defect rates | Increase reviews |
-| Test automation % | Release quality | Automate more tests |
-| Technical debt ratio | Maintenance cost | Address debt |
-| Build success rate | Integration issues | Fix build process |
-| Static analysis issues | Production defects | Fix before commit |
-| Requirements clarity | Rework | Improve requirements |
-| Team velocity trend | Delivery predictability | Adjust capacity |
+| Indicator              | Predicts                | Action               |
+| ---------------------- | ----------------------- | -------------------- |
+| Code review coverage   | Defect rates            | Increase reviews     |
+| Test automation %      | Release quality         | Automate more tests  |
+| Technical debt ratio   | Maintenance cost        | Address debt         |
+| Build success rate     | Integration issues      | Fix build process    |
+| Static analysis issues | Production defects      | Fix before commit    |
+| Requirements clarity   | Rework                  | Improve requirements |
+| Team velocity trend    | Delivery predictability | Adjust capacity      |
 
 #### Lagging Indicators (Historical)
 
 **Characteristics:**
+
 - Measure past outcomes
 - Results of actions taken
 - Validate effectiveness
@@ -185,14 +204,14 @@ GOAL: Improve Software Reliability
 
 **Examples:**
 
-| Indicator | Measures | Learning |
-|-----------|----------|----------|
-| Defects in production | Release quality | Past quality issues |
-| Customer satisfaction | User experience | Product success |
-| System downtime | Reliability | Availability problems |
-| Time to market | Process efficiency | Delivery speed |
-| Customer churn | Product value | Retention issues |
-| Revenue impact | Business value | Financial success |
+| Indicator             | Measures           | Learning              |
+| --------------------- | ------------------ | --------------------- |
+| Defects in production | Release quality    | Past quality issues   |
+| Customer satisfaction | User experience    | Product success       |
+| System downtime       | Reliability        | Availability problems |
+| Time to market        | Process efficiency | Delivery speed        |
+| Customer churn        | Product value      | Retention issues      |
+| Revenue impact        | Business value     | Financial success     |
 
 #### Balanced Scorecard
 
@@ -207,12 +226,12 @@ Leading Indicators          Lagging Indicators
 
 **Example Balanced Metrics:**
 
-| Goal | Leading | Lagging |
-|------|---------|---------|
-| Quality | Code review coverage | Defect escape rate |
-| Speed | CI/CD pipeline time | Time to market |
-| Reliability | Error budget usage | System uptime |
-| Security | Security scan coverage | Security incidents |
+| Goal        | Leading                | Lagging            |
+| ----------- | ---------------------- | ------------------ |
+| Quality     | Code review coverage   | Defect escape rate |
+| Speed       | CI/CD pipeline time    | Time to market     |
+| Reliability | Error budget usage     | System uptime      |
+| Security    | Security scan coverage | Security incidents |
 
 ## Metric Categories
 
@@ -221,6 +240,7 @@ Leading Indicators          Lagging Indicators
 #### 1. Defect Metrics
 
 **Defect Density:**
+
 ```
 Defect Density = Total Defects / Size
 Size = KLOC (thousands of lines of code) or Function Points
@@ -230,6 +250,7 @@ Example:
 ```
 
 **Defect Removal Efficiency (DRE):**
+
 ```
 DRE = (Defects Found Before Release / Total Defects) × 100%
 
@@ -238,6 +259,7 @@ DRE = (95 / 100) × 100% = 95%
 ```
 
 **Defect Escape Rate:**
+
 ```
 Escape Rate = (Production Defects / Total Defects) × 100%
 
@@ -246,6 +268,7 @@ Escape Rate = (5 / 100) × 100% = 5%
 ```
 
 **Defect Age:**
+
 ```
 Defect Age = Current Date - Defect Creation Date
 
@@ -257,6 +280,7 @@ Aging Categories:
 ```
 
 **Defect Priority Distribution:**
+
 ```
 Critical:   [■■■░░░░░░░] 10%
 High:       [■■■■■░░░░░] 25%
@@ -267,6 +291,7 @@ Low:        [■■■■░░░░░░] 20%
 #### 2. Code Quality Metrics
 
 **Cyclomatic Complexity:**
+
 ```
 Complexity = E - N + 2P
 
@@ -283,6 +308,7 @@ Thresholds:
 ```
 
 **Code Coverage:**
+
 ```
 Line Coverage = (Lines Executed / Total Lines) × 100%
 Branch Coverage = (Branches Executed / Total Branches) × 100%
@@ -293,6 +319,7 @@ Line Coverage = (800 / 1000) × 100% = 80%
 ```
 
 **Code Churn:**
+
 ```
 Code Churn = Lines Added + Lines Modified + Lines Deleted
 
@@ -301,6 +328,7 @@ Churn = 150 + 75 + 25 = 250 lines changed
 ```
 
 **Technical Debt Ratio:**
+
 ```
 TD Ratio = (Remediation Cost / Development Cost) × 100%
 
@@ -309,6 +337,7 @@ TD Ratio = (40 hours / 200 hours) × 100% = 20%
 ```
 
 **Maintainability Index:**
+
 ```
 MI = 171 - 5.2 × ln(HV) - 0.23 × CC - 16.2 × ln(LOC)
 
@@ -326,6 +355,7 @@ Scale:
 #### 3. Performance Metrics
 
 **Response Time Percentiles:**
+
 ```
 P50 (Median):     50% of requests faster than this
 P90:              90% of requests faster than this
@@ -340,6 +370,7 @@ P99:  500ms  (99% of requests)
 ```
 
 **Throughput:**
+
 ```
 Throughput = Requests Processed / Time Period
 
@@ -348,6 +379,7 @@ Throughput = 10,000 requests / 1 minute = 10,000 RPM
 ```
 
 **Resource Utilization:**
+
 ```
 CPU Utilization = (CPU Used / CPU Available) × 100%
 Memory Utilization = (Memory Used / Memory Available) × 100%
@@ -357,6 +389,7 @@ Disk I/O = Read Operations + Write Operations per second
 #### 4. Reliability Metrics
 
 **Mean Time Between Failures (MTBF):**
+
 ```
 MTBF = Total Operating Time / Number of Failures
 
@@ -365,6 +398,7 @@ MTBF = 720 hours / 3 failures = 240 hours
 ```
 
 **Mean Time To Failure (MTTF):**
+
 ```
 MTTF = Total Operating Time / Number of Units
 
@@ -373,6 +407,7 @@ MTTF = 10,000 hours / 50 units = 200 hours
 ```
 
 **Mean Time To Repair (MTTR):**
+
 ```
 MTTR = Total Repair Time / Number of Repairs
 
@@ -381,6 +416,7 @@ MTTR = 12 hours / 4 incidents = 3 hours
 ```
 
 **Availability:**
+
 ```
 Availability = (Uptime / (Uptime + Downtime)) × 100%
 
@@ -395,6 +431,7 @@ Common Targets:
 ```
 
 **Failure Rate:**
+
 ```
 Failure Rate (λ) = Number of Failures / Total Operating Time
 
@@ -407,6 +444,7 @@ Example:
 #### 1. Development Metrics
 
 **Velocity (Agile):**
+
 ```
 Velocity = Story Points Completed / Sprint
 
@@ -418,6 +456,7 @@ Average Velocity: 27.67 points/sprint
 ```
 
 **Lead Time:**
+
 ```
 Lead Time = Delivery Date - Request Date
 
@@ -428,6 +467,7 @@ Lead Time: 14 days
 ```
 
 **Cycle Time:**
+
 ```
 Cycle Time = Completion Date - Start Date
 
@@ -438,6 +478,7 @@ Cycle Time: 7 days
 ```
 
 **Work In Progress (WIP):**
+
 ```
 WIP = Count of Items Started But Not Completed
 
@@ -451,6 +492,7 @@ WIP Limit: 7-8 items
 #### 2. Testing Metrics
 
 **Test Effectiveness:**
+
 ```
 Test Effectiveness = (Defects Found by Testing / Total Defects) × 100%
 
@@ -459,6 +501,7 @@ Test Effectiveness = (80 / 100) × 100% = 80%
 ```
 
 **Test Coverage:**
+
 ```
 Requirements Coverage = (Requirements Tested / Total Requirements) × 100%
 
@@ -467,6 +510,7 @@ Requirements Coverage = (95 / 100) × 100% = 95%
 ```
 
 **Test Execution Rate:**
+
 ```
 Execution Rate = Tests Executed / Tests Planned
 
@@ -475,6 +519,7 @@ Execution Rate = 450 / 500 = 90%
 ```
 
 **Pass Rate:**
+
 ```
 Pass Rate = (Passed Tests / Total Tests Executed) × 100%
 
@@ -483,6 +528,7 @@ Pass Rate = (430 / 450) × 100% = 95.6%
 ```
 
 **Test Automation Rate:**
+
 ```
 Automation Rate = (Automated Tests / Total Tests) × 100%
 
@@ -493,6 +539,7 @@ Automation Rate = (350 / 500) × 100% = 70%
 #### 3. Deployment Metrics (DORA)
 
 **Deployment Frequency:**
+
 ```
 Frequency = Number of Deployments / Time Period
 
@@ -504,6 +551,7 @@ Low:        Less than once per month
 ```
 
 **Lead Time for Changes:**
+
 ```
 Lead Time = Deployment Time - Commit Time
 
@@ -515,6 +563,7 @@ Low:        More than six months
 ```
 
 **Change Failure Rate:**
+
 ```
 CFR = (Failed Changes / Total Changes) × 100%
 
@@ -526,6 +575,7 @@ Low:        46-60%
 ```
 
 **Time to Restore Service:**
+
 ```
 MTTR = Total Restore Time / Number of Incidents
 
@@ -541,6 +591,7 @@ Low:        More than one week
 #### 1. Productivity Metrics
 
 **Throughput:**
+
 ```
 Throughput = Work Items Completed / Time Period
 
@@ -549,6 +600,7 @@ Throughput = 24 stories / 2 weeks = 12 stories/week
 ```
 
 **Flow Efficiency:**
+
 ```
 Flow Efficiency = (Active Time / Total Lead Time) × 100%
 
@@ -562,6 +614,7 @@ Flow Efficiency = (3 / 10) × 100% = 30%
 #### 2. Quality Culture Metrics
 
 **Code Review Participation:**
+
 ```
 Review Participation = (Reviews Conducted / Total PRs) × 100%
 
@@ -570,6 +623,7 @@ Review Participation = (95 / 100) × 100% = 95%
 ```
 
 **Review Turnaround Time:**
+
 ```
 Review Time = Review Completion - Review Request
 
@@ -580,6 +634,7 @@ Turnaround: 5 hours
 ```
 
 **Knowledge Distribution:**
+
 ```
 Bus Factor = Minimum number of team members whose absence
              would cripple the project
@@ -592,6 +647,7 @@ Target: Bus Factor ≥ 3
 #### 1. Satisfaction Metrics
 
 **Net Promoter Score (NPS):**
+
 ```
 NPS = % Promoters - % Detractors
 
@@ -614,6 +670,7 @@ Benchmarks:
 ```
 
 **Customer Satisfaction Score (CSAT):**
+
 ```
 CSAT = (Satisfied Customers / Total Responses) × 100%
 
@@ -626,6 +683,7 @@ CSAT = (85 / 100) × 100% = 85%
 ```
 
 **Customer Effort Score (CES):**
+
 ```
 CES = Average rating of "How easy was it to [action]?"
 
@@ -640,16 +698,19 @@ Target: CES ≥ 5
 #### 2. Usage Metrics
 
 **Daily Active Users (DAU):**
+
 ```
 DAU = Unique users active in a day
 ```
 
 **Monthly Active Users (MAU):**
+
 ```
 MAU = Unique users active in a month
 ```
 
 **Stickiness:**
+
 ```
 Stickiness = (DAU / MAU) × 100%
 
@@ -665,6 +726,7 @@ Benchmarks:
 ```
 
 **Churn Rate:**
+
 ```
 Churn Rate = (Customers Lost / Total Customers at Start) × 100%
 
@@ -679,6 +741,7 @@ Churn = (50 / 1,000) × 100% = 5%
 ### Automated Collection
 
 **Source Code Repositories:**
+
 ```
 Metrics:
 - Commits per developer
@@ -694,6 +757,7 @@ Tools:
 ```
 
 **CI/CD Pipelines:**
+
 ```
 Metrics:
 - Build success rate
@@ -709,6 +773,7 @@ Tools:
 ```
 
 **Issue Tracking Systems:**
+
 ```
 Metrics:
 - Defect density
@@ -724,6 +789,7 @@ Tools:
 ```
 
 **Application Performance Monitoring:**
+
 ```
 Metrics:
 - Response times
@@ -741,6 +807,7 @@ Tools:
 ### Manual Collection
 
 **Surveys:**
+
 ```
 When to Use:
 - Customer satisfaction
@@ -757,6 +824,7 @@ Best Practices:
 ```
 
 **Interviews:**
+
 ```
 When to Use:
 - Deep insights
@@ -772,6 +840,7 @@ Best Practices:
 ```
 
 **Observation:**
+
 ```
 When to Use:
 - User behavior
@@ -791,6 +860,7 @@ Best Practices:
 ### Descriptive Statistics
 
 **Central Tendency:**
+
 ```
 Mean = Sum of values / Count
 Median = Middle value when sorted
@@ -803,6 +873,7 @@ Mode: 3
 ```
 
 **Dispersion:**
+
 ```
 Range = Maximum - Minimum
 Variance = Average of squared differences from mean
@@ -816,6 +887,7 @@ Std Dev: 4.35
 ### Trend Analysis
 
 **Moving Average:**
+
 ```
 Simple Moving Average = Sum of last N values / N
 
@@ -825,6 +897,7 @@ MA:   [-, -, 12.3, 13.7, 15, 16, 18]
 ```
 
 **Trend Direction:**
+
 ```
 Upward:    Values increasing
 Downward:  Values decreasing
@@ -835,6 +908,7 @@ Volatile:  Values fluctuating
 ### Statistical Process Control
 
 **Control Charts:**
+
 ```
 Upper Control Limit (UCL) = Mean + (3 × Std Dev)
 Center Line (CL) = Mean
@@ -848,6 +922,7 @@ LCL: 50 - 15 = 35
 ```
 
 **Out of Control Indicators:**
+
 1. Point beyond control limits
 2. 8 consecutive points on one side of center
 3. 6 consecutive increasing/decreasing points
@@ -857,6 +932,7 @@ LCL: 50 - 15 = 35
 ### Correlation Analysis
 
 **Correlation Coefficient (r):**
+
 ```
 r ranges from -1 to +1
 
@@ -878,6 +954,7 @@ Code Coverage vs Defect Density: r = -0.75 (Strong negative)
 ### Pareto Analysis
 
 **80/20 Rule:**
+
 ```
 80% of effects come from 20% of causes
 
@@ -896,6 +973,7 @@ Action: Focus quality efforts on Modules A & B
 ### Charts and Graphs
 
 **Line Chart:**
+
 ```
 Use for:
 - Trends over time
@@ -907,6 +985,7 @@ Defect trends over sprints
 ```
 
 **Bar Chart:**
+
 ```
 Use for:
 - Comparing categories
@@ -919,6 +998,7 @@ Defects by module
 ```
 
 **Pie Chart:**
+
 ```
 Use for:
 - Proportions
@@ -931,6 +1011,7 @@ Defect type distribution
 ```
 
 **Scatter Plot:**
+
 ```
 Use for:
 - Correlation
@@ -943,6 +1024,7 @@ Test coverage vs quality
 ```
 
 **Control Chart:**
+
 ```
 Use for:
 - Process stability
@@ -955,6 +1037,7 @@ Defect discovery rate
 ```
 
 **Heatmap:**
+
 ```
 Use for:
 - Intensity
@@ -1019,6 +1102,7 @@ Defect density per component
 ### Common Pitfalls
 
 **1. Vanity Metrics**
+
 ```
 Problem: Metrics that look good but don't drive action
 
@@ -1034,6 +1118,7 @@ Better Alternatives:
 ```
 
 **2. Gaming the Metrics**
+
 ```
 Problem: Optimizing for the metric, not the goal
 
@@ -1049,6 +1134,7 @@ Solution:
 ```
 
 **3. Over-measurement**
+
 ```
 Problem: Too many metrics, analysis paralysis
 
@@ -1059,6 +1145,7 @@ Solution:
 ```
 
 **4. Under-contextualization**
+
 ```
 Problem: Metrics without context mislead
 
@@ -1075,6 +1162,7 @@ Better:
 ```
 
 **5. Ignoring Trends**
+
 ```
 Problem: Focus on point-in-time values
 
@@ -1092,6 +1180,7 @@ Trend: Improving ✓
 ### Anti-Patterns
 
 **1. Metrics Theater**
+
 ```
 Anti-pattern: Collecting metrics but not acting
 
@@ -1107,6 +1196,7 @@ Solution:
 ```
 
 **2. Analysis Paralysis**
+
 ```
 Anti-pattern: Too much analysis, too little action
 
@@ -1122,6 +1212,7 @@ Solution:
 ```
 
 **3. Metric Fixation**
+
 ```
 Anti-pattern: Single metric obsession
 
@@ -1137,6 +1228,7 @@ Solution:
 ```
 
 **4. Comparison Trap**
+
 ```
 Anti-pattern: Inappropriate comparisons
 
@@ -1228,6 +1320,7 @@ Solution:
 ### Getting Started
 
 **Phase 1: Foundation (Weeks 1-4)**
+
 ```
 Week 1: Define goals
 - Identify business objectives
@@ -1251,6 +1344,7 @@ Week 4: Baseline
 ```
 
 **Phase 2: Operation (Months 2-3)**
+
 ```
 Month 2: Regular collection
 - Automated collection
@@ -1264,6 +1358,7 @@ Month 3: Analysis & action
 ```
 
 **Phase 3: Optimization (Month 4+)**
+
 ```
 - Refine metrics
 - Expand coverage
@@ -1306,6 +1401,7 @@ Month 3: Analysis & action
 ## Checklist
 
 ### Measurement Program Setup
+
 - [ ] Goals defined using GQM
 - [ ] Metrics selected (SMART criteria)
 - [ ] Data sources identified
@@ -1318,6 +1414,7 @@ Month 3: Analysis & action
 - [ ] Action process defined
 
 ### Ongoing Operations
+
 - [ ] Data collected regularly
 - [ ] Metrics reviewed on schedule
 - [ ] Trends analyzed
@@ -1330,17 +1427,20 @@ Month 3: Analysis & action
 ## References
 
 ### Books
+
 - "How to Measure Anything" - Douglas Hubbard
 - "Lean Analytics" - Alistair Croll & Benjamin Yoskovitz
 - "The Goal" - Eliyahu Goldratt
 - "Practical Software Measurement" - John McGarry et al.
 
 ### Standards
+
 - ISO/IEC 25023 - Software Quality Measurement
 - ISO/IEC 15939 - Software Measurement Process
 - IEEE 982.1 - Software Metrics
 
 ### Online Resources
+
 - [DORA Metrics](https://dora.dev)
 - [GQM+Strategies](http://www.goalquestionmetric.com)
 - [Software Quality Metrics](https://www.sei.cmu.edu)
@@ -1355,4 +1455,4 @@ Month 3: Analysis & action
 
 ---
 
-*Part of: [Foundations of Software Quality](README.md)*
+_Part of: [Foundations of Software Quality](README.md)_

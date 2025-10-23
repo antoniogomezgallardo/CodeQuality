@@ -16,6 +16,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** [Additional expected outcomes]
 
 ### Benefits
+
 - Clear and unambiguous
 - Easy to convert to automated tests
 - Shared language between business and technical teams
@@ -28,6 +29,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Example 1: User Login
 
 #### Scenario 1: Successful Login
+
 **Given** I am a registered user with valid credentials
 **When** I enter my email "user@example.com" and password "SecurePass123!"
 **And** I click the "Login" button
@@ -36,6 +38,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** my session should be active for 24 hours
 
 #### Scenario 2: Failed Login - Invalid Password
+
 **Given** I am a registered user
 **When** I enter my email "user@example.com" and incorrect password "wrongpass"
 **And** I click the "Login" button
@@ -45,6 +48,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** my account should not be locked (first attempt)
 
 #### Scenario 3: Account Lockout After Multiple Failed Attempts
+
 **Given** I am a registered user
 **And** I have failed to login 4 times in the last 5 minutes
 **When** I enter my email "user@example.com" and incorrect password
@@ -54,6 +58,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** I should receive an email notification about the account lockout
 
 #### Scenario 4: Password Reset Flow
+
 **Given** I have forgotten my password
 **When** I click "Forgot Password?" link
 **And** I enter my registered email "user@example.com"
@@ -67,6 +72,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Example 2: Shopping Cart
 
 #### Scenario 1: Add Product to Cart
+
 **Given** I am viewing a product page for "Wireless Headphones"
 **And** the product is in stock (quantity > 0)
 **When** I select quantity "2"
@@ -77,6 +83,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** the notification should auto-dismiss after 3 seconds
 
 #### Scenario 2: Update Cart Quantity
+
 **Given** I have "Wireless Headphones" in my cart with quantity 2
 **When** I navigate to the cart page
 **And** I change the quantity to 5
@@ -85,6 +92,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** the total price should update to reflect 5 items
 
 #### Scenario 3: Remove Item from Cart
+
 **Given** I have multiple items in my cart
 **When** I click the "Remove" button next to "Wireless Headphones"
 **Then** the item should be removed from my cart
@@ -94,6 +102,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** I should see an "Undo" option for 10 seconds
 
 #### Scenario 4: Cart Persistence Across Sessions
+
 **Given** I have items in my cart as a logged-in user
 **When** I log out and log back in
 **Then** my cart should contain the same items
@@ -101,6 +110,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** the prices should be updated to current prices
 
 #### Scenario 5: Out of Stock Handling
+
 **Given** I have "Limited Edition Sneakers" in my cart
 **And** the product goes out of stock before checkout
 **When** I proceed to checkout
@@ -113,6 +123,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Example 3: Search Functionality
 
 #### Scenario 1: Successful Search with Results
+
 **Given** I am on the homepage
 **When** I enter "laptop" in the search box
 **And** I press Enter or click the search button
@@ -122,6 +133,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** I should see the total number of results (e.g., "Showing 48 results for 'laptop'")
 
 #### Scenario 2: Search with No Results
+
 **Given** I am on the homepage
 **When** I enter "xyznonexistentproduct" in the search box
 **And** I press Enter
@@ -130,6 +142,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** I should have the option to clear the search
 
 #### Scenario 3: Search with Filters
+
 **Given** I have searched for "laptop"
 **And** I see 48 results
 **When** I apply filters: Brand "Dell", Price "$500-$1000", Rating "4+ stars"
@@ -138,6 +151,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** applied filters should be displayed with option to remove each
 
 #### Scenario 4: Search Auto-Complete
+
 **Given** I am on the homepage
 **When** I start typing "lap" in the search box
 **Then** I should see auto-complete suggestions within 300ms
@@ -152,6 +166,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Performance Criteria
 
 #### Example: Page Load Performance
+
 **Given** I am accessing the application on a desktop with broadband internet
 **When** I navigate to any page
 **Then** the page should load completely within 2 seconds
@@ -160,6 +175,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** the Cumulative Layout Shift (CLS) should be less than 0.1
 
 #### Example: API Response Time
+
 **Given** the system is under normal load (< 1000 concurrent users)
 **When** I make any API request
 **Then** the response time should be less than 500ms for 95% of requests (p95)
@@ -167,6 +183,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** no request should take more than 5 seconds (timeout)
 
 #### Example: Database Query Performance
+
 **Given** the database contains production-level data (> 1 million records)
 **When** any database query is executed
 **Then** queries should complete within 100ms for 95% of requests
@@ -178,6 +195,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Security Criteria
 
 #### Example: Authentication Security
+
 **Given** I am implementing user authentication
 **When** a user logs in
 **Then** passwords must be hashed using bcrypt with salt rounds >= 10
@@ -188,6 +206,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** Multi-factor authentication must be supported for high-value accounts
 
 #### Example: Data Protection
+
 **Given** the application handles personal data
 **When** data is stored or transmitted
 **Then** all data in transit must use TLS 1.2 or higher
@@ -197,6 +216,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** data access must be logged for audit purposes
 
 #### Example: Input Validation
+
 **Given** the application accepts user input
 **When** any form is submitted or API receives data
 **Then** all input must be validated on the server side
@@ -210,6 +230,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Accessibility Criteria (WCAG 2.1 Level AA)
 
 #### Example: Keyboard Navigation
+
 **Given** I am using the application without a mouse
 **When** I navigate using only keyboard (Tab, Enter, Arrow keys)
 **Then** all interactive elements must be keyboard accessible
@@ -219,6 +240,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** I should be able to complete all tasks using keyboard only
 
 #### Example: Screen Reader Support
+
 **Given** I am using a screen reader (NVDA, JAWS, VoiceOver)
 **When** I navigate through the page
 **Then** all images must have descriptive alt text
@@ -228,6 +250,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** dynamic content changes must be announced
 
 #### Example: Color and Contrast
+
 **Given** I am viewing the application
 **When** I see any text or UI element
 **Then** text must have contrast ratio of at least 4.5:1 (normal text)
@@ -236,6 +259,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** UI components must have contrast ratio of at least 3:1
 
 #### Example: Responsive Design
+
 **Given** I am using different devices and orientations
 **When** I view the application
 **Then** content must be readable without horizontal scrolling
@@ -248,16 +272,18 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Usability Criteria
 
 #### Example: Form Usability
+
 **Given** I am filling out a registration form
 **When** I interact with form fields
 **Then** form fields must have clear, descriptive labels
-**And** required fields must be clearly marked with an asterisk (*)
+**And** required fields must be clearly marked with an asterisk (\*)
 **And** field format requirements must be shown (e.g., "MM/DD/YYYY")
 **And** validation errors must be shown inline, next to the field
 **And** error messages must be specific and helpful
 **And** I should be able to submit the form by pressing Enter
 
 #### Example: Error Handling
+
 **Given** an error occurs in the application
 **When** the error is displayed to the user
 **Then** error messages must be clear and non-technical
@@ -273,6 +299,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ### Example: Payment Processing
 
 #### Scenario 1: Network Timeout During Payment
+
 **Given** I am completing a purchase
 **When** I submit payment and the network times out
 **Then** I should see a message "Payment processing... Please wait"
@@ -281,6 +308,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** I should have the option to retry or use a different payment method
 
 #### Scenario 2: Insufficient Funds
+
 **Given** I am completing a purchase
 **When** my payment is declined due to insufficient funds
 **Then** I should see a message "Payment declined: Insufficient funds"
@@ -289,6 +317,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** the order should not be created
 
 #### Scenario 3: Duplicate Payment Prevention
+
 **Given** I have just submitted a payment
 **When** I click the "Pay Now" button multiple times rapidly
 **Then** only one payment should be processed
@@ -297,6 +326,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** subsequent clicks should be ignored
 
 #### Scenario 4: Session Expiry During Checkout
+
 **Given** I am in the middle of checkout
 **When** my session expires (after 30 minutes of inactivity)
 **Then** I should be redirected to the login page
@@ -308,17 +338,20 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ## Cross-Browser and Device Criteria
 
 ### Example: Browser Compatibility
+
 **Given** I am using the application
 **When** I access it from different browsers
 **Then** the application must work correctly on:
+
 - Chrome (latest 2 versions)
 - Firefox (latest 2 versions)
 - Safari (latest 2 versions)
 - Edge (latest 2 versions)
-**And** feature detection must be used instead of browser detection
-**And** graceful degradation must be provided for unsupported features
+  **And** feature detection must be used instead of browser detection
+  **And** graceful degradation must be provided for unsupported features
 
 ### Example: Mobile Responsiveness
+
 **Given** I am using the application on mobile devices
 **When** I view any page
 **Then** the layout must adapt to screen sizes from 320px to 768px
@@ -328,6 +361,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** mobile-specific features (camera, GPS) should be supported where applicable
 
 ### Example: Progressive Web App (PWA)
+
 **Given** the application is a PWA
 **When** I install it on my device
 **Then** the app must work offline for previously visited pages
@@ -341,6 +375,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ## Data Validation Criteria
 
 ### Example: Email Validation
+
 **Given** I am entering an email address in a form
 **When** I submit the form
 **Then** the email must match the format: local@domain.tld
@@ -350,12 +385,14 @@ Acceptance criteria define the conditions that a software product must satisfy t
 **And** the email must be case-insensitive
 
 **Valid Examples:**
+
 - user@example.com
 - user.name@example.com
 - user+tag@example.co.uk
 - user123@sub.example.com
 
 **Invalid Examples:**
+
 - userexample.com (missing @)
 - @example.com (missing local part)
 - user@.com (invalid domain)
@@ -364,22 +401,25 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ---
 
 ### Example: Password Validation
+
 **Given** I am creating a new password
 **When** I enter a password in the registration form
 **Then** the password must be at least 8 characters long
 **And** the password must contain at least one uppercase letter
 **And** the password must contain at least one lowercase letter
 **And** the password must contain at least one number
-**And** the password must contain at least one special character (!@#$%^&*)
+**And** the password must contain at least one special character (!@#$%^&\*)
 **And** the password must not contain the user's email or username
 **And** password strength indicator should show in real-time
 
 **Valid Examples:**
+
 - SecureP@ss123
 - MyP@ssw0rd!
 - C0mplex!Password
 
 **Invalid Examples:**
+
 - password (no uppercase, number, or special char)
 - PASSWORD123 (no lowercase or special char)
 - Pass1! (too short, less than 8 chars)
@@ -387,21 +427,24 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ---
 
 ### Example: Phone Number Validation
+
 **Given** I am entering a phone number
 **When** I submit the form
 **Then** the phone number must be in a valid format
 **And** country code must be supported (US, UK, CA, etc.)
 **And** the system should accept various formats:
-  - (555) 123-4567
-  - 555-123-4567
-  - 555.123.4567
-  - +1-555-123-4567
-**And** the system should store in normalized format: +15551234567
-**And** the system should provide format hints or auto-formatting
+
+- (555) 123-4567
+- 555-123-4567
+- 555.123.4567
+- +1-555-123-4567
+  **And** the system should store in normalized format: +15551234567
+  **And** the system should provide format hints or auto-formatting
 
 ---
 
 ### Example: Date Validation
+
 **Given** I am entering a date (birth date, start date, etc.)
 **When** I submit the form
 **Then** the date must be in format MM/DD/YYYY or YYYY-MM-DD
@@ -414,11 +457,12 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ---
 
 ### Example: File Upload Validation
+
 **Given** I am uploading a file
 **When** I select a file and submit
 **Then** the file must be of allowed type (jpg, png, pdf, etc.)
 **And** the file size must not exceed 5 MB
-**And** the file name must not contain special characters (/, \, :, *, etc.)
+**And** the file name must not contain special characters (/, \, :, \*, etc.)
 **And** the system must scan for malware/viruses
 **And** the uploaded file must be stored securely
 **And** I should see upload progress indicator
@@ -429,6 +473,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ## Internationalization (i18n) Criteria
 
 ### Example: Multi-Language Support
+
 **Given** the application supports multiple languages
 **When** I select a language preference
 **Then** all UI text must be translated to the selected language
@@ -443,6 +488,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ## Compliance Criteria
 
 ### Example: GDPR Compliance
+
 **Given** the application processes EU user data
 **When** a user interacts with the system
 **Then** cookie consent must be obtained before setting non-essential cookies
@@ -457,6 +503,7 @@ Acceptance criteria define the conditions that a software product must satisfy t
 ## Testing Criteria
 
 ### Example: Test Coverage
+
 **Given** new functionality is developed
 **When** the code is ready for review
 **Then** unit test coverage must be at least 80%
@@ -487,24 +534,28 @@ When writing acceptance criteria, ensure:
 ### Pattern 1: CRUD Operations
 
 **Create:**
+
 - Valid data creates new record
 - Invalid data shows validation errors
 - Duplicate detection works
 - Success confirmation is shown
 
 **Read:**
+
 - Record displays correctly
 - Empty state is handled
 - Pagination works (if applicable)
 - Search/filter works (if applicable)
 
 **Update:**
+
 - Changes are saved correctly
 - Validation prevents invalid updates
 - Concurrent updates are handled
 - Update history is maintained (if required)
 
 **Delete:**
+
 - Confirmation is required
 - Soft delete vs hard delete is clear
 - Related data is handled appropriately
@@ -541,6 +592,7 @@ When writing acceptance criteria, ensure:
 ## Tips for Writing Effective Acceptance Criteria
 
 ### Do:
+
 - ✅ Write from the user's perspective
 - ✅ Use clear, simple language
 - ✅ Focus on what, not how
@@ -550,6 +602,7 @@ When writing acceptance criteria, ensure:
 - ✅ Review and refine before development
 
 ### Don't:
+
 - ❌ Write technical implementation details
 - ❌ Make assumptions without clarification
 - ❌ Use vague terms like "user-friendly" or "fast"
@@ -602,7 +655,7 @@ When writing acceptance criteria, ensure:
 
 ---
 
-*This template follows BDD (Behavior-Driven Development) principles and is compatible with testing frameworks like Cucumber, SpecFlow, and Behave.*
+_This template follows BDD (Behavior-Driven Development) principles and is compatible with testing frameworks like Cucumber, SpecFlow, and Behave._
 
 **Document Version:** 1.0
 **Last Updated:** YYYY-MM-DD

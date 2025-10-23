@@ -35,7 +35,9 @@ test.describe('User Authentication', () => {
 
     // Verify successful registration
     await expect(page.locator('[data-testid=success-message]')).toBeVisible();
-    await expect(page.locator('[data-testid=success-message]')).toContainText('Registration successful');
+    await expect(page.locator('[data-testid=success-message]')).toContainText(
+      'Registration successful'
+    );
 
     // Should redirect to dashboard
     await expect(page).toHaveURL(/.*dashboard/);
@@ -47,19 +49,25 @@ test.describe('User Authentication', () => {
 
     // Test empty form submission
     await page.click('[data-testid=register-button]');
-    await expect(page.locator('[data-testid=error-message]')).toContainText('Please fill in all required fields');
+    await expect(page.locator('[data-testid=error-message]')).toContainText(
+      'Please fill in all required fields'
+    );
 
     // Test invalid email format
     await page.fill('[data-testid=email]', 'invalid-email');
     await page.click('[data-testid=register-button]');
-    await expect(page.locator('[data-testid=email-error]')).toContainText('Please enter a valid email address');
+    await expect(page.locator('[data-testid=email-error]')).toContainText(
+      'Please enter a valid email address'
+    );
 
     // Test password mismatch
     await page.fill('[data-testid=email]', 'valid@example.com');
     await page.fill('[data-testid=password]', 'password123');
     await page.fill('[data-testid=confirm-password]', 'different-password');
     await page.click('[data-testid=register-button]');
-    await expect(page.locator('[data-testid=password-error]')).toContainText('Passwords do not match');
+    await expect(page.locator('[data-testid=password-error]')).toContainText(
+      'Passwords do not match'
+    );
   });
 
   test('should login with valid credentials', async ({ page }) => {
@@ -93,7 +101,7 @@ test.describe('API Integration with Mocking', () => {
         name: 'John Doe',
         email: 'john@example.com',
         role: 'admin',
-        avatar: 'https://example.com/avatar.jpg'
+        avatar: 'https://example.com/avatar.jpg',
       };
       await route.fulfill({ json });
     });
@@ -104,9 +112,9 @@ test.describe('API Integration with Mocking', () => {
         products: [
           { id: 1, name: 'Laptop', price: 999.99, category: 'Electronics' },
           { id: 2, name: 'Mouse', price: 29.99, category: 'Electronics' },
-          { id: 3, name: 'Keyboard', price: 79.99, category: 'Electronics' }
+          { id: 3, name: 'Keyboard', price: 79.99, category: 'Electronics' },
         ],
-        total: 3
+        total: 3,
       };
       await route.fulfill({ json });
     });
@@ -126,7 +134,7 @@ test.describe('API Integration with Mocking', () => {
       await route.fulfill({
         status: 500,
         contentType: 'application/json',
-        body: JSON.stringify({ error: 'Internal server error' })
+        body: JSON.stringify({ error: 'Internal server error' }),
       });
     });
 
@@ -134,7 +142,9 @@ test.describe('API Integration with Mocking', () => {
 
     // Verify error handling
     await expect(page.locator('[data-testid=error-message]')).toBeVisible();
-    await expect(page.locator('[data-testid=error-message]')).toContainText('Failed to load products');
+    await expect(page.locator('[data-testid=error-message]')).toContainText(
+      'Failed to load products'
+    );
     await expect(page.locator('[data-testid=retry-button]')).toBeVisible();
   });
 
@@ -147,7 +157,7 @@ test.describe('API Integration with Mocking', () => {
         apiRequests.push({
           url: request.url(),
           method: request.method(),
-          headers: request.headers()
+          headers: request.headers(),
         });
       }
     });
@@ -162,9 +172,7 @@ test.describe('API Integration with Mocking', () => {
 
       const json = {
         query,
-        results: [
-          { id: 1, title: `Result for "${query}"`, description: 'Mock search result' }
-        ]
+        results: [{ id: 1, title: `Result for "${query}"`, description: 'Mock search result' }],
       };
       await route.fulfill({ json });
     });
@@ -228,11 +236,7 @@ browsers.forEach(browserName => {
 
 test.describe('Mobile and Responsive Testing', () => {
   // Test on different device viewports
-  const devices_list = [
-    devices['iPhone 12'],
-    devices['iPad'],
-    devices['Desktop Chrome']
-  ];
+  const devices_list = [devices['iPhone 12'], devices['iPad'], devices['Desktop Chrome']];
 
   devices_list.forEach(device => {
     test.describe(`Testing on ${device.name || 'Custom Device'}`, () => {
@@ -258,7 +262,9 @@ test.describe('Mobile and Responsive Testing', () => {
         }
       });
 
-      test(`should handle forms correctly on ${device.name || 'Custom Device'}`, async ({ page }) => {
+      test(`should handle forms correctly on ${device.name || 'Custom Device'}`, async ({
+        page,
+      }) => {
         await page.goto('/contact');
 
         // Test form interactions
@@ -316,12 +322,18 @@ test.describe('Visual Regression Testing', () => {
     await page.goto('/components');
 
     // Screenshot all button states
-    await expect(page.locator('[data-testid=button-primary]')).toHaveScreenshot('button-primary.png');
-    await expect(page.locator('[data-testid=button-secondary]')).toHaveScreenshot('button-secondary.png');
+    await expect(page.locator('[data-testid=button-primary]')).toHaveScreenshot(
+      'button-primary.png'
+    );
+    await expect(page.locator('[data-testid=button-secondary]')).toHaveScreenshot(
+      'button-secondary.png'
+    );
 
     // Test hover state
     await page.hover('[data-testid=button-primary]');
-    await expect(page.locator('[data-testid=button-primary]')).toHaveScreenshot('button-primary-hover.png');
+    await expect(page.locator('[data-testid=button-primary]')).toHaveScreenshot(
+      'button-primary-hover.png'
+    );
   });
 });
 
@@ -344,12 +356,12 @@ test.describe('Performance Testing', () => {
 
     // Check Core Web Vitals using browser API
     const vitals = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        new PerformanceObserver((list) => {
+      return new Promise(resolve => {
+        new PerformanceObserver(list => {
           const entries = list.getEntries();
           const vitals = {};
 
-          entries.forEach((entry) => {
+          entries.forEach(entry => {
             if (entry.entryType === 'navigation') {
               vitals.loadTime = entry.loadEventEnd - entry.loadEventStart;
             }
@@ -368,34 +380,24 @@ test.describe('Performance Testing', () => {
     const contexts = await Promise.all([
       browser.newContext(),
       browser.newContext(),
-      browser.newContext()
+      browser.newContext(),
     ]);
 
-    const pages = await Promise.all(
-      contexts.map(context => context.newPage())
-    );
+    const pages = await Promise.all(contexts.map(context => context.newPage()));
 
     // All users navigate simultaneously
-    await Promise.all(
-      pages.map(page => page.goto('/products'))
-    );
+    await Promise.all(pages.map(page => page.goto('/products')));
 
     // All users perform search simultaneously
     await Promise.all(
-      pages.map((page, index) =>
-        page.fill('[data-testid=search-input]', `search${index}`)
-      )
+      pages.map((page, index) => page.fill('[data-testid=search-input]', `search${index}`))
     );
 
-    await Promise.all(
-      pages.map(page => page.click('[data-testid=search-button]'))
-    );
+    await Promise.all(pages.map(page => page.click('[data-testid=search-button]')));
 
     // Verify all searches completed
     await Promise.all(
-      pages.map(page =>
-        expect(page.locator('[data-testid=search-results]')).toBeVisible()
-      )
+      pages.map(page => expect(page.locator('[data-testid=search-results]')).toBeVisible())
     );
 
     // Cleanup
@@ -476,7 +478,7 @@ test.describe('File Operations', () => {
     await fileInput.setInputFiles({
       name: fileName,
       mimeType: 'text/plain',
-      buffer: Buffer.from(fileContent)
+      buffer: Buffer.from(fileContent),
     });
 
     await page.click('[data-testid=upload-button]');
@@ -557,7 +559,7 @@ test.describe('Browser Features', () => {
 const testUsers = [
   { name: 'John Doe', email: 'john@example.com', role: 'admin' },
   { name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
-  { name: 'Bob Johnson', email: 'bob@example.com', role: 'moderator' }
+  { name: 'Bob Johnson', email: 'bob@example.com', role: 'moderator' },
 ];
 
 testUsers.forEach(user => {
@@ -647,7 +649,7 @@ const test_with_auth = base.extend({
     await page.waitForURL('**/dashboard');
 
     await use(page);
-  }
+  },
 });
 
 // Example using the authenticated fixture
@@ -662,8 +664,8 @@ test_with_auth('should access protected route', async ({ authenticatedPage }) =>
 
 // Helper function for waiting for API calls
 async function waitForAPICall(page, urlPattern) {
-  return page.waitForResponse(response =>
-    response.url().includes(urlPattern) && response.status() === 200
+  return page.waitForResponse(
+    response => response.url().includes(urlPattern) && response.status() === 200
   );
 }
 
@@ -687,9 +689,9 @@ test('should use helper functions', async ({ page }) => {
 
   // Use form helper
   await fillForm(page, {
-    'name': 'John Doe',
-    'email': 'john@example.com',
-    'message': 'Test message'
+    name: 'John Doe',
+    email: 'john@example.com',
+    message: 'Test message',
   });
 
   // Wait for API call

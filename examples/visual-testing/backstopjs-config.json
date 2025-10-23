@@ -32,11 +32,7 @@
       "readyEvent": "",
       "readySelector": "",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='timestamp']",
-        ".advertisement",
-        ".cookie-notice"
-      ],
+      "hideSelectors": ["[data-testid='timestamp']", ".advertisement", ".cookie-notice"],
       "removeSelectors": [],
       "hoverSelector": "",
       "clickSelector": "",
@@ -53,10 +49,7 @@
       "delay": 500,
       "clickSelector": "[data-testid='menu-toggle']",
       "postInteractionWait": 500,
-      "hideSelectors": [
-        "[data-testid='timestamp']",
-        ".advertisement"
-      ],
+      "hideSelectors": ["[data-testid='timestamp']", ".advertisement"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -66,9 +59,7 @@
       "delay": 500,
       "clickSelector": "[data-testid='theme-toggle']",
       "postInteractionWait": 1000,
-      "hideSelectors": [
-        "[data-testid='timestamp']"
-      ],
+      "hideSelectors": ["[data-testid='timestamp']"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -76,10 +67,7 @@
       "label": "Login Page - Empty Form",
       "url": "http://localhost:3000/login",
       "delay": 500,
-      "hideSelectors": [
-        ".captcha",
-        "[data-testid='timestamp']"
-      ],
+      "hideSelectors": [".captcha", "[data-testid='timestamp']"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -96,10 +84,7 @@
       "label": "Product Listing - Grid Layout",
       "url": "http://localhost:3000/products",
       "delay": 2000,
-      "hideSelectors": [
-        ".promotional-banner",
-        "[data-testid='live-price']"
-      ],
+      "hideSelectors": [".promotional-banner", "[data-testid='live-price']"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1,
       "requireSameDimensions": true
@@ -108,10 +93,7 @@
       "label": "Product Detail - Component Focus",
       "url": "http://localhost:3000/products/123",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='view-count']",
-        ".related-products"
-      ],
+      "hideSelectors": ["[data-testid='view-count']", ".related-products"],
       "selectors": [
         "[data-testid='product-details']",
         "[data-testid='product-images']",
@@ -131,10 +113,7 @@
       "label": "Shopping Cart - With Items",
       "url": "http://localhost:3000/cart",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='estimated-delivery']",
-        "[data-testid='live-price']"
-      ],
+      "hideSelectors": ["[data-testid='estimated-delivery']", "[data-testid='live-price']"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -142,9 +121,7 @@
       "label": "Checkout - Step 1 Shipping",
       "url": "http://localhost:3000/checkout/shipping",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='order-summary-price']"
-      ],
+      "hideSelectors": ["[data-testid='order-summary-price']"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -152,10 +129,7 @@
       "label": "Checkout - Step 2 Payment",
       "url": "http://localhost:3000/checkout/payment",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='order-summary-price']",
-        ".payment-provider-logo"
-      ],
+      "hideSelectors": ["[data-testid='order-summary-price']", ".payment-provider-logo"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -163,10 +137,7 @@
       "label": "User Profile - Overview Tab",
       "url": "http://localhost:3000/profile",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='last-login']",
-        "[data-testid='member-since']"
-      ],
+      "hideSelectors": ["[data-testid='last-login']", "[data-testid='member-since']"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -196,10 +167,7 @@
       "label": "Search Results - With Results",
       "url": "http://localhost:3000/search?q=laptop",
       "delay": 1500,
-      "hideSelectors": [
-        "[data-testid='search-timestamp']",
-        ".sponsored-result"
-      ],
+      "hideSelectors": ["[data-testid='search-timestamp']", ".sponsored-result"],
       "selectors": ["document"],
       "misMatchThreshold": 0.1
     },
@@ -266,11 +234,7 @@
       "label": "Blog Post - Long Content Scroll",
       "url": "http://localhost:3000/blog/sample-post",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='publish-date']",
-        ".comments-section",
-        ".related-posts"
-      ],
+      "hideSelectors": ["[data-testid='publish-date']", ".comments-section", ".related-posts"],
       "scrollToSelector": "[data-testid='article-conclusion']",
       "selectors": ["document"],
       "misMatchThreshold": 0.1
@@ -294,9 +258,7 @@
       "label": "Responsive Table - Desktop",
       "url": "http://localhost:3000/data-table",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='last-updated']"
-      ],
+      "hideSelectors": ["[data-testid='last-updated']"],
       "selectors": ["[data-testid='data-table']"],
       "misMatchThreshold": 0.1,
       "onlyViewports": ["desktop", "wide"]
@@ -305,9 +267,7 @@
       "label": "Responsive Table - Mobile Cards",
       "url": "http://localhost:3000/data-table",
       "delay": 1000,
-      "hideSelectors": [
-        "[data-testid='last-updated']"
-      ],
+      "hideSelectors": ["[data-testid='last-updated']"],
       "selectors": ["[data-testid='data-table']"],
       "misMatchThreshold": 0.1,
       "onlyViewports": ["phone"]
@@ -337,10 +297,7 @@
       "label": "Multi-step Form - Progress Indicator",
       "url": "http://localhost:3000/wizard",
       "delay": 500,
-      "selectors": [
-        "[data-testid='progress-bar']",
-        "[data-testid='wizard-content']"
-      ],
+      "selectors": ["[data-testid='progress-bar']", "[data-testid='wizard-content']"],
       "selectorExpansion": true,
       "misMatchThreshold": 0.1
     }

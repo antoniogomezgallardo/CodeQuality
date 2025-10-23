@@ -1,10 +1,13 @@
 # Unit Testing
 
 ## Purpose
+
 Comprehensive guide to unit testing—testing individual components in isolation to ensure correctness, maintainability, and reliability at the smallest testable level.
 
 ## Overview
+
 Unit testing is:
+
 - Testing individual functions, methods, or classes
 - The foundation of the testing pyramid
 - Fast, isolated, and repeatable
@@ -14,6 +17,7 @@ Unit testing is:
 ## What is Unit Testing?
 
 ### Definition
+
 A unit test verifies that a single unit of code (function, method, class) works correctly in isolation from the rest of the system.
 
 ### Characteristics
@@ -70,6 +74,7 @@ Most tests should be unit tests
 ### JavaScript/TypeScript
 
 **Jest**
+
 ```javascript
 // __tests__/calculator.test.js
 describe('Calculator', () => {
@@ -96,6 +101,7 @@ describe('Calculator', () => {
 ```
 
 **Vitest**
+
 ```typescript
 // calculator.test.ts
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -125,6 +131,7 @@ describe('Calculator', () => {
 ### Python
 
 **pytest**
+
 ```python
 # test_calculator.py
 import pytest
@@ -149,6 +156,7 @@ class TestCalculator:
 ```
 
 **unittest**
+
 ```python
 # test_calculator.py
 import unittest
@@ -176,6 +184,7 @@ if __name__ == '__main__':
 ### Java
 
 **JUnit 5**
+
 ```java
 // CalculatorTest.java
 import org.junit.jupiter.api.*;
@@ -218,6 +227,7 @@ class CalculatorTest {
 ### C#
 
 **xUnit**
+
 ```csharp
 // CalculatorTests.cs
 using Xunit;
@@ -269,7 +279,7 @@ describe('UserService', () => {
     const userData = {
       name: 'John Doe',
       email: 'john@example.com',
-      age: 30
+      age: 30,
     };
 
     // ACT - Execute the code under test
@@ -308,36 +318,39 @@ describe('Shopping Cart', () => {
 
 ```javascript
 // ❌ Bad: Vague names
-it('should work')
-it('test1')
-it('should return true')
+it('should work');
+it('test1');
+it('should return true');
 
 // ✅ Good: Descriptive names
-it('should return true when user has admin role')
-it('should throw error when email is invalid')
-it('should calculate total including tax and shipping')
+it('should return true when user has admin role');
+it('should throw error when email is invalid');
+it('should calculate total including tax and shipping');
 ```
 
 ### Naming Patterns
 
-**Pattern 1: should_[expected]_when_[condition]**
+**Pattern 1: should*[expected]\_when*[condition]**
+
 ```javascript
-it('should_return_null_when_user_not_found')
-it('should_throw_error_when_password_too_short')
-it('should_send_email_when_order_confirmed')
+it('should_return_null_when_user_not_found');
+it('should_throw_error_when_password_too_short');
+it('should_send_email_when_order_confirmed');
 ```
 
 **Pattern 2: [method]_[scenario]_[expected]**
+
 ```javascript
-it('calculateTotal_withDiscount_returnsReducedAmount')
-it('validateEmail_withInvalidFormat_throwsError')
-it('findUser_withValidId_returnsUser')
+it('calculateTotal_withDiscount_returnsReducedAmount');
+it('validateEmail_withInvalidFormat_throwsError');
+it('findUser_withValidId_returnsUser');
 ```
 
-**Pattern 3: Given_[precondition]_When_[action]_Then_[outcome]**
+**Pattern 3: Given*[precondition]\_When*[action]_Then_[outcome]**
+
 ```javascript
-it('Given_emptyCart_When_addItem_Then_cartHasOneItem')
-it('Given_existingUser_When_updateEmail_Then_emailChanged')
+it('Given_emptyCart_When_addItem_Then_cartHasOneItem');
+it('Given_existingUser_When_updateEmail_Then_emailChanged');
 ```
 
 ## Mocking and Stubbing
@@ -371,6 +384,7 @@ Fake
 ### Mocking Examples
 
 **Jest Mocks**
+
 ```javascript
 // userService.test.js
 import { UserService } from './userService';
@@ -413,14 +427,14 @@ describe('UserService', () => {
     mockRepository.save.mockRejectedValue(new Error('DB Error'));
 
     // Act & Assert
-    await expect(userService.createUser({}))
-      .rejects.toThrow('DB Error');
+    await expect(userService.createUser({})).rejects.toThrow('DB Error');
     expect(mockEmailService.sendWelcome).not.toHaveBeenCalled();
   });
 });
 ```
 
 **Manual Mocks**
+
 ```javascript
 // Manual mock implementation
 class MockUserRepository {
@@ -748,7 +762,7 @@ it('should create user with correct properties', () => {
     name: 'John',
     email: 'john@example.com',
     age: 30,
-    role: 'user'
+    role: 'user',
   });
 });
 ```
@@ -823,20 +837,20 @@ const fixtures = {
   validUser: {
     name: 'John Doe',
     email: 'john@example.com',
-    age: 30
+    age: 30,
   },
 
   invalidUser: {
     name: '',
     email: 'invalid-email',
-    age: -5
+    age: -5,
   },
 
   adminUser: {
     name: 'Admin',
     email: 'admin@example.com',
-    role: 'admin'
-  }
+    role: 'admin',
+  },
 };
 
 // Usage
@@ -856,7 +870,7 @@ class UserBuilder {
       name: 'Default Name',
       email: 'default@example.com',
       age: 25,
-      role: 'user'
+      role: 'user',
     };
   }
 
@@ -883,10 +897,7 @@ class UserBuilder {
 // Usage
 describe('UserService', () => {
   it('should create admin user', () => {
-    const adminData = new UserBuilder()
-      .withName('Admin User')
-      .asAdmin()
-      .build();
+    const adminData = new UserBuilder().withName('Admin User').asAdmin().build();
 
     const user = userService.create(adminData);
     expect(user.role).toBe('admin');
@@ -903,7 +914,7 @@ describe('Calculator.add', () => {
     [1, 1, 2],
     [2, 3, 5],
     [-1, 1, 0],
-    [0, 0, 0]
+    [0, 0, 0],
   ])('add(%i, %i) should return %i', (a, b, expected) => {
     expect(calculator.add(a, b)).toBe(expected);
   });
@@ -913,7 +924,7 @@ describe('Calculator.add', () => {
 test.each([
   { a: 1, b: 1, expected: 2 },
   { a: 2, b: 3, expected: 5 },
-  { a: -1, b: 1, expected: 0 }
+  { a: -1, b: 1, expected: 0 },
 ])('add($a, $b) should return $expected', ({ a, b, expected }) => {
   expect(calculator.add(a, b)).toBe(expected);
 });
@@ -1050,6 +1061,7 @@ describe('Performance', () => {
 ### Unit Test Quality Checklist
 
 **Test Design:**
+
 - [ ] Tests are independent
 - [ ] Tests are fast (< 100ms each)
 - [ ] Each test has single responsibility
@@ -1057,6 +1069,7 @@ describe('Performance', () => {
 - [ ] AAA pattern followed
 
 **Coverage:**
+
 - [ ] Happy path tested
 - [ ] Error cases tested
 - [ ] Edge cases tested
@@ -1064,6 +1077,7 @@ describe('Performance', () => {
 - [ ] Coverage targets met
 
 **Code Quality:**
+
 - [ ] No test logic
 - [ ] No duplicate code
 - [ ] Clear assertions
@@ -1071,6 +1085,7 @@ describe('Performance', () => {
 - [ ] No implementation details tested
 
 **Maintainability:**
+
 - [ ] Easy to understand
 - [ ] Easy to modify
 - [ ] Tests fail for right reasons
@@ -1080,18 +1095,21 @@ describe('Performance', () => {
 ## References
 
 ### Books
+
 - "Test Driven Development: By Example" - Kent Beck
 - "The Art of Unit Testing" - Roy Osherove
 - "Growing Object-Oriented Software, Guided by Tests" - Freeman & Pryce
 - "xUnit Test Patterns" - Gerard Meszaros
 
 ### Online Resources
+
 - [Jest Documentation](https://jestjs.io/)
 - [pytest Documentation](https://docs.pytest.org/)
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
 - [Martin Fowler - Unit Testing](https://martinfowler.com/bliki/UnitTest.html)
 
 ### Tools
+
 - **JavaScript**: Jest, Vitest, Mocha, Jasmine
 - **Python**: pytest, unittest, nose2
 - **Java**: JUnit, TestNG, Mockito
@@ -1107,4 +1125,4 @@ describe('Performance', () => {
 
 ---
 
-*Part of: [Test Levels](README.md)*
+_Part of: [Test Levels](README.md)_

@@ -37,7 +37,7 @@ const createApp = () => {
     name: `User ${i + 1}`,
     email: `user${i + 1}@example.com`,
     role: i % 10 === 0 ? 'admin' : 'user',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   }));
 
   /**
@@ -74,12 +74,12 @@ const createApp = () => {
     // Create large array
     const largeArray = Array.from({ length: 100000 }, (_, i) => ({
       id: i,
-      data: `Data ${i}`.repeat(10)
+      data: `Data ${i}`.repeat(10),
     }));
 
     res.json({
       count: largeArray.length,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   });
 
@@ -99,8 +99,8 @@ const createApp = () => {
         page,
         limit,
         total: users.length,
-        totalPages: Math.ceil(users.length / limit)
-      }
+        totalPages: Math.ceil(users.length / limit),
+      },
     });
   });
 
@@ -113,9 +113,10 @@ const createApp = () => {
     let results = users;
 
     if (searchQuery) {
-      results = results.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase())
+      results = results.filter(
+        user =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -126,7 +127,7 @@ const createApp = () => {
     res.json({
       results,
       count: results.length,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   });
 
@@ -151,7 +152,7 @@ const createApp = () => {
     res.json({
       processed: true,
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   });
 
@@ -167,7 +168,7 @@ const createApp = () => {
  * @param {Function} requestFn - Function that makes the request
  * @returns {Promise<Object>} Response and duration
  */
-const measureResponseTime = async (requestFn) => {
+const measureResponseTime = async requestFn => {
   const start = Date.now();
   const response = await requestFn();
   const duration = Date.now() - start;
@@ -182,7 +183,9 @@ const measureResponseTime = async (requestFn) => {
  * @returns {Promise<Array>} Results of all requests
  */
 const runConcurrentRequests = async (requestFn, count) => {
-  const requests = Array(count).fill(null).map(() => requestFn());
+  const requests = Array(count)
+    .fill(null)
+    .map(() => requestFn());
   return Promise.all(requests);
 };
 
@@ -191,7 +194,7 @@ const runConcurrentRequests = async (requestFn, count) => {
  * @param {Array<number>} durations - Array of response durations
  * @returns {Object} Statistics
  */
-const calculateStats = (durations) => {
+const calculateStats = durations => {
   const sorted = [...durations].sort((a, b) => a - b);
   const sum = durations.reduce((a, b) => a + b, 0);
 
@@ -201,7 +204,7 @@ const calculateStats = (durations) => {
     mean: sum / durations.length,
     median: sorted[Math.floor(sorted.length / 2)],
     p95: sorted[Math.floor(sorted.length * 0.95)],
-    p99: sorted[Math.floor(sorted.length * 0.99)]
+    p99: sorted[Math.floor(sorted.length * 0.99)],
   };
 };
 
@@ -213,19 +216,22 @@ const calculateStats = (durations) => {
  */
 const runLoadTest = (url, options = {}) => {
   return new Promise((resolve, reject) => {
-    const instance = autocannon({
-      url,
-      connections: options.connections || 10,
-      duration: options.duration || 10,
-      pipelining: options.pipelining || 1,
-      ...options
-    }, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
+    const instance = autocannon(
+      {
+        url,
+        connections: options.connections || 10,
+        duration: options.duration || 10,
+        pipelining: options.pipelining || 1,
+        ...options,
+      },
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
       }
-    });
+    );
 
     autocannon.track(instance);
   });
@@ -244,7 +250,7 @@ describe('API Performance Testing', () => {
     server = app.listen(0); // Random port
   });
 
-  afterAll((done) => {
+  afterAll(done => {
     server.close(done);
   });
 
@@ -263,10 +269,7 @@ describe('API Performance Testing', () => {
 
     it('should meet SLA for user list endpoint (< 500ms)', async () => {
       const { duration } = await measureResponseTime(() =>
-        request(app)
-          .get('/api/users')
-          .query({ page: 1, limit: 10 })
-          .expect(200)
+        request(app).get('/api/users').query({ page: 1, limit: 10 }).expect(200)
       );
 
       expect(duration).toBeLessThan(500);
@@ -274,10 +277,7 @@ describe('API Performance Testing', () => {
 
     it('should measure and validate search endpoint performance', async () => {
       const { duration, response } = await measureResponseTime(() =>
-        request(app)
-          .get('/api/search')
-          .query({ query: 'user', role: 'admin' })
-          .expect(200)
+        request(app).get('/api/search').query({ query: 'user', role: 'admin' }).expect(200)
       );
 
       expect(duration).toBeLessThan(1000);
@@ -343,16 +343,13 @@ describe('API Performance Testing', () => {
       const concurrentRequests = 100;
       const durations = [];
 
-      const results = await runConcurrentRequests(
-        async () => {
-          const { duration, response } = await measureResponseTime(() =>
-            request(app).get('/api/users').expect(200)
-          );
-          durations.push(duration);
-          return response;
-        },
-        concurrentRequests
-      );
+      const results = await runConcurrentRequests(async () => {
+        const { duration, response } = await measureResponseTime(() =>
+          request(app).get('/api/users').expect(200)
+        );
+        durations.push(duration);
+        return response;
+      }, concurrentRequests);
 
       const stats = calculateStats(durations);
 
@@ -367,19 +364,13 @@ describe('API Performance Testing', () => {
       const concurrentRequests = 50;
       const durations = [];
 
-      const results = await runConcurrentRequests(
-        async () => {
-          const { duration, response } = await measureResponseTime(() =>
-            request(app)
-              .post('/api/process')
-              .send({ data: 'test data' })
-              .expect(200)
-          );
-          durations.push(duration);
-          return response;
-        },
-        concurrentRequests
-      );
+      const results = await runConcurrentRequests(async () => {
+        const { duration, response } = await measureResponseTime(() =>
+          request(app).post('/api/process').send({ data: 'test data' }).expect(200)
+        );
+        durations.push(duration);
+        return response;
+      }, concurrentRequests);
 
       const stats = calculateStats(durations);
 
@@ -402,7 +393,7 @@ describe('API Performance Testing', () => {
       const result = await runLoadTest(url, {
         connections: 10,
         duration: 5, // 5 seconds
-        pipelining: 1
+        pipelining: 1,
       });
 
       console.log('Load Test Results:');
@@ -425,7 +416,7 @@ describe('API Performance Testing', () => {
 
       const result = await runLoadTest(url, {
         connections: 20,
-        duration: 5
+        duration: 5,
       });
 
       console.log('Pagination Load Test Results:');
@@ -443,7 +434,7 @@ describe('API Performance Testing', () => {
 
       const result = await runLoadTest(url, {
         connections: 50,
-        duration: 5
+        duration: 5,
       });
 
       console.log('High Connection Load Test:');
@@ -519,7 +510,7 @@ describe('API Performance Testing', () => {
     const baselineMetrics = {
       fastEndpoint: { mean: 50, p95: 80, p99: 100 },
       userListEndpoint: { mean: 200, p95: 350, p99: 450 },
-      searchEndpoint: { mean: 300, p95: 500, p99: 600 }
+      searchEndpoint: { mean: 300, p95: 500, p99: 600 },
     };
 
     it('should detect regression in fast endpoint', async () => {
@@ -556,10 +547,7 @@ describe('API Performance Testing', () => {
 
       for (let i = 0; i < iterations; i++) {
         const { duration } = await measureResponseTime(() =>
-          request(app)
-            .get('/api/users')
-            .query({ page: 1, limit: 10 })
-            .expect(200)
+          request(app).get('/api/users').query({ page: 1, limit: 10 }).expect(200)
         );
         durations.push(duration);
       }
@@ -587,10 +575,7 @@ describe('API Performance Testing', () => {
 
       for (const size of sizes) {
         const { duration } = await measureResponseTime(() =>
-          request(app)
-            .get('/api/users')
-            .query({ limit: size })
-            .expect(200)
+          request(app).get('/api/users').query({ limit: size }).expect(200)
         );
 
         results.push({ size, duration });
@@ -610,15 +595,12 @@ describe('API Performance Testing', () => {
       for (const connections of connectionCounts) {
         const durations = [];
 
-        await runConcurrentRequests(
-          async () => {
-            const { duration } = await measureResponseTime(() =>
-              request(app).get('/api/fast').expect(200)
-            );
-            durations.push(duration);
-          },
-          connections
-        );
+        await runConcurrentRequests(async () => {
+          const { duration } = await measureResponseTime(() =>
+            request(app).get('/api/fast').expect(200)
+          );
+          durations.push(duration);
+        }, connections);
 
         const stats = calculateStats(durations);
         results.push({ connections, p95: stats.p95 });
@@ -637,10 +619,10 @@ describe('API Performance Testing', () => {
 
   describe('SLA Validation', () => {
     const SLA = {
-      p50: 100,  // 50% of requests should complete in < 100ms
-      p95: 500,  // 95% of requests should complete in < 500ms
+      p50: 100, // 50% of requests should complete in < 100ms
+      p95: 500, // 95% of requests should complete in < 500ms
       p99: 1000, // 99% of requests should complete in < 1000ms
-      errorRate: 0.01 // < 1% error rate
+      errorRate: 0.01, // < 1% error rate
     };
 
     it('should meet SLA for all percentiles', async () => {
@@ -695,9 +677,10 @@ describe('API Performance Testing', () => {
       const mean = stats.mean;
 
       // Calculate standard deviation
-      const variance = durations.reduce((acc, val) => {
-        return acc + Math.pow(val - mean, 2);
-      }, 0) / durations.length;
+      const variance =
+        durations.reduce((acc, val) => {
+          return acc + Math.pow(val - mean, 2);
+        }, 0) / durations.length;
 
       const stdDev = Math.sqrt(variance);
       const coefficientOfVariation = (stdDev / mean) * 100;

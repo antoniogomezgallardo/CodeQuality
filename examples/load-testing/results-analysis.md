@@ -19,6 +19,7 @@ This guide helps you interpret load testing results, identify performance bottle
 ### k6 Report Structure
 
 **Console Output:**
+
 ```
      ✓ status is 200
      ✓ response time < 500ms
@@ -43,6 +44,7 @@ This guide helps you interpret load testing results, identify performance bottle
 ```
 
 **What to Look For:**
+
 1. **Check success rate** (should be > 99%)
 2. **p95 and p99** response times (key SLA metrics)
 3. **http_req_failed** percentage (error rate)
@@ -52,6 +54,7 @@ This guide helps you interpret load testing results, identify performance bottle
 ### JMeter Report Structure
 
 **Aggregate Report Columns:**
+
 - **Label:** Request name
 - **# Samples:** Number of requests
 - **Average:** Mean response time
@@ -68,6 +71,7 @@ This guide helps you interpret load testing results, identify performance bottle
 
 **HTML Dashboard:**
 Navigate to the generated HTML report and review:
+
 - **APDEX (Application Performance Index):** Satisfaction score (0-1)
 - **Response Time Over Time:** Graph showing trends
 - **Throughput vs Threads:** Scalability visualization
@@ -77,6 +81,7 @@ Navigate to the generated HTML report and review:
 ### Artillery Report
 
 **Console Summary:**
+
 ```
 Summary report @ 14:32:45
   Scenarios launched:  1000
@@ -99,6 +104,7 @@ Summary report @ 14:32:45
 ```
 
 **What to Focus On:**
+
 1. **Scenario completion rate** (should be near 100%)
 2. **Response time percentiles**
 3. **HTTP status code distribution**
@@ -127,6 +133,7 @@ Summary report @ 14:32:45
    - Active users over time
 
 **Color Coding:**
+
 - **Green:** Acceptable performance
 - **Orange:** Warning threshold
 - **Red:** Failed requests or SLA violations
@@ -138,6 +145,7 @@ Summary report @ 14:32:45
 #### Understanding Percentiles
 
 **Example Results:**
+
 ```
 p50 (median): 200ms
 p90: 350ms
@@ -150,36 +158,43 @@ max: 15000ms
 **Interpretation:**
 
 **p50 = 200ms:**
+
 - Typical user experience
 - Half of requests faster, half slower
 - Good starting point for understanding performance
 
 **p90 = 350ms:**
+
 - 90% of users see this or better
 - 1 in 10 users experience slower responses
 - Good metric for general SLA
 
 **p95 = 450ms:**
+
 - Most common SLA target
 - 1 in 20 users experience slower responses
 - Industry standard for "most users"
 
 **p99 = 1200ms:**
+
 - Captures tail latency
 - 1 in 100 users affected
 - Important at scale (1% of 1M = 10,000 users)
 
 **p99.9 = 3500ms:**
+
 - Extreme outliers
 - 1 in 1000 requests
 - Can indicate serious issues
 
 **max = 15000ms:**
+
 - Worst case observed
 - Often an anomaly
 - Don't rely on this for SLA
 
 **Red Flags:**
+
 ```
 ✗ Large gap between p95 and p99 (450ms → 1200ms)
   → Indicates inconsistent performance
@@ -197,6 +212,7 @@ max: 15000ms
 #### Response Time Trends
 
 **Healthy Pattern:**
+
 ```
    Response Time
       ^
@@ -209,9 +225,11 @@ max: 15000ms
  200ms|────────────────────────────>
       Time (Ramp-up → Steady State)
 ```
-*Response time increases slightly during ramp-up, then stabilizes*
+
+_Response time increases slightly during ramp-up, then stabilizes_
 
 **Warning Pattern:**
+
 ```
    Response Time
       ^
@@ -223,9 +241,11 @@ max: 15000ms
  200ms|─────╱──────────────────────>
       Time
 ```
-*Continuous increase indicates capacity issues*
+
+_Continuous increase indicates capacity issues_
 
 **Critical Pattern:**
+
 ```
    Response Time
       ^
@@ -237,13 +257,15 @@ max: 15000ms
       |────────────────────────────>
       Time
 ```
-*Oscillation indicates instability (thrashing, GC storms)*
+
+_Oscillation indicates instability (thrashing, GC storms)_
 
 ### Error Rate Analysis
 
 #### Acceptable vs Concerning
 
 **Excellent: < 0.1%**
+
 ```
 Total requests: 100,000
 Errors: 50
@@ -252,6 +274,7 @@ Impact: 99.95% success rate (close to four nines)
 ```
 
 **Good: 0.1% - 1%**
+
 ```
 Total requests: 100,000
 Errors: 500
@@ -260,6 +283,7 @@ Impact: 99.5% success rate (acceptable for most services)
 ```
 
 **Warning: 1% - 5%**
+
 ```
 Total requests: 100,000
 Errors: 2,500
@@ -268,6 +292,7 @@ Impact: Significant user impact, investigate immediately
 ```
 
 **Critical: > 5%**
+
 ```
 Total requests: 100,000
 Errors: 7,000
@@ -278,6 +303,7 @@ Impact: Service severely degraded, stop test
 #### Error Distribution
 
 **Good Distribution:**
+
 ```
 200 OK:         99,500 (99.5%)
 201 Created:       400 (0.4%)
@@ -286,6 +312,7 @@ Impact: Service severely degraded, stop test
 ```
 
 **Bad Distribution:**
+
 ```
 200 OK:         85,000 (85%)
 500 Server Error: 10,000 (10%)  ← Backend failures
@@ -293,6 +320,7 @@ Impact: Service severely degraded, stop test
 ```
 
 **Critical Distribution:**
+
 ```
 200 OK:          50,000 (50%)
 502 Bad Gateway: 30,000 (30%)  ← Proxy/gateway issues
@@ -304,6 +332,7 @@ Impact: Service severely degraded, stop test
 #### RPS (Requests Per Second)
 
 **Target vs Actual:**
+
 ```
 Load Profile: 100 VUs × 10 req/iteration = 1000 requests
 Duration: 10 seconds
@@ -321,6 +350,7 @@ If achieved: 110 RPS
 ```
 
 **Scaling Analysis:**
+
 ```
 Phase 1: 50 VUs  → 100 RPS ✓ Linear
 Phase 2: 100 VUs → 200 RPS ✓ Linear scaling
@@ -334,24 +364,29 @@ Bottleneck likely around 200 RPS
 #### Throughput vs Response Time
 
 **Healthy Relationship:**
+
 ```
 RPS    Response Time
 100    →  200ms
 200    →  220ms  (10% increase)
 300    →  250ms  (25% increase)
 ```
-*Response time increases slowly with load*
+
+_Response time increases slowly with load_
 
 **Degrading Performance:**
+
 ```
 RPS    Response Time
 100    →  200ms
 200    →  350ms  (75% increase)
 300    →  800ms  (300% increase)
 ```
-*Response time increases exponentially*
+
+_Response time increases exponentially_
 
 **Capacity Reached:**
+
 ```
 RPS    Response Time
 100    →  200ms
@@ -359,7 +394,8 @@ RPS    Response Time
 250    →  1200ms
 260    →  2500ms ← Breaking point
 ```
-*Dramatic increase indicates capacity limit*
+
+_Dramatic increase indicates capacity limit_
 
 ## Identifying Bottlenecks
 
@@ -368,12 +404,14 @@ RPS    Response Time
 #### 1. Application Server Bottleneck
 
 **Symptoms:**
+
 - Response time increases linearly with load
 - CPU utilization > 80%
 - Thread pool exhaustion
 - Request queue growing
 
 **Evidence in Results:**
+
 ```
 Concurrent Users: 100 → Response Time: 200ms, CPU: 40%
 Concurrent Users: 200 → Response Time: 400ms, CPU: 80%
@@ -381,6 +419,7 @@ Concurrent Users: 300 → Response Time: 1200ms, CPU: 95%
 ```
 
 **Solution:**
+
 - Scale horizontally (add more servers)
 - Optimize hot code paths
 - Increase thread pool size (if I/O bound)
@@ -388,12 +427,14 @@ Concurrent Users: 300 → Response Time: 1200ms, CPU: 95%
 #### 2. Database Bottleneck
 
 **Symptoms:**
+
 - Slow queries dominate response time
 - Database CPU/memory high
 - Connection pool exhausted
 - Lock contention
 
 **Evidence in Results:**
+
 ```
 Endpoint         Response Time  DB Query Time
 GET /products    450ms          400ms (89%)
@@ -402,6 +443,7 @@ GET /cart        300ms          250ms (83%)
 ```
 
 **Solution:**
+
 - Add database indexes
 - Query optimization
 - Read replicas
@@ -411,12 +453,14 @@ GET /cart        300ms          250ms (83%)
 #### 3. Network Bottleneck
 
 **Symptoms:**
+
 - High `http_req_connecting` time
 - Large `http_req_waiting` time
 - Bandwidth saturation
 - Packet loss
 
 **Evidence in Results:**
+
 ```
 http_req_duration:     500ms
   http_req_sending:    2ms
@@ -427,6 +471,7 @@ Network bandwidth: 950 Mbps out of 1 Gbps (95%)
 ```
 
 **Solution:**
+
 - Upgrade network capacity
 - Enable compression
 - Use CDN for static content
@@ -435,12 +480,14 @@ Network bandwidth: 950 Mbps out of 1 Gbps (95%)
 #### 4. Memory/GC Bottleneck
 
 **Symptoms:**
+
 - Periodic response time spikes
 - Sawtooth pattern in response times
 - Memory usage grows then drops
 - GC pause times increasing
 
 **Evidence in Results:**
+
 ```
 Time    Response Time  Memory Usage
 10:00   200ms          2 GB
@@ -452,6 +499,7 @@ Time    Response Time  Memory Usage
 ```
 
 **Solution:**
+
 - Increase heap size
 - Tune GC settings
 - Fix memory leaks
@@ -461,12 +509,14 @@ Time    Response Time  Memory Usage
 #### 5. Connection Pool Exhaustion
 
 **Symptoms:**
+
 - Sudden response time degradation
 - Connection timeout errors
 - "Pool exhausted" exceptions
 - Wait time for connections
 
 **Evidence in Results:**
+
 ```
 Connection Pool Size: 50
 Active Connections: 50/50 (100% utilization)
@@ -478,6 +528,7 @@ After exhaustion: p95 = 2000ms
 ```
 
 **Solution:**
+
 - Increase pool size
 - Reduce connection hold time
 - Add connection timeout
@@ -486,12 +537,14 @@ After exhaustion: p95 = 2000ms
 #### 6. Third-Party API Bottleneck
 
 **Symptoms:**
+
 - Specific endpoints much slower
 - External API rate limiting
 - Timeout errors from external services
 - Delays proportional to external calls
 
 **Evidence in Results:**
+
 ```
 Endpoint           Response Time  External Call Time
 GET /weather       3200ms         3000ms (94%)
@@ -502,6 +555,7 @@ External API: 50 errors "Rate limit exceeded"
 ```
 
 **Solution:**
+
 - Cache external API responses
 - Circuit breaker pattern
 - Async processing
@@ -546,6 +600,7 @@ High Response Time?
 ### Layered Analysis Approach
 
 #### Layer 1: Application Metrics
+
 ```
 Metric                  Value       Status
 ─────────────────────────────────────────
@@ -555,6 +610,7 @@ Throughput              200 RPS     ✓ Target met
 ```
 
 #### Layer 2: Server Metrics
+
 ```
 Metric                  Value       Status
 ─────────────────────────────────────────
@@ -565,6 +621,7 @@ Network I/O             500 Mbps    ✓ Good
 ```
 
 #### Layer 3: Application Server Metrics
+
 ```
 Metric                  Value       Status
 ─────────────────────────────────────────
@@ -575,6 +632,7 @@ GC Pause Time          50ms avg     ✓ Good
 ```
 
 #### Layer 4: Database Metrics
+
 ```
 Metric                  Value       Status
 ─────────────────────────────────────────
@@ -590,6 +648,7 @@ Deadlocks              0            ✓ Good
 **Observation:** Response time spikes every 5 minutes
 
 **Step 1: Check Application Metrics**
+
 ```
 Time    Response Time  Throughput
 10:00   200ms          200 RPS
@@ -599,6 +658,7 @@ Time    Response Time  Throughput
 ```
 
 **Step 2: Correlate with Server Metrics**
+
 ```
 Time    CPU    Memory  Disk I/O
 10:00   50%    2 GB    200 IOPS
@@ -608,6 +668,7 @@ Time    CPU    Memory  Disk I/O
 ```
 
 **Step 3: Check Application Logs**
+
 ```
 10:05:00 - INFO: Starting scheduled batch job
 10:05:30 - INFO: Processing 10,000 records
@@ -617,6 +678,7 @@ Time    CPU    Memory  Disk I/O
 **Root Cause:** Scheduled batch job running every 5 minutes consuming CPU and disk I/O
 
 **Solution:**
+
 - Move batch job to off-peak hours
 - Reduce batch job frequency
 - Process in smaller chunks
@@ -627,18 +689,21 @@ Time    CPU    Memory  Disk I/O
 ### Issue 1: Slow Cold Start
 
 **Symptoms:**
+
 ```
 First 5 minutes: p95 = 1200ms
 After warm-up:   p95 = 300ms
 ```
 
 **Root Causes:**
+
 - JIT compilation
 - Cache warming
 - Connection pool initialization
 - Lazy loading
 
 **Solutions:**
+
 - Pre-warm caches before test
 - Initialize connections at startup
 - Run warm-up phase (excluded from results)
@@ -647,6 +712,7 @@ After warm-up:   p95 = 300ms
 ### Issue 2: Memory Leak
 
 **Symptoms:**
+
 ```
 Time    Memory  Response Time  GC Pauses
 0min    1 GB    200ms          50ms
@@ -657,12 +723,14 @@ Time    Memory  Response Time  GC Pauses
 ```
 
 **Root Causes:**
+
 - Unclosed connections
 - Event listeners not removed
 - Static collections growing
 - Cache without eviction
 
 **Solutions:**
+
 - Heap dump analysis
 - Fix resource leaks
 - Implement proper cleanup
@@ -671,6 +739,7 @@ Time    Memory  Response Time  GC Pauses
 ### Issue 3: Cascading Failures
 
 **Symptoms:**
+
 ```
 Service A: 200ms → 5000ms
 Service B (depends on A): 300ms → 8000ms
@@ -678,12 +747,14 @@ Service C (depends on B): 400ms → 12000ms
 ```
 
 **Root Causes:**
+
 - No timeout configuration
 - No circuit breaker
 - Synchronous calls
 - No bulkheading
 
 **Solutions:**
+
 - Implement timeouts
 - Add circuit breakers
 - Use async patterns
@@ -692,6 +763,7 @@ Service C (depends on B): 400ms → 12000ms
 ### Issue 4: Database N+1 Queries
 
 **Symptoms:**
+
 ```
 Endpoint: GET /users/orders
 Response Time: 3500ms
@@ -699,6 +771,7 @@ Queries Executed: 1 (users) + 100 (orders per user) = 101 queries
 ```
 
 **Evidence:**
+
 ```
 Query: SELECT * FROM users WHERE id = ?       (50ms)
 Query: SELECT * FROM orders WHERE user_id = ? (30ms) × 100
@@ -706,6 +779,7 @@ Total: 50ms + (30ms × 100) = 3050ms
 ```
 
 **Solutions:**
+
 - Use JOIN queries
 - Eager loading
 - DataLoader pattern
@@ -714,6 +788,7 @@ Total: 50ms + (30ms × 100) = 3050ms
 ### Issue 5: Inefficient Caching
 
 **Symptoms:**
+
 ```
 Cache Hit Rate: 30%
 Response Time (cache hit):  50ms
@@ -722,12 +797,14 @@ Average Response Time: (0.3 × 50) + (0.7 × 500) = 365ms
 ```
 
 **Root Causes:**
+
 - Wrong cache key strategy
 - Cache TTL too short
 - Cache warming not implemented
 - Cache size too small
 
 **Solutions:**
+
 - Optimize cache key generation
 - Adjust TTL based on data volatility
 - Implement cache warming
@@ -748,24 +825,31 @@ Average Response Time: (0.3 × 50) + (0.7 × 500) = 365ms
 **Effort:** Low / Medium / High
 
 ### Current State
+
 [Describe the problem with metrics]
 
 ### Expected State
+
 [Describe the desired outcome with target metrics]
 
 ### Root Cause
+
 [Technical explanation of why this is happening]
 
 ### Recommended Solution
+
 [Step-by-step implementation plan]
 
 ### Expected Impact
+
 [Quantified improvement expectations]
 
 ### Implementation Timeline
+
 [Estimated duration and dependencies]
 
 ### Risks
+
 [Potential risks of implementing this change]
 ```
 
@@ -778,6 +862,7 @@ Average Response Time: (0.3 × 50) + (0.7 × 500) = 365ms
 **Effort:** Medium
 
 **Current State:**
+
 ```
 Endpoint: GET /api/products
 Current p95: 850ms
@@ -788,6 +873,7 @@ Users affected: 80/200 concurrent users
 ```
 
 **Expected State:**
+
 ```
 Target p95: < 400ms
 Expected query time: < 150ms
@@ -795,6 +881,7 @@ Expected success rate: > 99%
 ```
 
 **Root Cause:**
+
 - Missing index on `products.category_id`
 - Inefficient JOIN causing full table scan
 - No query result caching
@@ -802,12 +889,14 @@ Expected success rate: > 99%
 **Recommended Solution:**
 
 1. **Add Database Index (Day 1)**
+
    ```sql
    CREATE INDEX idx_products_category ON products(category_id);
    CREATE INDEX idx_products_status ON products(status, created_at);
    ```
 
 2. **Optimize Query (Day 2)**
+
    ```sql
    -- Before: Full table scan
    SELECT * FROM products p
@@ -823,6 +912,7 @@ Expected success rate: > 99%
    ```
 
 3. **Implement Cache Layer (Day 3-5)**
+
    ```javascript
    // Redis cache with 5-minute TTL
    const cachedProducts = await cache.get('products:active');
@@ -834,6 +924,7 @@ Expected success rate: > 99%
    ```
 
 **Expected Impact:**
+
 ```
 Query time:      720ms → 120ms (83% improvement)
 Response time:   850ms → 320ms (62% improvement)
@@ -842,6 +933,7 @@ Throughput:      200 RPS → 250 RPS (25% increase)
 ```
 
 **Implementation Timeline:**
+
 - Day 1: Add indexes (2 hours)
 - Day 2: Optimize queries (4 hours)
 - Day 3-5: Implement caching (16 hours)
@@ -849,6 +941,7 @@ Throughput:      200 RPS → 250 RPS (25% increase)
 - Total: 26 hours over 6 days
 
 **Risks:**
+
 - Index creation may lock table (plan for low-traffic window)
 - Cache invalidation complexity
 - Redis single point of failure (mitigate with Redis Cluster)
@@ -860,6 +953,7 @@ Throughput:      200 RPS → 250 RPS (25% increase)
 **Effort:** Low
 
 **Current State:**
+
 ```
 Servers: 2 instances
 CPU: 85% average, 95% peak
@@ -869,6 +963,7 @@ Headroom: 15% (insufficient for traffic spikes)
 ```
 
 **Expected State:**
+
 ```
 Servers: 4 instances
 CPU: 45% average, 60% peak
@@ -878,6 +973,7 @@ Headroom: 40% (sufficient buffer)
 ```
 
 **Root Cause:**
+
 - Insufficient compute capacity
 - No room for traffic spikes
 - Auto-scaling not configured
@@ -890,6 +986,7 @@ Headroom: 40% (sufficient buffer)
    - Validate health checks
 
 2. **Configure Auto-Scaling**
+
    ```yaml
    auto_scaling:
      min_instances: 3
@@ -909,6 +1006,7 @@ Headroom: 40% (sufficient buffer)
    - 30-second grace period
 
 **Expected Impact:**
+
 ```
 CPU utilization:  85% → 45% (47% reduction)
 Response time:    450ms → 300ms (33% improvement)
@@ -917,12 +1015,14 @@ Cost increase:    $400/month → $800/month (100%)
 ```
 
 **Implementation Timeline:**
+
 - Day 1: Deploy instances and test (4 hours)
 - Day 2: Configure auto-scaling (2 hours)
 - Day 3: Load test validation (4 hours)
 - Total: 10 hours over 3 days
 
 **Risks:**
+
 - Increased infrastructure cost
 - Potential session management issues (mitigate with sticky sessions or Redis)
 - Need monitoring for auto-scaling
@@ -933,6 +1033,7 @@ Cost increase:    $400/month → $800/month (100%)
 
 ```markdown
 # Load Testing Results - [Application Name]
+
 **Date:** [Test Date]
 **Environment:** [Staging/Production-like]
 **Test Type:** [Load/Stress/Spike]
@@ -946,6 +1047,7 @@ Cost increase:    $400/month → $800/month (100%)
 **Status:** ✓ Pass / ⚠ Warning / ✗ Fail
 
 **Key Metrics:**
+
 - Response Time (p95): [Value] (Target: < 500ms) [Status]
 - Error Rate: [Value]% (Target: < 1%) [Status]
 - Throughput: [Value] RPS (Target: [Value] RPS) [Status]
@@ -954,11 +1056,13 @@ Cost increase:    $400/month → $800/month (100%)
 ## Impact on Users
 
 **Positive:**
+
 - [X%] of users experience response times under [Y]ms
 - System handles [X] concurrent users successfully
 - [X%] uptime maintained under peak load
 
 **Areas of Concern:**
+
 - [X%] of users experience response times over [Y]ms
 - [X%] error rate during peak periods
 - Capacity headroom only [X%]
@@ -966,11 +1070,13 @@ Cost increase:    $400/month → $800/month (100%)
 ## Business Impact
 
 **Current Capacity:**
+
 - Supports [X] concurrent users
 - Handles [X] orders per hour
 - Estimated revenue capacity: $[X]/hour
 
 **Recommended Capacity:**
+
 - After improvements: [X] concurrent users
 - After improvements: [X] orders per hour
 - Estimated revenue capacity: $[X]/hour (X% increase)
@@ -989,23 +1095,26 @@ Cost increase:    $400/month → $800/month (100%)
 
 ## Investment Required
 
-| Improvement | Timeline | Cost | Expected Benefit |
-|------------|----------|------|------------------|
-| [Item 1] | [Duration] | $[Amount] | [Benefit] |
-| [Item 2] | [Duration] | $[Amount] | [Benefit] |
-| **Total** | **[Duration]** | **$[Amount]** | **[Benefit]** |
+| Improvement | Timeline       | Cost          | Expected Benefit |
+| ----------- | -------------- | ------------- | ---------------- |
+| [Item 1]    | [Duration]     | $[Amount]     | [Benefit]        |
+| [Item 2]    | [Duration]     | $[Amount]     | [Benefit]        |
+| **Total**   | **[Duration]** | **$[Amount]** | **[Benefit]**    |
 
 ## Recommendations
 
 **Immediate Actions (0-2 weeks):**
+
 1. [Action item]
 2. [Action item]
 
 **Short-term (2-8 weeks):**
+
 1. [Action item]
 2. [Action item]
 
 **Long-term (2-6 months):**
+
 1. [Action item]
 2. [Action item]
 
@@ -1030,12 +1139,14 @@ Cost increase:    $400/month → $800/month (100%)
 ## Test Configuration
 
 **Environment:**
+
 - Base URL: [URL]
 - Infrastructure: [Description]
 - Database: [Type and configuration]
 - Cache: [Type and configuration]
 
 **Test Parameters:**
+
 - Tool: [k6/JMeter/Artillery/Gatling]
 - Test Type: [Load/Stress/Spike/Soak]
 - Duration: [Duration]
@@ -1043,6 +1154,7 @@ Cost increase:    $400/month → $800/month (100%)
 - Ramp-up: [Duration]
 
 **Test Scenarios:**
+
 1. Browse Products (60% of traffic)
 2. Shopping Journey (30% of traffic)
 3. Purchase Journey (10% of traffic)
@@ -1051,66 +1163,66 @@ Cost increase:    $400/month → $800/month (100%)
 
 ### Response Time Metrics
 
-| Metric | Value | SLA Target | Status |
-|--------|-------|------------|--------|
-| Min | [Value]ms | - | - |
-| Mean | [Value]ms | - | - |
-| Median | [Value]ms | - | - |
-| p90 | [Value]ms | < 400ms | [Status] |
-| p95 | [Value]ms | < 500ms | [Status] |
-| p99 | [Value]ms | < 1000ms | [Status] |
-| Max | [Value]ms | - | - |
+| Metric | Value     | SLA Target | Status   |
+| ------ | --------- | ---------- | -------- |
+| Min    | [Value]ms | -          | -        |
+| Mean   | [Value]ms | -          | -        |
+| Median | [Value]ms | -          | -        |
+| p90    | [Value]ms | < 400ms    | [Status] |
+| p95    | [Value]ms | < 500ms    | [Status] |
+| p99    | [Value]ms | < 1000ms   | [Status] |
+| Max    | [Value]ms | -          | -        |
 
 ### Throughput Metrics
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| Total Requests | [Value] | - | - |
-| Successful Requests | [Value] | > 99% | [Status] |
-| Failed Requests | [Value] | < 1% | [Status] |
-| Requests/Second | [Value] | [Target] | [Status] |
-| Data Transferred | [Value] MB | - | - |
+| Metric              | Value      | Target   | Status   |
+| ------------------- | ---------- | -------- | -------- |
+| Total Requests      | [Value]    | -        | -        |
+| Successful Requests | [Value]    | > 99%    | [Status] |
+| Failed Requests     | [Value]    | < 1%     | [Status] |
+| Requests/Second     | [Value]    | [Target] | [Status] |
+| Data Transferred    | [Value] MB | -        | -        |
 
 ### Error Analysis
 
-| Status Code | Count | Percentage |
-|------------|-------|------------|
-| 200 OK | [Value] | [%] |
-| 201 Created | [Value] | [%] |
-| 400 Bad Request | [Value] | [%] |
-| 401 Unauthorized | [Value] | [%] |
-| 500 Server Error | [Value] | [%] |
-| 502 Bad Gateway | [Value] | [%] |
-| 503 Unavailable | [Value] | [%] |
+| Status Code      | Count   | Percentage |
+| ---------------- | ------- | ---------- |
+| 200 OK           | [Value] | [%]        |
+| 201 Created      | [Value] | [%]        |
+| 400 Bad Request  | [Value] | [%]        |
+| 401 Unauthorized | [Value] | [%]        |
+| 500 Server Error | [Value] | [%]        |
+| 502 Bad Gateway  | [Value] | [%]        |
+| 503 Unavailable  | [Value] | [%]        |
 
 ### Per-Endpoint Analysis
 
-| Endpoint | Requests | p95 | Error % | Status |
-|----------|----------|-----|---------|--------|
-| GET / | [Value] | [Value]ms | [%] | [Status] |
-| GET /api/products | [Value] | [Value]ms | [%] | [Status] |
-| POST /api/cart | [Value] | [Value]ms | [%] | [Status] |
-| POST /api/checkout | [Value] | [Value]ms | [%] | [Status] |
+| Endpoint           | Requests | p95       | Error % | Status   |
+| ------------------ | -------- | --------- | ------- | -------- |
+| GET /              | [Value]  | [Value]ms | [%]     | [Status] |
+| GET /api/products  | [Value]  | [Value]ms | [%]     | [Status] |
+| POST /api/cart     | [Value]  | [Value]ms | [%]     | [Status] |
+| POST /api/checkout | [Value]  | [Value]ms | [%]     | [Status] |
 
 ## Infrastructure Metrics
 
 ### Application Servers
 
-| Metric | Min | Avg | Max |
-|--------|-----|-----|-----|
-| CPU % | [Value] | [Value] | [Value] |
-| Memory (GB) | [Value] | [Value] | [Value] |
-| Thread Pool | [Value] | [Value] | [Value] |
+| Metric          | Min     | Avg     | Max     |
+| --------------- | ------- | ------- | ------- |
+| CPU %           | [Value] | [Value] | [Value] |
+| Memory (GB)     | [Value] | [Value] | [Value] |
+| Thread Pool     | [Value] | [Value] | [Value] |
 | Heap Usage (GB) | [Value] | [Value] | [Value] |
 
 ### Database
 
-| Metric | Min | Avg | Max |
-|--------|-----|-----|-----|
-| Connections | [Value] | [Value] | [Value] |
-| Query Time (ms) | [Value] | [Value] | [Value] |
+| Metric           | Min     | Avg     | Max     |
+| ---------------- | ------- | ------- | ------- |
+| Connections      | [Value] | [Value] | [Value] |
+| Query Time (ms)  | [Value] | [Value] | [Value] |
 | Slow Queries/min | [Value] | [Value] | [Value] |
-| Cache Hit % | [Value] | [Value] | [Value] |
+| Cache Hit %      | [Value] | [Value] | [Value] |
 
 ## Bottleneck Analysis
 
@@ -1154,18 +1266,18 @@ Cost increase:    $400/month → $800/month (100%)
 
 ### Response Time Comparison
 
-| Metric | Baseline | Current | Change | Status |
-|--------|----------|---------|--------|--------|
-| p50 | 200ms | 210ms | +5% | ⚠ Regression |
-| p95 | 450ms | 420ms | -6.7% | ✓ Improvement |
-| p99 | 900ms | 1100ms | +22% | ✗ Regression |
+| Metric | Baseline | Current | Change | Status        |
+| ------ | -------- | ------- | ------ | ------------- |
+| p50    | 200ms    | 210ms   | +5%    | ⚠ Regression |
+| p95    | 450ms    | 420ms   | -6.7%  | ✓ Improvement |
+| p99    | 900ms    | 1100ms  | +22%   | ✗ Regression  |
 
 ### Throughput Comparison
 
-| Metric | Baseline | Current | Change | Status |
-|--------|----------|---------|--------|--------|
-| RPS | 200 | 180 | -10% | ✗ Regression |
-| Error Rate | 0.5% | 0.3% | -40% | ✓ Improvement |
+| Metric     | Baseline | Current | Change | Status        |
+| ---------- | -------- | ------- | ------ | ------------- |
+| RPS        | 200      | 180     | -10%   | ✗ Regression  |
+| Error Rate | 0.5%     | 0.3%    | -40%   | ✓ Improvement |
 
 ### Regression Details
 
@@ -1230,16 +1342,19 @@ regression_thresholds:
 ### Current Capacity
 
 **Infrastructure:**
+
 - Application Servers: [N] × [Instance Type]
 - Database: [Type] - [Instance Size]
 - Cache: [Type] - [Memory Size]
 
 **Measured Capacity:**
+
 - Maximum Throughput: [X] RPS
 - Maximum Concurrent Users: [Y]
 - Response Time at Max Load: p95 = [Z]ms
 
 **Capacity Utilization:**
+
 - Current Peak Load: [X] RPS
 - Maximum Capacity: [Y] RPS
 - Utilization: [X/Y]% = [Z]%
@@ -1248,6 +1363,7 @@ regression_thresholds:
 ### Growth Projections
 
 **Traffic Growth:**
+
 - Current Daily Users: [X]
 - Growth Rate: [Y]% per month
 - Projected Users (3 months): [X * 1.Y^3]
@@ -1257,27 +1373,30 @@ regression_thresholds:
 **Capacity Requirements:**
 
 | Timeframe | Projected Load | Required Capacity | Additional Resources Needed |
-|-----------|---------------|-------------------|---------------------------|
-| Current | [X] RPS | [Y] RPS | 0 (baseline) |
-| 3 months | [A] RPS | [B] RPS | [C] servers |
-| 6 months | [D] RPS | [E] RPS | [F] servers |
-| 12 months | [G] RPS | [H] RPS | [I] servers |
+| --------- | -------------- | ----------------- | --------------------------- |
+| Current   | [X] RPS        | [Y] RPS           | 0 (baseline)                |
+| 3 months  | [A] RPS        | [B] RPS           | [C] servers                 |
+| 6 months  | [D] RPS        | [E] RPS           | [F] servers                 |
+| 12 months | [G] RPS        | [H] RPS           | [I] servers                 |
 
 ### Scaling Strategy
 
 **Horizontal Scaling:**
+
 - Current: [N] application servers
 - Each server handles: [X] RPS
 - To handle [Y] RPS: Need [Y/X] servers
 - Recommendation: Scale to [N+M] servers
 
 **Vertical Scaling:**
+
 - Current: [Instance Type] ([vCPU], [RAM])
 - CPU utilization: [X]%
 - Memory utilization: [Y]%
 - Recommendation: [Upgrade/Keep current] instance type
 
 **Database Scaling:**
+
 - Current: [Instance Type]
 - Connections: [X/Y] ([Z]% utilization)
 - Query performance: [Good/Needs improvement]
@@ -1285,15 +1404,16 @@ regression_thresholds:
 
 ### Cost Analysis
 
-| Resource | Current Monthly Cost | Projected Cost (+6mo) | Projected Cost (+12mo) |
-|----------|---------------------|----------------------|----------------------|
-| Application Servers | $[X] | $[Y] | $[Z] |
-| Database | $[A] | $[B] | $[C] |
-| Cache | $[D] | $[E] | $[F] |
-| Load Balancer | $[G] | $[H] | $[I] |
-| **Total** | **$[Total1]** | **$[Total2]** | **$[Total3]** |
+| Resource            | Current Monthly Cost | Projected Cost (+6mo) | Projected Cost (+12mo) |
+| ------------------- | -------------------- | --------------------- | ---------------------- |
+| Application Servers | $[X]                 | $[Y]                  | $[Z]                   |
+| Database            | $[A]                 | $[B]                  | $[C]                   |
+| Cache               | $[D]                 | $[E]                  | $[F]                   |
+| Load Balancer       | $[G]                 | $[H]                  | $[I]                   |
+| **Total**           | **$[Total1]**        | **$[Total2]**         | **$[Total3]**          |
 
 **Cost per User:**
+
 - Current: $[X] per 1000 users
 - After optimization: $[Y] per 1000 users
 - Savings potential: [Z]%

@@ -2,12 +2,12 @@
 
 ## Document Information
 
-| Field | Details |
-|-------|---------|
-| **Application** | [Application Name] |
-| **Version** | [Version Number] |
-| **Test Date** | YYYY-MM-DD |
-| **Tester** | [Name] |
+| Field           | Details                                |
+| --------------- | -------------------------------------- |
+| **Application** | [Application Name]                     |
+| **Version**     | [Version Number]                       |
+| **Test Date**   | YYYY-MM-DD                             |
+| **Tester**      | [Name]                                 |
 | **Environment** | Development / Staging / Pre-Production |
 
 ---
@@ -65,6 +65,7 @@
   - [ ] Test endpoints with insufficient privileges
 
 **Test Cases:**
+
 ```
 1. Login as regular user
 2. Attempt to access: /admin/dashboard
@@ -112,6 +113,7 @@
   - [ ] Use of established crypto libraries (not custom crypto)
 
 **Test Cases:**
+
 ```
 1. Check password storage:
    - Verify passwords are hashed (not plaintext or base64)
@@ -169,6 +171,7 @@
   - [ ] Test: `' or '1'='1`
 
 **Test Cases:**
+
 ```
 SQL Injection Test:
 1. Input in login username: admin' OR '1'='1'--
@@ -211,6 +214,7 @@ NoSQL Injection Test:
   - [ ] Risk assessment completed
 
 **Test Cases:**
+
 ```
 Race Condition Test:
 1. Add $1000 to account balance twice simultaneously
@@ -262,6 +266,7 @@ Rate Limiting Test:
   - [ ] Credentials allowed only for specific origins
 
 **Test Cases:**
+
 ```
 1. Check for exposed files:
    GET /.git/config
@@ -310,6 +315,7 @@ Rate Limiting Test:
   - [ ] Lockfile used (package-lock.json, Pipfile.lock)
 
 **Test Cases:**
+
 ```
 1. Run dependency scan:
    npm audit
@@ -362,6 +368,7 @@ Rate Limiting Test:
   - [ ] (See dedicated section below)
 
 **Test Cases:**
+
 ```
 Weak Password Test:
 1. Attempt to set password: "password123"
@@ -406,6 +413,7 @@ Brute Force Test:
   - [ ] Rollback mechanism available
 
 **Test Cases:**
+
 ```
 Deserialization Test:
 1. Send serialized object in request
@@ -450,6 +458,7 @@ Deserialization Test:
   - [ ] Real-time monitoring dashboard
 
 **Test Cases:**
+
 ```
 1. Perform failed login attempt
 2. Check logs for entry:
@@ -490,6 +499,7 @@ Deserialization Test:
   - [ ] Timeout configured (5 seconds max)
 
 **Test Cases:**
+
 ```
 SSRF Test:
 1. Feature: Import data from URL
@@ -557,6 +567,7 @@ AWS Metadata Test:
   - [ ] Admin actions logged
 
 **Test Scenarios:**
+
 ```
 1. Create test user with 'user' role
 2. Attempt to access admin endpoint: POST /api/admin/users
@@ -605,6 +616,7 @@ AWS Metadata Test:
   - [ ] `"><script>alert('XSS')</script>`
 
 **Test Cases:**
+
 ```
 XSS Test:
 1. Input in search box: <script>alert('XSS')</script>
@@ -624,6 +636,7 @@ XSS Test:
   - [ ] Cookie domain properly scoped
 
 **Example Secure Cookie:**
+
 ```
 Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600
 ```
@@ -646,6 +659,7 @@ Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age
   - [ ] Option to terminate other sessions
 
 **Test Cases:**
+
 ```
 Session Fixation Test:
 1. Get session ID before login
@@ -698,7 +712,7 @@ Session Fixation Test:
 - [ ] **Rate Limiting**
   - [ ] Per-user rate limits (1000 req/hour)
   - [ ] Per-IP rate limits (100 req/hour)
-  - [ ] Rate limit headers returned (X-RateLimit-*)
+  - [ ] Rate limit headers returned (X-RateLimit-\*)
   - [ ] HTTP 429 status on limit exceeded
 
 - [ ] **Input Validation**
@@ -718,6 +732,7 @@ Session Fixation Test:
   - [ ] Breaking changes properly communicated
 
 **Test Cases:**
+
 ```
 API Rate Limiting Test:
 1. Send 150 requests in 1 minute to /api/products
@@ -785,6 +800,7 @@ API Rate Limiting Test:
   - [ ] ImageMagick vulnerabilities patched
 
 **Test Cases:**
+
 ```
 File Upload Test:
 1. Upload file: malicious.php.jpg (PHP code in image)
@@ -800,47 +816,61 @@ File Upload Test:
 ### Required Headers
 
 - [ ] **Content-Security-Policy (CSP)**
+
   ```
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.example.com; style-src 'self' 'unsafe-inline'
   ```
+
   - Prevents XSS attacks
   - Restricts resource loading
 
 - [ ] **X-Content-Type-Options**
+
   ```
   X-Content-Type-Options: nosniff
   ```
+
   - Prevents MIME-sniffing attacks
 
 - [ ] **X-Frame-Options**
+
   ```
   X-Frame-Options: DENY
   ```
+
   - Prevents clickjacking attacks
   - Alternative: use CSP `frame-ancestors`
 
 - [ ] **X-XSS-Protection**
+
   ```
   X-XSS-Protection: 1; mode=block
   ```
+
   - Enables browser XSS filter (legacy browsers)
 
 - [ ] **Strict-Transport-Security (HSTS)**
+
   ```
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   ```
+
   - Forces HTTPS for 1 year
 
 - [ ] **Referrer-Policy**
+
   ```
   Referrer-Policy: strict-origin-when-cross-origin
   ```
+
   - Controls referrer information
 
 - [ ] **Permissions-Policy**
+
   ```
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   ```
+
   - Controls browser features
 
 ### Headers to Remove
@@ -854,6 +884,7 @@ File Upload Test:
   - Example: `Server: nginx/1.18.0` → `Server: nginx`
 
 **Test Headers:**
+
 ```bash
 curl -I https://example.com
 
@@ -873,20 +904,24 @@ Strict-Transport-Security: max-age=31536000
 ### Automated Scanning
 
 - [ ] **JavaScript (npm)**
+
   ```bash
   npm audit
   npm audit fix
   ```
+
   - [ ] 0 critical vulnerabilities
   - [ ] 0 high vulnerabilities
 
 - [ ] **Python (pip)**
+
   ```bash
   pip check
   safety check
   ```
 
 - [ ] **Ruby (bundler)**
+
   ```bash
   bundle audit check --update
   ```
@@ -1022,29 +1057,34 @@ Strict-Transport-Security: max-age=31536000
 ## Tools Reference
 
 ### Web Application Scanners
+
 - **OWASP ZAP:** Free, open-source web app scanner
 - **Burp Suite:** Professional web security testing
 - **Nikto:** Web server scanner
 - **Acunetix:** Commercial web vulnerability scanner
 
 ### Dependency Scanners
+
 - **npm audit:** Built-in Node.js tool
 - **Snyk:** Dependency vulnerability scanning (free tier available)
 - **OWASP Dependency-Check:** Open-source dependency scanner
 - **Safety:** Python dependency checker
 
 ### Network Scanners
+
 - **nmap:** Network port scanner
 - **OpenVAS:** Open-source vulnerability scanner
 - **Nessus:** Professional vulnerability scanner
 
 ### Specialized Tools
+
 - **sqlmap:** Automated SQL injection testing
 - **testssl.sh:** SSL/TLS configuration testing
 - **Hydra:** Password brute-forcing
 - **Metasploit:** Penetration testing framework
 
 ### Cloud Security
+
 - **AWS Security Hub:** AWS security assessment
 - **ScoutSuite:** Multi-cloud security auditing
 - **Prowler:** AWS security best practices checker
@@ -1053,23 +1093,23 @@ Strict-Transport-Security: max-age=31536000
 
 ## Severity Ratings
 
-| Severity | Description | Examples | Response Time |
-|----------|-------------|----------|---------------|
-| **Critical** | Immediate risk, data breach possible | SQL injection, RCE, authentication bypass | < 24 hours |
-| **High** | Significant risk, limited data exposure | XSS, CSRF, privilege escalation | < 1 week |
-| **Medium** | Moderate risk, limited impact | Missing security headers, verbose errors | < 1 month |
-| **Low** | Minimal risk, best practice | Version disclosure, minor config issue | Next release |
+| Severity     | Description                             | Examples                                  | Response Time |
+| ------------ | --------------------------------------- | ----------------------------------------- | ------------- |
+| **Critical** | Immediate risk, data breach possible    | SQL injection, RCE, authentication bypass | < 24 hours    |
+| **High**     | Significant risk, limited data exposure | XSS, CSRF, privilege escalation           | < 1 week      |
+| **Medium**   | Moderate risk, limited impact           | Missing security headers, verbose errors  | < 1 month     |
+| **Low**      | Minimal risk, best practice             | Version disclosure, minor config issue    | Next release  |
 
 ---
 
 ## Sign-Off
 
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| **Security Tester** | | | |
-| **Development Lead** | | | |
-| **Security Officer** | | | |
-| **Product Manager** | | | |
+| Role                 | Name | Signature | Date |
+| -------------------- | ---- | --------- | ---- |
+| **Security Tester**  |      |           |      |
+| **Development Lead** |      |           |      |
+| **Security Officer** |      |           |      |
+| **Product Manager**  |      |           |      |
 
 ---
 
@@ -1078,6 +1118,7 @@ Strict-Transport-Security: max-age=31536000
 **Next Review:** Quarterly or after major releases
 
 **References:**
+
 - [OWASP Top 10 - 2021](https://owasp.org/www-project-top-ten/)
 - [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
 - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)

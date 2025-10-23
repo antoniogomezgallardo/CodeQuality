@@ -1,10 +1,13 @@
 # User Story Mapping
 
 ## Purpose
+
 A comprehensive guide to user story mapping as a technique for discovering, organizing, and prioritizing user stories to build a shared understanding of the product and plan effective releases.
 
 ## Overview
+
 User story mapping is a collaborative activity that helps teams:
+
 - Visualize the user journey
 - Identify gaps in functionality
 - Prioritize features effectively
@@ -15,6 +18,7 @@ User story mapping is a collaborative activity that helps teams:
 ## What is User Story Mapping?
 
 ### Definition
+
 User story mapping is a visual exercise that arranges user stories in a two-dimensional map to show the flow of activities users perform and the priority/release of features.
 
 ### The Two Dimensions
@@ -57,6 +61,7 @@ Story Priority → Release Planning → MVP to Future
 ### Step-by-Step Process
 
 #### 1. Frame the Problem
+
 **Define the scope and goals**
 
 ```markdown
@@ -65,21 +70,25 @@ Story Priority → Release Planning → MVP to Future
 **Product Vision**: Online marketplace for handmade crafts
 
 **Target Users**:
+
 - Craft buyers (primary)
 - Craft sellers (secondary)
 
 **Business Goals**:
+
 - Enable craft purchases online
 - Provide seller platform
 - Generate transaction revenue
 
 **Success Metrics**:
+
 - 1000 active buyers in 6 months
 - 100 active sellers
 - $50K monthly GMV
 ```
 
 #### 2. Map the Big Picture
+
 **Identify user activities (the backbone)**
 
 ```
@@ -93,6 +102,7 @@ Each activity represents a major step in the user journey
 ```
 
 **Activity Template:**
+
 ```markdown
 ## Activity: [Name]
 
@@ -106,6 +116,7 @@ Each activity represents a major step in the user journey
 ```
 
 #### 3. Explore the Details
+
 **Break down activities into tasks (user stories)**
 
 ```
@@ -125,6 +136,7 @@ Activity: Discover Products
 ```
 
 #### 4. Slice Out a Release
+
 **Prioritize vertically to define releases**
 
 ```
@@ -184,12 +196,14 @@ Future - Innovation
 ### User Activities (Backbone)
 
 **Characteristics:**
+
 - High-level user goals
 - Sequential flow
 - User-centric (not system-centric)
 - Stable over time
 
 **Good Activity Names:**
+
 ```
 ✅ Browse Products
 ✅ Complete Purchase
@@ -204,12 +218,14 @@ Future - Innovation
 ### User Tasks (Stories)
 
 **Characteristics:**
+
 - Specific actions
 - User perspective
 - Testable
 - Deliver value
 
 **Story Format:**
+
 ```
 As a [user role]
 I want to [action]
@@ -224,6 +240,7 @@ So that I can find products within my budget
 ### Releases (Slices)
 
 **Horizontal Slices:**
+
 ```
 ❌ Anti-Pattern: Building layer by layer
    Release 1: Database
@@ -234,6 +251,7 @@ So that I can find products within my budget
 ```
 
 **Vertical Slices:**
+
 ```
 ✅ Pattern: Building end-to-end features
    Release 1: Basic browse, select, purchase (MVP)
@@ -262,12 +280,14 @@ So that I can find products within my budget
 ### Pre-Workshop Preparation
 
 **1. Define Objectives**
+
 ```markdown
 ## Workshop Objectives
 
 **Goal**: Create story map for Q1 release
 
 **Participants**:
+
 - Product Owner
 - Development Team (4-6 people)
 - UX Designer
@@ -276,6 +296,7 @@ So that I can find products within my budget
 **Duration**: 2-3 hours
 
 **Deliverables**:
+
 - Complete story map
 - MVP scope defined
 - Release plan
@@ -283,6 +304,7 @@ So that I can find products within my budget
 ```
 
 **2. Prepare Materials**
+
 ```
 Physical Workshop:
 □ Large wall space or whiteboard
@@ -299,6 +321,7 @@ Virtual Workshop:
 ```
 
 **3. Research & Prep**
+
 ```markdown
 □ User research findings
 □ Persona documents
@@ -311,6 +334,7 @@ Virtual Workshop:
 ### Workshop Agenda
 
 #### Opening (15 minutes)
+
 ```
 1. Welcome & Introductions
 2. Review Workshop Goals
@@ -323,6 +347,7 @@ Virtual Workshop:
 ```
 
 #### Frame the Problem (20 minutes)
+
 ```
 1. Review Product Vision
 2. Identify Target Users
@@ -331,6 +356,7 @@ Virtual Workshop:
 ```
 
 #### Map User Activities (30 minutes)
+
 ```
 1. Brainstorm user activities
 2. Write on sticky notes
@@ -340,6 +366,7 @@ Virtual Workshop:
 ```
 
 **Facilitation Tips:**
+
 ```
 Questions to Ask:
 - "What does the user do first?"
@@ -349,6 +376,7 @@ Questions to Ask:
 ```
 
 #### Explore User Tasks (45 minutes)
+
 ```
 1. For each activity, brainstorm tasks
 2. Write stories on sticky notes
@@ -358,6 +386,7 @@ Questions to Ask:
 ```
 
 **Story Writing Format:**
+
 ```
 ┌─────────────────────────────┐
 │ As a [role]                 │
@@ -371,6 +400,7 @@ Questions to Ask:
 ```
 
 #### Slice Releases (40 minutes)
+
 ```
 1. Draw horizontal line for MVP
 2. Select stories above line
@@ -380,6 +410,7 @@ Questions to Ask:
 ```
 
 **MVP Validation Questions:**
+
 ```
 - Can users accomplish their core goal?
 - Does it deliver measurable value?
@@ -388,6 +419,7 @@ Questions to Ask:
 ```
 
 #### Wrap-Up (20 minutes)
+
 ```
 1. Review complete map
 2. Capture photos/screenshots
@@ -399,16 +431,19 @@ Questions to Ask:
 ### Post-Workshop Activities
 
 **1. Document the Map**
+
 ```markdown
 ## Story Map Documentation
 
 ### Map Overview
+
 [Photo/screenshot of complete map]
 
 ### User Activities
+
 1. [Activity 1]: [Description]
 2. [Activity 2]: [Description]
-...
+   ...
 
 ### Release Plan
 
@@ -423,12 +458,14 @@ Stories: [Count]
 User Value: [Description]
 
 ### Parking Lot Items
+
 - [Idea not yet prioritized]
 - [Question to research]
 - [Dependency to resolve]
 ```
 
 **2. Create Backlog**
+
 ```
 Transform map into backlog:
 1. Transfer stories to project management tool
@@ -439,6 +476,7 @@ Transform map into backlog:
 ```
 
 **3. Maintain the Map**
+
 ```
 Keep map alive:
 □ Update as scope changes
@@ -541,6 +579,7 @@ KEY RESULT 3: 50% mobile conversion rate
 ## Story Splitting Strategies
 
 ### 1. Workflow Steps
+
 ```
 Epic: User Registration
 
@@ -552,6 +591,7 @@ Split by workflow:
 ```
 
 ### 2. Business Rules
+
 ```
 Epic: Apply Discount Code
 
@@ -563,6 +603,7 @@ Split by rules:
 ```
 
 ### 3. Data Variations
+
 ```
 Epic: Search Products
 
@@ -574,6 +615,7 @@ Split by data types:
 ```
 
 ### 4. Operations (CRUD)
+
 ```
 Epic: Manage Addresses
 
@@ -585,6 +627,7 @@ Split by operation:
 ```
 
 ### 5. Happy/Sad Paths
+
 ```
 Epic: Process Payment
 
@@ -596,6 +639,7 @@ Split by scenarios:
 ```
 
 ### 6. Simple/Complex
+
 ```
 Epic: Product Search
 
@@ -608,6 +652,7 @@ Split by complexity:
 ## Common Pitfalls
 
 ### 1. Activity vs Feature Confusion
+
 ```
 ❌ Wrong (Feature-focused):
    User Registration → Product Catalog → Shopping Cart
@@ -617,6 +662,7 @@ Split by complexity:
 ```
 
 ### 2. Too Many Stories in MVP
+
 ```
 ❌ Problem: MVP with 100 stories
    Result: Delays release, doesn't validate quickly
@@ -627,6 +673,7 @@ Split by complexity:
 ```
 
 ### 3. Missing the User Journey
+
 ```
 ❌ Problem: Activities not in user sequence
    Payment → Browse → Checkout → Search
@@ -636,6 +683,7 @@ Split by complexity:
 ```
 
 ### 4. Technical Stories in Map
+
 ```
 ❌ Wrong:
    "Set up database"
@@ -651,6 +699,7 @@ Note: Technical stories go in backlog, not map
 ```
 
 ### 5. No Clear MVP
+
 ```
 ❌ Problem: Everything is high priority
    Result: Can't make trade-off decisions
@@ -664,6 +713,7 @@ Note: Technical stories go in backlog, not map
 ### When to Update
 
 **Regular Reviews:**
+
 ```
 Sprint Planning: Review upcoming stories
 Sprint Review: Update based on learnings
@@ -672,6 +722,7 @@ Major Pivots: Rebuild sections as needed
 ```
 
 **Trigger Events:**
+
 ```
 □ New user research insights
 □ Significant scope changes
@@ -703,6 +754,7 @@ v2.0 - Strategic Pivot
 ### Digital Tools
 
 **Recommended Tools:**
+
 ```
 Collaborative Mapping:
 - Miro (visual, flexible)
@@ -760,46 +812,58 @@ Value Metrics:
 # [Product Name] Story Map
 
 ## Vision
+
 [Product vision statement]
 
 ## Users
+
 - [Primary persona]
 - [Secondary persona]
 
 ## Goals
+
 - [Business goal 1]
 - [Business goal 2]
 
 ## Story Map
 
 ### Activity 1: [Name]
+
 **MVP**
+
 - [ ] Story 1.1: [Description]
 - [ ] Story 1.2: [Description]
 
 **Release 2**
+
 - [ ] Story 1.3: [Description]
 - [ ] Story 1.4: [Description]
 
 **Future**
+
 - [ ] Story 1.5: [Description]
 
 ### Activity 2: [Name]
+
 [Repeat structure]
 
 ## Release Plan
 
 ### MVP - [Target Date]
+
 **Goal**: [What we're learning/validating]
 **Scope**: [X stories]
 **Success Criteria**:
+
 - [Metric 1]
 - [Metric 2]
 
 ### Release 2 - [Target Date]
+
 **Goal**: [What we're improving]
 **Scope**: [X stories]
 **Success Criteria**:
+
 - [Metric 1]
 - [Metric 2]
 ```
@@ -842,6 +906,7 @@ Value Metrics:
 ### Story Mapping Workshop Checklist
 
 **Preparation:**
+
 - [ ] Workshop scheduled with right participants
 - [ ] Objectives defined
 - [ ] User research available
@@ -849,6 +914,7 @@ Value Metrics:
 - [ ] Agenda shared with participants
 
 **During Workshop:**
+
 - [ ] Product vision reviewed
 - [ ] User activities identified
 - [ ] Activities arranged in sequence
@@ -859,6 +925,7 @@ Value Metrics:
 - [ ] Map photographed/saved
 
 **Follow-up:**
+
 - [ ] Map documented
 - [ ] Stories transferred to backlog
 - [ ] Acceptance criteria added
@@ -869,15 +936,18 @@ Value Metrics:
 ## References
 
 ### Books
+
 - "User Story Mapping" - Jeff Patton
 - "Impact Mapping" - Gojko Adzic
 - "User Stories Applied" - Mike Cohn
 
 ### Articles
+
 - [The New User Story Backlog is a Map](https://www.jpattonassociates.com/the-new-backlog/) - Jeff Patton
 - [Story Mapping Guide](https://www.atlassian.com/agile/project-management/user-story-mapping) - Atlassian
 
 ### Tools
+
 - [Miro](https://miro.com) - Visual collaboration
 - [StoriesOnBoard](https://storiesonboard.com) - Purpose-built tool
 - [Mural](https://mural.co) - Digital workspace
@@ -892,4 +962,4 @@ Value Metrics:
 
 ---
 
-*Part of: [Requirements Engineering](README.md)*
+_Part of: [Requirements Engineering](README.md)_

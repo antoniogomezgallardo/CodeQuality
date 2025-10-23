@@ -12,6 +12,7 @@
 ## Story Details
 
 ### User Story Statement
+
 ```
 As a [type of user]
 I want [goal/desire]
@@ -19,6 +20,7 @@ So that [benefit/value]
 ```
 
 ### Description
+
 [Detailed description of what needs to be built and why it matters]
 
 ---
@@ -197,21 +199,25 @@ So that [benefit/value]
 ## Additional Context
 
 ### Related Stories/Epics
+
 - [List related user stories]
 - [Reference parent epic]
 - [Note any follow-up stories]
 
 ### Assumptions
+
 - [List any assumptions made]
 - [Document constraints]
 - [Note any temporary solutions]
 
 ### Out of Scope
+
 - [Clearly define what is NOT included]
 - [List features for future iterations]
 - [Document deferred requirements]
 
 ### Reference Materials
+
 - [ ] Design files: [Link]
 - [ ] Technical specs: [Link]
 - [ ] API documentation: [Link]
@@ -223,6 +229,7 @@ So that [benefit/value]
 ## DoR Sign-off
 
 ### Team Review
+
 - [ ] **Reviewed in refinement meeting**
   - Date: [Date]
   - Attendees: [List]
@@ -233,6 +240,7 @@ So that [benefit/value]
   - [ ] No blocking questions remain
 
 ### Product Owner Approval
+
 - [ ] **Product Owner confirms ready for sprint**
   - Approved by: [Name]
   - Date: [Date]
@@ -253,6 +261,7 @@ So that [benefit/value]
 **Readiness Score:** [Met/Total = %]
 
 **Status:**
+
 - ✅ READY - All critical criteria met (>90%)
 - ⚠️ NEARLY READY - Most criteria met (70-90%), minor items pending
 - ❌ NOT READY - Significant gaps remain (<70%)
@@ -261,16 +270,18 @@ So that [benefit/value]
 
 ## Version History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | [Date] | [Name] | Initial DoR assessment |
+| Version | Date   | Author | Changes                |
+| ------- | ------ | ------ | ---------------------- |
+| 1.0     | [Date] | [Name] | Initial DoR assessment |
 
 ---
 
 ## DoR Variants
 
 ### For Bugs/Defects
+
 Additional criteria for defect stories:
+
 - [ ] Bug is reproducible
 - [ ] Steps to reproduce documented
 - [ ] Expected vs actual behavior clear
@@ -280,7 +291,9 @@ Additional criteria for defect stories:
 - [ ] Root cause analyzed (if known)
 
 ### For Technical Debt
+
 Additional criteria for technical debt stories:
+
 - [ ] Current pain points documented
 - [ ] Business impact quantified
 - [ ] Refactoring approach outlined
@@ -289,7 +302,9 @@ Additional criteria for technical debt stories:
 - [ ] Rollback plan exists
 
 ### For Spikes/Research
+
 Additional criteria for spike stories:
+
 - [ ] Research questions clearly defined
 - [ ] Success criteria established
 - [ ] Time-boxed (typically 1-2 days)
@@ -299,4 +314,4 @@ Additional criteria for spike stories:
 
 ---
 
-*This template should be customized based on your team's specific needs and context.*
+_This template should be customized based on your team's specific needs and context._

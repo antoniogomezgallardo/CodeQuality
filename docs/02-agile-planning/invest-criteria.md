@@ -5,6 +5,7 @@
 INVEST is a mnemonic acronym created by Bill Wake that defines the characteristics of well-formed user stories. Each letter represents a quality that makes user stories more effective and valuable in Agile development.
 
 **INVEST stands for:**
+
 - **I**ndependent
 - **N**egotiable
 - **V**aluable
@@ -30,6 +31,7 @@ User stories should be self-contained and independent of other stories, allowing
 
 ```markdown
 **Benefits:**
+
 - Flexible prioritization and sequencing
 - Parallel development possible
 - Reduced risk of blocking
@@ -37,6 +39,7 @@ User stories should be self-contained and independent of other stories, allowing
 - Simpler sprint planning
 
 **Challenges of Dependent Stories:**
+
 - One story blocked → multiple stories blocked
 - Complex coordination required
 - Difficult to change priorities
@@ -48,17 +51,21 @@ User stories should be self-contained and independent of other stories, allowing
 ```markdown
 **Technique 1: Combine Dependent Stories**
 ❌ Before (Dependent):
+
 - Story 1: Create user registration API
 - Story 2: Create user registration UI
 
 ✅ After (Independent):
+
 - Story: Implement user registration (API + UI)
 
 **Technique 2: Reorder Dependencies**
 ❌ Before:
+
 - Story A requires Story B to be complete first
 
 ✅ After:
+
 - Redesign Story A to not require Story B
 - Or combine them into one story
 
@@ -79,6 +86,7 @@ User stories should be self-contained and independent of other stories, allowing
 **Scenario:** E-commerce checkout flow
 
 ❌ **Dependent Stories:**
+
 1. Create payment processing API
 2. Integrate Stripe payment gateway
 3. Add payment form UI
@@ -86,6 +94,7 @@ User stories should be self-contained and independent of other stories, allowing
 5. Send order confirmation email
 
 **Problems:**
+
 - Story 3 depends on Story 1
 - Story 4 depends on Stories 1-3
 - Story 5 depends on Story 4
@@ -93,11 +102,13 @@ User stories should be self-contained and independent of other stories, allowing
 - Changes cascade through all stories
 
 ✅ **Independent Stories (Vertical Slices):**
+
 1. "Implement checkout with mock payment" (E2E flow with placeholder)
 2. "Replace mock payment with Stripe integration"
 3. "Add order confirmation email notification"
 
 **Benefits:**
+
 - Story 1 delivers end-to-end value (even if simplified)
 - Story 2 enhances existing feature
 - Story 3 can be developed anytime
@@ -112,6 +123,7 @@ User stories are not detailed contracts. They are placeholders for conversations
 
 ```markdown
 **Enables:**
+
 - Collaboration and co-creation
 - Flexible solutions
 - Innovation and creativity
@@ -119,6 +131,7 @@ User stories are not detailed contracts. They are placeholders for conversations
 - Scope negotiation under constraints
 
 **Avoids:**
+
 - Waterfall-style requirements documents
 - Over-specification too early
 - Stifling creativity
@@ -139,11 +152,13 @@ userId, timestamp, and data fields."
 "As a user, I want to submit my form data so that it's saved for future reference."
 
 **Acceptance Criteria (Still Negotiable):**
+
 - Form data is persisted when user clicks submit
 - User receives confirmation that submission succeeded
 - User can continue working after submission
 
 **Discussion Points:**
+
 - What data needs to be submitted?
 - What constitutes successful submission?
 - What should happen on errors?
@@ -197,6 +212,7 @@ Every user story must deliver value to the end user, customer, or business. If a
 
 ```markdown
 **Ensures:**
+
 - Business alignment
 - User focus
 - ROI justification
@@ -204,6 +220,7 @@ Every user story must deliver value to the end user, customer, or business. If a
 - Stakeholder buy-in
 
 **Prevents:**
+
 - Technical work without business value
 - Gold plating
 - Speculative features
@@ -245,12 +262,14 @@ enabling us to support customer requests for Apple Pay and Google Pay"
 
 ```markdown
 **Quantitative Value:**
+
 - Increase conversion rate by 5%
 - Reduce support tickets by 20%
 - Save users 30 seconds per transaction
 - Reduce infrastructure costs by $500/month
 
 **Qualitative Value:**
+
 - Improve user satisfaction (measured by NPS)
 - Enhance brand perception
 - Increase customer trust
@@ -258,6 +277,7 @@ enabling us to support customer requests for Apple Pay and Google Pay"
 
 **Value Validation:**
 Before accepting a story, ask:
+
 1. Who benefits from this?
 2. How will they benefit?
 3. How will we measure the benefit?
@@ -272,6 +292,7 @@ The team must be able to estimate the size or effort required for a user story. 
 
 ```markdown
 **Enables:**
+
 - Sprint planning
 - Velocity calculation
 - Predictable delivery
@@ -279,6 +300,7 @@ The team must be able to estimate the size or effort required for a user story. 
 - Risk identification
 
 **Requires:**
+
 - Sufficient understanding
 - Appropriate size
 - Required knowledge/skills
@@ -300,6 +322,7 @@ The team must be able to estimate the size or effort required for a user story. 
 ❓ Too big to estimate accurately
 
 ✅ Break into smaller stories:
+
 - "Implement user login on mobile"
 - "Display product catalog on mobile"
 - "Add shopping cart to mobile app"
@@ -309,6 +332,7 @@ The team must be able to estimate the size or effort required for a user story. 
 ❓ Unknown complexity, unknown issues
 
 ✅ Create a spike first:
+
 - "Spike: Research and document third-party API integration approach"
 - After spike, create estimable implementation story
 
@@ -317,6 +341,7 @@ The team must be able to estimate the size or effort required for a user story. 
 ❓ Team has no blockchain experience
 
 ✅ Solutions:
+
 - Time-boxed spike to gain knowledge
 - Training/research time
 - Bring in expert for estimation
@@ -328,6 +353,7 @@ The team must be able to estimate the size or effort required for a user story. 
 ```markdown
 **Technique 1: Use Spikes**
 When uncertainty is high:
+
 - Time-box research (1-3 days)
 - Goal: Answer specific questions
 - Output: Information to estimate real story
@@ -356,12 +382,14 @@ Developer B: 13 points (concerned about email delivery)
 Developer C: 8 points (moderate complexity)
 
 **Discussion:**
+
 - What's causing the difference?
 - Have we done email delivery before?
 - Do we have email templates ready?
 - What about rate limiting?
 
 **Refined Story with Clarifications:**
+
 - Use existing email service (already integrated)
 - Email template designed (part of DoR)
 - Rate limiting: 3 reset requests per hour
@@ -378,6 +406,7 @@ User stories should be small enough to complete within a single sprint (typicall
 
 ```markdown
 **Benefits:**
+
 - Faster feedback
 - Easier estimation
 - Reduced risk
@@ -387,6 +416,7 @@ User stories should be small enough to complete within a single sprint (typicall
 - Less likely to be blocked
 
 **Drawbacks of Large Stories:**
+
 - Uncertainty increases
 - Estimation accuracy decreases
 - Risk of not completing in sprint
@@ -398,12 +428,14 @@ User stories should be small enough to complete within a single sprint (typicall
 
 ```markdown
 **Ideal Size:**
+
 - 1-3 days of development work
 - 1-8 story points (depending on team's scale)
 - Completable within sprint
 - Small enough to demo a tangible outcome
 
 **Size Thresholds:**
+
 - 🟢 **Perfect:** 1-5 points
 - 🟡 **Acceptable:** 5-8 points (but consider splitting)
 - 🔴 **Too Large:** 8-13 points (must split)
@@ -420,6 +452,7 @@ If a story takes more than half a sprint to complete, it's too large.
 Epic: "User can book a hotel room"
 
 Split into:
+
 1. "Search for available hotels"
 2. "View hotel details and room options"
 3. "Select room and enter booking details"
@@ -429,6 +462,7 @@ Split into:
 Epic: "Manage product inventory"
 
 Split into:
+
 1. "Create new product"
 2. "View product list"
 3. "Update product details"
@@ -438,6 +472,7 @@ Split into:
 Epic: "Calculate shipping costs"
 
 Split into:
+
 1. "Calculate domestic shipping"
 2. "Calculate international shipping"
 3. "Apply shipping discounts"
@@ -446,6 +481,7 @@ Split into:
 Epic: "User authentication"
 
 Split into:
+
 1. "Email/password login (simple)"
 2. "OAuth social login (complex)"
 3. "Two-factor authentication (complex)"
@@ -454,6 +490,7 @@ Split into:
 Epic: "Analytics dashboard"
 
 Split into:
+
 1. "Show top 3 key metrics (MVP)"
 2. "Add detailed charts and graphs"
 3. "Enable custom dashboard configuration"
@@ -462,6 +499,7 @@ Split into:
 Epic: "Mobile app push notifications"
 
 Split into:
+
 1. "iOS push notifications"
 2. "Android push notifications"
 
@@ -469,6 +507,7 @@ Split into:
 Epic: "Payment processing"
 
 Split into:
+
 1. "Process successful payment"
 2. "Handle payment failures"
 3. "Process refunds"
@@ -482,6 +521,7 @@ User stories must have clear, testable acceptance criteria. If you can't test wh
 
 ```markdown
 **Enables:**
+
 - Clear definition of "done"
 - Automated testing
 - Objective acceptance
@@ -489,6 +529,7 @@ User stories must have clear, testable acceptance criteria. If you can't test wh
 - Continuous integration
 
 **Requires:**
+
 - Measurable criteria
 - Observable outcomes
 - Specific behaviors
@@ -523,11 +564,13 @@ Then I see an error "Reset link expired"
 And I can request a new reset link
 
 ❌ **Non-Testable (Avoid):**
+
 - "Password reset works well"
 - "User experience is good"
 - "System is secure"
 
 ✅ **Testable (Specific):**
+
 - "Password reset email arrives within 2 minutes"
 - "User can complete reset in 3 clicks"
 - "Reset tokens expire after 1 hour"
@@ -537,6 +580,7 @@ And I can request a new reset link
 
 ```markdown
 **For Each Story, Verify:**
+
 - [ ] Acceptance criteria are specific and measurable
 - [ ] Success conditions are clearly defined
 - [ ] Failure scenarios are identified
@@ -556,17 +600,18 @@ Use this scorecard to evaluate user stories:
 ```markdown
 **Story:** [Write story here]
 
-| Criterion | Score (1-5) | Notes |
-|-----------|-------------|-------|
-| Independent | [ ] | Can it be developed without waiting for other stories? |
-| Negotiable | [ ] | Is it open to discussion and refinement? |
-| Valuable | [ ] | Does it deliver clear user/business value? |
-| Estimable | [ ] | Can the team estimate the effort? |
-| Small | [ ] | Can it be completed in 1-3 days? |
-| Testable | [ ] | Are acceptance criteria clear and measurable? |
-| **Total** | [ ] / 30 | Target: 25+ for ready stories |
+| Criterion   | Score (1-5) | Notes                                                  |
+| ----------- | ----------- | ------------------------------------------------------ |
+| Independent | [ ]         | Can it be developed without waiting for other stories? |
+| Negotiable  | [ ]         | Is it open to discussion and refinement?               |
+| Valuable    | [ ]         | Does it deliver clear user/business value?             |
+| Estimable   | [ ]         | Can the team estimate the effort?                      |
+| Small       | [ ]         | Can it be completed in 1-3 days?                       |
+| Testable    | [ ]         | Are acceptance criteria clear and measurable?          |
+| **Total**   | [ ] / 30    | Target: 25+ for ready stories                          |
 
 **Action Items:**
+
 - Score <20: Needs significant refinement
 - Score 20-24: Needs some improvement
 - Score 25+: Ready for sprint
@@ -580,15 +625,15 @@ Use this scorecard to evaluate user stories:
 
 **INVEST Analysis:**
 
-| Criterion | Score | Issues |
-|-----------|-------|--------|
-| Independent | 5/5 | ✅ No dependencies |
-| Negotiable | 5/5 | ✅ Open to discussion |
-| Valuable | 5/5 | ✅ Clear user value |
-| Estimable | 1/5 | ❌ "Faster" is too vague |
-| Small | 1/5 | ❌ Too large and undefined |
-| Testable | 1/5 | ❌ No measurable criteria |
-| **Total** | **18/30** | ⚠️ **Needs Refinement** |
+| Criterion   | Score     | Issues                     |
+| ----------- | --------- | -------------------------- |
+| Independent | 5/5       | ✅ No dependencies         |
+| Negotiable  | 5/5       | ✅ Open to discussion      |
+| Valuable    | 5/5       | ✅ Clear user value        |
+| Estimable   | 1/5       | ❌ "Faster" is too vague   |
+| Small       | 1/5       | ❌ Too large and undefined |
+| Testable    | 1/5       | ❌ No measurable criteria  |
+| **Total**   | **18/30** | ⚠️ **Needs Refinement**    |
 
 **Refinement:**
 
@@ -596,6 +641,7 @@ Use this scorecard to evaluate user stories:
 so that I can find products quickly without frustration"
 
 **Acceptance Criteria:**
+
 - Search API responds in <500ms for 95% of requests
 - Page renders search results in <800ms total
 - Tested with 10,000 products in catalog
@@ -603,15 +649,15 @@ so that I can find products quickly without frustration"
 
 **Re-scored:**
 
-| Criterion | Score | Improvement |
-|-----------|-------|-------------|
-| Independent | 5/5 | ✅ Still independent |
-| Negotiable | 5/5 | ✅ Can discuss thresholds |
-| Valuable | 5/5 | ✅ Clear user benefit |
-| Estimable | 5/5 | ✅ Now specific and clear |
-| Small | 4/5 | ✅ Focused on one page/action |
-| Testable | 5/5 | ✅ Measurable criteria defined |
-| **Total** | **29/30** | ✅ **Ready for Sprint** |
+| Criterion   | Score     | Improvement                    |
+| ----------- | --------- | ------------------------------ |
+| Independent | 5/5       | ✅ Still independent           |
+| Negotiable  | 5/5       | ✅ Can discuss thresholds      |
+| Valuable    | 5/5       | ✅ Clear user benefit          |
+| Estimable   | 5/5       | ✅ Now specific and clear      |
+| Small       | 4/5       | ✅ Focused on one page/action  |
+| Testable    | 5/5       | ✅ Measurable criteria defined |
+| **Total**   | **29/30** | ✅ **Ready for Sprint**        |
 ```
 
 ## Common Anti-Patterns
@@ -623,6 +669,7 @@ so that I can find products quickly without frustration"
 "As a developer, I want to upgrade React to v18"
 
 **Why it fails INVEST:**
+
 - Not valuable to end user
 - Not negotiable (technical necessity)
 - Not small if it affects many components
@@ -643,6 +690,7 @@ Or: Make it a technical story with business justification:
 "Build the shopping cart UI"
 
 **Why it fails INVEST:**
+
 - Not independent (UI depends on API)
 - Doesn't deliver end-to-end value alone
 
@@ -659,6 +707,7 @@ Vertical slice:
 Attaching a 20-page detailed specification to a story
 
 **Why it fails INVEST:**
+
 - Not negotiable (too detailed too early)
 - Stifles conversation
 - Waterfall approach
@@ -685,4 +734,4 @@ Story + lightweight acceptance criteria + conversation
 
 ---
 
-*Part of: [Agile Planning](README.md)*
+_Part of: [Agile Planning](README.md)_

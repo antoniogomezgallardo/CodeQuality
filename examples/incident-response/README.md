@@ -46,6 +46,7 @@ Comprehensive overview of incident response practices and how to use the example
 ### 2. incident-runbook-template.md
 
 A complete template for creating service-specific runbooks. Includes:
+
 - Common failure scenarios
 - Step-by-step remediation procedures
 - Escalation paths
@@ -57,6 +58,7 @@ A complete template for creating service-specific runbooks. Includes:
 ### 3. postmortem-example.md
 
 A filled-out postmortem example following the blameless postmortem format. Demonstrates:
+
 - Incident timeline
 - Root cause analysis
 - Impact assessment
@@ -68,6 +70,7 @@ A filled-out postmortem example following the blameless postmortem format. Demon
 ### 4. monitoring-alerts.yaml
 
 Prometheus alerting rules for common incident scenarios:
+
 - High error rates
 - Service availability
 - Resource exhaustion
@@ -79,6 +82,7 @@ Prometheus alerting rules for common incident scenarios:
 ### 5. incident-detection.js
 
 Automated incident detection script that:
+
 - Monitors health endpoints
 - Checks SLI metrics
 - Detects anomalies
@@ -90,6 +94,7 @@ Automated incident detection script that:
 ### 6. on-call-rotation.json
 
 On-call schedule configuration including:
+
 - Rotation schedules
 - Escalation policies
 - Coverage rules
@@ -100,6 +105,7 @@ On-call schedule configuration including:
 ### 7. incident-severity-matrix.md
 
 Comprehensive guide for classifying incidents by severity:
+
 - Severity definitions (SEV-1 through SEV-4)
 - Response time expectations
 - Escalation requirements
@@ -110,6 +116,7 @@ Comprehensive guide for classifying incidents by severity:
 ### 8. communication-templates.md
 
 Pre-written templates for incident communications:
+
 - Initial incident notification
 - Status updates
 - Resolution notification
@@ -121,6 +128,7 @@ Pre-written templates for incident communications:
 ### 9. sli-slo-config.yaml
 
 Service Level Indicator (SLI) and Service Level Objective (SLO) definitions:
+
 - Availability SLIs/SLOs
 - Latency SLIs/SLOs
 - Error rate SLIs/SLOs
@@ -131,6 +139,7 @@ Service Level Indicator (SLI) and Service Level Objective (SLO) definitions:
 ### 10. rollback-playbook.md
 
 Emergency rollback procedures for various scenarios:
+
 - Application deployments
 - Database migrations
 - Infrastructure changes
@@ -151,6 +160,7 @@ Emergency rollback procedures for various scenarios:
 ### Initial Setup
 
 1. **Customize Templates**
+
    ```bash
    # Copy runbook template for each service
    cp incident-runbook-template.md runbook-{service-name}.md
@@ -159,6 +169,7 @@ Emergency rollback procedures for various scenarios:
    ```
 
 2. **Configure Monitoring Alerts**
+
    ```bash
    # Deploy Prometheus alerts
    kubectl apply -f monitoring-alerts.yaml
@@ -168,6 +179,7 @@ Emergency rollback procedures for various scenarios:
    ```
 
 3. **Setup Incident Detection**
+
    ```bash
    # Install dependencies
    npm install
@@ -194,16 +206,19 @@ Emergency rollback procedures for various scenarios:
 ### Phase 1: Detection
 
 **Automatic Detection:**
+
 - Monitoring alerts fire
 - Automated health checks fail
 - Anomaly detection triggers
 
 **Manual Detection:**
+
 - Customer reports
 - Team member discovers issue
 - Security alerts
 
 **Actions:**
+
 1. Acknowledge alert
 2. Assess severity
 3. Create incident ticket
@@ -212,18 +227,21 @@ Emergency rollback procedures for various scenarios:
 ### Phase 2: Response
 
 **Initial Response (First 5 minutes):**
+
 1. Assign Incident Commander
 2. Create incident channel (Slack/Teams)
 3. Begin incident timeline
 4. Assess impact and severity
 
 **Investigation (Ongoing):**
+
 1. Gather data (logs, metrics, traces)
 2. Form hypotheses
 3. Test theories
 4. Identify root cause
 
 **Mitigation (ASAP):**
+
 1. Implement immediate fixes
 2. Reduce blast radius
 3. Execute rollback if needed
@@ -232,12 +250,14 @@ Emergency rollback procedures for various scenarios:
 ### Phase 3: Recovery
 
 **Restoration:**
+
 1. Verify service health
 2. Monitor key metrics
 3. Clear incidents/alerts
 4. Notify stakeholders
 
 **Validation:**
+
 1. Run smoke tests
 2. Check user-facing features
 3. Verify data integrity
@@ -246,6 +266,7 @@ Emergency rollback procedures for various scenarios:
 ### Phase 4: Postmortem
 
 **Within 24-48 hours:**
+
 1. Schedule postmortem meeting
 2. Document timeline
 3. Identify root cause
@@ -257,6 +278,7 @@ Emergency rollback procedures for various scenarios:
 ### Phase 5: Follow-up
 
 **Ongoing:**
+
 1. Track action items
 2. Implement improvements
 3. Update runbooks
@@ -270,12 +292,14 @@ Emergency rollback procedures for various scenarios:
 **Definition:** Complete service outage affecting all users
 
 **Examples:**
+
 - Website completely down
 - Payment processing offline
 - Data breach detected
 - Critical security vulnerability
 
 **Response:**
+
 - Immediate response required
 - Page on-call immediately
 - Incident Commander required
@@ -289,12 +313,14 @@ Emergency rollback procedures for various scenarios:
 **Definition:** Major functionality degraded affecting many users
 
 **Examples:**
+
 - Significant performance degradation
 - Key feature unavailable
 - Partial outage (single region)
 - Data inconsistencies
 
 **Response:**
+
 - Response within 15 minutes
 - Incident Commander recommended
 - Manager notification
@@ -307,12 +333,14 @@ Emergency rollback procedures for various scenarios:
 **Definition:** Minor functionality affected, limited user impact
 
 **Examples:**
+
 - Single feature degraded
 - Non-critical service issues
 - Minor performance issues
 - Workaround available
 
 **Response:**
+
 - Response within 1 hour
 - Normal business hours handling
 - Team notification
@@ -325,12 +353,14 @@ Emergency rollback procedures for various scenarios:
 **Definition:** Minimal impact, cosmetic issues
 
 **Examples:**
+
 - UI glitches
 - Non-critical bugs
 - Documentation issues
 - Minor alerts
 
 **Response:**
+
 - Best effort resolution
 - Can wait for next sprint
 - Log and track

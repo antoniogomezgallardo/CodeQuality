@@ -32,12 +32,15 @@
 ## 3. Introduction
 
 ### 3.1 Purpose
+
 This test plan outlines the manual testing strategy for the User Management System within the CodeQuality Management Platform. The plan defines the scope, approach, resources, and schedule for testing activities.
 
 ### 3.2 Background
+
 The User Management System is a critical component that handles user authentication, authorization, profile management, and user-related operations. Manual testing is essential to validate the user experience, usability, and edge cases that automated tests might miss.
 
 ### 3.3 Document Conventions
+
 - **High Priority:** Critical functionality that must work correctly
 - **Medium Priority:** Important functionality with moderate impact
 - **Low Priority:** Nice-to-have features with minimal impact
@@ -49,6 +52,7 @@ The User Management System is a critical component that handles user authenticat
 ## 4. Test Objectives
 
 ### 4.1 Primary Objectives
+
 - Validate all user management functionalities work as specified
 - Ensure excellent user experience across different browsers and devices
 - Verify security measures are properly implemented
@@ -56,6 +60,7 @@ The User Management System is a critical component that handles user authenticat
 - Validate performance under normal usage conditions
 
 ### 4.2 Success Criteria
+
 - 100% of critical test cases pass
 - 95% of high priority test cases pass
 - 90% of medium priority test cases pass
@@ -64,6 +69,7 @@ The User Management System is a critical component that handles user authenticat
 - Performance meets specified requirements
 
 ### 4.3 Exit Criteria
+
 - All planned test cases have been executed
 - All P1 and P2 defects have been resolved
 - Regression testing completed successfully
@@ -75,6 +81,7 @@ The User Management System is a critical component that handles user authenticat
 ### 5.1 Features to be Tested
 
 #### 5.1.1 User Authentication
+
 - **User Registration**
   - Account creation with email verification
   - Password strength validation
@@ -96,6 +103,7 @@ The User Management System is a critical component that handles user authenticat
   - Session persistence across browser restarts
 
 #### 5.1.2 User Profile Management
+
 - **Profile Creation and Updates**
   - Personal information management
   - Profile photo upload and management
@@ -110,6 +118,7 @@ The User Management System is a critical component that handles user authenticat
   - Administrative functions
 
 #### 5.1.3 User Interface and Experience
+
 - **Responsive Design**
   - Mobile device compatibility
   - Tablet optimization
@@ -123,6 +132,7 @@ The User Management System is a critical component that handles user authenticat
   - Font size scalability
 
 ### 5.2 Features NOT to be Tested
+
 - API endpoint testing (covered by automated tests)
 - Database performance testing (covered by specialized tools)
 - Load testing (covered by performance testing team)
@@ -131,6 +141,7 @@ The User Management System is a critical component that handles user authenticat
 ### 5.3 Test Types
 
 #### 5.3.1 Functional Testing
+
 - Positive testing scenarios
 - Negative testing scenarios
 - Boundary value testing
@@ -138,6 +149,7 @@ The User Management System is a critical component that handles user authenticat
 - Error handling validation
 
 #### 5.3.2 Non-Functional Testing
+
 - Usability testing
 - Compatibility testing
 - Accessibility testing
@@ -145,6 +157,7 @@ The User Management System is a critical component that handles user authenticat
 - Performance testing (user-facing)
 
 #### 5.3.3 Exploratory Testing
+
 - Ad-hoc testing sessions
 - User journey exploration
 - Edge case discovery
@@ -153,6 +166,7 @@ The User Management System is a critical component that handles user authenticat
 ## 6. Test Approach
 
 ### 6.1 Testing Methodology
+
 - **Risk-Based Testing:** Focus on high-risk areas first
 - **User Story-Based Testing:** Test cases derived from user stories
 - **Exploratory Testing:** Unscripted investigation of the application
@@ -160,6 +174,7 @@ The User Management System is a critical component that handles user authenticat
 - **Mobile-First Approach:** Start with mobile testing, then desktop
 
 ### 6.2 Test Execution Strategy
+
 1. **Smoke Testing:** Basic functionality verification
 2. **Functional Testing:** Feature-specific test execution
 3. **Integration Testing:** End-to-end workflow validation
@@ -167,6 +182,7 @@ The User Management System is a critical component that handles user authenticat
 5. **User Acceptance Testing:** Stakeholder validation
 
 ### 6.3 Test Data Management
+
 - **Test Data Sources:**
   - Production-like synthetic data
   - Anonymized production data (where permitted)
@@ -181,6 +197,7 @@ The User Management System is a critical component that handles user authenticat
 ## 7. Test Environment
 
 ### 7.1 Hardware Requirements
+
 - **Desktop Computers:**
   - Windows 11 workstations
   - macOS Ventura systems
@@ -194,6 +211,7 @@ The User Management System is a critical component that handles user authenticat
   - iPad Air and Pro models
 
 ### 7.2 Software Requirements
+
 - **Operating Systems:**
   - Windows 11 (latest updates)
   - macOS Ventura/Sonoma
@@ -207,12 +225,14 @@ The User Management System is a critical component that handles user authenticat
   - Edge 118+ (desktop and mobile)
 
 ### 7.3 Network Configurations
+
 - High-speed broadband (100+ Mbps)
 - Standard broadband (10-25 Mbps)
 - Mobile 4G/5G connections
 - Slow 3G simulation for performance testing
 
 ### 7.4 Testing Tools
+
 - **Bug Tracking:** Jira
 - **Test Management:** TestRail
 - **Screen Recording:** Loom, OBS Studio
@@ -224,18 +244,19 @@ The User Management System is a critical component that handles user authenticat
 
 ### 8.1 Testing Phases
 
-| Phase | Duration | Start Date | End Date | Deliverables |
-|-------|----------|------------|----------|--------------|
-| Test Planning | 3 days | [Date] | [Date] | Test Plan, Test Cases |
-| Test Environment Setup | 2 days | [Date] | [Date] | Environment Ready |
-| Smoke Testing | 1 day | [Date] | [Date] | Smoke Test Results |
-| Functional Testing | 5 days | [Date] | [Date] | Test Execution Reports |
-| Integration Testing | 3 days | [Date] | [Date] | Integration Test Results |
-| Regression Testing | 2 days | [Date] | [Date] | Regression Test Report |
-| User Acceptance Testing | 3 days | [Date] | [Date] | UAT Sign-off |
-| Test Closure | 1 day | [Date] | [Date] | Test Summary Report |
+| Phase                   | Duration | Start Date | End Date | Deliverables             |
+| ----------------------- | -------- | ---------- | -------- | ------------------------ |
+| Test Planning           | 3 days   | [Date]     | [Date]   | Test Plan, Test Cases    |
+| Test Environment Setup  | 2 days   | [Date]     | [Date]   | Environment Ready        |
+| Smoke Testing           | 1 day    | [Date]     | [Date]   | Smoke Test Results       |
+| Functional Testing      | 5 days   | [Date]     | [Date]   | Test Execution Reports   |
+| Integration Testing     | 3 days   | [Date]     | [Date]   | Integration Test Results |
+| Regression Testing      | 2 days   | [Date]     | [Date]   | Regression Test Report   |
+| User Acceptance Testing | 3 days   | [Date]     | [Date]   | UAT Sign-off             |
+| Test Closure            | 1 day    | [Date]     | [Date]   | Test Summary Report      |
 
 ### 8.2 Milestones
+
 - **Test Plan Approval:** [Date]
 - **Test Case Design Complete:** [Date]
 - **Test Environment Ready:** [Date]
@@ -248,16 +269,17 @@ The User Management System is a critical component that handles user authenticat
 
 ### 9.1 Human Resources
 
-| Role | Name | Responsibility | Availability |
-|------|------|----------------|--------------|
-| Test Manager | [Name] | Overall test coordination | 100% |
-| Senior Tester | [Name] | Test case design and execution | 100% |
-| Mobile Tester | [Name] | Mobile-specific testing | 80% |
-| Accessibility Tester | [Name] | Accessibility compliance | 50% |
-| Business Analyst | [Name] | Requirements clarification | 30% |
-| UX Designer | [Name] | Usability feedback | 20% |
+| Role                 | Name   | Responsibility                 | Availability |
+| -------------------- | ------ | ------------------------------ | ------------ |
+| Test Manager         | [Name] | Overall test coordination      | 100%         |
+| Senior Tester        | [Name] | Test case design and execution | 100%         |
+| Mobile Tester        | [Name] | Mobile-specific testing        | 80%          |
+| Accessibility Tester | [Name] | Accessibility compliance       | 50%          |
+| Business Analyst     | [Name] | Requirements clarification     | 30%          |
+| UX Designer          | [Name] | Usability feedback             | 20%          |
 
 ### 9.2 Skills Required
+
 - Manual testing expertise
 - Mobile testing experience
 - Accessibility testing knowledge
@@ -267,6 +289,7 @@ The User Management System is a critical component that handles user authenticat
 - Security testing awareness
 
 ### 9.3 Training Needs
+
 - Product domain knowledge sessions
 - New testing tool training
 - Security testing workshops
@@ -275,6 +298,7 @@ The User Management System is a critical component that handles user authenticat
 ## 10. Test Deliverables
 
 ### 10.1 Test Planning Deliverables
+
 - Test Plan Document
 - Test Case Specifications
 - Test Data Requirements
@@ -282,6 +306,7 @@ The User Management System is a critical component that handles user authenticat
 - Risk Assessment Document
 
 ### 10.2 Test Execution Deliverables
+
 - Test Execution Reports (daily)
 - Defect Reports
 - Test Coverage Reports
@@ -289,6 +314,7 @@ The User Management System is a critical component that handles user authenticat
 - Risk and Issue Logs
 
 ### 10.3 Test Closure Deliverables
+
 - Test Summary Report
 - Defect Summary Report
 - Lessons Learned Document
@@ -299,15 +325,16 @@ The User Management System is a critical component that handles user authenticat
 
 ### 11.1 High-Risk Areas
 
-| Risk | Impact | Probability | Mitigation Strategy |
-|------|--------|-------------|---------------------|
-| Environment unavailability | High | Medium | Backup environment setup |
-| Key tester unavailability | High | Low | Cross-training, backup resources |
-| Requirements changes | Medium | High | Change management process |
-| Third-party service issues | Medium | Medium | Service monitoring, fallback plans |
-| Data privacy violations | High | Low | Strict data handling procedures |
+| Risk                       | Impact | Probability | Mitigation Strategy                |
+| -------------------------- | ------ | ----------- | ---------------------------------- |
+| Environment unavailability | High   | Medium      | Backup environment setup           |
+| Key tester unavailability  | High   | Low         | Cross-training, backup resources   |
+| Requirements changes       | Medium | High        | Change management process          |
+| Third-party service issues | Medium | Medium      | Service monitoring, fallback plans |
+| Data privacy violations    | High   | Low         | Strict data handling procedures    |
 
 ### 11.2 Technical Risks
+
 - Browser compatibility issues
 - Mobile device fragmentation
 - Network connectivity problems
@@ -315,6 +342,7 @@ The User Management System is a critical component that handles user authenticat
 - Security vulnerabilities
 
 ### 11.3 Project Risks
+
 - Timeline compression
 - Resource constraints
 - Scope creep
@@ -324,12 +352,14 @@ The User Management System is a critical component that handles user authenticat
 ## 12. Test Execution Strategy
 
 ### 12.1 Test Case Organization
+
 - **Priority-Based Execution:** P1 → P2 → P3 → P4
 - **Module-Based Execution:** Complete one module before moving to next
 - **Risk-Based Execution:** High-risk areas tested first
 - **Dependency-Based Execution:** Prerequisites completed first
 
 ### 12.2 Test Execution Process
+
 1. **Daily Planning:** Review test cases for the day
 2. **Environment Verification:** Ensure test environment is ready
 3. **Test Data Preparation:** Set up required test data
@@ -339,6 +369,7 @@ The User Management System is a critical component that handles user authenticat
 7. **Test Evidence:** Capture screenshots and logs
 
 ### 12.3 Defect Triage Process
+
 - **Daily Defect Review:** Team reviews new defects
 - **Severity and Priority Assignment:** Based on impact and urgency
 - **Assignment:** Defects assigned to developers
@@ -350,18 +381,21 @@ The User Management System is a critical component that handles user authenticat
 ### 13.1 Defect Classification
 
 #### Severity Levels
+
 - **Critical:** System crash, data loss, security breach
 - **High:** Major functionality broken, workaround available
 - **Medium:** Minor functionality issues, usability problems
 - **Low:** Cosmetic issues, documentation errors
 
 #### Priority Levels
+
 - **P1:** Fix immediately (within 24 hours)
 - **P2:** Fix in current iteration (within 1 week)
 - **P3:** Fix in next release (within 1 month)
 - **P4:** Fix when time permits (backlog)
 
 ### 13.2 Defect Lifecycle
+
 1. **Open:** Defect discovered and logged
 2. **Assigned:** Defect assigned to developer
 3. **In Progress:** Developer working on fix
@@ -371,6 +405,7 @@ The User Management System is a critical component that handles user authenticat
 7. **Closed:** Defect officially closed
 
 ### 13.3 Defect Reporting Template
+
 - **Defect ID:** Unique identifier
 - **Summary:** One-line description
 - **Description:** Detailed description
@@ -384,6 +419,7 @@ The User Management System is a critical component that handles user authenticat
 ## 14. Test Metrics
 
 ### 14.1 Test Progress Metrics
+
 - **Test Cases Planned vs. Executed**
 - **Test Cases Passed vs. Failed**
 - **Test Coverage Percentage**
@@ -391,6 +427,7 @@ The User Management System is a critical component that handles user authenticat
 - **Test Execution Progress**
 
 ### 14.2 Defect Metrics
+
 - **Defects by Severity/Priority**
 - **Defects by Module/Feature**
 - **Defect Detection Efficiency**
@@ -398,6 +435,7 @@ The User Management System is a critical component that handles user authenticat
 - **Mean Time to Resolution**
 
 ### 14.3 Quality Metrics
+
 - **Customer Satisfaction Score**
 - **User Experience Rating**
 - **Accessibility Compliance Score**
@@ -405,6 +443,7 @@ The User Management System is a critical component that handles user authenticat
 - **Security Vulnerability Count**
 
 ### 14.4 Reporting Schedule
+
 - **Daily:** Progress reports to stakeholders
 - **Weekly:** Detailed metrics reports
 - **End of Phase:** Comprehensive reports
@@ -413,18 +452,21 @@ The User Management System is a critical component that handles user authenticat
 ## 15. Approval
 
 ### 15.1 Review and Approval Process
+
 This test plan requires approval from the following stakeholders:
 
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| Test Manager | [Name] | | |
-| Project Manager | [Name] | | |
-| Development Lead | [Name] | | |
-| Product Owner | [Name] | | |
-| Quality Assurance Manager | [Name] | | |
+| Role                      | Name   | Signature | Date |
+| ------------------------- | ------ | --------- | ---- |
+| Test Manager              | [Name] |           |      |
+| Project Manager           | [Name] |           |      |
+| Development Lead          | [Name] |           |      |
+| Product Owner             | [Name] |           |      |
+| Quality Assurance Manager | [Name] |           |      |
 
 ### 15.2 Change Management
+
 Any changes to this test plan must be:
+
 1. Documented with rationale
 2. Reviewed by stakeholders
 3. Approved by Test Manager and Project Manager
@@ -432,6 +474,7 @@ Any changes to this test plan must be:
 5. Version controlled and archived
 
 ### 15.3 Document Control
+
 - **Version Control:** All versions maintained in central repository
 - **Access Control:** Read access for all team members, write access for authorized personnel
 - **Backup:** Daily backups of all test documentation
@@ -445,4 +488,4 @@ Any changes to this test plan must be:
 
 ---
 
-*This test plan serves as the foundation for systematic and comprehensive manual testing of the User Management System, ensuring quality delivery and user satisfaction.*
+_This test plan serves as the foundation for systematic and comprehensive manual testing of the User Management System, ensuring quality delivery and user satisfaction._

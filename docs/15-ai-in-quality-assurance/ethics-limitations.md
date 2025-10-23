@@ -1,12 +1,15 @@
 # AI Ethics & Limitations in Quality Assurance
 
 ## Purpose
+
 Establish guidelines for responsible AI use in QA, understanding limitations, avoiding pitfalls, and ensuring human oversight maintains quality standards and ethical practices.
 
 ## Context
+
 AI is a powerful tool, but it's not infallible. Understanding where AI excels, where it fails, and how to use it responsibly is critical for successful adoption without compromising quality or ethics.
 
 ## Prerequisites
+
 - Understanding of [AI Fundamentals](ai-fundamentals.md)
 - Familiarity with [AI-Assisted Testing](ai-assisted-testing.md)
 - Awareness of your organization's compliance requirements
@@ -61,6 +64,7 @@ test('user authentication', () => {
 ```
 
 **Prevention Strategy:**
+
 ```yaml
 mandatory_review_checklist:
   - [ ] Does the code compile/run?
@@ -75,6 +79,7 @@ mandatory_review_checklist:
 **Problem:** AI has limited context window, may miss important details
 
 **Example:**
+
 ```python
 # File 1: user.py
 class User:
@@ -95,6 +100,7 @@ def test_user_verification():
 ```
 
 **Mitigation:**
+
 ```python
 # Provide more context to AI
 prompt = f"""
@@ -115,10 +121,11 @@ Class definition:
 **Problem:** AI training data has a cutoff date
 
 **Example:**
+
 ```javascript
 // AI might suggest outdated testing patterns
 // ❌ OLD - Pre-2020 pattern
-const { shallow } = require('enzyme');  // Enzyme is deprecated
+const { shallow } = require('enzyme'); // Enzyme is deprecated
 
 test('renders button', () => {
   const wrapper = shallow(<Button />);
@@ -135,6 +142,7 @@ test('renders button', () => {
 ```
 
 **Prevention:**
+
 ```yaml
 update_prompts_with:
   - Current framework versions
@@ -148,6 +156,7 @@ update_prompts_with:
 **Problem:** AI learns from internet code, including bad practices
 
 **Example:**
+
 ```python
 # AI might suggest biased or problematic code
 # ❌ BIASED - Assumes gender
@@ -162,6 +171,7 @@ def test_user_profile():
 ```
 
 **Mitigation:**
+
 - Review all AI suggestions for bias
 - Educate team on common bias patterns
 - Configure linters to catch problematic code
@@ -172,34 +182,32 @@ def test_user_profile():
 **Problem:** AI may miss security implications
 
 **Example:**
+
 ```javascript
 // AI generates test that seems fine but has security issue
 // ❌ INSECURE - Hardcoded credentials in test
 test('admin login', async () => {
-  const response = await request(app)
-    .post('/login')
-    .send({
-      username: 'admin@company.com',
-      password: 'AdminPass123!'  // ❌ Real password in code!
-    });
+  const response = await request(app).post('/login').send({
+    username: 'admin@company.com',
+    password: 'AdminPass123!', // ❌ Real password in code!
+  });
   expect(response.status).toBe(200);
 });
 
 // ✅ SECURE - Use environment variables or mocks
 test('admin login', async () => {
   const testUser = await createTestUser('admin');
-  const response = await request(app)
-    .post('/login')
-    .send({
-      username: testUser.email,
-      password: testUser.password
-    });
+  const response = await request(app).post('/login').send({
+    username: testUser.email,
+    password: testUser.password,
+  });
   expect(response.status).toBe(200);
   await deleteTestUser(testUser.id);
 });
 ```
 
 **Security Review Checklist:**
+
 ```yaml
 ai_generated_code_security_review:
   credentials:
@@ -228,6 +236,7 @@ ai_generated_code_security_review:
 **Principle:** Never send sensitive data to public AI services
 
 **What NOT to send:**
+
 ```yaml
 never_send_to_public_apis:
   - Customer PII (names, emails, addresses)
@@ -241,6 +250,7 @@ never_send_to_public_apis:
 ```
 
 **Safe Practices:**
+
 ```python
 # ❌ BAD - Sending real user data to OpenAI
 prompt = f"Generate tests for user {real_user_email} with password {real_password}"
@@ -257,27 +267,28 @@ response = local_llm.generate(prompt_with_sensitive_data)
 ```
 
 **Data Classification:**
+
 ```yaml
 data_classification:
   public:
-    description: "Can be freely shared"
-    examples: ["Public documentation", "Open source code"]
-    ai_usage: "Any AI service OK"
+    description: 'Can be freely shared'
+    examples: ['Public documentation', 'Open source code']
+    ai_usage: 'Any AI service OK'
 
   internal:
-    description: "For company use only"
-    examples: ["Internal docs", "Process flows"]
-    ai_usage: "Approved vendors with DPA"
+    description: 'For company use only'
+    examples: ['Internal docs', 'Process flows']
+    ai_usage: 'Approved vendors with DPA'
 
   confidential:
-    description: "Restricted access"
-    examples: ["Source code", "Architecture"]
-    ai_usage: "Local models only"
+    description: 'Restricted access'
+    examples: ['Source code', 'Architecture']
+    ai_usage: 'Local models only'
 
   restricted:
-    description: "Highest sensitivity"
-    examples: ["Credentials", "PII", "Trade secrets"]
-    ai_usage: "Never use AI"
+    description: 'Highest sensitivity'
+    examples: ['Credentials', 'PII', 'Trade secrets']
+    ai_usage: 'Never use AI'
 ```
 
 ### 2. Transparency
@@ -285,17 +296,22 @@ data_classification:
 **Principle:** Be clear when AI is used
 
 **Documentation Requirements:**
+
 ```markdown
 # Test Suite Documentation
 
 ## AI-Generated Tests
+
 The following test files were AI-assisted:
+
 - `user_authentication.test.js` - 70% AI-generated, reviewed by @john
 - `api_integration.test.js` - 50% AI-generated, reviewed by @sarah
 - `validation.test.js` - 30% AI-suggested edge cases
 
 ## Review Process
+
 All AI-generated code must:
+
 1. Be reviewed by senior engineer
 2. Pass all existing tests
 3. Meet coding standards
@@ -303,12 +319,14 @@ All AI-generated code must:
 5. Have reviewer sign-off in PR
 
 ## AI Tools Used
+
 - GitHub Copilot for test scaffolding
 - ChatGPT-4 for edge case suggestions
 - Custom test generator (OpenAI API)
 ```
 
 **Code Comments:**
+
 ```python
 # AI-Generated test (Reviewed 2024-10-15 by John Doe)
 # Original prompt: "Generate tests for email validation function"
@@ -328,47 +346,49 @@ def test_email_validation():
 **Principle:** Humans make final decisions, not AI
 
 **Critical Decision Points:**
+
 ```yaml
 requires_human_approval:
   deployment_decisions:
-    description: "AI can recommend, humans decide"
-    example: "AI predicts 85% success - human reviews and approves"
+    description: 'AI can recommend, humans decide'
+    example: 'AI predicts 85% success - human reviews and approves'
 
   security_issues:
-    description: "AI can detect, humans triage and fix"
-    example: "AI flags potential SQL injection - security team validates"
+    description: 'AI can detect, humans triage and fix'
+    example: 'AI flags potential SQL injection - security team validates'
 
   test_exclusions:
-    description: "AI can suggest, humans approve skipping tests"
-    example: "AI recommends skipping slow tests - team decides"
+    description: 'AI can suggest, humans approve skipping tests'
+    example: 'AI recommends skipping slow tests - team decides'
 
   code_review_approval:
-    description: "AI reviews, humans approve PRs"
-    example: "AI finds 3 issues - human reviewer validates before merge"
+    description: 'AI reviews, humans approve PRs'
+    example: 'AI finds 3 issues - human reviewer validates before merge'
 ```
 
 **Escalation Matrix:**
+
 ```yaml
 ai_confidence_levels:
   high_confidence_90_plus:
-    action: "AI can auto-suggest"
-    human_review: "Spot check (10% sampling)"
-    example: "Formatting fixes, simple refactoring"
+    action: 'AI can auto-suggest'
+    human_review: 'Spot check (10% sampling)'
+    example: 'Formatting fixes, simple refactoring'
 
   medium_confidence_60_90:
-    action: "AI suggests, human reviews all"
-    human_review: "Required for every suggestion"
-    example: "Test generation, code improvements"
+    action: 'AI suggests, human reviews all'
+    human_review: 'Required for every suggestion'
+    example: 'Test generation, code improvements'
 
   low_confidence_below_60:
-    action: "AI provides options, human chooses"
-    human_review: "Required + senior engineer sign-off"
-    example: "Complex refactoring, architecture changes"
+    action: 'AI provides options, human chooses'
+    human_review: 'Required + senior engineer sign-off'
+    example: 'Complex refactoring, architecture changes'
 
   security_critical:
-    action: "AI assists research, human decides"
-    human_review: "Security team approval required"
-    example: "Authentication, authorization, encryption"
+    action: 'AI assists research, human decides'
+    human_review: 'Security team approval required'
+    example: 'Authentication, authorization, encryption'
 ```
 
 ### 4. Fairness & Inclusion
@@ -376,6 +396,7 @@ ai_confidence_levels:
 **Principle:** Ensure AI doesn't perpetuate bias
 
 **Test Data Diversity:**
+
 ```python
 # ❌ BIASED - Only Western names
 test_data = [
@@ -394,6 +415,7 @@ test_data = [
 ```
 
 **Accessibility Testing:**
+
 ```javascript
 // Ensure AI-generated tests include accessibility
 describe('Button component', () => {
@@ -421,6 +443,7 @@ describe('Button component', () => {
 ### GDPR Compliance
 
 **Requirements:**
+
 ```yaml
 gdpr_compliance:
   data_minimization:
@@ -440,6 +463,7 @@ gdpr_compliance:
 ```
 
 **Example Implementation:**
+
 ```python
 class GDPRCompliantAIService:
     def __init__(self):
@@ -471,6 +495,7 @@ class GDPRCompliantAIService:
 ### SOC 2 Compliance
 
 **Requirements:**
+
 ```yaml
 soc2_requirements:
   security:
@@ -500,25 +525,27 @@ soc2_requirements:
 ### Responsible Resource Use
 
 **Environmental Impact:**
+
 ```yaml
 ai_environmental_considerations:
   model_selection:
-    problem: "Larger models consume more energy"
-    solution: "Use smallest model that meets needs"
-    example: "GPT-3.5 vs GPT-4: 10x energy difference"
+    problem: 'Larger models consume more energy'
+    solution: 'Use smallest model that meets needs'
+    example: 'GPT-3.5 vs GPT-4: 10x energy difference'
 
   caching:
-    problem: "Redundant API calls waste resources"
-    solution: "Cache common responses"
-    impact: "80% reduction in API calls"
+    problem: 'Redundant API calls waste resources'
+    solution: 'Cache common responses'
+    impact: '80% reduction in API calls'
 
   batch_processing:
-    problem: "Individual requests less efficient"
-    solution: "Batch similar requests"
-    impact: "50% reduction in processing time"
+    problem: 'Individual requests less efficient'
+    solution: 'Batch similar requests'
+    impact: '50% reduction in processing time'
 ```
 
 **Cost Optimization Ethics:**
+
 ```python
 # ❌ WASTEFUL - Unconstrained AI usage
 def generate_tests_wasteful(code):
@@ -556,6 +583,7 @@ def generate_tests_responsible(code):
 ### AI Output Validation
 
 **Automated Checks:**
+
 ```python
 class AIOutputValidator:
     def validate_generated_test(self, test_code, original_code):
@@ -592,27 +620,28 @@ class AIOutputValidator:
 ### Monitoring AI Quality
 
 **Metrics to Track:**
+
 ```yaml
 ai_quality_metrics:
   accuracy:
-    metric: "% of AI suggestions accepted"
-    target: "> 70%"
-    action_if_low: "Review prompts, retrain, or switch models"
+    metric: '% of AI suggestions accepted'
+    target: '> 70%'
+    action_if_low: 'Review prompts, retrain, or switch models'
 
   false_positives:
     metric: "% of AI-flagged issues that aren't real"
-    target: "< 30%"
-    action_if_high: "Adjust sensitivity, improve context"
+    target: '< 30%'
+    action_if_high: 'Adjust sensitivity, improve context'
 
   time_to_value:
-    metric: "Time saved with AI vs manual"
-    target: "> 50% reduction"
-    action_if_low: "Optimize workflow, improve prompts"
+    metric: 'Time saved with AI vs manual'
+    target: '> 50% reduction'
+    action_if_low: 'Optimize workflow, improve prompts'
 
   user_satisfaction:
-    metric: "Team rating of AI helpfulness"
-    target: "> 7/10"
-    action_if_low: "Gather feedback, adjust tools"
+    metric: 'Team rating of AI helpfulness'
+    target: '> 7/10'
+    action_if_low: 'Gather feedback, adjust tools'
 ```
 
 ## Incident Response
@@ -620,6 +649,7 @@ ai_quality_metrics:
 ### When AI Goes Wrong
 
 **Response Plan:**
+
 ```yaml
 ai_incident_levels:
   p1_critical:
@@ -663,25 +693,30 @@ ai_incident_levels:
 ```
 
 **Postmortem Template:**
+
 ```markdown
 # AI Incident Postmortem
 
 ## Incident Summary
+
 - **Date**: 2024-10-15
 - **Duration**: 2 hours
 - **Severity**: P1 - Critical
 - **Impact**: 3 security vulnerabilities in production
 
 ## What Happened
+
 AI test generator created tests with hardcoded credentials that passed code review and were deployed to production.
 
 ## Root Cause
+
 1. AI generated tests with real-looking but insecure patterns
 2. Human reviewer assumed AI output was secure
 3. No automated security scanning in CI/CD
 4. Validation checks didn't catch hardcoded secrets
 
 ## Timeline
+
 - 14:00: AI generated tests with hardcoded creds
 - 14:30: PR approved and merged
 - 16:00: Deployed to production
@@ -690,18 +725,21 @@ AI test generator created tests with hardcoded credentials that passed code revi
 - 18:00: Issue resolved
 
 ## What Went Wrong
+
 - ❌ Over-reliance on AI-generated code
 - ❌ Inadequate code review process
 - ❌ Missing automated security checks
 - ❌ No secrets detection in CI/CD
 
 ## What Went Right
+
 - ✅ Security scan caught issue
 - ✅ Quick rollback process
 - ✅ No customer data compromised
 - ✅ Team responded effectively
 
 ## Action Items
+
 - [ ] Add secrets detection to CI/CD (Owner: DevOps, Due: +1 week)
 - [ ] Update AI validator to check for hardcoded secrets
 - [ ] Mandatory security review for AI-generated code
@@ -709,6 +747,7 @@ AI test generator created tests with hardcoded credentials that passed code revi
 - [ ] Update documentation with this scenario
 
 ## Lessons Learned
+
 1. AI is a tool, not a replacement for human judgment
 2. Always validate AI output, especially for security
 3. Defense in depth: multiple layers of checking
@@ -788,4 +827,4 @@ after_ai_adoption:
 
 ---
 
-*AI is a powerful tool when used responsibly. Always prioritize human judgment, data privacy, and ethical practices over automation convenience.*
+_AI is a powerful tool when used responsibly. Always prioritize human judgment, data privacy, and ethical practices over automation convenience._

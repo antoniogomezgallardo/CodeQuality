@@ -1,12 +1,15 @@
 # Test Levels
 
 ## Purpose
+
 Comprehensive guide to different levels of testing from unit tests to end-to-end tests, providing specific techniques, best practices, and implementation patterns for each level.
 
 ## Context
+
 Test levels define the scope and focus of testing activities, from individual components to complete system behavior. Each level serves specific purposes in the overall quality strategy.
 
 ## Prerequisites
+
 - Understanding of [Testing Strategy](../04-testing-strategy/README.md)
 - Basic programming knowledge
 - Familiarity with software architecture
@@ -33,9 +36,11 @@ graph TB
 ## Unit Testing
 
 ### Definition
+
 Testing individual components or modules in isolation to verify they behave as expected for given inputs.
 
 ### Characteristics
+
 - **Scope**: Single function, method, or class
 - **Dependencies**: Mocked or stubbed
 - **Execution**: Fast (milliseconds)
@@ -72,18 +77,18 @@ describe('Calculator', () => {
 
 ```javascript
 // Bad: Vague test names
-it('should work')
-it('should be valid')
-it('should return correct value')
+it('should work');
+it('should be valid');
+it('should return correct value');
 
 // Good: Descriptive test names
-it('should return sum when adding two positive numbers')
-it('should throw error when dividing by zero')
-it('should return empty array when no items match filter')
+it('should return sum when adding two positive numbers');
+it('should throw error when dividing by zero');
+it('should return empty array when no items match filter');
 
 // Pattern: should_[expected behavior]_when_[condition]
-it('should_return_true_when_user_has_admin_role')
-it('should_throw_exception_when_email_is_invalid')
+it('should_return_true_when_user_has_admin_role');
+it('should_throw_exception_when_email_is_invalid');
 ```
 
 #### Mocking and Stubbing
@@ -120,10 +125,10 @@ describe('UserService', () => {
 
   beforeEach(() => {
     mockUserRepository = {
-      save: jest.fn()
+      save: jest.fn(),
     };
     mockEmailService = {
-      sendWelcomeEmail: jest.fn()
+      sendWelcomeEmail: jest.fn(),
     };
     userService = new UserService(mockUserRepository, mockEmailService);
   });
@@ -148,8 +153,7 @@ describe('UserService', () => {
     const userData = { email: 'invalid-email', name: 'John Doe' };
 
     // Act & Assert
-    await expect(userService.createUser(userData))
-      .rejects.toThrow('Invalid email format');
+    await expect(userService.createUser(userData)).rejects.toThrow('Invalid email format');
 
     expect(mockUserRepository.save).not.toHaveBeenCalled();
     expect(mockEmailService.sendWelcomeEmail).not.toHaveBeenCalled();
@@ -165,19 +169,23 @@ const fc = require('fast-check');
 
 describe('Calculator Properties', () => {
   it('addition should be commutative', () => {
-    fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
-      const calculator = new Calculator();
-      return calculator.add(a, b) === calculator.add(b, a);
-    }));
+    fc.assert(
+      fc.property(fc.integer(), fc.integer(), (a, b) => {
+        const calculator = new Calculator();
+        return calculator.add(a, b) === calculator.add(b, a);
+      })
+    );
   });
 
   it('addition should be associative', () => {
-    fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
-      const calculator = new Calculator();
-      const result1 = calculator.add(calculator.add(a, b), c);
-      const result2 = calculator.add(a, calculator.add(b, c));
-      return result1 === result2;
-    }));
+    fc.assert(
+      fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
+        const calculator = new Calculator();
+        const result1 = calculator.add(calculator.add(a, b), c);
+        const result2 = calculator.add(a, calculator.add(b, c));
+        return result1 === result2;
+      })
+    );
   });
 });
 ```
@@ -189,10 +197,11 @@ describe('Calculator Properties', () => {
 ```javascript
 // Line coverage
 function calculateDiscount(price, customerType) {
-  if (customerType === 'premium') {  // Line 1
-    return price * 0.9;              // Line 2
+  if (customerType === 'premium') {
+    // Line 1
+    return price * 0.9; // Line 2
   }
-  return price;                      // Line 3
+  return price; // Line 3
 }
 
 // 100% line coverage needs tests for both branches
@@ -213,9 +222,15 @@ function getShippingCost(weight, destination) {
 
 // Function coverage
 class OrderProcessor {
-  processOrder() { /* implementation */ }
-  cancelOrder() { /* implementation */ }
-  refundOrder() { /* implementation */ }
+  processOrder() {
+    /* implementation */
+  }
+  cancelOrder() {
+    /* implementation */
+  }
+  refundOrder() {
+    /* implementation */
+  }
 }
 
 // 100% function coverage needs to call all methods
@@ -248,6 +263,7 @@ module.exports = {
 ## Integration Testing
 
 ### Definition
+
 Testing the interfaces and interaction between integrated components to detect interface defects.
 
 ### Types of Integration Testing
@@ -273,17 +289,17 @@ describe('OrderService Integration', () => {
   it('should create order with valid items', async () => {
     // Arrange
     const customer = await database.customers.create({
-      email: 'test@example.com'
+      email: 'test@example.com',
     });
     const product = await database.products.create({
       name: 'Laptop',
-      price: 1000
+      price: 1000,
     });
 
     // Act
     const order = await orderService.createOrder({
       customerId: customer.id,
-      items: [{ productId: product.id, quantity: 1 }]
+      items: [{ productId: product.id, quantity: 1 }],
     });
 
     // Assert
@@ -315,13 +331,10 @@ describe('User API Integration', () => {
       const userData = {
         email: 'test@example.com',
         name: 'John Doe',
-        password: 'securePassword123'
+        password: 'securePassword123',
       };
 
-      const response = await request
-        .post('/users')
-        .send(userData)
-        .expect(201);
+      const response = await request.post('/users').send(userData).expect(201);
 
       expect(response.body.id).toBeDefined();
       expect(response.body.email).toBe(userData.email);
@@ -332,13 +345,10 @@ describe('User API Integration', () => {
       const userData = {
         email: 'invalid-email',
         name: 'John Doe',
-        password: 'securePassword123'
+        password: 'securePassword123',
       };
 
-      const response = await request
-        .post('/users')
-        .send(userData)
-        .expect(400);
+      const response = await request.post('/users').send(userData).expect(400);
 
       expect(response.body.error).toContain('Invalid email format');
     });
@@ -349,18 +359,14 @@ describe('User API Integration', () => {
       // Create test user
       const user = await createTestUser();
 
-      const response = await request
-        .get(`/users/${user.id}`)
-        .expect(200);
+      const response = await request.get(`/users/${user.id}`).expect(200);
 
       expect(response.body.id).toBe(user.id);
       expect(response.body.email).toBe(user.email);
     });
 
     it('should return 404 for non-existent user', async () => {
-      await request
-        .get('/users/999999')
-        .expect(404);
+      await request.get('/users/999999').expect(404);
     });
   });
 });
@@ -387,7 +393,7 @@ describe('UserRepository Integration', () => {
     // Arrange
     const userData = {
       email: 'test@example.com',
-      name: 'John Doe'
+      name: 'John Doe',
     };
 
     // Act
@@ -406,8 +412,7 @@ describe('UserRepository Integration', () => {
 
     // Act & Assert
     await repository.save(userData);
-    await expect(repository.save(userData))
-      .rejects.toThrow('Email already exists');
+    await expect(repository.save(userData)).rejects.toThrow('Email already exists');
   });
 });
 ```
@@ -422,7 +427,7 @@ describe('PaymentService Integration', () => {
   beforeEach(() => {
     paymentService = new PaymentService({
       apiKey: process.env.TEST_PAYMENT_API_KEY,
-      baseUrl: 'https://api.sandbox.payment.com'
+      baseUrl: 'https://api.sandbox.payment.com',
     });
   });
 
@@ -431,7 +436,7 @@ describe('PaymentService Integration', () => {
       amount: 1000,
       currency: 'USD',
       cardToken: 'test_card_token',
-      description: 'Test payment'
+      description: 'Test payment',
     };
 
     const result = await paymentService.processPayment(paymentRequest);
@@ -446,11 +451,10 @@ describe('PaymentService Integration', () => {
       amount: 1000,
       currency: 'USD',
       cardToken: 'invalid_card_token',
-      description: 'Test payment'
+      description: 'Test payment',
     };
 
-    await expect(paymentService.processPayment(paymentRequest))
-      .rejects.toThrow('Payment declined');
+    await expect(paymentService.processPayment(paymentRequest)).rejects.toThrow('Payment declined');
   });
 });
 ```
@@ -458,6 +462,7 @@ describe('PaymentService Integration', () => {
 ## Component Testing
 
 ### Definition
+
 Testing individual components in isolation with their dependencies mocked, focusing on component behavior and contracts.
 
 ### Frontend Component Testing
@@ -473,7 +478,7 @@ describe('UserProfile Component', () => {
     id: 1,
     name: 'John Doe',
     email: 'john@example.com',
-    avatar: 'https://example.com/avatar.jpg'
+    avatar: 'https://example.com/avatar.jpg',
   };
 
   it('should display user information', () => {
@@ -507,13 +512,7 @@ describe('UserProfile Component', () => {
     const user = userEvent.setup();
     const mockOnSave = jest.fn();
 
-    render(
-      <UserProfile
-        user={mockUser}
-        isEditing={true}
-        onSave={mockOnSave}
-      />
-    );
+    render(<UserProfile user={mockUser} isEditing={true} onSave={mockOnSave} />);
 
     // Clear name field
     const nameInput = screen.getByLabelText('Name');
@@ -530,13 +529,7 @@ describe('UserProfile Component', () => {
     const user = userEvent.setup();
     const mockOnSave = jest.fn().mockRejectedValue(new Error('Server error'));
 
-    render(
-      <UserProfile
-        user={mockUser}
-        isEditing={true}
-        onSave={mockOnSave}
-      />
-    );
+    render(<UserProfile user={mockUser} isEditing={true} onSave={mockOnSave} />);
 
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
@@ -558,10 +551,10 @@ describe('EmailService Component', () => {
 
   beforeEach(() => {
     mockEmailProvider = {
-      send: jest.fn().mockResolvedValue({ messageId: 'test-id' })
+      send: jest.fn().mockResolvedValue({ messageId: 'test-id' }),
     };
     mockTemplateEngine = {
-      render: jest.fn().mockReturnValue('<html>Test email</html>')
+      render: jest.fn().mockReturnValue('<html>Test email</html>'),
     };
 
     emailService = new EmailService(mockEmailProvider, mockTemplateEngine);
@@ -572,14 +565,11 @@ describe('EmailService Component', () => {
 
     await emailService.sendWelcomeEmail(user);
 
-    expect(mockTemplateEngine.render).toHaveBeenCalledWith(
-      'welcome',
-      { name: user.name }
-    );
+    expect(mockTemplateEngine.render).toHaveBeenCalledWith('welcome', { name: user.name });
     expect(mockEmailProvider.send).toHaveBeenCalledWith({
       to: user.email,
       subject: 'Welcome to our platform!',
-      html: '<html>Test email</html>'
+      html: '<html>Test email</html>',
     });
   });
 
@@ -601,8 +591,9 @@ describe('EmailService Component', () => {
 
     mockEmailProvider.send.mockRejectedValue(new Error('Network error'));
 
-    await expect(emailService.sendWelcomeEmail(user))
-      .rejects.toThrow('Failed to send email after 3 attempts');
+    await expect(emailService.sendWelcomeEmail(user)).rejects.toThrow(
+      'Failed to send email after 3 attempts'
+    );
 
     expect(mockEmailProvider.send).toHaveBeenCalledTimes(3);
   });
@@ -612,6 +603,7 @@ describe('EmailService Component', () => {
 ## System Testing
 
 ### Definition
+
 Testing the complete integrated system to verify it meets specified requirements.
 
 ### System Test Types
@@ -750,14 +742,9 @@ describe('Security System Tests', () => {
   it('should prevent XSS attacks', async () => {
     const maliciousScript = '<script>alert("XSS")</script>';
 
-    await request(app)
-      .post('/api/comments')
-      .send({ text: maliciousScript, postId: 1 })
-      .expect(201);
+    await request(app).post('/api/comments').send({ text: maliciousScript, postId: 1 }).expect(201);
 
-    const response = await request(app)
-      .get('/api/comments/1')
-      .expect(200);
+    const response = await request(app).get('/api/comments/1').expect(200);
 
     // Script should be escaped or sanitized
     expect(response.body.text).not.toContain('<script>');
@@ -765,13 +752,9 @@ describe('Security System Tests', () => {
   });
 
   it('should enforce authentication on protected endpoints', async () => {
-    await request(app)
-      .get('/api/admin/users')
-      .expect(401);
+    await request(app).get('/api/admin/users').expect(401);
 
-    await request(app)
-      .delete('/api/users/1')
-      .expect(401);
+    await request(app).delete('/api/users/1').expect(401);
   });
 });
 ```
@@ -779,6 +762,7 @@ describe('Security System Tests', () => {
 ## End-to-End Testing
 
 ### Definition
+
 Testing complete user workflows from start to finish to ensure the entire application works as expected from a user's perspective.
 
 ### E2E Testing Best Practices
@@ -850,7 +834,7 @@ describe('User Authentication', () => {
 const testUsers = [
   { type: 'admin', email: 'admin@example.com', password: 'admin123' },
   { type: 'user', email: 'user@example.com', password: 'user123' },
-  { type: 'guest', email: 'guest@example.com', password: 'guest123' }
+  { type: 'guest', email: 'guest@example.com', password: 'guest123' },
 ];
 
 describe('User Role Access', () => {
@@ -927,6 +911,7 @@ test.describe('Cross-browser compatibility', () => {
 ## Contract Testing
 
 ### Definition
+
 Testing the contracts between service consumers and providers to ensure API compatibility.
 
 ### Consumer-Driven Contract Testing
@@ -939,7 +924,7 @@ const { like, eachLike } = MatchersV3;
 describe('User API Contract', () => {
   const provider = new PactV3({
     consumer: 'UserUI',
-    provider: 'UserAPI'
+    provider: 'UserAPI',
   });
 
   it('should get user by id', async () => {
@@ -950,23 +935,23 @@ describe('User API Contract', () => {
         method: 'GET',
         path: '/users/1',
         headers: {
-          'Authorization': like('Bearer token')
-        }
+          Authorization: like('Bearer token'),
+        },
       })
       .willRespondWith({
         status: 200,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: {
           id: 1,
           name: like('John Doe'),
           email: like('john@example.com'),
-          createdAt: like('2023-01-01T00:00:00Z')
-        }
+          createdAt: like('2023-01-01T00:00:00Z'),
+        },
       });
 
-    await provider.executeTest(async (mockServer) => {
+    await provider.executeTest(async mockServer => {
       const userService = new UserService(mockServer.url);
       const user = await userService.getUser(1);
 
@@ -982,18 +967,18 @@ describe('User API Contract', () => {
       .uponReceiving('a request for users')
       .withRequest({
         method: 'GET',
-        path: '/users'
+        path: '/users',
       })
       .willRespondWith({
         status: 200,
         body: eachLike({
           id: like(1),
           name: like('John Doe'),
-          email: like('john@example.com')
-        })
+          email: like('john@example.com'),
+        }),
       });
 
-    await provider.executeTest(async (mockServer) => {
+    await provider.executeTest(async mockServer => {
       const userService = new UserService(mockServer.url);
       const users = await userService.getUsers();
 
@@ -1023,17 +1008,17 @@ describe('User API Provider', () => {
           await User.create({
             id: 1,
             name: 'John Doe',
-            email: 'john@example.com'
+            email: 'john@example.com',
           });
         },
         'users exist': async () => {
           // Set up test data
           await User.bulkCreate([
             { id: 1, name: 'John Doe', email: 'john@example.com' },
-            { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
+            { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
           ]);
-        }
-      }
+        },
+      },
     };
 
     return new Verifier(opts).verifyProvider();
@@ -1053,16 +1038,16 @@ class TestHelpers {
       name: 'Test User',
       email: 'test@example.com',
       password: 'password123',
-      ...overrides
+      ...overrides,
     });
   }
 
   static async createTestOrder(userId, overrides = {}) {
     return await Order.create({
       userId,
-      total: 100.00,
+      total: 100.0,
       status: 'pending',
-      ...overrides
+      ...overrides,
     });
   }
 
@@ -1080,7 +1065,7 @@ class CustomMatchers {
 
     return {
       message: () => `expected ${received} ${pass ? 'not ' : ''}to be a valid email`,
-      pass
+      pass,
     };
   }
 
@@ -1089,7 +1074,7 @@ class CustomMatchers {
 
     return {
       message: () => `expected ${received} to be within ${min}-${max}`,
-      pass
+      pass,
     };
   }
 }
@@ -1116,10 +1101,13 @@ const retry = (fn, retries = 3) => {
 };
 
 // Usage
-it('should handle network delays', retry(async () => {
-  const response = await api.getData();
-  expect(response.status).toBe(200);
-}));
+it(
+  'should handle network delays',
+  retry(async () => {
+    const response = await api.getData();
+    expect(response.status).toBe(200);
+  })
+);
 
 // Wait utilities
 class WaitUtils {
@@ -1158,6 +1146,7 @@ class WaitUtils {
 ### Test Level Implementation Checklist
 
 **Unit Testing:**
+
 - [ ] Tests follow AAA pattern
 - [ ] Descriptive test names
 - [ ] Proper mocking/stubbing
@@ -1165,6 +1154,7 @@ class WaitUtils {
 - [ ] Fast execution (< 1 second)
 
 **Integration Testing:**
+
 - [ ] Database integration tested
 - [ ] API endpoints tested
 - [ ] Third-party services tested
@@ -1172,6 +1162,7 @@ class WaitUtils {
 - [ ] Data isolation maintained
 
 **Component Testing:**
+
 - [ ] Component behavior tested
 - [ ] Props and events tested
 - [ ] Error states covered
@@ -1179,6 +1170,7 @@ class WaitUtils {
 - [ ] Performance acceptable
 
 **System Testing:**
+
 - [ ] End-to-end workflows tested
 - [ ] Cross-browser compatibility
 - [ ] Performance requirements met
@@ -1186,6 +1178,7 @@ class WaitUtils {
 - [ ] Data integrity verified
 
 **Contract Testing:**
+
 - [ ] Consumer contracts defined
 - [ ] Provider verification setup
 - [ ] API compatibility ensured
@@ -1196,14 +1189,15 @@ class WaitUtils {
 
 ### Testing Frameworks
 
-| Language | Unit Testing | Integration | E2E |
-|----------|--------------|-------------|-----|
-| JavaScript | Jest, Mocha | Supertest | Playwright, Cypress |
-| Java | JUnit, TestNG | Spring Test | Selenium |
-| Python | pytest, unittest | FastAPI TestClient | Selenium |
-| C# | NUnit, xUnit | ASP.NET Test | Selenium |
+| Language   | Unit Testing     | Integration        | E2E                 |
+| ---------- | ---------------- | ------------------ | ------------------- |
+| JavaScript | Jest, Mocha      | Supertest          | Playwright, Cypress |
+| Java       | JUnit, TestNG    | Spring Test        | Selenium            |
+| Python     | pytest, unittest | FastAPI TestClient | Selenium            |
+| C#         | NUnit, xUnit     | ASP.NET Test       | Selenium            |
 
 ### Tools
+
 - **Pact** - Contract testing
 - **Testcontainers** - Integration testing
 - **Storybook** - Component testing
@@ -1211,6 +1205,7 @@ class WaitUtils {
 - **OWASP ZAP** - Security testing
 
 ### Books
+
 - "Growing Object-Oriented Software, Guided by Tests" - Freeman & Pryce
 - "The Art of Unit Testing" - Roy Osherove
 - "Effective Unit Testing" - Lasse Koskela
@@ -1218,6 +1213,7 @@ class WaitUtils {
 ## Test Level Documentation
 
 ### Core Testing Levels
+
 - [Unit Testing](unit-testing.md) - Testing individual components in isolation
 - [Integration Testing](integration-testing.md) - Testing component interactions
 - [Component Testing](component-testing.md) - Testing UI components
@@ -1226,6 +1222,7 @@ class WaitUtils {
 - [Contract Testing](contract-testing.md) - Testing API contracts
 
 ### Specialized Testing Approaches
+
 - [API Testing](api-testing.md) - Testing REST, GraphQL, and API contracts
 - [Microservices Testing](microservices-testing.md) - Testing distributed systems
 - [Visual Testing](visual-testing.md) - Automated UI appearance validation
@@ -1240,4 +1237,4 @@ class WaitUtils {
 
 ---
 
-*Next: [Unit Testing](unit-testing.md) - Deep dive into unit testing*
+_Next: [Unit Testing](unit-testing.md) - Deep dive into unit testing_

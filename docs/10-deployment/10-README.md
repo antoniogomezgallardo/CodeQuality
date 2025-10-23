@@ -38,6 +38,7 @@ Modern Deployment:
 ### Impact on DORA Metrics
 
 **Deployment strategies directly influence:**
+
 - **Deployment Frequency**: Blue-green enables multiple deploys/day
 - **Lead Time**: Automated deployments reduce time from commit to production
 - **Change Failure Rate**: Gradual rollouts limit blast radius
@@ -47,47 +48,53 @@ Modern Deployment:
 
 ### Strategy Comparison
 
-| Strategy | Downtime | Rollback | Cost | Complexity | Best For |
-|----------|----------|----------|------|------------|----------|
-| **Recreate** | Yes | Fast | Low | Low | Dev/test |
-| **Rolling** | No | Slow | Low | Low | Stateless apps |
-| **Blue-Green** | No | Instant | High | Medium | Critical apps |
-| **Canary** | No | Fast | Medium | High | Risk-averse |
-| **A/B Testing** | No | Fast | Medium | High | Feature testing |
-| **Shadow** | No | N/A | High | Very High | Safe validation |
+| Strategy        | Downtime | Rollback | Cost   | Complexity | Best For        |
+| --------------- | -------- | -------- | ------ | ---------- | --------------- |
+| **Recreate**    | Yes      | Fast     | Low    | Low        | Dev/test        |
+| **Rolling**     | No       | Slow     | Low    | Low        | Stateless apps  |
+| **Blue-Green**  | No       | Instant  | High   | Medium     | Critical apps   |
+| **Canary**      | No       | Fast     | Medium | High       | Risk-averse     |
+| **A/B Testing** | No       | Fast     | Medium | High       | Feature testing |
+| **Shadow**      | No       | N/A      | High   | Very High  | Safe validation |
 
 ### When to Use Each Strategy
 
 ```markdown
 **Recreate (Big Bang):**
+
 - Development environments
 - Maintenance windows acceptable
 - Non-critical applications
 
 **Rolling Update:**
+
 - Stateless web applications
 - Backward-compatible changes
 - Standard production deployments
 
 **Blue-Green:**
+
 - Mission-critical systems
 - E-commerce platforms
 - When instant rollback essential
 - Financial applications
 
 **Canary:**
+
 - High-traffic applications
 - Gradual user exposure needed
 - Real-user validation required
 - Risk-averse organizations
 
 **A/B Testing:**
+
 - UI/UX optimization
 - Feature validation
 - Business metric optimization
 - Data-driven decisions
 
 **Shadow:**
+
 - Major refactoring validation
 - Performance comparison
 - Algorithm testing
@@ -114,6 +121,7 @@ Modern Deployment:
 
 ```markdown
 ✅ **Automate Everything:**
+
 - Build process
 - Test execution
 - Deployment scripts
@@ -121,6 +129,7 @@ Modern Deployment:
 - Rollback procedures
 
 ❌ **Avoid Manual Steps:**
+
 - Manual file copying
 - Manual configuration changes
 - Manual database updates
@@ -144,6 +153,7 @@ if (featureFlags.isEnabled('new-checkout', user)) {
 
 ```markdown
 **Monitor During Deployment:**
+
 - Error rates
 - Response times
 - Resource utilization
@@ -151,6 +161,7 @@ if (featureFlags.isEnabled('new-checkout', user)) {
 - User feedback
 
 **Automated Rollback Triggers:**
+
 - Error rate > 1%
 - Latency p99 > 2x baseline
 - Health check failures
@@ -164,38 +175,42 @@ if (featureFlags.isEnabled('new-checkout', user)) {
 ```yaml
 # Deployment automation workflow
 stages:
-  - build           # Compile and package
-  - test            # Run all tests
-  - deploy-staging  # Deploy to staging
-  - smoke-test      # Verify staging
-  - deploy-canary   # 10% production
-  - monitor         # Watch metrics
-  - deploy-prod     # Full production
-  - verify          # Post-deployment checks
+  - build # Compile and package
+  - test # Run all tests
+  - deploy-staging # Deploy to staging
+  - smoke-test # Verify staging
+  - deploy-canary # 10% production
+  - monitor # Watch metrics
+  - deploy-prod # Full production
+  - verify # Post-deployment checks
 ```
 
 ### Progressive Deployment
 
 ```markdown
 **Phase 1: Staging (10 minutes)**
+
 - Deploy to staging environment
 - Run automated tests
 - Manual smoke testing
 - Stakeholder review
 
 **Phase 2: Canary (1 hour)**
+
 - Deploy to 10% of production
 - Monitor error rates and latency
 - Check business metrics
 - Validate with real users
 
 **Phase 3: Production (2 hours)**
+
 - Gradually increase to 100%
 - Continue monitoring
 - Keep old version ready
 - Document deployment
 
 **Phase 4: Cleanup (24 hours)**
+
 - Remove old version
 - Clean up feature flags
 - Update documentation
@@ -210,16 +225,19 @@ stages:
 **Backward-Compatible Pattern:**
 
 Phase 1: Expand
+
 - Add new column (nullable)
 - Deploy application code (supports both old and new)
 - Backfill data
 
 Phase 2: Migrate
+
 - Dual-write to old and new columns
 - Monitor for issues
 - Validate data consistency
 
 Phase 3: Contract
+
 - Remove old column
 - Deploy code using only new column
 - Clean up migration code
@@ -229,6 +247,7 @@ Phase 3: Contract
 
 ```markdown
 ✅ **Safe Migrations:**
+
 - Always backward-compatible
 - Test with production data volume
 - Time-boxed execution
@@ -236,6 +255,7 @@ Phase 3: Contract
 - Zero downtime required
 
 ❌ **Dangerous Migrations:**
+
 - Breaking changes without transition
 - Untested on production-size data
 - No rollback plan
@@ -286,16 +306,16 @@ Phase 3: Contract
 ```javascript
 const deploymentMetrics = {
   // DORA metrics
-  deploymentFrequency: 'Multiple per day',  // Elite: on-demand
-  leadTime: 45,                             // minutes (Elite: <1 hour)
-  mttr: 15,                                 // minutes (Elite: <1 hour)
-  changeFailureRate: 8,                     // % (Elite: 0-15%)
+  deploymentFrequency: 'Multiple per day', // Elite: on-demand
+  leadTime: 45, // minutes (Elite: <1 hour)
+  mttr: 15, // minutes (Elite: <1 hour)
+  changeFailureRate: 8, // % (Elite: 0-15%)
 
   // Deployment metrics
-  deploymentDuration: 12,                   // minutes
-  successRate: 98,                          // %
-  rollbackRate: 2,                          // %
-  automationLevel: 100                      // %
+  deploymentDuration: 12, // minutes
+  successRate: 98, // %
+  rollbackRate: 2, // %
+  automationLevel: 100, // %
 };
 ```
 
@@ -305,18 +325,21 @@ const deploymentMetrics = {
 
 ```markdown
 **Kubernetes:**
+
 - Rolling updates
 - Blue-green deployments
 - Canary with Istio/Linkerd
 - Auto-scaling
 
 **Cloud Platforms:**
+
 - AWS: CodeDeploy, ECS, EKS
 - Azure: App Service, AKS
 - GCP: Cloud Run, GKE
 - Heroku: Git push deployments
 
 **CD Tools:**
+
 - ArgoCD: GitOps deployments
 - Spinnaker: Multi-cloud CD
 - Flux: Kubernetes GitOps
@@ -327,12 +350,14 @@ const deploymentMetrics = {
 
 ```markdown
 **Commercial:**
+
 - LaunchDarkly
 - Split.io
 - Optimizely
 - ConfigCat
 
 **Open Source:**
+
 - Unleash
 - Flagsmith
 - GrowthBook
@@ -345,21 +370,25 @@ const deploymentMetrics = {
 
 ```markdown
 **CI/CD Pipeline (08):**
+
 - Deployment automation
 - Build and test stages
 - Artifact management
 
 **Feature Flags (07):**
+
 - Deploy without releasing
 - Gradual rollouts
 - A/B testing
 
 **Incident Management (11):**
+
 - Rollback procedures
 - Monitoring and alerting
 - Postmortem analysis
 
 **Monitoring (09):**
+
 - Deployment metrics
 - Health checks
 - Performance tracking
@@ -396,6 +425,7 @@ const deploymentMetrics = {
 **Problem:** Schema changes break backward compatibility
 
 **Solution:**
+
 - Use expand-contract pattern
 - Deploy migrations separately
 - Test with production data volume
@@ -408,6 +438,7 @@ const deploymentMetrics = {
 **Problem:** Configuration drift between environments
 
 **Solution:**
+
 - Infrastructure as Code (Terraform)
 - Config management (Ansible, Chef)
 - Environment-specific configs
@@ -420,6 +451,7 @@ const deploymentMetrics = {
 **Problem:** Cannot roll back database migrations
 
 **Solution:**
+
 - Design reversible migrations
 - Keep old code compatible
 - Use feature flags for new features
@@ -442,6 +474,7 @@ const deploymentMetrics = {
 ## Next Steps
 
 After mastering deployment:
+
 1. Explore [Incident Management](../11-incident-management/README.md)
 2. Review [DORA Metrics](../09-metrics-monitoring/dora-metrics.md)
 3. Study [Continuous Delivery](../08-cicd-pipeline/continuous-delivery.md)
@@ -466,4 +499,4 @@ After mastering deployment:
 
 ---
 
-*Part of: Code Quality Documentation Project*
+_Part of: Code Quality Documentation Project_

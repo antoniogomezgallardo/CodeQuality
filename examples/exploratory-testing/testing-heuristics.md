@@ -5,13 +5,16 @@ Testing heuristics are rules of thumb, educated guesses, or mental shortcuts tha
 ## 🧠 General Testing Heuristics
 
 ### CRUD Operations (Create, Read, Update, Delete)
+
 Every data entity should be tested for:
+
 - **Create:** Can new records be added correctly?
 - **Read:** Can existing records be retrieved and displayed?
 - **Update:** Can records be modified accurately?
 - **Delete:** Can records be removed safely?
 
 #### CRUD Testing Questions
+
 - What happens when you create duplicate records?
 - Can you read records with special characters?
 - What if you update a record that another user is editing?
@@ -19,19 +22,24 @@ Every data entity should be tested for:
 - How does the system handle concurrent CRUD operations?
 
 ### Goldilocks Testing (Too Little, Too Much, Just Right)
+
 Test with three levels of input:
+
 - **Too Little:** Minimum values, empty fields, null data
 - **Too Much:** Maximum values, oversized inputs, flood testing
 - **Just Right:** Normal, expected values within valid ranges
 
 #### Examples
+
 - **Text Fields:** Empty string, single character, maximum length + 1
 - **Numbers:** Zero, negative, maximum integer values
 - **Files:** Empty file, extremely large file, normal-sized file
 - **Lists:** Empty list, single item, thousands of items
 
 ### Boundary Value Exploration
+
 Focus on the edges and boundaries of input domains:
+
 - **Numeric Boundaries:** -1, 0, 1, MAX_INT, MIN_INT
 - **String Boundaries:** Empty, single char, max length
 - **Date Boundaries:** Past dates, future dates, leap years
@@ -42,6 +50,7 @@ Focus on the edges and boundaries of input domains:
 ### Form Testing Heuristics
 
 #### Input Field Testing
+
 - **Data Types:** Text, numbers, dates, emails, URLs
 - **Length Limits:** Too short, too long, exactly at limit
 - **Character Sets:** ASCII, Unicode, emojis, special symbols
@@ -49,6 +58,7 @@ Focus on the edges and boundaries of input domains:
 - **Leading/Trailing:** Spaces, tabs, newlines
 
 #### Form Behavior Testing
+
 - **Navigation:** Tab order, Enter key behavior, mouse vs. keyboard
 - **Validation:** Client-side vs. server-side, real-time vs. submit
 - **State Management:** Form memory, auto-save, session timeouts
@@ -57,12 +67,14 @@ Focus on the edges and boundaries of input domains:
 ### User Interface Testing Heuristics
 
 #### Visual Testing
+
 - **Layout:** Responsive design, element alignment, overflow
 - **Typography:** Font sizes, readability, text truncation
 - **Colors:** Contrast ratios, color blindness considerations
 - **Images:** Loading, alt text, broken image handling
 
 #### Interaction Testing
+
 - **Click Targets:** Size, spacing, hover states, active states
 - **Gestures:** Swipe, pinch, zoom (mobile testing)
 - **Drag and Drop:** Valid/invalid drop zones, visual feedback
@@ -71,12 +83,14 @@ Focus on the edges and boundaries of input domains:
 ### Authentication Testing Heuristics
 
 #### Login Testing
+
 - **Credentials:** Valid, invalid, expired, locked accounts
 - **Session Management:** Timeouts, concurrent sessions, remember me
 - **Security:** Brute force protection, password policies
 - **Social Login:** Third-party authentication, account linking
 
 #### Permission Testing
+
 - **Role-Based Access:** Different user roles and permissions
 - **Privilege Escalation:** Attempting unauthorized actions
 - **Data Isolation:** Users seeing only their own data
@@ -87,12 +101,14 @@ Focus on the edges and boundaries of input domains:
 ### Performance Testing Heuristics
 
 #### Load Testing Ideas
+
 - **Gradual Load:** Slowly increase user activity
 - **Spike Testing:** Sudden increases in load
 - **Stress Testing:** Push beyond normal capacity
 - **Endurance Testing:** Sustained load over time
 
 #### Performance Observation Points
+
 - **Response Times:** Page loads, API calls, database queries
 - **Resource Usage:** Memory, CPU, network bandwidth
 - **User Experience:** Loading indicators, progressive loading
@@ -101,12 +117,14 @@ Focus on the edges and boundaries of input domains:
 ### Error Handling Heuristics
 
 #### Error Condition Testing
+
 - **Network Issues:** Timeouts, connection drops, slow networks
 - **Server Errors:** 500 errors, database unavailable, API failures
 - **Client Errors:** JavaScript errors, browser compatibility issues
 - **Data Corruption:** Invalid data, encoding issues, format problems
 
 #### Error Message Evaluation
+
 - **Clarity:** Are error messages understandable?
 - **Actionability:** Do they tell users what to do next?
 - **Security:** Do they reveal sensitive information?
@@ -115,12 +133,14 @@ Focus on the edges and boundaries of input domains:
 ### Security Testing Heuristics
 
 #### Input Validation Testing
+
 - **Injection Attacks:** SQL, XSS, command injection attempts
 - **File Upload Security:** Malicious files, oversized files
 - **URL Manipulation:** Parameter tampering, path traversal
 - **Data Exposure:** Information leakage in error messages
 
 #### Authentication Security
+
 - **Password Security:** Weak passwords, password reuse
 - **Session Security:** Session hijacking, fixation attacks
 - **Account Security:** Brute force, account enumeration
@@ -129,7 +149,9 @@ Focus on the edges and boundaries of input domains:
 ## 🎨 Creative Testing Heuristics
 
 ### Persona-Based Testing
+
 Think like different user types:
+
 - **The Novice:** First-time user, needs guidance
 - **The Expert:** Power user, wants efficiency
 - **The Skeptic:** Cautious user, worried about security
@@ -137,7 +159,9 @@ Think like different user types:
 - **The Accessible:** Uses assistive technologies
 
 ### Scenario-Based Testing
+
 Create realistic user scenarios:
+
 - **Happy Path:** Everything goes as planned
 - **Interruption:** User is interrupted mid-task
 - **Multi-tasking:** User switches between applications
@@ -145,7 +169,9 @@ Create realistic user scenarios:
 - **Mobile Context:** User on-the-go with distractions
 
 ### Time-Based Testing
+
 Consider timing factors:
+
 - **Rush Testing:** User in a hurry, makes quick decisions
 - **Careful Testing:** User takes time, reads everything
 - **Peak Hours:** System under high load
@@ -155,7 +181,9 @@ Consider timing factors:
 ## 📊 Heuristic Application Framework
 
 ### FEW HICCUPS Heuristic
+
 A comprehensive framework for remembering key testing areas:
+
 - **F**unctionality
 - **E**rror handling
 - **W**orkflow
@@ -169,7 +197,9 @@ A comprehensive framework for remembering key testing areas:
 - **S**ecurity
 
 ### SFDPOT Heuristic
+
 For touring the application:
+
 - **S**tructure (how is it built?)
 - **F**unction (what does it do?)
 - **D**ata (what data does it handle?)
@@ -178,7 +208,9 @@ For touring the application:
 - **T**ime (timing and sequence issues)
 
 ### Touring Heuristics
+
 Different ways to explore an application:
+
 - **Business District Tour:** Focus on core functionality
 - **Historic District Tour:** Look at legacy features
 - **Tourist District Tour:** Features new users see first
@@ -189,6 +221,7 @@ Different ways to explore an application:
 ## 🔧 Practical Heuristic Application
 
 ### Session Planning with Heuristics
+
 1. **Choose Primary Heuristics:** Select 2-3 relevant heuristics
 2. **Generate Test Ideas:** Use heuristics to brainstorm
 3. **Prioritize Ideas:** Focus on highest-risk areas
@@ -196,12 +229,14 @@ Different ways to explore an application:
 5. **Document Patterns:** Note which heuristics were most valuable
 
 ### Heuristic Evaluation Questions
+
 - **Relevance:** Is this heuristic applicable to the current context?
 - **Coverage:** Does this heuristic help explore important risk areas?
 - **Efficiency:** Does this heuristic help find issues quickly?
 - **Completeness:** Are there gaps this heuristic doesn't address?
 
 ### Common Heuristic Combinations
+
 - **CRUD + Boundary:** Test data operations at limits
 - **Persona + Scenario:** Role-playing realistic user journeys
 - **Error + Security:** Focus on attack vectors through error conditions
@@ -211,6 +246,7 @@ Different ways to explore an application:
 ## 📝 Custom Heuristic Development
 
 ### Creating Domain-Specific Heuristics
+
 1. **Analyze Your Domain:** What are common failure patterns?
 2. **Study User Behavior:** How do real users interact?
 3. **Review Past Issues:** What problems have occurred before?
@@ -218,6 +254,7 @@ Different ways to explore an application:
 5. **Formalize Patterns:** Create memorable heuristics
 
 ### Example: E-commerce Heuristics
+
 - **Shopping Cart States:** Empty, single item, multiple items, full cart
 - **Payment Flow:** Multiple payment methods, failed payments, retries
 - **Inventory Management:** In stock, out of stock, limited quantity
@@ -225,6 +262,7 @@ Different ways to explore an application:
 - **Order States:** Pending, processing, shipped, delivered, returned
 
 ### Example: Mobile App Heuristics
+
 - **Device Orientations:** Portrait, landscape, rotation during use
 - **Network Conditions:** WiFi, cellular, offline, poor signal
 - **Interruptions:** Phone calls, notifications, app switching
@@ -234,6 +272,7 @@ Different ways to explore an application:
 ## 🎯 Heuristic Effectiveness Tips
 
 ### Making Heuristics Memorable
+
 - **Use Acronyms:** FEW HICCUPS, SFDPOT
 - **Create Mnemonics:** "Every Good Boy Does Fine"
 - **Visual Associations:** Mind maps, diagrams
@@ -241,6 +280,7 @@ Different ways to explore an application:
 - **Practice Regularly:** Use heuristics consistently
 
 ### Avoiding Heuristic Pitfalls
+
 - **Don't Over-Rely:** Heuristics guide, don't dictate
 - **Stay Curious:** Let observations lead exploration
 - **Adapt to Context:** Some heuristics won't apply
@@ -248,6 +288,7 @@ Different ways to explore an application:
 - **Update Regularly:** Refine heuristics based on experience
 
 ### Team Heuristic Practices
+
 - **Shared Vocabulary:** Ensure team understands common heuristics
 - **Heuristic Reviews:** Discuss effectiveness in retrospectives
 - **Custom Development:** Create team-specific heuristics
@@ -256,4 +297,4 @@ Different ways to explore an application:
 
 ---
 
-*Heuristics provide the structure and mental models that make exploratory testing both efficient and thorough. They help testers ask the right questions and explore the right areas while maintaining the flexibility to follow interesting discoveries.*
+_Heuristics provide the structure and mental models that make exploratory testing both efficient and thorough. They help testers ask the right questions and explore the right areas while maintaining the flexibility to follow interesting discoveries._

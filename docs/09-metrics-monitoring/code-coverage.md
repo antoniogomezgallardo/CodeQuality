@@ -7,7 +7,7 @@ Code coverage is a metric that measures the percentage of code executed by autom
 ## Purpose
 
 - **Identify gaps**: Find untested code paths
-- **Quality indicator**: Measure test suite thoroughness  
+- **Quality indicator**: Measure test suite thoroughness
 - **Risk assessment**: Highlight high-risk untested areas
 - **Refactoring confidence**: Ensure changes are covered by tests
 - **Trend tracking**: Monitor test coverage over time
@@ -20,10 +20,11 @@ Percentage of executed lines.
 
 ```javascript
 function calculateDiscount(price, customerType) {
-  if (customerType === 'premium') {  // Line 2: Covered
-    return price * 0.8;               // Line 3: Covered
+  if (customerType === 'premium') {
+    // Line 2: Covered
+    return price * 0.8; // Line 3: Covered
   }
-  return price;                       // Line 5: Not covered
+  return price; // Line 5: Not covered
 }
 
 // Test
@@ -40,7 +41,8 @@ Percentage of decision branches executed.
 
 ```javascript
 function validate(age, hasLicense) {
-  if (age >= 18 && hasLicense) {  // 4 branches: TT, TF, FT, FF
+  if (age >= 18 && hasLicense) {
+    // 4 branches: TT, TF, FT, FF
     return 'valid';
   }
   return 'invalid';
@@ -48,11 +50,11 @@ function validate(age, hasLicense) {
 
 // Tests
 test('valid: adult with license', () => {
-  expect(validate(20, true)).toBe('valid');  // Branch: TT
+  expect(validate(20, true)).toBe('valid'); // Branch: TT
 });
 
 test('invalid: adult without license', () => {
-  expect(validate(20, false)).toBe('invalid');  // Branch: TF
+  expect(validate(20, false)).toBe('invalid'); // Branch: TF
 });
 
 // Branch Coverage: 50% (2/4 branches tested)
@@ -81,15 +83,15 @@ module.exports = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
-    }
+      statements: 80,
+    },
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.test.{js,jsx,ts,tsx}',
     '!src/**/*.spec.{js,jsx,ts,tsx}',
-    '!src/**/index.{js,ts}'
-  ]
+    '!src/**/index.{js,ts}',
+  ],
 };
 ```
 
@@ -171,11 +173,11 @@ test('publicMethod returns correct result', () => {
 ```javascript
 // 100% coverage but still has bugs
 function divide(a, b) {
-  return a / b;  // Line covered
+  return a / b; // Line covered
 }
 
 test('divide numbers', () => {
-  expect(divide(10, 2)).toBe(5);  // ✅ Passes, 100% coverage
+  expect(divide(10, 2)).toBe(5); // ✅ Passes, 100% coverage
 });
 
 // BUG: Division by zero not tested!
@@ -192,8 +194,8 @@ function complexBusinessLogic(data) {
 }
 
 test('runs without error', () => {
-  complexBusinessLogic(mockData);  // No assertions!
-  expect(true).toBe(true);         // Meaningless assertion
+  complexBusinessLogic(mockData); // No assertions!
+  expect(true).toBe(true); // Meaningless assertion
 });
 
 // 100% coverage but tests nothing meaningful
@@ -234,19 +236,19 @@ jobs:
 ```javascript
 const coverageMetrics = {
   // Current coverage
-  statementCoverage: 85,  // %
-  branchCoverage: 78,     // %
-  functionCoverage: 90,   // %
-  lineCoverage: 85,       // %
+  statementCoverage: 85, // %
+  branchCoverage: 78, // %
+  functionCoverage: 90, // %
+  lineCoverage: 85, // %
 
   // Coverage trends
-  coverageTrend: '+2.3%',  // Increasing
+  coverageTrend: '+2.3%', // Increasing
   uncoveredLines: 324,
   uncoveredFunctions: 28,
 
   // Quality metrics
-  testToCodeRatio: 1.2,  // 1.2 test lines per code line
-  testsPerFunction: 2.5   // Average tests per function
+  testToCodeRatio: 1.2, // 1.2 test lines per code line
+  testsPerFunction: 2.5, // Average tests per function
 };
 ```
 
@@ -264,4 +266,4 @@ const coverageMetrics = {
 
 ---
 
-*Part of: [Metrics & Monitoring](README.md)*
+_Part of: [Metrics & Monitoring](README.md)_

@@ -1,12 +1,15 @@
 # Agentic Code Review Workflows
 
 ## Purpose
+
 Provide comprehensive guidance on building multi-agent code review systems that combine specialized AI agents to deliver faster, more thorough, and more consistent code reviews than traditional human-only approaches.
 
 ## Context
+
 Traditional code reviews face challenges: human reviewers may miss security vulnerabilities, performance issues go unnoticed, accessibility is often an afterthought, and senior engineers become bottlenecks. Agentic code review workflows deploy specialized AI agents that work in parallel to provide comprehensive, rapid, and consistent reviews across all quality dimensions.
 
 ## Prerequisites
+
 - Understanding of [Agentic Fundamentals](agentic-fundamentals.md)
 - Experience with [Multi-Agent Systems](multi-agent-systems.md)
 - Familiarity with [Code Review](../../templates/code-review-checklist.md) best practices
@@ -46,10 +49,12 @@ graph TB
 ```
 
 **Time Comparison:**
+
 - Traditional: 2-8 hours (human availability dependent)
 - Agentic: 5-15 minutes (always available)
 
 **Coverage:**
+
 - Traditional: 60-70% of issues (depends on reviewer expertise)
 - Agentic: 85-95% of issues (comprehensive, specialized agents)
 
@@ -60,6 +65,7 @@ graph TB
 ### 1. Security Agent
 
 **Focus Areas:**
+
 - OWASP Top 10 vulnerabilities
 - Hardcoded secrets and credentials
 - SQL injection, XSS, CSRF vulnerabilities
@@ -197,6 +203,7 @@ Fix: Use bcrypt/argon2 for password hashing and store hashes in database
 ### 2. Performance Agent
 
 **Focus Areas:**
+
 - N+1 query problems
 - Inefficient algorithms (O(n²) → O(n log n))
 - Memory leaks
@@ -338,6 +345,7 @@ Estimated Improvement: 60% faster for n > 100
 ### 3. Accessibility Agent
 
 **Focus Areas:**
+
 - WCAG 2.1 Level A/AA compliance
 - ARIA attributes and roles
 - Keyboard navigation
@@ -481,6 +489,7 @@ Accessible: <a href="/products">View our products</a>
 ### 4. Code Quality Agent
 
 **Focus Areas:**
+
 - SOLID principles violations
 - Code smells (Long Method, God Class, Feature Envy)
 - DRY violations
@@ -643,6 +652,7 @@ Refactored: Extract each responsibility into separate methods
 ### 5. Test Coverage Agent
 
 **Focus Areas:**
+
 - Missing unit tests for new functions
 - Uncovered edge cases
 - Missing error condition tests
@@ -1121,7 +1131,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Get full history for diff
+          fetch-depth: 0 # Get full history for diff
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -1504,17 +1514,18 @@ print(f"Total cost (30 days): ${stats['total_cost']:.2f}")
 
 **Using GPT-4 Turbo (October 2024 pricing):**
 
-| Agent | Input Tokens | Output Tokens | Cost |
-|-------|-------------|---------------|------|
-| Security Agent | 1,500 | 800 | $0.04 |
-| Performance Agent | 1,200 | 600 | $0.03 |
-| Accessibility Agent | 900 | 500 | $0.02 |
-| Code Quality Agent | 1,100 | 700 | $0.03 |
-| Test Coverage Agent | 1,000 | 600 | $0.03 |
-| Synthesis Agent | 2,000 | 1,200 | $0.06 |
-| **Total** | **7,700** | **4,400** | **$0.21** |
+| Agent               | Input Tokens | Output Tokens | Cost      |
+| ------------------- | ------------ | ------------- | --------- |
+| Security Agent      | 1,500        | 800           | $0.04     |
+| Performance Agent   | 1,200        | 600           | $0.03     |
+| Accessibility Agent | 900          | 500           | $0.02     |
+| Code Quality Agent  | 1,100        | 700           | $0.03     |
+| Test Coverage Agent | 1,000        | 600           | $0.03     |
+| Synthesis Agent     | 2,000        | 1,200         | $0.06     |
+| **Total**           | **7,700**    | **4,400**     | **$0.21** |
 
 **Monthly Cost (10-person team, 200 PRs/month):**
+
 - Total: $42/month
 - Time saved: 300 hours (1.5 hrs per PR × 200 PRs)
 - Value of time saved: $30,000 (at $100/hr)
@@ -1525,6 +1536,7 @@ print(f"Total cost (30 days): ${stats['total_cost']:.2f}")
 ### Cost Optimization Strategies
 
 **1. Use GPT-4 Mini for non-critical agents:**
+
 ```python
 # Cost-optimized agent initialization
 security_agent = SecurityAgent(model="gpt-4o")  # Keep critical
@@ -1538,6 +1550,7 @@ synthesis_agent = SynthesisAgent(model="gpt-4o")  # Keep critical
 **New cost: $0.09 per review (57% reduction)**
 
 **2. Smart caching:**
+
 ```python
 from functools import lru_cache
 import hashlib
@@ -1554,6 +1567,7 @@ result = cached_review(code_hash, "security")
 ```
 
 **3. Selective agent execution:**
+
 ```python
 # Only run agents relevant to changed files
 if any(f.endswith('.html') for f in changed_files):
@@ -1663,6 +1677,7 @@ class ReviewFeedback:
 **Symptoms:** Agents flag issues that aren't actually problems
 
 **Solutions:**
+
 1. Increase temperature=0 for more deterministic output
 2. Add examples of acceptable patterns to prompts
 3. Implement voting system - require 2+ agents to agree
@@ -1673,6 +1688,7 @@ class ReviewFeedback:
 **Symptoms:** Review exceeds 2 minutes
 
 **Solutions:**
+
 1. Add timeout to each agent (30 seconds)
 2. Use GPT-4 Mini for faster responses
 3. Run agents in parallel instead of sequential
@@ -1683,6 +1699,7 @@ class ReviewFeedback:
 **Symptoms:** Agent approves code with actual bugs
 
 **Solutions:**
+
 1. Add more specific examples to agent prompts
 2. Use GPT-4 instead of GPT-4 Mini for critical agents
 3. Add custom rules/patterns to agent instructions
@@ -1710,4 +1727,4 @@ class ReviewFeedback:
 
 ---
 
-*Multi-agent code review delivers comprehensive, consistent feedback faster than human-only review, while freeing senior engineers to focus on architecture and mentoring rather than catching syntax errors and security vulnerabilities.*
+_Multi-agent code review delivers comprehensive, consistent feedback faster than human-only review, while freeing senior engineers to focus on architecture and mentoring rather than catching syntax errors and security vulnerabilities._

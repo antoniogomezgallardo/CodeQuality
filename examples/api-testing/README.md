@@ -159,6 +159,7 @@ npm test -- --verbose
 Comprehensive REST API testing examples using Supertest and Jest:
 
 **Coverage:**
+
 - GET requests with query parameters
 - POST requests with body validation
 - PUT/PATCH requests for resource updates
@@ -175,12 +176,10 @@ Comprehensive REST API testing examples using Supertest and Jest:
 - Request/response interceptors
 
 **Key Patterns:**
+
 ```javascript
 // Basic GET request
-const response = await request(app)
-  .get('/api/users')
-  .expect(200)
-  .expect('Content-Type', /json/);
+const response = await request(app).get('/api/users').expect(200).expect('Content-Type', /json/);
 
 // POST with authentication
 const response = await request(app)
@@ -201,6 +200,7 @@ const response = await request(app)
 GraphQL API testing with queries, mutations, and error handling:
 
 **Coverage:**
+
 - Simple queries with variables
 - Complex nested queries
 - Mutations (create, update, delete)
@@ -213,6 +213,7 @@ GraphQL API testing with queries, mutations, and error handling:
 - Subscriptions testing basics
 
 **Key Patterns:**
+
 ```javascript
 // GraphQL query
 const query = `
@@ -241,6 +242,7 @@ const mutation = `
 Consumer-driven contract testing using Pact:
 
 **Coverage:**
+
 - Consumer contract definition
 - Provider state management
 - Interaction expectations
@@ -251,6 +253,7 @@ Consumer-driven contract testing using Pact:
 - Breaking change detection
 
 **Key Patterns:**
+
 ```javascript
 // Define consumer expectations
 await provider.addInteraction({
@@ -258,12 +261,12 @@ await provider.addInteraction({
   uponReceiving: 'a request for user details',
   withRequest: {
     method: 'GET',
-    path: '/api/users/1'
+    path: '/api/users/1',
   },
   willRespondWith: {
     status: 200,
-    body: like({ id: 1, name: 'John' })
-  }
+    body: like({ id: 1, name: 'John' }),
+  },
 });
 ```
 
@@ -272,6 +275,7 @@ await provider.addInteraction({
 Integration testing with real databases and external services:
 
 **Coverage:**
+
 - Database integration (PostgreSQL)
 - Transaction management
 - Test data setup and teardown
@@ -283,6 +287,7 @@ Integration testing with real databases and external services:
 - Message queue integration
 
 **Key Patterns:**
+
 ```javascript
 // Database setup
 beforeEach(async () => {
@@ -301,6 +306,7 @@ afterEach(async () => {
 Basic API performance testing and monitoring:
 
 **Coverage:**
+
 - Response time assertions
 - Throughput measurement
 - Concurrent request handling
@@ -311,6 +317,7 @@ Basic API performance testing and monitoring:
 - Performance regression detection
 
 **Key Patterns:**
+
 ```javascript
 // Response time assertion
 const start = Date.now();
@@ -331,9 +338,7 @@ describe('User API', () => {
       const token = await getAuthToken();
 
       // Act
-      const response = await request(app)
-        .get('/api/users')
-        .set('Authorization', `Bearer ${token}`);
+      const response = await request(app).get('/api/users').set('Authorization', `Bearer ${token}`);
 
       // Assert
       expect(response.status).toBe(200);
@@ -344,6 +349,7 @@ describe('User API', () => {
 ```
 
 **Guidelines:**
+
 - Group related tests using `describe` blocks
 - Use descriptive test names following "should..." pattern
 - Follow AAA pattern (Arrange, Act, Assert)
@@ -358,7 +364,7 @@ const createTestUser = (overrides = {}) => ({
   name: 'Test User',
   email: `test-${Date.now()}@example.com`,
   role: 'user',
-  ...overrides
+  ...overrides,
 });
 
 // Clean up after tests
@@ -368,6 +374,7 @@ afterEach(async () => {
 ```
 
 **Guidelines:**
+
 - Use unique identifiers (timestamps, UUIDs) to avoid conflicts
 - Create minimal test data needed for each test
 - Always clean up test data after tests
@@ -391,6 +398,7 @@ const token = await authenticateUser('admin');
 ```
 
 **Guidelines:**
+
 - Test both authenticated and unauthenticated access
 - Verify role-based permissions
 - Test token expiration and refresh
@@ -412,6 +420,7 @@ it('should return 400 for invalid input', async () => {
 ```
 
 **Guidelines:**
+
 - Test all expected error scenarios
 - Verify appropriate HTTP status codes
 - Validate error message structure
@@ -422,7 +431,7 @@ it('should return 400 for invalid input', async () => {
 
 ```javascript
 // Schema validation helper
-const validateUserSchema = (user) => {
+const validateUserSchema = user => {
   expect(user).toHaveProperty('id');
   expect(user).toHaveProperty('name');
   expect(user).toHaveProperty('email');
@@ -432,6 +441,7 @@ const validateUserSchema = (user) => {
 ```
 
 **Guidelines:**
+
 - Validate response structure and schema
 - Check data types and formats
 - Verify required fields are present
@@ -443,9 +453,7 @@ const validateUserSchema = (user) => {
 ```javascript
 // ✅ Good: Proper error handling
 it('should handle errors gracefully', async () => {
-  await expect(
-    request(app).get('/api/nonexistent')
-  ).rejects.toThrow();
+  await expect(request(app).get('/api/nonexistent')).rejects.toThrow();
 });
 
 // ❌ Bad: Missing await
@@ -455,6 +463,7 @@ it('should return users', () => {
 ```
 
 **Guidelines:**
+
 - Always use `async/await` for asynchronous operations
 - Handle promise rejections with try/catch or expect().rejects
 - Avoid mixing callbacks and promises
@@ -486,6 +495,7 @@ describe('User CRUD Operations', () => {
 ```
 
 **Guidelines:**
+
 - Tests should not depend on execution order
 - Each test should set up its own prerequisites
 - Clean up test data in afterEach/afterAll
@@ -499,9 +509,7 @@ describe('User CRUD Operations', () => {
 const nock = require('nock');
 
 beforeEach(() => {
-  nock('https://api.external.com')
-    .get('/data')
-    .reply(200, { data: 'mocked response' });
+  nock('https://api.external.com').get('/data').reply(200, { data: 'mocked response' });
 });
 
 afterEach(() => {
@@ -510,6 +518,7 @@ afterEach(() => {
 ```
 
 **Guidelines:**
+
 - Mock external services to ensure test reliability
 - Use libraries like Nock or MSW for HTTP mocking
 - Clean up mocks after each test
@@ -526,11 +535,12 @@ jest.setTimeout(10000); // 10 seconds
 await Promise.all([
   request(app).get('/api/users'),
   request(app).get('/api/products'),
-  request(app).get('/api/orders')
+  request(app).get('/api/orders'),
 ]);
 ```
 
 **Guidelines:**
+
 - Set appropriate test timeouts
 - Use connection pooling for database tests
 - Run independent tests in parallel
@@ -556,6 +566,7 @@ describe('User API', () => {
 ```
 
 **Guidelines:**
+
 - Document complex test scenarios
 - Explain non-obvious test setup
 - Note external dependencies
@@ -579,9 +590,7 @@ class RequestBuilder {
   }
 
   async get(path) {
-    return request(this.app)
-      .get(path)
-      .set(this.headers);
+    return request(this.app).get(path).set(this.headers);
   }
 }
 
@@ -598,16 +607,14 @@ const UserFactory = {
     name: faker.name.fullName(),
     email: faker.internet.email(),
     age: faker.number.int({ min: 18, max: 65 }),
-    ...overrides
+    ...overrides,
   }),
 
   create: async (overrides = {}) => {
     const user = UserFactory.build(overrides);
-    const response = await request(app)
-      .post('/api/users')
-      .send(user);
+    const response = await request(app).post('/api/users').send(user);
     return response.body;
-  }
+  },
 };
 ```
 
@@ -616,16 +623,13 @@ const UserFactory = {
 ```javascript
 expect.extend({
   toBeValidUser(received) {
-    const hasRequiredFields =
-      received.id &&
-      received.name &&
-      received.email;
+    const hasRequiredFields = received.id && received.name && received.email;
 
     return {
       pass: hasRequiredFields,
-      message: () => `Expected ${received} to be a valid user`
+      message: () => `Expected ${received} to be a valid user`,
     };
-  }
+  },
 });
 
 // Usage
@@ -647,9 +651,7 @@ const retryRequest = async (fn, maxRetries = 3) => {
 };
 
 // Usage
-const response = await retryRequest(() =>
-  request(app).get('/api/users')
-);
+const response = await retryRequest(() => request(app).get('/api/users'));
 ```
 
 ## Troubleshooting
@@ -661,6 +663,7 @@ const response = await retryRequest(() =>
 **Problem:** `Error: listen EADDRINUSE: address already in use`
 
 **Solution:**
+
 ```bash
 # Find process using the port
 npx kill-port 3000
@@ -675,6 +678,7 @@ netstat -ano | findstr :3000   # Windows
 **Problem:** `Error: connect ECONNREFUSED 127.0.0.1:5432`
 
 **Solution:**
+
 - Verify database is running
 - Check connection credentials in `.env`
 - Ensure database exists
@@ -690,6 +694,7 @@ psql -h localhost -U postgres -d test_db
 **Problem:** `Timeout - Async callback was not invoked within the 5000 ms timeout`
 
 **Solution:**
+
 ```javascript
 // Increase timeout for specific test
 it('should handle slow operation', async () => {
@@ -705,6 +710,7 @@ jest.setTimeout(30000);
 **Problem:** Contract verification fails on provider side
 
 **Solution:**
+
 - Ensure provider states are properly implemented
 - Verify API versions match contract
 - Check provider URL configuration
@@ -715,11 +721,12 @@ jest.setTimeout(30000);
 **Problem:** Nock mock not intercepting requests
 
 **Solution:**
+
 ```javascript
 // Enable Nock debugging
 nock.recorder.rec({
   output_objects: true,
-  enable_reqheaders_recording: true
+  enable_reqheaders_recording: true,
 });
 
 // Verify mock is set up correctly
@@ -729,26 +736,28 @@ nock.isDone(); // Returns true if all mocks were called
 ### Debugging Tips
 
 1. **Enable Verbose Output:**
+
 ```bash
 npm test -- --verbose --no-coverage
 ```
 
 2. **Use Jest Debug Mode:**
+
 ```bash
 node --inspect-brk node_modules/.bin/jest --runInBand
 ```
 
 3. **Log Request/Response:**
+
 ```javascript
-const response = await request(app)
-  .get('/api/users')
-  .expect(200);
+const response = await request(app).get('/api/users').expect(200);
 
 console.log('Request:', response.request);
 console.log('Response:', response.body);
 ```
 
 4. **Check Environment Variables:**
+
 ```javascript
 console.log('API_BASE_URL:', process.env.API_BASE_URL);
 ```

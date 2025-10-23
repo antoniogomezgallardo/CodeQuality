@@ -16,15 +16,13 @@ describe('OpenAPI Contract Testing', () => {
 
   beforeAll(async () => {
     // Load and validate OpenAPI specification
-    apiSpec = await SwaggerParser.validate(
-      path.resolve(__dirname, '../specs/user-api.yaml')
-    );
+    apiSpec = await SwaggerParser.validate(path.resolve(__dirname, '../specs/user-api.yaml'));
 
     // Setup JSON Schema validator
     ajv = new Ajv({
       allErrors: true,
       strict: false,
-      validateFormats: true
+      validateFormats: true,
     });
     addFormats(ajv);
 
@@ -71,7 +69,7 @@ describe('OpenAPI Contract Testing', () => {
         email: 'john.doe@example.com',
         role: 'admin',
         isActive: true,
-        createdAt: '2023-01-15T10:30:00Z'
+        createdAt: '2023-01-15T10:30:00Z',
       };
 
       expect(validate(validUser)).toBe(true);
@@ -85,7 +83,7 @@ describe('OpenAPI Contract Testing', () => {
       const validError = {
         error: 'Validation Error',
         code: 'VALIDATION_FAILED',
-        message: 'Invalid email format'
+        message: 'Invalid email format',
       };
 
       expect(validate(validError)).toBe(true);
@@ -104,8 +102,8 @@ describe('OpenAPI Contract Testing', () => {
             email: 'john.doe@example.com',
             role: 'admin',
             isActive: true,
-            createdAt: '2023-01-15T10:30:00Z'
-          }
+            createdAt: '2023-01-15T10:30:00Z',
+          },
         ],
         pagination: {
           page: 1,
@@ -113,8 +111,8 @@ describe('OpenAPI Contract Testing', () => {
           total: 50,
           totalPages: 5,
           hasNext: true,
-          hasPrev: false
-        }
+          hasPrev: false,
+        },
       };
 
       expect(validate(validUserList)).toBe(true);
@@ -130,9 +128,9 @@ describe('OpenAPI Contract Testing', () => {
       try {
         const response = await axios.get(`${baseURL}/api/users/123`, {
           headers: {
-            'Authorization': 'Bearer test-token',
-            'Accept': 'application/json'
-          }
+            Authorization: 'Bearer test-token',
+            Accept: 'application/json',
+          },
         });
 
         // Validate status code
@@ -145,11 +143,11 @@ describe('OpenAPI Contract Testing', () => {
 
         // Validate response headers
         expect(response.headers['content-type']).toMatch(/application\/json/);
-
       } catch (error) {
         if (error.response) {
           // Validate error response
-          const errorSchema = pathSpec.responses[error.response.status]?.content['application/json']?.schema;
+          const errorSchema =
+            pathSpec.responses[error.response.status]?.content['application/json']?.schema;
           if (errorSchema) {
             const validate = ajv.compile(resolveSchemaRef(errorSchema));
             expect(validate(error.response.data)).toBe(true);
@@ -179,19 +177,18 @@ describe('OpenAPI Contract Testing', () => {
           params: {
             page: 1,
             limit: 10,
-            sort: 'name'
+            sort: 'name',
           },
           headers: {
-            'Authorization': 'Bearer test-token',
-            'Accept': 'application/json'
-          }
+            Authorization: 'Bearer test-token',
+            Accept: 'application/json',
+          },
         });
 
         // Validate response schema
         const responseSchema = pathSpec.responses['200'].content['application/json'].schema;
         const validate = ajv.compile(resolveSchemaRef(responseSchema));
         expect(validate(response.data)).toBe(true);
-
       } catch (error) {
         console.log('API might not be running, skipping live validation');
       }
@@ -208,7 +205,7 @@ describe('OpenAPI Contract Testing', () => {
       const validRequest = {
         name: 'Jane Smith',
         email: 'jane.smith@example.com',
-        role: 'user'
+        role: 'user',
       };
 
       expect(requestValidate(validRequest)).toBe(true);
@@ -217,7 +214,7 @@ describe('OpenAPI Contract Testing', () => {
       const invalidRequest = {
         name: 'Jane Smith',
         email: 'invalid-email',
-        role: 'invalid-role'
+        role: 'invalid-role',
       };
 
       expect(requestValidate(invalidRequest)).toBe(false);
@@ -225,10 +222,10 @@ describe('OpenAPI Contract Testing', () => {
       try {
         const response = await axios.post(`${baseURL}/api/users`, validRequest, {
           headers: {
-            'Authorization': 'Bearer test-token',
+            Authorization: 'Bearer test-token',
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
+            Accept: 'application/json',
+          },
         });
 
         // Validate successful response
@@ -238,7 +235,6 @@ describe('OpenAPI Contract Testing', () => {
 
         // Validate Location header
         expect(response.headers.location).toMatch(/\/api\/users\/\d+/);
-
       } catch (error) {
         console.log('API might not be running, skipping live validation');
       }
@@ -254,7 +250,7 @@ describe('OpenAPI Contract Testing', () => {
 
       const partialUpdate = {
         name: 'John Updated',
-        role: 'moderator'
+        role: 'moderator',
       };
 
       expect(requestValidate(partialUpdate)).toBe(true);
@@ -334,8 +330,8 @@ describe('OpenAPI Contract Testing', () => {
             const operation = pathItem[method];
 
             // At least some error responses should be documented
-            const hasErrorResponses = errorCodes.some(code =>
-              operation.responses[code] !== undefined
+            const hasErrorResponses = errorCodes.some(
+              code => operation.responses[code] !== undefined
             );
             expect(hasErrorResponses).toBe(true);
           }
@@ -401,11 +397,13 @@ describe('OpenAPI Contract Testing', () => {
    * Helper function to extract validation errors
    */
   function getValidationErrors(validate) {
-    return validate.errors?.map(error => ({
-      path: error.instancePath,
-      message: error.message,
-      allowedValues: error.params?.allowedValues
-    })) || [];
+    return (
+      validate.errors?.map(error => ({
+        path: error.instancePath,
+        message: error.message,
+        allowedValues: error.params?.allowedValues,
+      })) || []
+    );
   }
 });
 
@@ -425,7 +423,7 @@ describe('API Performance Contracts', () => {
 
       try {
         await axios.get(`${baseURL}${path.replace('{id}', '123')}`, {
-          headers: { 'Authorization': 'Bearer test-token' }
+          headers: { Authorization: 'Bearer test-token' },
         });
 
         const responseTime = Date.now() - startTime;
@@ -440,5 +438,5 @@ describe('API Performance Contracts', () => {
 module.exports = {
   validateResponse,
   getValidationErrors,
-  resolveSchemaRef
+  resolveSchemaRef,
 };

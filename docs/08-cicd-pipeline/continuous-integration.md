@@ -90,6 +90,7 @@ jobs:
 
 ```markdown
 **Best Practices:**
+
 - Commit at least once per day
 - Pull latest changes before pushing
 - Fix broken builds immediately
@@ -101,21 +102,23 @@ jobs:
 ```yaml
 # Automated CI pipeline triggers
 on:
-  push:  # Every push to main/develop
-  pull_request:  # Every PR
-  schedule:  # Nightly builds
-    - cron: '0 2 * * *'  # 2 AM daily
+  push: # Every push to main/develop
+  pull_request: # Every PR
+  schedule: # Nightly builds
+    - cron: '0 2 * * *' # 2 AM daily
 ```
 
 ### 6. Keep the Build Fast
 
 ```markdown
 **Target Times:**
+
 - Unit tests: < 5 minutes
 - Integration tests: < 15 minutes
 - Full CI pipeline: < 20 minutes
 
 **Optimization Strategies:**
+
 - Parallel test execution
 - Incremental builds
 - Test result caching
@@ -139,6 +142,7 @@ services:
 
 ```markdown
 **Visibility:**
+
 - Build status badges on README
 - Slack/Teams notifications
 - Dashboard displays
@@ -159,6 +163,7 @@ services:
 
 ```markdown
 **Protocol:**
+
 1. Build breaks → Stop committing new features
 2. Team swarms to fix build
 3. Revert commit if fix takes >10 minutes
@@ -275,14 +280,14 @@ jobs:
   quick-checks:
     runs-on: ubuntu-latest
     steps:
-      - run: npm run lint  # 30 seconds
-      - run: npm run test:unit  # 2 minutes
+      - run: npm run lint # 30 seconds
+      - run: npm run test:unit # 2 minutes
 
   slow-tests:
     needs: quick-checks
     steps:
-      - run: npm run test:integration  # 10 minutes
-      - run: npm run test:e2e  # 15 minutes
+      - run: npm run test:integration # 10 minutes
+      - run: npm run test:e2e # 15 minutes
 ```
 
 ### 2. Fail Fast
@@ -352,7 +357,7 @@ const ciMetrics = {
   buildsPerDay: 45, // (healthy CI: 20-50+)
 
   // Flaky test rate
-  flakyTestRate: 2 // % (target: <5%)
+  flakyTestRate: 2, // % (target: <5%)
 };
 ```
 
@@ -371,4 +376,4 @@ const ciMetrics = {
 
 ---
 
-*Part of: [CI/CD Pipeline](README.md)*
+_Part of: [CI/CD Pipeline](README.md)_

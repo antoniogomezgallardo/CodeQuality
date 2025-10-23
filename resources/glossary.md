@@ -250,9 +250,10 @@
 
 ---
 
-*This glossary provides definitions for key terms used in software quality and development practices, including AI/ML terminology. For additional terms, refer to industry standards and frameworks.*
+_This glossary provides definitions for key terms used in software quality and development practices, including AI/ML terminology. For additional terms, refer to industry standards and frameworks._
 
 **Recent Additions:**
+
 - AI & Machine Learning terms (added October 2024)
 - LLM and RAG terminology
 - Prompt engineering concepts

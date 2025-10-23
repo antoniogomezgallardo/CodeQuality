@@ -665,7 +665,7 @@ variables:
   DOCKER_DRIVER: overlay2
   REGISTRY: registry.gitlab.com
   IMAGE_NAME: $CI_REGISTRY_IMAGE
-  NODE_VERSION: "20"
+  NODE_VERSION: '20'
 
 # Templates
 .node_template: &node_template
@@ -847,7 +847,6 @@ deploy-production:
         myapp=$IMAGE_NAME:$CI_COMMIT_SHA \
         -n production
     - kubectl rollout status deployment/myapp-green -n production --timeout=10m
-
     # Smoke tests on green
     - npm run test:smoke -- --url=https://green.example.com
 
@@ -987,7 +986,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better analysis
+          fetch-depth: 0 # Full history for better analysis
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -1442,7 +1441,7 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_CERTDIR: '/certs'
   REGISTRY: registry.gitlab.com
   IMAGE_NAME: $CI_REGISTRY_IMAGE
   POSTGRES_DB: testdb
@@ -1490,10 +1489,10 @@ code-quality:
   stage: validate
   image: sonarsource/sonar-scanner-cli:latest
   variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
-    GIT_DEPTH: "0"
+    SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar'
+    GIT_DEPTH: '0'
   cache:
-    key: "${CI_JOB_NAME}"
+    key: '${CI_JOB_NAME}'
     paths:
       - .sonar/cache
   script:
@@ -2446,13 +2445,8 @@ echo "✅ Pre-push checks passed!"
       "prettier --write",
       "jest --bail --findRelatedTests --passWithNoTests"
     ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ],
-    "*.{css,scss}": [
-      "stylelint --fix",
-      "prettier --write"
-    ]
+    "*.{json,md,yml,yaml}": ["prettier --write"],
+    "*.{css,scss}": ["stylelint --fix", "prettier --write"]
   }
 }
 ```

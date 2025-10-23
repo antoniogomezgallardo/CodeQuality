@@ -25,13 +25,13 @@ const prometheus = require('prom-client');
 const httpRequestDuration = new prometheus.Histogram({
   name: 'http_request_duration_seconds',
   help: 'HTTP request duration in seconds',
-  labelNames: ['method', 'route', 'status_code']
+  labelNames: ['method', 'route', 'status_code'],
 });
 
 const httpRequestTotal = new prometheus.Counter({
   name: 'http_requests_total',
   help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status_code']
+  labelNames: ['method', 'route', 'status_code'],
 });
 
 // Instrument HTTP requests
@@ -45,9 +45,7 @@ app.use((req, res, next) => {
       .labels(req.method, req.route?.path || req.path, res.statusCode)
       .observe(duration);
 
-    httpRequestTotal
-      .labels(req.method, req.route?.path || req.path, res.statusCode)
-      .inc();
+    httpRequestTotal.labels(req.method, req.route?.path || req.path, res.statusCode).inc();
   });
 
   next();
@@ -72,8 +70,8 @@ const logger = winston.createLogger({
   defaultMeta: { service: 'user-service' },
   transports: [
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
-  ]
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
 });
 
 // Usage
@@ -81,14 +79,14 @@ logger.info('User login successful', {
   userId: user.id,
   email: user.email,
   ip: req.ip,
-  userAgent: req.get('user-agent')
+  userAgent: req.get('user-agent'),
 });
 
 logger.error('Database connection failed', {
   error: err.message,
   stack: err.stack,
   database: 'postgres',
-  host: process.env.DB_HOST
+  host: process.env.DB_HOST,
 });
 ```
 
@@ -106,7 +104,7 @@ const { JaegerExporter } = require('@opentelemetry/exporter-jaeger');
 // Setup
 const provider = new NodeTracerProvider();
 const exporter = new JaegerExporter({
-  endpoint: 'http://localhost:14268/api/traces'
+  endpoint: 'http://localhost:14268/api/traces',
 });
 
 provider.addSpanProcessor(new SpanProcessor(exporter));
@@ -124,14 +122,14 @@ async function processOrder(orderId) {
 
     // Validate order
     const validateSpan = tracer.startSpan('validate_order', {
-      parent: span
+      parent: span,
     });
     await validateOrder(orderId);
     validateSpan.end();
 
     // Process payment
     const paymentSpan = tracer.startSpan('process_payment', {
-      parent: span
+      parent: span,
     });
     await processPayment(orderId);
     paymentSpan.end();
@@ -140,7 +138,7 @@ async function processOrder(orderId) {
   } catch (error) {
     span.setStatus({
       code: SpanStatusCode.ERROR,
-      message: error.message
+      message: error.message,
     });
     throw error;
   } finally {
@@ -160,24 +158,30 @@ async function processOrder(orderId) {
     "panels": [
       {
         "title": "Request Rate",
-        "targets": [{
-          "expr": "rate(http_requests_total[5m])",
-          "legendFormat": "{{method}} {{route}}"
-        }]
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{route}}"
+          }
+        ]
       },
       {
         "title": "Error Rate",
-        "targets": [{
-          "expr": "rate(http_requests_total{status_code=~\"5..\"}[5m])",
-          "legendFormat": "5xx errors"
-        }]
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status_code=~\"5..\"}[5m])",
+            "legendFormat": "5xx errors"
+          }
+        ]
       },
       {
         "title": "Response Time (P99)",
-        "targets": [{
-          "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
-          "legendFormat": "p99 latency"
-        }]
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p99 latency"
+          }
+        ]
       }
     ]
   }
@@ -197,8 +201,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "High error rate detected"
-          description: "Error rate is {{ $value | humanizePercentage }}"
+          summary: 'High error rate detected'
+          description: 'Error rate is {{ $value | humanizePercentage }}'
 
       - alert: HighLatency
         expr: histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 1
@@ -206,8 +210,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High latency detected"
-          description: "P99 latency is {{ $value }}s"
+          summary: 'High latency detected'
+          description: 'P99 latency is {{ $value }}s'
 ```
 
 ## Related Resources
@@ -224,4 +228,4 @@ groups:
 
 ---
 
-*Part of: [Metrics & Monitoring](README.md)*
+_Part of: [Metrics & Monitoring](README.md)_

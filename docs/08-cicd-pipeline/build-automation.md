@@ -33,6 +33,7 @@ Build automation transforms source code into executable artifacts through repeat
 ### Why Build Automation?
 
 **Benefits:**
+
 - **Consistency**: Same input → same output every time
 - **Speed**: Automated builds run faster than manual processes
 - **Reliability**: Eliminates human error
@@ -42,6 +43,7 @@ Build automation transforms source code into executable artifacts through repeat
 - **Reproducibility**: Can recreate any build at any time
 
 **Key Metrics:**
+
 - Build time (target: < 10 minutes)
 - Build success rate (target: > 95%)
 - Time to detect failures (target: < 5 minutes)
@@ -64,6 +66,7 @@ Source Code → Build Tool → [Compile + Test + Package] → Artifacts
 ### JavaScript/Node.js
 
 **npm Scripts**
+
 ```json
 {
   "scripts": {
@@ -83,6 +86,7 @@ Source Code → Build Tool → [Compile + Test + Package] → Artifacts
 ```
 
 **Webpack Configuration**
+
 ```javascript
 // webpack.config.js
 const path = require('path');
@@ -99,7 +103,7 @@ module.exports = (env, argv) => {
     output: {
       filename: isProduction ? '[name].[contenthash].js' : '[name].js',
       path: path.resolve(__dirname, 'dist'),
-      clean: true
+      clean: true,
     },
 
     module: {
@@ -107,13 +111,13 @@ module.exports = (env, argv) => {
         {
           test: /\.tsx?$/,
           use: 'ts-loader',
-          exclude: /node_modules/
+          exclude: /node_modules/,
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader']
-        }
-      ]
+          use: ['style-loader', 'css-loader', 'postcss-loader'],
+        },
+      ],
     },
 
     optimization: {
@@ -122,10 +126,10 @@ module.exports = (env, argv) => {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: isProduction
-            }
-          }
-        })
+              drop_console: isProduction,
+            },
+          },
+        }),
       ],
       splitChunks: {
         chunks: 'all',
@@ -133,27 +137,28 @@ module.exports = (env, argv) => {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
-            priority: 10
-          }
-        }
-      }
+            priority: 10,
+          },
+        },
+      },
     },
 
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './src/index.html',
-        minify: isProduction
+        minify: isProduction,
       }),
-      ...(process.env.ANALYZE ? [new BundleAnalyzerPlugin()] : [])
+      ...(process.env.ANALYZE ? [new BundleAnalyzerPlugin()] : []),
     ],
 
-    devtool: isProduction ? 'source-map' : 'eval-source-map'
+    devtool: isProduction ? 'source-map' : 'eval-source-map',
   };
 };
 ```
 
 **Vite Configuration**
+
 ```javascript
 // vite.config.js
 import { defineConfig } from 'vite';
@@ -165,8 +170,8 @@ export default defineConfig(({ mode }) => ({
     react(),
     visualizer({
       filename: './dist/stats.html',
-      open: false
-    })
+      open: false,
+    }),
   ],
 
   build: {
@@ -178,16 +183,16 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          router: ['react-router-dom']
-        }
-      }
+          router: ['react-router-dom'],
+        },
+      },
     },
 
     terserOptions: {
       compress: {
-        drop_console: mode === 'production'
-      }
-    }
+        drop_console: mode === 'production',
+      },
+    },
   },
 
   test: {
@@ -199,15 +204,16 @@ export default defineConfig(({ mode }) => ({
       statements: 80,
       branches: 80,
       functions: 80,
-      lines: 80
-    }
-  }
+      lines: 80,
+    },
+  },
 }));
 ```
 
 ### Java
 
 **Maven (pom.xml)**
+
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
@@ -323,6 +329,7 @@ export default defineConfig(({ mode }) => ({
 ```
 
 **Gradle (build.gradle.kts)**
+
 ```kotlin
 plugins {
     java
@@ -380,6 +387,7 @@ tasks.build {
 ### .NET
 
 **MSBuild (.csproj)**
+
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
@@ -408,6 +416,7 @@ tasks.build {
 ```
 
 **Build Script (build.ps1)**
+
 ```powershell
 #!/usr/bin/env pwsh
 
@@ -456,6 +465,7 @@ Write-Host "✅ Build completed successfully!" -ForegroundColor Green
 ### Python
 
 **setup.py / pyproject.toml**
+
 ```toml
 # pyproject.toml
 [build-system]
@@ -512,6 +522,7 @@ disallow_untyped_defs = true
 ```
 
 **Makefile**
+
 ```makefile
 .PHONY: help clean install lint test build docker
 
@@ -570,6 +581,7 @@ docker:
 Transform source code into executable code.
 
 **TypeScript Compilation**
+
 ```json
 {
   "compilerOptions": {
@@ -598,6 +610,7 @@ Transform source code into executable code.
 Run automated tests as part of the build.
 
 **Jest Configuration with Thresholds**
+
 ```javascript
 // jest.config.js
 module.exports = {
@@ -608,7 +621,7 @@ module.exports = {
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.tsx',
-    '!src/index.ts'
+    '!src/index.ts',
   ],
 
   coverageThresholds: {
@@ -616,22 +629,19 @@ module.exports = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
+      statements: 80,
     },
     './src/core/': {
       branches: 90,
       functions: 90,
       lines: 90,
-      statements: 90
-    }
+      statements: 90,
+    },
   },
 
-  testMatch: [
-    '**/__tests__/**/*.test.ts',
-    '**/?(*.)+(spec|test).ts'
-  ],
+  testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
 
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
 ```
 
@@ -640,6 +650,7 @@ module.exports = {
 Enforce code quality standards.
 
 **ESLint + Prettier**
+
 ```javascript
 // .eslintrc.js
 module.exports = {
@@ -650,20 +661,20 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
-    'prettier'
+    'prettier',
   ],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/explicit-function-return-type': 'warn',
     'import/order': ['error', { 'newlines-between': 'always' }],
-    'no-console': ['warn', { allow: ['warn', 'error'] }]
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
   },
   overrides: [
     {
       files: ['**/*.test.ts'],
-      env: { jest: true }
-    }
-  ]
+      env: { jest: true },
+    },
+  ],
 };
 ```
 
@@ -672,6 +683,7 @@ module.exports = {
 Bundle and compress code for deployment.
 
 **Docker Multi-Stage Build**
+
 ```dockerfile
 # Build stage
 FROM node:20-alpine AS builder
@@ -725,6 +737,7 @@ CMD ["node", "dist/index.js"]
 Automatic version management.
 
 **Semantic Versioning Script**
+
 ```javascript
 // scripts/version.js
 const fs = require('fs');
@@ -772,24 +785,25 @@ const configs = {
   development: {
     API_URL: 'http://localhost:3000',
     ENABLE_ANALYTICS: false,
-    LOG_LEVEL: 'debug'
+    LOG_LEVEL: 'debug',
   },
   staging: {
     API_URL: 'https://staging-api.example.com',
     ENABLE_ANALYTICS: true,
-    LOG_LEVEL: 'info'
+    LOG_LEVEL: 'info',
   },
   production: {
     API_URL: 'https://api.example.com',
     ENABLE_ANALYTICS: true,
-    LOG_LEVEL: 'error'
-  }
+    LOG_LEVEL: 'error',
+  },
 };
 
 module.exports = configs[process.env.NODE_ENV || 'development'];
 ```
 
 **Webpack Environment Configuration**
+
 ```javascript
 // webpack.config.js
 const webpack = require('webpack');
@@ -802,9 +816,9 @@ module.exports = (env, argv) => ({
     new webpack.DefinePlugin({
       'process.env.API_URL': JSON.stringify(config.API_URL),
       'process.env.ENABLE_ANALYTICS': JSON.stringify(config.ENABLE_ANALYTICS),
-      '__DEV__': argv.mode === 'development'
-    })
-  ]
+      __DEV__: argv.mode === 'development',
+    }),
+  ],
 });
 ```
 
@@ -831,7 +845,7 @@ const buildSteps = [
   { name: 'Clean', command: 'rimraf dist' },
   { name: 'Compile', command: 'tsc' },
   { name: 'Bundle', command: 'webpack --mode production' },
-  { name: 'Optimize', command: 'node scripts/optimize.js' }
+  { name: 'Optimize', command: 'node scripts/optimize.js' },
 ];
 
 for (const step of buildSteps) {
@@ -854,6 +868,7 @@ console.log('\n✅ Build completed successfully!');
 ### Lock Files
 
 **package-lock.json (npm)**
+
 - Ensures deterministic installs
 - Records exact versions of all dependencies
 - Should be committed to version control
@@ -867,12 +882,14 @@ npm install
 ```
 
 **yarn.lock / pnpm-lock.yaml**
+
 - Similar to package-lock.json
 - Optimized for different package managers
 
 ### Dependency Caching
 
 **GitHub Actions**
+
 ```yaml
 - name: Cache dependencies
   uses: actions/cache@v3
@@ -884,6 +901,7 @@ npm install
 ```
 
 **GitLab CI**
+
 ```yaml
 cache:
   key:
@@ -913,6 +931,7 @@ cache:
 ### 1. Incremental Builds
 
 **TypeScript Incremental Compilation**
+
 ```json
 {
   "compilerOptions": {
@@ -923,21 +942,23 @@ cache:
 ```
 
 **Webpack Caching**
+
 ```javascript
 module.exports = {
   cache: {
     type: 'filesystem',
     cacheDirectory: path.resolve(__dirname, '.webpack_cache'),
     buildDependencies: {
-      config: [__filename]
-    }
-  }
+      config: [__filename],
+    },
+  },
 };
 ```
 
 ### 2. Parallel Execution
 
 **Concurrent npm Scripts**
+
 ```json
 {
   "scripts": {
@@ -957,29 +978,32 @@ module.exports = {
 ```
 
 **Parallel Jest Tests**
+
 ```javascript
 module.exports = {
   maxWorkers: '50%', // Use 50% of available CPU cores
   testPathIgnorePatterns: ['/node_modules/'],
-  workerIdleMemoryLimit: '512MB'
+  workerIdleMemoryLimit: '512MB',
 };
 ```
 
 ### 3. Build Output Optimization
 
 **Tree Shaking**
+
 ```javascript
 // webpack.config.js
 module.exports = {
   optimization: {
     usedExports: true, // Tree shaking
     minimize: true,
-    sideEffects: false
-  }
+    sideEffects: false,
+  },
 };
 ```
 
 **Code Splitting**
+
 ```javascript
 module.exports = {
   optimization: {
@@ -993,16 +1017,16 @@ module.exports = {
           name(module) {
             const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
             return `vendor.${packageName.replace('@', '')}`;
-          }
+          },
         },
         common: {
           minChunks: 2,
           priority: -10,
-          reuseExistingChunk: true
-        }
-      }
-    }
-  }
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
 };
 ```
 
@@ -1025,6 +1049,7 @@ module.exports = smp.wrap({
 ### Artifact Storage
 
 **Directory Structure**
+
 ```
 dist/
 ├── assets/
@@ -1039,6 +1064,7 @@ dist/
 ```
 
 **Build Metadata**
+
 ```javascript
 // scripts/generate-build-info.js
 const fs = require('fs');
@@ -1051,18 +1077,16 @@ const buildInfo = {
   gitCommit: execSync('git rev-parse HEAD').toString().trim(),
   gitBranch: execSync('git rev-parse --abbrev-ref HEAD').toString().trim(),
   nodeVersion: process.version,
-  env: process.env.NODE_ENV
+  env: process.env.NODE_ENV,
 };
 
-fs.writeFileSync(
-  'dist/metadata/build-info.json',
-  JSON.stringify(buildInfo, null, 2)
-);
+fs.writeFileSync('dist/metadata/build-info.json', JSON.stringify(buildInfo, null, 2));
 ```
 
 ### Artifact Registry Integration
 
 **npm Registry**
+
 ```bash
 # Publish to registry
 npm publish --registry=https://registry.example.com
@@ -1072,6 +1096,7 @@ npm install --registry=https://registry.example.com
 ```
 
 **.npmrc Configuration**
+
 ```ini
 registry=https://registry.npmjs.org/
 @myorg:registry=https://npm.pkg.github.com/
@@ -1080,6 +1105,7 @@ registry=https://registry.npmjs.org/
 ```
 
 **Docker Registry**
+
 ```bash
 # Build and tag
 docker build -t myapp:1.0.0 .
@@ -1187,7 +1213,7 @@ stages:
   - publish
 
 variables:
-  NODE_VERSION: "20"
+  NODE_VERSION: '20'
   DOCKER_DRIVER: overlay2
 
 .node_template: &node_template
@@ -1277,13 +1303,14 @@ module.exports = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
-    }
-  }
+      statements: 80,
+    },
+  },
 };
 ```
 
 **Fail Build on Low Coverage**
+
 ```bash
 # In CI pipeline
 npm test -- --coverage --coverageThreshold='{"global":{"branches":80,"functions":80,"lines":80,"statements":80}}'
@@ -1292,6 +1319,7 @@ npm test -- --coverage --coverageThreshold='{"global":{"branches":80,"functions"
 ### Code Quality Gates
 
 **SonarQube Integration**
+
 ```yaml
 # .github/workflows/sonar.yml
 - name: SonarQube Scan
@@ -1308,6 +1336,7 @@ npm test -- --coverage --coverageThreshold='{"global":{"branches":80,"functions"
 ```
 
 **sonar-project.properties**
+
 ```properties
 sonar.projectKey=myapp
 sonar.sources=src
@@ -1341,12 +1370,13 @@ module.exports = {
   performance: {
     maxEntrypointSize: 250000, // 250 KB
     maxAssetSize: 250000,
-    hints: 'error'
-  }
+    hints: 'error',
+  },
 };
 ```
 
 **bundlesize Configuration**
+
 ```json
 {
   "name": "myapp",
@@ -1410,6 +1440,7 @@ CMD ["node", "dist/index.js"]
 ```
 
 **Benefits:**
+
 - Smaller final image (only production dependencies)
 - Improved security (no build tools in production)
 - Faster deployment (optimized layers)
@@ -1421,6 +1452,7 @@ CMD ["node", "dist/index.js"]
 ### Deterministic Builds
 
 **Requirements:**
+
 1. **Fixed dependency versions**: Use lock files
 2. **Fixed tool versions**: Specify exact versions
 3. **Fixed environment**: Use containers
@@ -1428,6 +1460,7 @@ CMD ["node", "dist/index.js"]
 5. **Sorted inputs**: Process files in consistent order
 
 **Example: Reproducible npm Build**
+
 ```json
 {
   "engines": {
@@ -1619,6 +1652,7 @@ jobs:
 ## Checklist
 
 ### Build Configuration
+
 - [ ] Build completes in < 10 minutes
 - [ ] All tests pass before build completes
 - [ ] Build artifacts are reproducible
@@ -1627,6 +1661,7 @@ jobs:
 - [ ] Environment variables are documented
 
 ### Quality Gates
+
 - [ ] Code coverage thresholds enforced (≥ 80%)
 - [ ] Linting rules enforced
 - [ ] Security vulnerabilities scanned
@@ -1634,6 +1669,7 @@ jobs:
 - [ ] Build fails on warnings
 
 ### Artifacts
+
 - [ ] Build metadata included (version, commit, timestamp)
 - [ ] Source maps generated
 - [ ] Documentation generated
@@ -1641,6 +1677,7 @@ jobs:
 - [ ] Artifacts are signed/verified
 
 ### Optimization
+
 - [ ] Incremental builds enabled
 - [ ] Dependencies cached
 - [ ] Parallel execution used where possible
@@ -1648,6 +1685,7 @@ jobs:
 - [ ] Unnecessary files excluded from output
 
 ### CI/CD Integration
+
 - [ ] Build runs on every commit
 - [ ] Build runs on multiple environments (if applicable)
 - [ ] Artifacts promoted through environments
@@ -1661,6 +1699,7 @@ jobs:
 ### Tools
 
 **JavaScript/Node.js:**
+
 - [npm](https://docs.npmjs.com/) - Package manager
 - [Webpack](https://webpack.js.org/) - Module bundler
 - [Vite](https://vitejs.dev/) - Build tool
@@ -1668,19 +1707,23 @@ jobs:
 - [Rollup](https://rollupjs.org/) - Module bundler
 
 **Java:**
+
 - [Maven](https://maven.apache.org/) - Build automation
 - [Gradle](https://gradle.org/) - Build tool
 
 **.NET:**
+
 - [MSBuild](https://docs.microsoft.com/en-us/visualstudio/msbuild/) - Build platform
 - [dotnet CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/) - Command-line tools
 
 **Python:**
+
 - [setuptools](https://setuptools.pypa.io/) - Build system
 - [Poetry](https://python-poetry.org/) - Dependency management
 - [PyInstaller](https://pyinstaller.org/) - Package applications
 
 **Containers:**
+
 - [Docker](https://docs.docker.com/) - Containerization
 - [BuildKit](https://github.com/moby/buildkit) - Build toolkit
 

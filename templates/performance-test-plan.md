@@ -2,16 +2,16 @@
 
 ## Document Information
 
-| Field | Details |
-|-------|---------|
-| **Project Name** | [Project Name] |
-| **Application Under Test** | [Application Name] |
-| **Version** | 1.0 |
-| **Test Date** | YYYY-MM-DD |
-| **Test Environment** | Staging / Pre-Production / Production |
-| **Document Owner** | [Name/Team] |
-| **Reviewed By** | [Name/Date] |
-| **Approved By** | [Name/Date] |
+| Field                      | Details                               |
+| -------------------------- | ------------------------------------- |
+| **Project Name**           | [Project Name]                        |
+| **Application Under Test** | [Application Name]                    |
+| **Version**                | 1.0                                   |
+| **Test Date**              | YYYY-MM-DD                            |
+| **Test Environment**       | Staging / Pre-Production / Production |
+| **Document Owner**         | [Name/Team]                           |
+| **Reviewed By**            | [Name/Date]                           |
+| **Approved By**            | [Name/Date]                           |
 
 ---
 
@@ -37,15 +37,18 @@
 ## Executive Summary
 
 ### Purpose
+
 This performance test plan defines the strategy, approach, and resources required to validate that the [Application Name] meets its performance requirements under various load conditions.
 
 ### Background
+
 [Brief context about the application, recent changes, or reasons for performance testing]
 
 **Example:**
 The e-commerce platform is expecting 3x traffic increase during the holiday season (Black Friday/Cyber Monday). This performance test validates that the system can handle 10,000 concurrent users making purchases simultaneously while maintaining response times under 2 seconds.
 
 ### Key Objectives
+
 - Validate system performance under expected peak load
 - Identify performance bottlenecks
 - Verify system stability under sustained load
@@ -59,6 +62,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 ### Primary Objectives
 
 #### 1. Load Testing
+
 **Goal:** Verify system behavior under expected load conditions
 
 - Validate application handles expected user load (5,000 concurrent users)
@@ -67,6 +71,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 - Verify resource utilization stays within acceptable limits
 
 #### 2. Stress Testing
+
 **Goal:** Determine system breaking point and failure modes
 
 - Identify maximum load capacity before degradation
@@ -76,6 +81,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 - Test recovery after stress conditions
 
 #### 3. Endurance Testing (Soak Testing)
+
 **Goal:** Verify system stability over extended periods
 
 - Run at 70% peak load for 8 hours
@@ -85,6 +91,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 - Monitor for performance degradation over time
 
 #### 4. Spike Testing
+
 **Goal:** Test system behavior under sudden load increases
 
 - Simulate sudden traffic spikes (2x load in 30 seconds)
@@ -93,6 +100,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 - Validate circuit breakers and rate limiting
 
 #### 5. Scalability Testing
+
 **Goal:** Determine how system scales with increased resources
 
 - Test horizontal scaling (adding more instances)
@@ -115,6 +123,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 ### In Scope
 
 #### Functional Areas
+
 - [ ] User authentication and registration
 - [ ] Product search and browsing
 - [ ] Shopping cart operations
@@ -123,6 +132,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 - [ ] API endpoints (internal and public)
 
 #### Technical Components
+
 - [ ] Web application servers
 - [ ] API gateway
 - [ ] Database (read and write operations)
@@ -132,6 +142,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 - [ ] External API integrations (payment gateway)
 
 #### Test Types
+
 - [ ] Load testing
 - [ ] Stress testing
 - [ ] Endurance testing
@@ -152,53 +163,53 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 
 ### Response Time Requirements
 
-| Transaction | Target (Avg) | Acceptable (p95) | Max (p99) | SLA |
-|-------------|-------------|------------------|-----------|-----|
-| Homepage Load | < 1.0s | < 1.5s | < 2.0s | 99.9% |
-| Product Search | < 0.5s | < 1.0s | < 1.5s | 99.9% |
-| Add to Cart | < 0.3s | < 0.5s | < 1.0s | 99.95% |
-| Checkout | < 2.0s | < 3.0s | < 5.0s | 99.95% |
-| Payment Processing | < 3.0s | < 5.0s | < 8.0s | 99.9% |
-| Order Confirmation | < 1.0s | < 2.0s | < 3.0s | 99.9% |
-| API - GET /products | < 200ms | < 500ms | < 1000ms | 99.99% |
-| API - POST /orders | < 500ms | < 1000ms | < 2000ms | 99.99% |
+| Transaction         | Target (Avg) | Acceptable (p95) | Max (p99) | SLA    |
+| ------------------- | ------------ | ---------------- | --------- | ------ |
+| Homepage Load       | < 1.0s       | < 1.5s           | < 2.0s    | 99.9%  |
+| Product Search      | < 0.5s       | < 1.0s           | < 1.5s    | 99.9%  |
+| Add to Cart         | < 0.3s       | < 0.5s           | < 1.0s    | 99.95% |
+| Checkout            | < 2.0s       | < 3.0s           | < 5.0s    | 99.95% |
+| Payment Processing  | < 3.0s       | < 5.0s           | < 8.0s    | 99.9%  |
+| Order Confirmation  | < 1.0s       | < 2.0s           | < 3.0s    | 99.9%  |
+| API - GET /products | < 200ms      | < 500ms          | < 1000ms  | 99.99% |
+| API - POST /orders  | < 500ms      | < 1000ms         | < 2000ms  | 99.99% |
 
 ### Throughput Requirements
 
-| Metric | Normal Load | Peak Load | Target |
-|--------|------------|-----------|--------|
-| Requests per second | 500 req/s | 2,000 req/s | Handle peak + 50% buffer |
-| Transactions per minute | 1,200 tpm | 5,000 tpm | 100% success rate |
-| Orders per hour | 3,000 orders/hr | 12,000 orders/hr | Zero order loss |
-| Concurrent users | 2,000 users | 8,000 users | Maintain response times |
+| Metric                  | Normal Load     | Peak Load        | Target                   |
+| ----------------------- | --------------- | ---------------- | ------------------------ |
+| Requests per second     | 500 req/s       | 2,000 req/s      | Handle peak + 50% buffer |
+| Transactions per minute | 1,200 tpm       | 5,000 tpm        | 100% success rate        |
+| Orders per hour         | 3,000 orders/hr | 12,000 orders/hr | Zero order loss          |
+| Concurrent users        | 2,000 users     | 8,000 users      | Maintain response times  |
 
 ### Capacity Requirements
 
-| Resource | Normal Load | Peak Load | Maximum |
-|----------|------------|-----------|---------|
-| Concurrent Users | 2,000 | 8,000 | 10,000 |
-| Active Sessions | 5,000 | 20,000 | 25,000 |
-| Database Connections | 50 | 150 | 200 |
-| Queue Messages/sec | 100 msg/s | 500 msg/s | 1,000 msg/s |
+| Resource             | Normal Load | Peak Load | Maximum     |
+| -------------------- | ----------- | --------- | ----------- |
+| Concurrent Users     | 2,000       | 8,000     | 10,000      |
+| Active Sessions      | 5,000       | 20,000    | 25,000      |
+| Database Connections | 50          | 150       | 200         |
+| Queue Messages/sec   | 100 msg/s   | 500 msg/s | 1,000 msg/s |
 
 ### Resource Utilization Requirements
 
-| Resource | Target (Normal) | Alert Threshold | Critical Threshold |
-|----------|----------------|-----------------|-------------------|
-| CPU Usage | < 50% | > 70% | > 85% |
-| Memory Usage | < 60% | > 75% | > 90% |
-| Disk I/O | < 40% | > 70% | > 85% |
-| Network Bandwidth | < 50% | > 75% | > 90% |
-| Database CPU | < 40% | > 60% | > 80% |
+| Resource          | Target (Normal) | Alert Threshold | Critical Threshold |
+| ----------------- | --------------- | --------------- | ------------------ |
+| CPU Usage         | < 50%           | > 70%           | > 85%              |
+| Memory Usage      | < 60%           | > 75%           | > 90%              |
+| Disk I/O          | < 40%           | > 70%           | > 85%              |
+| Network Bandwidth | < 50%           | > 75%           | > 90%              |
+| Database CPU      | < 40%           | > 60%           | > 80%              |
 
 ### Error Rate Requirements
 
-| Error Type | Acceptable Rate | Target Rate |
-|------------|----------------|-------------|
-| HTTP 4xx Errors | < 1% | < 0.5% |
-| HTTP 5xx Errors | < 0.1% | < 0.05% |
-| Timeouts | < 0.1% | < 0.01% |
-| Failed Transactions | < 0.05% | < 0.01% |
+| Error Type          | Acceptable Rate | Target Rate |
+| ------------------- | --------------- | ----------- |
+| HTTP 4xx Errors     | < 1%            | < 0.5%      |
+| HTTP 5xx Errors     | < 0.1%          | < 0.05%     |
+| Timeouts            | < 0.1%          | < 0.01%     |
+| Failed Transactions | < 0.05%         | < 0.01%     |
 
 ### Availability Requirements
 
@@ -215,6 +226,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** User browses products, searches, and views details
 
 **User Journey:**
+
 1. Load homepage (5s think time)
 2. Search for "laptop" (3s think time)
 3. View search results (2s think time)
@@ -233,6 +245,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** User adds products to shopping cart
 
 **User Journey:**
+
 1. Browse products (5s think time)
 2. Add product to cart (2s think time)
 3. View cart (3s think time)
@@ -250,6 +263,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** User completes checkout and payment
 
 **User Journey:**
+
 1. View cart (2s think time)
 2. Proceed to checkout (3s think time)
 3. Enter shipping information (30s think time)
@@ -270,6 +284,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** New user creates account
 
 **User Journey:**
+
 1. Click "Sign Up" (2s think time)
 2. Fill registration form (45s think time)
 3. Submit registration (3s think time)
@@ -287,6 +302,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** Existing user logs in
 
 **User Journey:**
+
 1. Click "Login" (2s think time)
 2. Enter credentials (10s think time)
 3. Submit login (2s think time)
@@ -303,6 +319,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** External API calls to product catalog
 
 **API Calls:**
+
 - GET /api/v1/products (list)
 - GET /api/v1/products/{id} (details)
 - GET /api/v1/categories
@@ -318,6 +335,7 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 **Description:** External API calls for order operations
 
 **API Calls:**
+
 - POST /api/v1/orders (create)
 - GET /api/v1/orders/{id} (retrieve)
 - PUT /api/v1/orders/{id} (update)
@@ -334,14 +352,15 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 
 **Purpose:** Gradually increase load to target level
 
-| Time | Concurrent Users | Requests/sec | Notes |
-|------|-----------------|--------------|-------|
-| 0:00 | 0 | 0 | Start |
-| 0:05 | 500 | 50 | Initial ramp |
-| 0:10 | 2,000 | 200 | Normal load |
-| 0:15 | 5,000 | 500 | Target load reached |
+| Time | Concurrent Users | Requests/sec | Notes               |
+| ---- | ---------------- | ------------ | ------------------- |
+| 0:00 | 0                | 0            | Start               |
+| 0:05 | 500              | 50           | Initial ramp        |
+| 0:10 | 2,000            | 200          | Normal load         |
+| 0:15 | 5,000            | 500          | Target load reached |
 
 **Actions:**
+
 - Monitor all systems
 - Watch for early warning signs
 - Verify monitoring and alerting working
@@ -352,11 +371,12 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 
 **Purpose:** Maintain stable load to measure sustained performance
 
-| Time | Concurrent Users | Requests/sec | Notes |
-|------|-----------------|--------------|-------|
-| 0:15-1:15 | 5,000 | 500 | Sustained load |
+| Time      | Concurrent Users | Requests/sec | Notes          |
+| --------- | ---------------- | ------------ | -------------- |
+| 0:15-1:15 | 5,000            | 500          | Sustained load |
 
 **Actions:**
+
 - Collect baseline metrics
 - Monitor resource utilization
 - Verify SLA compliance
@@ -368,13 +388,14 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 
 **Purpose:** Test system under maximum expected load
 
-| Time | Concurrent Users | Requests/sec | Notes |
-|------|-----------------|--------------|-------|
-| 1:15 | 5,000 | 500 | Starting point |
-| 1:20 | 8,000 | 800 | Peak load |
-| 1:45 | 8,000 | 800 | Sustained peak |
+| Time | Concurrent Users | Requests/sec | Notes          |
+| ---- | ---------------- | ------------ | -------------- |
+| 1:15 | 5,000            | 500          | Starting point |
+| 1:20 | 8,000            | 800          | Peak load      |
+| 1:45 | 8,000            | 800          | Sustained peak |
 
 **Actions:**
+
 - Monitor response times
 - Check error rates
 - Verify auto-scaling triggers
@@ -386,14 +407,15 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 
 **Purpose:** Determine system breaking point
 
-| Time | Concurrent Users | Requests/sec | Notes |
-|------|-----------------|--------------|-------|
-| 1:45 | 8,000 | 800 | Starting point |
-| 1:50 | 10,000 | 1,000 | Beyond capacity |
-| 2:00 | 12,000 | 1,200 | Stress load |
-| 2:05 | 15,000 | 1,500 | Maximum stress |
+| Time | Concurrent Users | Requests/sec | Notes           |
+| ---- | ---------------- | ------------ | --------------- |
+| 1:45 | 8,000            | 800          | Starting point  |
+| 1:50 | 10,000           | 1,000        | Beyond capacity |
+| 2:00 | 12,000           | 1,200        | Stress load     |
+| 2:05 | 15,000           | 1,500        | Maximum stress  |
 
 **Actions:**
+
 - Identify breaking point
 - Document failure modes
 - Test circuit breakers
@@ -405,13 +427,14 @@ The e-commerce platform is expecting 3x traffic increase during the holiday seas
 
 **Purpose:** Gradually reduce load and verify recovery
 
-| Time | Concurrent Users | Requests/sec | Notes |
-|------|-----------------|--------------|-------|
-| 2:05 | 15,000 | 1,500 | Start ramp-down |
-| 2:10 | 5,000 | 500 | Back to normal |
-| 2:15 | 0 | 0 | Test complete |
+| Time | Concurrent Users | Requests/sec | Notes           |
+| ---- | ---------------- | ------------ | --------------- |
+| 2:05 | 15,000           | 1,500        | Start ramp-down |
+| 2:10 | 5,000            | 500          | Back to normal  |
+| 2:15 | 0                | 0            | Test complete   |
 
 **Actions:**
+
 - Monitor system recovery
 - Check for stuck processes
 - Verify resource cleanup
@@ -452,6 +475,7 @@ Concurrent Users
 #### Production-Like Environment
 
 **Application Servers:**
+
 - Type: AWS EC2 t3.xlarge
 - CPU: 4 vCPU
 - Memory: 16 GB RAM
@@ -459,6 +483,7 @@ Concurrent Users
 - OS: Ubuntu 22.04 LTS
 
 **Database:**
+
 - Type: AWS RDS PostgreSQL 14
 - Instance: db.r5.2xlarge
 - CPU: 8 vCPU
@@ -467,6 +492,7 @@ Concurrent Users
 - Read Replicas: 2
 
 **Cache:**
+
 - Type: AWS ElastiCache Redis 7.0
 - Instance: cache.r6g.xlarge
 - CPU: 4 vCPU
@@ -474,24 +500,26 @@ Concurrent Users
 - Configuration: Cluster mode enabled
 
 **Load Balancer:**
+
 - Type: AWS Application Load Balancer (ALB)
 - Distribution: Round-robin
 - Health Check: /health endpoint (30s interval)
 - Connection Timeout: 60s
 
 **Message Queue:**
+
 - Type: RabbitMQ 3.12
 - Instance: t3.medium
 - Configuration: Mirrored queues, durable
 
 ### Network Configuration
 
-| Component | Bandwidth | Latency |
-|-----------|-----------|---------|
-| Load Generator → ALB | 10 Gbps | < 10ms |
-| ALB → App Servers | 10 Gbps | < 5ms |
-| App Servers → Database | 10 Gbps | < 2ms |
-| App Servers → Cache | 10 Gbps | < 1ms |
+| Component              | Bandwidth | Latency |
+| ---------------------- | --------- | ------- |
+| Load Generator → ALB   | 10 Gbps   | < 10ms  |
+| ALB → App Servers      | 10 Gbps   | < 5ms   |
+| App Servers → Database | 10 Gbps   | < 2ms   |
+| App Servers → Cache    | 10 Gbps   | < 1ms   |
 
 ### Configuration Parity
 
@@ -509,16 +537,17 @@ Concurrent Users
 
 ### Data Volume
 
-| Data Type | Production | Test Environment | Ratio |
-|-----------|-----------|------------------|-------|
-| Users | 5,000,000 | 1,000,000 | 20% |
-| Products | 100,000 | 100,000 | 100% |
-| Orders (Historical) | 10,000,000 | 2,000,000 | 20% |
-| Active Sessions | 20,000 | 20,000 | 100% |
+| Data Type           | Production | Test Environment | Ratio |
+| ------------------- | ---------- | ---------------- | ----- |
+| Users               | 5,000,000  | 1,000,000        | 20%   |
+| Products            | 100,000    | 100,000          | 100%  |
+| Orders (Historical) | 10,000,000 | 2,000,000        | 20%   |
+| Active Sessions     | 20,000     | 20,000           | 100%  |
 
 ### Data Characteristics
 
 #### User Data
+
 - 1,000,000 user accounts
 - Email format: testuser{1-1000000}@example.com
 - Password: hashed with bcrypt
@@ -526,6 +555,7 @@ Concurrent Users
 - Profiles: Complete with addresses and payment methods
 
 #### Product Data
+
 - 100,000 products (full production catalog)
 - Categories: All production categories
 - Inventory: Realistic stock levels (10-1000 units)
@@ -533,6 +563,7 @@ Concurrent Users
 - Images: Hosted on test CDN
 
 #### Order Data
+
 - 2,000,000 historical orders
 - Order status distribution: 70% completed, 20% shipped, 10% processing
 - Date range: Last 2 years
@@ -570,12 +601,14 @@ npm run verify:test-data
 #### Primary Tool: Apache JMeter 5.6
 
 **Configuration:**
+
 - Master-slave distributed setup
 - 5 load generator instances (c5.2xlarge)
 - Each instance: 8 vCPU, 16GB RAM
 - Total capacity: 20,000 concurrent users
 
 **JMeter Configuration:**
+
 ```properties
 # jmeter.properties
 server.rmi.ssl.disable=false
@@ -585,6 +618,7 @@ summariser.interval=30
 ```
 
 **Test Plan Structure:**
+
 ```
 Test Plan
 ├── User Defined Variables
@@ -613,21 +647,21 @@ import { check, sleep } from 'k6';
 
 export let options = {
   stages: [
-    { duration: '5m', target: 100 },   // Ramp-up
-    { duration: '10m', target: 100 },  // Steady state
-    { duration: '5m', target: 0 },     // Ramp-down
+    { duration: '5m', target: 100 }, // Ramp-up
+    { duration: '10m', target: 100 }, // Steady state
+    { duration: '5m', target: 0 }, // Ramp-down
   ],
   thresholds: {
-    http_req_duration: ['p(95)<500'],  // 95% under 500ms
-    http_req_failed: ['rate<0.01'],    // Error rate under 1%
+    http_req_duration: ['p(95)<500'], // 95% under 500ms
+    http_req_failed: ['rate<0.01'], // Error rate under 1%
   },
 };
 
 export default function () {
   let response = http.get('https://api.example.com/v1/products');
   check(response, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 500ms': (r) => r.timings.duration < 500,
+    'status is 200': r => r.status === 200,
+    'response time < 500ms': r => r.timings.duration < 500,
   });
   sleep(1);
 }
@@ -638,6 +672,7 @@ export default function () {
 #### Application Performance Monitoring (APM)
 
 **Tool: New Relic / Datadog**
+
 - Real-time application metrics
 - Distributed tracing
 - Database query analysis
@@ -647,12 +682,14 @@ export default function () {
 #### Infrastructure Monitoring
 
 **Tool: Prometheus + Grafana**
+
 - System metrics (CPU, memory, disk, network)
 - Container metrics (if using Docker/K8s)
 - Custom application metrics
 - Alert rules configured
 
 **Key Dashboards:**
+
 1. System Overview (CPU, memory, disk)
 2. Application Performance (response time, throughput)
 3. Database Performance (connections, queries, locks)
@@ -662,6 +699,7 @@ export default function () {
 #### Log Aggregation
 
 **Tool: ELK Stack (Elasticsearch, Logstash, Kibana)**
+
 - Centralized log collection
 - Real-time log analysis
 - Error pattern detection
@@ -670,6 +708,7 @@ export default function () {
 #### Database Monitoring
 
 **Tool: AWS RDS Performance Insights**
+
 - Query performance analysis
 - Wait event analysis
 - Database load monitoring
@@ -680,12 +719,14 @@ export default function () {
 #### Metrics Storage
 
 **InfluxDB:**
+
 - Time-series database for metrics
 - JMeter Backend Listener integration
 - Grafana integration for visualization
 - Retention: 90 days
 
 **InfluxDB Schema:**
+
 ```
 measurement: jmeter
 tags:
@@ -705,6 +746,7 @@ fields:
 **Grafana Dashboard - Performance Test Results:**
 
 Panels:
+
 1. Response Time (p50, p95, p99)
 2. Throughput (requests/sec)
 3. Error Rate (%)
@@ -719,6 +761,7 @@ Panels:
 ### Must-Have Criteria (Test Fails if Not Met)
 
 #### Performance Criteria
+
 - ✅ **Response Time:** 95% of requests complete within target time
 - ✅ **Error Rate:** Less than 0.1% error rate during normal load
 - ✅ **Throughput:** Handle 500 req/s sustained for 1 hour
@@ -726,12 +769,14 @@ Panels:
 - ✅ **Transaction Success:** 100% of transactions complete successfully
 
 #### Stability Criteria
+
 - ✅ **Memory:** No memory leaks (memory stable during endurance test)
 - ✅ **Connections:** Database connection pool remains stable
 - ✅ **Recovery:** System recovers within 5 minutes after stress
 - ✅ **Resource Cleanup:** All resources properly released
 
 #### Scalability Criteria
+
 - ✅ **Auto-Scaling:** Instances scale up within 2 minutes of threshold
 - ✅ **Scale-Down:** Instances scale down after load reduction
 - ✅ **Linear Scaling:** 2x resources = 1.8x+ capacity (90% efficiency)
@@ -756,6 +801,7 @@ Panels:
 ### Pre-Test Activities
 
 #### 1 Week Before Test
+
 - [ ] Finalize test plan and get approval
 - [ ] Set up test environment
 - [ ] Configure monitoring and dashboards
@@ -764,6 +810,7 @@ Panels:
 - [ ] Review and adjust test scripts
 
 #### 2 Days Before Test
+
 - [ ] Verify test environment parity
 - [ ] Refresh test data from snapshot
 - [ ] Run smoke test (100 users, 10 minutes)
@@ -772,6 +819,7 @@ Panels:
 - [ ] Create backup of production (if testing prod-like)
 
 #### Day of Test - Pre-Test (2 hours before)
+
 - [ ] Final environment verification
 - [ ] Start all monitoring tools
 - [ ] Verify load generators ready
@@ -785,48 +833,55 @@ Panels:
 
 #### Test Team Roles
 
-| Role | Responsibilities | Person |
-|------|-----------------|--------|
-| **Test Lead** | Overall coordination, decision making | [Name] |
-| **Load Test Engineer** | Run JMeter, monitor load generation | [Name] |
-| **App Monitoring** | Monitor application metrics, logs | [Name] |
-| **Infra Monitoring** | Monitor servers, database, network | [Name] |
-| **DBA** | Monitor database performance, queries | [Name] |
-| **Scribe** | Document timeline, issues, observations | [Name] |
+| Role                   | Responsibilities                        | Person |
+| ---------------------- | --------------------------------------- | ------ |
+| **Test Lead**          | Overall coordination, decision making   | [Name] |
+| **Load Test Engineer** | Run JMeter, monitor load generation     | [Name] |
+| **App Monitoring**     | Monitor application metrics, logs       | [Name] |
+| **Infra Monitoring**   | Monitor servers, database, network      | [Name] |
+| **DBA**                | Monitor database performance, queries   | [Name] |
+| **Scribe**             | Document timeline, issues, observations | [Name] |
 
 #### Execution Timeline
 
 **T-15 minutes:**
+
 - [ ] Final team briefing
 - [ ] Confirm all systems ready
 - [ ] Start recording session (optional)
 
 **T-0: Test Start**
+
 - [ ] Start JMeter master controller
 - [ ] Verify load generation starts
 - [ ] Confirm monitoring data flowing
 
 **T+15: Steady State Reached**
+
 - [ ] Verify all metrics within normal range
 - [ ] Check error logs for any issues
 - [ ] Begin collecting baseline data
 
 **T+75: Peak Load Phase**
+
 - [ ] Monitor response time degradation
 - [ ] Watch for auto-scaling triggers
 - [ ] Check database connection pools
 
 **T+105: Stress Phase**
+
 - [ ] Monitor closely for failures
 - [ ] Document breaking points
 - [ ] Note error messages and patterns
 
 **T+135: Ramp-Down**
+
 - [ ] Monitor system recovery
 - [ ] Verify resource cleanup
 - [ ] Check for hung processes
 
 **T+145: Test Complete**
+
 - [ ] Stop JMeter
 - [ ] Export all metrics
 - [ ] Take final screenshots
@@ -835,6 +890,7 @@ Panels:
 ### Post-Test Activities
 
 #### Immediate (Within 1 hour)
+
 - [ ] Export all test results
 - [ ] Backup monitoring dashboards (screenshots)
 - [ ] Export application and system logs
@@ -842,12 +898,14 @@ Panels:
 - [ ] Document any major issues observed
 
 #### Within 24 Hours
+
 - [ ] Complete detailed analysis
 - [ ] Generate test report
 - [ ] Create issue tickets for defects
 - [ ] Share preliminary findings with stakeholders
 
 #### Within 1 Week
+
 - [ ] Finalize test report with recommendations
 - [ ] Present findings to leadership
 - [ ] Create action plan for improvements
@@ -861,53 +919,53 @@ Panels:
 
 #### Application Metrics
 
-| Metric | Source | Collection Interval | Alert Threshold |
-|--------|--------|-------------------|-----------------|
-| Response Time (avg) | JMeter / APM | 30s | > 2s |
-| Response Time (p95) | JMeter / APM | 30s | > 3s |
-| Response Time (p99) | JMeter / APM | 30s | > 5s |
-| Throughput (req/s) | JMeter | 30s | < 400 req/s |
-| Error Rate (%) | JMeter / APM | 30s | > 1% |
-| Active Users | JMeter | 30s | - |
+| Metric              | Source       | Collection Interval | Alert Threshold |
+| ------------------- | ------------ | ------------------- | --------------- |
+| Response Time (avg) | JMeter / APM | 30s                 | > 2s            |
+| Response Time (p95) | JMeter / APM | 30s                 | > 3s            |
+| Response Time (p99) | JMeter / APM | 30s                 | > 5s            |
+| Throughput (req/s)  | JMeter       | 30s                 | < 400 req/s     |
+| Error Rate (%)      | JMeter / APM | 30s                 | > 1%            |
+| Active Users        | JMeter       | 30s                 | -               |
 
 #### Infrastructure Metrics
 
-| Metric | Source | Collection Interval | Alert Threshold |
-|--------|--------|-------------------|-----------------|
-| CPU Usage (%) | CloudWatch | 60s | > 80% |
-| Memory Usage (%) | CloudWatch | 60s | > 85% |
-| Disk I/O (IOPS) | CloudWatch | 60s | > 10,000 |
-| Network In/Out (MB/s) | CloudWatch | 60s | > 1,000 MB/s |
-| Load Average | CloudWatch | 60s | > 8.0 |
+| Metric                | Source     | Collection Interval | Alert Threshold |
+| --------------------- | ---------- | ------------------- | --------------- |
+| CPU Usage (%)         | CloudWatch | 60s                 | > 80%           |
+| Memory Usage (%)      | CloudWatch | 60s                 | > 85%           |
+| Disk I/O (IOPS)       | CloudWatch | 60s                 | > 10,000        |
+| Network In/Out (MB/s) | CloudWatch | 60s                 | > 1,000 MB/s    |
+| Load Average          | CloudWatch | 60s                 | > 8.0           |
 
 #### Database Metrics
 
-| Metric | Source | Collection Interval | Alert Threshold |
-|--------|--------|-------------------|-----------------|
-| Connections (active) | RDS | 60s | > 150 |
-| Query Duration (avg) | RDS | 60s | > 100ms |
-| Read IOPS | RDS | 60s | > 5,000 |
-| Write IOPS | RDS | 60s | > 2,000 |
-| CPU Usage (%) | RDS | 60s | > 70% |
-| Deadlocks | RDS | 60s | > 0 |
+| Metric               | Source | Collection Interval | Alert Threshold |
+| -------------------- | ------ | ------------------- | --------------- |
+| Connections (active) | RDS    | 60s                 | > 150           |
+| Query Duration (avg) | RDS    | 60s                 | > 100ms         |
+| Read IOPS            | RDS    | 60s                 | > 5,000         |
+| Write IOPS           | RDS    | 60s                 | > 2,000         |
+| CPU Usage (%)        | RDS    | 60s                 | > 70%           |
+| Deadlocks            | RDS    | 60s                 | > 0             |
 
 #### Cache Metrics
 
-| Metric | Source | Collection Interval | Alert Threshold |
-|--------|--------|-------------------|-----------------|
-| Hit Rate (%) | Redis | 60s | < 70% |
-| Evictions (count) | Redis | 60s | > 1000/min |
-| Memory Usage (%) | Redis | 60s | > 80% |
-| Connected Clients | Redis | 60s | > 500 |
+| Metric            | Source | Collection Interval | Alert Threshold |
+| ----------------- | ------ | ------------------- | --------------- |
+| Hit Rate (%)      | Redis  | 60s                 | < 70%           |
+| Evictions (count) | Redis  | 60s                 | > 1000/min      |
+| Memory Usage (%)  | Redis  | 60s                 | > 80%           |
+| Connected Clients | Redis  | 60s                 | > 500           |
 
 #### Business Metrics
 
-| Metric | Source | Collection Interval | Alert Threshold |
-|--------|--------|-------------------|-----------------|
-| Orders/minute | App Logs | 60s | < 50 |
-| Cart Abandonment (%) | App Metrics | 60s | > 70% |
-| Payment Success Rate (%) | App Metrics | 60s | < 95% |
-| Revenue/minute | App Metrics | 60s | - |
+| Metric                   | Source      | Collection Interval | Alert Threshold |
+| ------------------------ | ----------- | ------------------- | --------------- |
+| Orders/minute            | App Logs    | 60s                 | < 50            |
+| Cart Abandonment (%)     | App Metrics | 60s                 | > 70%           |
+| Payment Success Rate (%) | App Metrics | 60s                 | < 95%           |
+| Revenue/minute           | App Metrics | 60s                 | -               |
 
 ### Monitoring Checklist During Test
 
@@ -939,6 +997,7 @@ Panels:
 **Description:** Test environment doesn't accurately represent production
 
 **Mitigation:**
+
 - Conduct environment parity review before test
 - Document any differences
 - Adjust test expectations accordingly
@@ -951,6 +1010,7 @@ Panels:
 **Description:** Test data doesn't represent production data characteristics
 
 **Mitigation:**
+
 - Analyze production data patterns
 - Generate test data with similar distribution
 - Validate test data before test execution
@@ -963,6 +1023,7 @@ Panels:
 **Description:** Load generators can't produce required load
 
 **Mitigation:**
+
 - Size load generators appropriately (5 instances)
 - Monitor load generator CPU/memory during test
 - Have spare load generator capacity
@@ -975,6 +1036,7 @@ Panels:
 **Description:** Monitoring tools fail during test execution
 
 **Mitigation:**
+
 - Verify all monitoring tools before test
 - Have redundant monitoring (multiple tools)
 - Export metrics during test (not just at end)
@@ -989,6 +1051,7 @@ Panels:
 **Description:** Test causes production issues (if testing in prod)
 
 **Mitigation:**
+
 - Only test in isolated environment
 - If testing in production:
   - Schedule during low-traffic period (2-4 AM)
@@ -1003,6 +1066,7 @@ Panels:
 **Description:** Test causes data corruption or loss
 
 **Mitigation:**
+
 - Test only in non-production environment
 - Take database backup before test
 - Use read-only operations where possible
@@ -1017,6 +1081,7 @@ Panels:
 **Description:** Key team members unavailable during test
 
 **Mitigation:**
+
 - Schedule test with all stakeholders' availability
 - Cross-train team members on all roles
 - Have backup personnel identified
@@ -1029,6 +1094,7 @@ Panels:
 **Description:** Test execution delayed, impacting project timeline
 
 **Mitigation:**
+
 - Build buffer time into schedule
 - Have contingency test dates
 - Prioritize critical test scenarios
@@ -1041,8 +1107,10 @@ Panels:
 ### Test Artifacts
 
 #### 1. Test Results Report
+
 **Format:** PDF + HTML
 **Contents:**
+
 - Executive summary
 - Test execution summary
 - Performance metrics and graphs
@@ -1053,8 +1121,10 @@ Panels:
 **Delivery:** Within 3 days of test completion
 
 #### 2. Test Data and Logs
+
 **Format:** Compressed archive
 **Contents:**
+
 - JMeter results files (.jtl)
 - Application logs
 - System logs
@@ -1064,8 +1134,10 @@ Panels:
 **Delivery:** Within 1 day of test completion
 
 #### 3. Monitoring Dashboards
+
 **Format:** Grafana JSON exports + Screenshots
 **Contents:**
+
 - Performance overview dashboard
 - Infrastructure metrics dashboard
 - Database performance dashboard
@@ -1074,8 +1146,10 @@ Panels:
 **Delivery:** Within 1 day of test completion
 
 #### 4. Issue Tracking
+
 **Format:** Jira/GitHub Issues
 **Contents:**
+
 - Performance defects with priority
 - Bottleneck descriptions
 - Optimization recommendations
@@ -1084,8 +1158,10 @@ Panels:
 **Delivery:** Within 2 days of test completion
 
 #### 5. Presentation
+
 **Format:** PowerPoint/Google Slides
 **Contents:**
+
 - Executive summary (5 slides)
 - Key findings
 - Performance graphs
@@ -1100,9 +1176,11 @@ Panels:
 # Performance Test Results Report
 
 ## Executive Summary
+
 [High-level overview, pass/fail status, key findings]
 
 ## Test Overview
+
 - Test Date: [Date]
 - Duration: [Duration]
 - Max Users: [Number]
@@ -1111,35 +1189,43 @@ Panels:
 ## Results Summary
 
 ### Pass/Fail Status
+
 Overall Result: [PASS/FAIL]
 
 ### Key Metrics
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Response Time (p95) | < 2s | 1.8s | ✅ Pass |
-| Error Rate | < 0.1% | 0.05% | ✅ Pass |
-| Throughput | 500 req/s | 520 req/s | ✅ Pass |
+
+| Metric              | Target    | Actual    | Status  |
+| ------------------- | --------- | --------- | ------- |
+| Response Time (p95) | < 2s      | 1.8s      | ✅ Pass |
+| Error Rate          | < 0.1%    | 0.05%     | ✅ Pass |
+| Throughput          | 500 req/s | 520 req/s | ✅ Pass |
 
 ## Detailed Analysis
 
 ### Performance Metrics
+
 [Graphs and detailed analysis]
 
 ### Bottlenecks Identified
+
 1. [Bottleneck 1]
 2. [Bottleneck 2]
 
 ### Resource Utilization
+
 [CPU, Memory, Disk, Network analysis]
 
 ## Recommendations
+
 1. [Recommendation 1]
 2. [Recommendation 2]
 
 ## Next Steps
+
 [Action items and follow-up tasks]
 
 ## Appendices
+
 [Detailed data, graphs, logs]
 ```
 
@@ -1147,13 +1233,13 @@ Overall Result: [PASS/FAIL]
 
 ## Approval Sign-off
 
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| **Test Lead** | | | |
-| **Engineering Manager** | | | |
-| **Product Manager** | | | |
-| **DevOps Lead** | | | |
-| **DBA** | | | |
+| Role                    | Name | Signature | Date |
+| ----------------------- | ---- | --------- | ---- |
+| **Test Lead**           |      |           |      |
+| **Engineering Manager** |      |           |      |
+| **Product Manager**     |      |           |      |
+| **DevOps Lead**         |      |           |      |
+| **DBA**                 |      |           |      |
 
 ---
 
@@ -1162,6 +1248,7 @@ Overall Result: [PASS/FAIL]
 **Next Review:** YYYY-MM-DD
 
 **References:**
+
 - [ISO/IEC 25010:2011 - Systems and software Quality Requirements and Evaluation](https://iso25000.com/index.php/en/iso-25000-standards/iso-25010)
 - [ISTQB Performance Testing Guidelines](https://www.istqb.org/)
 - [Apache JMeter Best Practices](https://jmeter.apache.org/usermanual/best-practices.html)

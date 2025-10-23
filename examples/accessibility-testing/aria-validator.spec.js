@@ -33,7 +33,10 @@ const ARIA_ROLES = {
   scrollbar: { required: ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'], allowedChildren: [] },
   searchbox: { required: [], allowedChildren: [] },
   slider: { required: ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'], allowedChildren: [] },
-  spinbutton: { required: ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'], allowedChildren: [] },
+  spinbutton: {
+    required: ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'],
+    allowedChildren: [],
+  },
   status: { required: [], allowedChildren: [] },
   switch: { required: ['aria-checked'], allowedChildren: [] },
   tab: { required: ['aria-selected'], allowedChildren: [] },
@@ -51,7 +54,7 @@ test.describe('Required ARIA Attributes', () => {
   test('elements with roles should have required ARIA attributes', async ({ page }) => {
     await page.goto('https://example.com');
 
-    const violations = await page.evaluate((roles) => {
+    const violations = await page.evaluate(roles => {
       const issues = [];
 
       Object.keys(roles).forEach(role => {
@@ -89,7 +92,9 @@ test.describe('Required ARIA Attributes', () => {
 
           if (role === 'slider' || role === 'spinbutton' || role === 'scrollbar') {
             const requiredValueAttrs = ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'];
-            const missingValueAttrs = requiredValueAttrs.filter(attr => !element.hasAttribute(attr));
+            const missingValueAttrs = requiredValueAttrs.filter(
+              attr => !element.hasAttribute(attr)
+            );
 
             if (missingValueAttrs.length > 0) {
               issues.push({
@@ -155,8 +160,10 @@ test.describe('Required ARIA Attributes', () => {
     await page.goto('https://example.com');
 
     // Open dialog if exists
-    const dialogTrigger = await page.locator('button:has-text("Open Modal"), button:has-text("Open Dialog")');
-    if (await dialogTrigger.count() > 0) {
+    const dialogTrigger = await page.locator(
+      'button:has-text("Open Modal"), button:has-text("Open Dialog")'
+    );
+    if ((await dialogTrigger.count()) > 0) {
       await dialogTrigger.first().click();
       await page.waitForSelector('[role="dialog"]', { state: 'visible' });
     }
@@ -182,18 +189,54 @@ test.describe('Invalid ARIA Usage', () => {
 
     const invalidAttrs = await page.evaluate(() => {
       const validAriaAttrs = [
-        'aria-activedescendant', 'aria-atomic', 'aria-autocomplete', 'aria-busy',
-        'aria-checked', 'aria-colcount', 'aria-colindex', 'aria-colspan',
-        'aria-controls', 'aria-current', 'aria-describedby', 'aria-details',
-        'aria-disabled', 'aria-dropeffect', 'aria-errormessage', 'aria-expanded',
-        'aria-flowto', 'aria-grabbed', 'aria-haspopup', 'aria-hidden',
-        'aria-invalid', 'aria-keyshortcuts', 'aria-label', 'aria-labelledby',
-        'aria-level', 'aria-live', 'aria-modal', 'aria-multiline',
-        'aria-multiselectable', 'aria-orientation', 'aria-owns', 'aria-placeholder',
-        'aria-posinset', 'aria-pressed', 'aria-readonly', 'aria-relevant',
-        'aria-required', 'aria-roledescription', 'aria-rowcount', 'aria-rowindex',
-        'aria-rowspan', 'aria-selected', 'aria-setsize', 'aria-sort',
-        'aria-valuemax', 'aria-valuemin', 'aria-valuenow', 'aria-valuetext',
+        'aria-activedescendant',
+        'aria-atomic',
+        'aria-autocomplete',
+        'aria-busy',
+        'aria-checked',
+        'aria-colcount',
+        'aria-colindex',
+        'aria-colspan',
+        'aria-controls',
+        'aria-current',
+        'aria-describedby',
+        'aria-details',
+        'aria-disabled',
+        'aria-dropeffect',
+        'aria-errormessage',
+        'aria-expanded',
+        'aria-flowto',
+        'aria-grabbed',
+        'aria-haspopup',
+        'aria-hidden',
+        'aria-invalid',
+        'aria-keyshortcuts',
+        'aria-label',
+        'aria-labelledby',
+        'aria-level',
+        'aria-live',
+        'aria-modal',
+        'aria-multiline',
+        'aria-multiselectable',
+        'aria-orientation',
+        'aria-owns',
+        'aria-placeholder',
+        'aria-posinset',
+        'aria-pressed',
+        'aria-readonly',
+        'aria-relevant',
+        'aria-required',
+        'aria-roledescription',
+        'aria-rowcount',
+        'aria-rowindex',
+        'aria-rowspan',
+        'aria-selected',
+        'aria-setsize',
+        'aria-sort',
+        'aria-valuemax',
+        'aria-valuemin',
+        'aria-valuenow',
+        'aria-valuetext',
       ];
 
       const issues = [];
@@ -226,17 +269,74 @@ test.describe('Invalid ARIA Usage', () => {
 
     const invalidRoles = await page.evaluate(() => {
       const validRoles = [
-        'alert', 'alertdialog', 'application', 'article', 'banner', 'button',
-        'cell', 'checkbox', 'columnheader', 'combobox', 'complementary',
-        'contentinfo', 'definition', 'dialog', 'directory', 'document',
-        'feed', 'figure', 'form', 'grid', 'gridcell', 'group', 'heading',
-        'img', 'link', 'list', 'listbox', 'listitem', 'log', 'main',
-        'marquee', 'math', 'menu', 'menubar', 'menuitem', 'menuitemcheckbox',
-        'menuitemradio', 'navigation', 'none', 'note', 'option', 'presentation',
-        'progressbar', 'radio', 'radiogroup', 'region', 'row', 'rowgroup',
-        'rowheader', 'scrollbar', 'search', 'searchbox', 'separator', 'slider',
-        'spinbutton', 'status', 'switch', 'tab', 'table', 'tablist', 'tabpanel',
-        'term', 'textbox', 'timer', 'toolbar', 'tooltip', 'tree', 'treegrid',
+        'alert',
+        'alertdialog',
+        'application',
+        'article',
+        'banner',
+        'button',
+        'cell',
+        'checkbox',
+        'columnheader',
+        'combobox',
+        'complementary',
+        'contentinfo',
+        'definition',
+        'dialog',
+        'directory',
+        'document',
+        'feed',
+        'figure',
+        'form',
+        'grid',
+        'gridcell',
+        'group',
+        'heading',
+        'img',
+        'link',
+        'list',
+        'listbox',
+        'listitem',
+        'log',
+        'main',
+        'marquee',
+        'math',
+        'menu',
+        'menubar',
+        'menuitem',
+        'menuitemcheckbox',
+        'menuitemradio',
+        'navigation',
+        'none',
+        'note',
+        'option',
+        'presentation',
+        'progressbar',
+        'radio',
+        'radiogroup',
+        'region',
+        'row',
+        'rowgroup',
+        'rowheader',
+        'scrollbar',
+        'search',
+        'searchbox',
+        'separator',
+        'slider',
+        'spinbutton',
+        'status',
+        'switch',
+        'tab',
+        'table',
+        'tablist',
+        'tabpanel',
+        'term',
+        'textbox',
+        'timer',
+        'toolbar',
+        'tooltip',
+        'tree',
+        'treegrid',
         'treeitem',
       ];
 
@@ -443,12 +543,14 @@ test.describe('Landmark Regions', () => {
       const landmarkTypes = ['navigation', 'region', 'complementary', 'form'];
 
       landmarkTypes.forEach(type => {
-        const landmarks = document.querySelectorAll(`[role="${type}"], ${type === 'navigation' ? 'nav' : ''}`);
+        const landmarks = document.querySelectorAll(
+          `[role="${type}"], ${type === 'navigation' ? 'nav' : ''}`
+        );
 
         if (landmarks.length > 1) {
           landmarks.forEach(landmark => {
-            const hasLabel = landmark.hasAttribute('aria-label') ||
-                           landmark.hasAttribute('aria-labelledby');
+            const hasLabel =
+              landmark.hasAttribute('aria-label') || landmark.hasAttribute('aria-labelledby');
 
             if (!hasLabel) {
               issues.push({
@@ -475,9 +577,24 @@ test.describe('Landmark Regions', () => {
     await page.goto('https://example.com');
 
     const contentOutsideLandmarks = await page.evaluate(() => {
-      const landmarks = ['banner', 'navigation', 'main', 'complementary', 'contentinfo', 'form', 'region', 'search'];
+      const landmarks = [
+        'banner',
+        'navigation',
+        'main',
+        'complementary',
+        'contentinfo',
+        'form',
+        'region',
+        'search',
+      ];
       const landmarkSelectors = [
-        'header', 'nav', 'main', 'aside', 'footer', 'form[aria-label]', 'section[aria-label]',
+        'header',
+        'nav',
+        'main',
+        'aside',
+        'footer',
+        'form[aria-label]',
+        'section[aria-label]',
         ...landmarks.map(l => `[role="${l}"]`),
       ].join(',');
 
@@ -529,7 +646,7 @@ test.describe('ARIA Live Regions', () => {
 
     // Submit form to trigger validation errors
     const submitButton = await page.locator('button[type="submit"]');
-    if (await submitButton.count() > 0) {
+    if ((await submitButton.count()) > 0) {
       await submitButton.click();
       await page.waitForTimeout(500);
 

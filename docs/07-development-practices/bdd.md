@@ -1,10 +1,13 @@
 # Behavior-Driven Development (BDD)
 
 ## Purpose
+
 Comprehensive guide to Behavior-Driven Development—a collaborative approach that bridges the gap between technical and non-technical stakeholders through executable specifications written in natural language.
 
 ## Overview
+
 Behavior-Driven Development is:
+
 - A collaborative approach to software development
 - An extension of Test-Driven Development (TDD)
 - Focused on business value and user behavior
@@ -15,6 +18,7 @@ Behavior-Driven Development is:
 ## What is BDD?
 
 ### Definition
+
 BDD is an agile software development methodology that encourages collaboration between developers, QA, and non-technical participants through concrete examples and executable specifications.
 
 ### Core Principles
@@ -67,11 +71,13 @@ Living Documentation
 ### Discovery Workshop
 
 **Participants:**
+
 - Business Analyst / Product Owner
 - Developer
 - QA / Tester
 
 **Process:**
+
 ```
 1. Discovery (Example Mapping)
    ├── Identify user story
@@ -95,6 +101,7 @@ Living Documentation
 ### Example Mapping Session
 
 **Visual Format:**
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ User Story: Account Withdrawal                      │
@@ -113,6 +120,7 @@ Living Documentation
 ```
 
 **Card Colors:**
+
 - Yellow: User Story
 - Blue: Rules/Acceptance Criteria
 - Green: Examples/Scenarios
@@ -200,6 +208,7 @@ Feature: Shopping Cart
 ### Cucumber (JavaScript/TypeScript)
 
 **Installation:**
+
 ```bash
 npm install --save-dev @cucumber/cucumber
 npm install --save-dev @cucumber/cucumber-js
@@ -207,6 +216,7 @@ npm install --save-dev chai
 ```
 
 **Feature File:**
+
 ```gherkin
 # features/authentication.feature
 Feature: User Authentication
@@ -224,6 +234,7 @@ Feature: User Authentication
 ```
 
 **Step Definitions:**
+
 ```typescript
 // features/step_definitions/authentication.steps.ts
 import { Given, When, Then } from '@cucumber/cucumber';
@@ -234,7 +245,7 @@ import { DashboardPage } from '../pages/DashboardPage';
 let loginPage: LoginPage;
 let dashboardPage: DashboardPage;
 
-Given('I am on the login page', async function() {
+Given('I am on the login page', async function () {
   loginPage = new LoginPage(this.driver);
   await loginPage.navigate();
 
@@ -243,18 +254,18 @@ Given('I am on the login page', async function() {
   expect(isLoaded).to.be.true;
 });
 
-When('I enter username {string}', async function(username: string) {
+When('I enter username {string}', async function (username: string) {
   await loginPage.enterUsername(username);
 
   // Store for later verification if needed
   this.currentUsername = username;
 });
 
-When('I enter password {string}', async function(password: string) {
+When('I enter password {string}', async function (password: string) {
   await loginPage.enterPassword(password);
 });
 
-When('I click the login button', async function() {
+When('I click the login button', async function () {
   await loginPage.clickLoginButton();
 
   // Wait for navigation
@@ -265,7 +276,7 @@ When('I click the login button', async function() {
   );
 });
 
-Then('I should be redirected to the dashboard', async function() {
+Then('I should be redirected to the dashboard', async function () {
   dashboardPage = new DashboardPage(this.driver);
 
   const currentUrl = await this.driver.getCurrentUrl();
@@ -275,13 +286,14 @@ Then('I should be redirected to the dashboard', async function() {
   expect(isDashboardDisplayed).to.be.true;
 });
 
-Then('I should see a welcome message {string}', async function(expectedMessage: string) {
+Then('I should see a welcome message {string}', async function (expectedMessage: string) {
   const actualMessage = await dashboardPage.getWelcomeMessage();
   expect(actualMessage).to.equal(expectedMessage);
 });
 ```
 
 **World (Context) Setup:**
+
 ```typescript
 // features/support/world.ts
 import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber';
@@ -309,10 +321,7 @@ export class CustomWorldImpl extends World implements CustomWorld {
     chromeOptions.addArguments('--no-sandbox');
     chromeOptions.addArguments('--disable-dev-shm-usage');
 
-    this.driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(chromeOptions)
-      .build();
+    this.driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
   }
 
   async cleanup() {
@@ -326,21 +335,22 @@ setWorldConstructor(CustomWorldImpl);
 ```
 
 **Hooks:**
+
 ```typescript
 // features/support/hooks.ts
 import { Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
 import { CustomWorld } from './world';
 
-BeforeAll(async function() {
+BeforeAll(async function () {
   console.log('Setting up test environment...');
   // Database seeding, service initialization, etc.
 });
 
-Before(async function(this: CustomWorld) {
+Before(async function (this: CustomWorld) {
   await this.init();
 });
 
-After(async function(this: CustomWorld, scenario) {
+After(async function (this: CustomWorld, scenario) {
   // Take screenshot on failure
   if (scenario.result?.status === Status.FAILED) {
     const screenshot = await this.driver.takeScreenshot();
@@ -350,13 +360,14 @@ After(async function(this: CustomWorld, scenario) {
   await this.cleanup();
 });
 
-AfterAll(async function() {
+AfterAll(async function () {
   console.log('Tearing down test environment...');
   // Cleanup resources
 });
 ```
 
 **Configuration:**
+
 ```typescript
 // cucumber.js
 module.exports = {
@@ -367,19 +378,20 @@ module.exports = {
       'progress',
       'html:reports/cucumber-report.html',
       'json:reports/cucumber-report.json',
-      'junit:reports/cucumber-report.xml'
+      'junit:reports/cucumber-report.xml',
     ],
     formatOptions: {
-      snippetInterface: 'async-await'
+      snippetInterface: 'async-await',
     },
-    publishQuiet: true
-  }
+    publishQuiet: true,
+  },
 };
 ```
 
 ### SpecFlow (.NET/C#)
 
 **Feature File:**
+
 ```gherkin
 # Features/OrderProcessing.feature
 Feature: Order Processing
@@ -401,6 +413,7 @@ Feature: Order Processing
 ```
 
 **Step Definitions:**
+
 ```csharp
 // StepDefinitions/OrderProcessingSteps.cs
 using TechTalk.SpecFlow;
@@ -539,6 +552,7 @@ public class OrderItem
 ### Behave (Python)
 
 **Feature File:**
+
 ```gherkin
 # features/user_registration.feature
 Feature: User Registration
@@ -563,6 +577,7 @@ Feature: User Registration
 ```
 
 **Step Definitions:**
+
 ```python
 # features/steps/user_registration_steps.py
 from behave import given, when, then
@@ -686,6 +701,7 @@ def step_impl(context):
 ```
 
 **Environment Setup:**
+
 ```python
 # features/environment.py
 from selenium import webdriver
@@ -738,6 +754,7 @@ def after_all(context):
 ### JBehave (Java)
 
 **Story File:**
+
 ```gherkin
 // stories/product_search.story
 Narrative:
@@ -760,6 +777,7 @@ And the results should be sorted by relevance
 ```
 
 **Step Definitions:**
+
 ```java
 // steps/ProductSearchSteps.java
 import org.jbehave.core.annotations.*;
@@ -905,6 +923,7 @@ Feature: User API
 ```
 
 **Step Definitions:**
+
 ```typescript
 // step_definitions/api.steps.ts
 import { Given, When, Then } from '@cucumber/cucumber';
@@ -917,43 +936,41 @@ interface ApiWorld {
   testUser?: any;
 }
 
-Given('a user exists with ID {string} and the following details:',
-  async function(this: ApiWorld, userId: string, dataTable) {
+Given(
+  'a user exists with ID {string} and the following details:',
+  async function (this: ApiWorld, userId: string, dataTable) {
     const userData = dataTable.rowsHash();
 
     // Create test user
     this.testUser = await axios.post('http://api.example.com/api/users', {
       id: userId,
-      ...userData
+      ...userData,
     });
 
     expect(this.testUser.status).to.equal(201);
   }
 );
 
-When('I send a GET request to {string}',
-  async function(this: ApiWorld, endpoint: string) {
-    const startTime = Date.now();
+When('I send a GET request to {string}', async function (this: ApiWorld, endpoint: string) {
+  const startTime = Date.now();
 
-    try {
-      this.response = await axios.get(`http://api.example.com${endpoint}`);
-    } catch (error: any) {
-      // Store error response for negative scenarios
-      this.response = error.response;
-    }
-
-    this.responseTime = Date.now() - startTime;
+  try {
+    this.response = await axios.get(`http://api.example.com${endpoint}`);
+  } catch (error: any) {
+    // Store error response for negative scenarios
+    this.response = error.response;
   }
-);
 
-Then('the response status code should be {int}',
-  function(this: ApiWorld, expectedStatus: number) {
-    expect(this.response?.status).to.equal(expectedStatus);
-  }
-);
+  this.responseTime = Date.now() - startTime;
+});
 
-Then('the response should have the following JSON structure:',
-  function(this: ApiWorld, expectedJson: string) {
+Then('the response status code should be {int}', function (this: ApiWorld, expectedStatus: number) {
+  expect(this.response?.status).to.equal(expectedStatus);
+});
+
+Then(
+  'the response should have the following JSON structure:',
+  function (this: ApiWorld, expectedJson: string) {
     const expected = JSON.parse(expectedJson);
     const actual = this.response?.data;
 
@@ -968,8 +985,9 @@ Then('the response should have the following JSON structure:',
   }
 );
 
-Then('the response time should be less than {int} milliseconds',
-  function(this: ApiWorld, maxTime: number) {
+Then(
+  'the response time should be less than {int} milliseconds',
+  function (this: ApiWorld, maxTime: number) {
     expect(this.responseTime).to.be.lessThan(maxTime);
   }
 );
@@ -1021,6 +1039,7 @@ Feature: Mobile App Authentication
 ### Writing Effective Scenarios
 
 **DO:**
+
 ```gherkin
 ✓ Scenario: Add item to empty cart
   Given I am logged in as "customer@example.com"
@@ -1031,6 +1050,7 @@ Feature: Mobile App Authentication
 ```
 
 **DON'T:**
+
 ```gherkin
 ✗ Scenario: Cart functionality
   Given I navigate to "https://example.com/login"
@@ -1113,25 +1133,27 @@ feature-name.feature
 ### Data Management
 
 **Use Scenario Context:**
+
 ```typescript
 // Store data in context for use across steps
-Given('I create a new user account', async function() {
+Given('I create a new user account', async function () {
   this.user = await createUser({
     email: 'test@example.com',
-    password: 'SecurePass123!'
+    password: 'SecurePass123!',
   });
 
   // Store for later steps
   this.userId = this.user.id;
 });
 
-Then('the user profile should be accessible', async function() {
+Then('the user profile should be accessible', async function () {
   const profile = await getProfile(this.userId);
   expect(profile).to.exist;
 });
 ```
 
 **External Data Files:**
+
 ```gherkin
 Scenario: Import users from CSV
   Given I have a CSV file "test-data/users.csv" with:
@@ -1170,6 +1192,7 @@ Feature: User Authentication
 ```
 
 **Run specific tags:**
+
 ```bash
 # Run only smoke tests
 npm run test:bdd -- --tags "@smoke"
@@ -1186,6 +1209,7 @@ npm run test:bdd -- --tags "@critical and @authentication"
 ### Generating Reports
 
 **Cucumber HTML Reporter:**
+
 ```javascript
 // cucumber-report.js
 const reporter = require('cucumber-html-reporter');
@@ -1200,28 +1224,26 @@ const options = {
   metadata: {
     'App Version': '1.2.3',
     'Test Environment': 'STAGING',
-    'Browser': 'Chrome 120.0',
-    'Platform': 'macOS',
-    'Executed': new Date().toISOString()
-  }
+    Browser: 'Chrome 120.0',
+    Platform: 'macOS',
+    Executed: new Date().toISOString(),
+  },
 };
 
 reporter.generate(options);
 ```
 
 **Allure Reports:**
+
 ```typescript
 // cucumber.js with Allure
 module.exports = {
   default: {
-    format: [
-      'json:reports/cucumber-report.json',
-      'allure-cucumberjs/reporter'
-    ],
+    format: ['json:reports/cucumber-report.json', 'allure-cucumberjs/reporter'],
     formatOptions: {
-      resultsDir: 'allure-results'
-    }
-  }
+      resultsDir: 'allure-results',
+    },
+  },
 };
 ```
 
@@ -1257,6 +1279,7 @@ Benefits:
 ### Patterns
 
 **Page Object Pattern:**
+
 ```typescript
 // pages/LoginPage.ts
 export class LoginPage {
@@ -1266,7 +1289,7 @@ export class LoginPage {
     emailInput: By.id('email'),
     passwordInput: By.id('password'),
     loginButton: By.css('[data-testid="login-button"]'),
-    errorMessage: By.css('.error-message')
+    errorMessage: By.css('.error-message'),
   };
 
   constructor(driver: WebDriver) {
@@ -1308,6 +1331,7 @@ export class LoginPage {
 ```
 
 **Service Layer Pattern:**
+
 ```typescript
 // services/UserService.ts
 export class UserService {
@@ -1346,6 +1370,7 @@ export class UserService {
 ### Anti-Patterns
 
 **❌ UI-Driven Scenarios:**
+
 ```gherkin
 # BAD: Too much UI detail
 Scenario: Login
@@ -1358,6 +1383,7 @@ Scenario: Login
 ```
 
 **✓ Behavior-Driven Scenarios:**
+
 ```gherkin
 # GOOD: Focus on behavior
 Scenario: Login
@@ -1367,6 +1393,7 @@ Scenario: Login
 ```
 
 **❌ Overly Generic Steps:**
+
 ```gherkin
 # BAD: Too generic, hard to understand
 Scenario: Process thing
@@ -1376,6 +1403,7 @@ Scenario: Process thing
 ```
 
 **✓ Specific, Clear Steps:**
+
 ```gherkin
 # GOOD: Clear and specific
 Scenario: Place order
@@ -1385,6 +1413,7 @@ Scenario: Place order
 ```
 
 **❌ Testing Implementation Details:**
+
 ```gherkin
 # BAD: Implementation details
 Scenario: Save user
@@ -1394,6 +1423,7 @@ Scenario: Save user
 ```
 
 **✓ Testing Business Behavior:**
+
 ```gherkin
 # GOOD: Business behavior
 Scenario: Create user account
@@ -1638,15 +1668,13 @@ Benefits:
 **Problem:** Scenarios pass sometimes, fail other times
 
 **Solutions:**
+
 ```typescript
 // 1. Proper waits
 await driver.wait(until.elementLocated(By.id('result')), 10000);
 
 // 2. Retry logic
-async function retryOperation<T>(
-  operation: () => Promise<T>,
-  maxRetries: number = 3
-): Promise<T> {
+async function retryOperation<T>(operation: () => Promise<T>, maxRetries: number = 3): Promise<T> {
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await operation();
@@ -1672,6 +1700,7 @@ beforeEach(async () => {
 ### Slow Execution
 
 **Solutions:**
+
 ```javascript
 // 1. Parallel execution
 // cucumber.js
@@ -1704,6 +1733,7 @@ Given('a user exists', async function() {
 ### Maintenance Burden
 
 **Solutions:**
+
 ```
 1. Step Definition Reusability
    - Create generic, reusable steps
@@ -1730,15 +1760,15 @@ Given('a user exists', async function() {
 
 ### BDD Frameworks
 
-| Language         | Framework      | Website                           |
-|-----------------|----------------|-----------------------------------|
-| JavaScript/TS   | Cucumber.js    | cucumber.io                       |
-| Java            | Cucumber-JVM   | cucumber.io/docs/installation/java|
-| Java            | JBehave        | jbehave.org                       |
-| .NET/C#         | SpecFlow       | specflow.org                      |
-| Python          | Behave         | behave.readthedocs.io             |
-| Ruby            | Cucumber       | cucumber.io/docs/installation/ruby|
-| PHP             | Behat          | behat.org                         |
+| Language      | Framework    | Website                            |
+| ------------- | ------------ | ---------------------------------- |
+| JavaScript/TS | Cucumber.js  | cucumber.io                        |
+| Java          | Cucumber-JVM | cucumber.io/docs/installation/java |
+| Java          | JBehave      | jbehave.org                        |
+| .NET/C#       | SpecFlow     | specflow.org                       |
+| Python        | Behave       | behave.readthedocs.io              |
+| Ruby          | Cucumber     | cucumber.io/docs/installation/ruby |
+| PHP           | Behat        | behat.org                          |
 
 ### Supporting Tools
 
@@ -1767,16 +1797,19 @@ Collaboration:
 ### Learning Resources
 
 **Books:**
+
 - "BDD in Action" by John Ferguson Smart
 - "The Cucumber Book" by Matt Wynne and Aslak Hellesøy
 - "Specification by Example" by Gojko Adzic
 
 **Online Courses:**
+
 - Cucumber School (cucumber.io/school)
 - Test Automation University - BDD courses
 - Pluralsight - BDD courses
 
 **Communities:**
+
 - Cucumber Community Slack
 - BDD discussions on Reddit r/softwaretesting
 - Stack Overflow [bdd] tag

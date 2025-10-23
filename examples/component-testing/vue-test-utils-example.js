@@ -21,7 +21,7 @@ jest.mock('@/services/api', () => ({
   fetchUser: jest.fn(),
   updateUser: jest.fn(),
   deleteUser: jest.fn(),
-  searchUsers: jest.fn()
+  searchUsers: jest.fn(),
 }));
 
 const mockApi = require('@/services/api');
@@ -40,7 +40,7 @@ const createStore = (initialState = {}) => {
       user: null,
       users: [],
       loading: false,
-      ...initialState
+      ...initialState,
     },
     mutations: {
       SET_USER: (state, user) => {
@@ -51,7 +51,7 @@ const createStore = (initialState = {}) => {
       },
       SET_LOADING: (state, loading) => {
         state.loading = loading;
-      }
+      },
     },
     actions: {
       fetchUser: ({ commit }, id) => {
@@ -65,12 +65,12 @@ const createStore = (initialState = {}) => {
         return mockApi.updateUser(userData).then(user => {
           commit('SET_USER', user);
         });
-      }
+      },
     },
     getters: {
       activeUsers: state => state.users.filter(user => user.isActive),
-      userById: state => id => state.users.find(user => user.id === id)
-    }
+      userById: state => id => state.users.find(user => user.id === id),
+    },
   });
 };
 
@@ -78,8 +78,8 @@ const createRouter = () => {
   return new VueRouter({
     routes: [
       { path: '/users/:id', name: 'UserProfile', component: UserProfile },
-      { path: '/users', name: 'UserList', component: UserList }
-    ]
+      { path: '/users', name: 'UserList', component: UserList },
+    ],
   });
 };
 
@@ -95,7 +95,7 @@ describe('UserProfile Component', () => {
     role: 'admin',
     avatar: 'https://example.com/avatar.jpg',
     isActive: true,
-    lastLogin: '2023-01-15T10:30:00Z'
+    lastLogin: '2023-01-15T10:30:00Z',
   };
 
   beforeEach(() => {
@@ -110,7 +110,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: mockUser }
+      propsData: { user: mockUser },
     });
 
     expect(wrapper.text()).toContain('John Doe');
@@ -123,7 +123,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: mockUser }
+      propsData: { user: mockUser },
     });
 
     const avatar = wrapper.find('[data-testid="user-avatar"]');
@@ -137,7 +137,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: mockUser }
+      propsData: { user: mockUser },
     });
 
     const statusBadge = wrapper.find('[data-testid="status-badge"]');
@@ -152,7 +152,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: inactiveUser }
+      propsData: { user: inactiveUser },
     });
 
     const statusBadge = wrapper.find('[data-testid="status-badge"]');
@@ -165,7 +165,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: mockUser }
+      propsData: { user: mockUser },
     });
 
     const editButton = wrapper.find('[data-testid="edit-button"]');
@@ -182,8 +182,8 @@ describe('UserProfile Component', () => {
       router,
       propsData: {
         user: mockUser,
-        isUpdating: true
-      }
+        isUpdating: true,
+      },
     });
 
     const loadingSpinner = wrapper.find('[data-testid="loading-spinner"]');
@@ -199,7 +199,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: userWithoutAvatar }
+      propsData: { user: userWithoutAvatar },
     });
 
     const initialsAvatar = wrapper.find('[data-testid="avatar-initials"]');
@@ -212,7 +212,7 @@ describe('UserProfile Component', () => {
       localVue,
       store,
       router,
-      propsData: { user: mockUser }
+      propsData: { user: mockUser },
     });
 
     const lastLoginElement = wrapper.find('[data-testid="last-login"]');
@@ -232,7 +232,7 @@ describe('UserForm Component', () => {
   test('should render form fields', () => {
     const wrapper = mount(UserForm, {
       localVue,
-      store
+      store,
     });
 
     expect(wrapper.find('input[name="name"]').exists()).toBe(true);
@@ -245,13 +245,13 @@ describe('UserForm Component', () => {
     const initialValues = {
       name: 'John Doe',
       email: 'john.doe@example.com',
-      role: 'admin'
+      role: 'admin',
     };
 
     const wrapper = mount(UserForm, {
       localVue,
       store,
-      propsData: { initialValues }
+      propsData: { initialValues },
     });
 
     expect(wrapper.find('input[name="name"]').element.value).toBe('John Doe');
@@ -262,7 +262,7 @@ describe('UserForm Component', () => {
   test('should validate required fields', async () => {
     const wrapper = mount(UserForm, {
       localVue,
-      store
+      store,
     });
 
     const form = wrapper.find('form');
@@ -277,7 +277,7 @@ describe('UserForm Component', () => {
   test('should validate email format', async () => {
     const wrapper = mount(UserForm, {
       localVue,
-      store
+      store,
     });
 
     const emailInput = wrapper.find('input[name="email"]');
@@ -295,8 +295,8 @@ describe('UserForm Component', () => {
       localVue,
       store,
       listeners: {
-        submit: mockSubmit
-      }
+        submit: mockSubmit,
+      },
     });
 
     await wrapper.find('input[name="name"]').setValue('Jane Smith');
@@ -309,7 +309,7 @@ describe('UserForm Component', () => {
     expect(mockSubmit).toHaveBeenCalledWith({
       name: 'Jane Smith',
       email: 'jane.smith@example.com',
-      role: 'user'
+      role: 'user',
     });
   });
 
@@ -317,7 +317,7 @@ describe('UserForm Component', () => {
     const wrapper = mount(UserForm, {
       localVue,
       store,
-      propsData: { isSubmitting: true }
+      propsData: { isSubmitting: true },
     });
 
     const submitButton = wrapper.find('button[type="submit"]');
@@ -328,7 +328,7 @@ describe('UserForm Component', () => {
   test('should reset form when reset button is clicked', async () => {
     const wrapper = mount(UserForm, {
       localVue,
-      store
+      store,
     });
 
     await wrapper.find('input[name="name"]').setValue('Jane Smith');
@@ -346,14 +346,14 @@ describe('UserForm Component', () => {
       localVue,
       store,
       propsData: {
-        initialValues: { name: 'John', email: 'john@example.com', role: 'user' }
-      }
+        initialValues: { name: 'John', email: 'john@example.com', role: 'user' },
+      },
     });
 
     expect(wrapper.find('input[name="name"]').element.value).toBe('John');
 
     await wrapper.setProps({
-      initialValues: { name: 'Jane', email: 'jane@example.com', role: 'admin' }
+      initialValues: { name: 'Jane', email: 'jane@example.com', role: 'admin' },
     });
 
     expect(wrapper.find('input[name="name"]').element.value).toBe('Jane');
@@ -368,7 +368,7 @@ describe('UserList Component', () => {
   const mockUsers = [
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin', isActive: true },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user', isActive: true },
-    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator', isActive: false }
+    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator', isActive: false },
   ];
 
   beforeEach(() => {
@@ -380,7 +380,7 @@ describe('UserList Component', () => {
     const wrapper = mount(UserList, {
       localVue,
       store,
-      propsData: { users: mockUsers }
+      propsData: { users: mockUsers },
     });
 
     const userRows = wrapper.findAll('[data-testid^="user-row"]');
@@ -398,7 +398,7 @@ describe('UserList Component', () => {
     const wrapper = mount(UserList, {
       localVue,
       store,
-      propsData: { users: [] }
+      propsData: { users: [] },
     });
 
     const emptyState = wrapper.find('[data-testid="empty-state"]');
@@ -410,7 +410,7 @@ describe('UserList Component', () => {
     const wrapper = mount(UserList, {
       localVue,
       store,
-      propsData: { users: mockUsers }
+      propsData: { users: mockUsers },
     });
 
     const searchInput = wrapper.find('[data-testid="search-input"]');
@@ -427,7 +427,7 @@ describe('UserList Component', () => {
     const wrapper = mount(UserList, {
       localVue,
       store,
-      propsData: { users: mockUsers }
+      propsData: { users: mockUsers },
     });
 
     const nameHeader = wrapper.find('[data-testid="header-name"]');
@@ -445,7 +445,7 @@ describe('UserList Component', () => {
     const wrapper = mount(UserList, {
       localVue,
       store,
-      propsData: { users: mockUsers }
+      propsData: { users: mockUsers },
     });
 
     const firstUserRow = wrapper.find('[data-testid="user-row-0"]');
@@ -461,8 +461,8 @@ describe('UserList Component', () => {
       store,
       propsData: {
         users: [],
-        isLoading: true
-      }
+        isLoading: true,
+      },
     });
 
     const loadingSkeleton = wrapper.find('[data-testid="loading-skeleton"]');
@@ -475,17 +475,15 @@ describe('SearchInput Component', () => {
 
   beforeEach(() => {
     localVue = createVueInstance();
-    mockApi.searchUsers.mockResolvedValue([
-      { id: 1, name: 'John Doe', email: 'john@example.com' }
-    ]);
+    mockApi.searchUsers.mockResolvedValue([{ id: 1, name: 'John Doe', email: 'john@example.com' }]);
   });
 
   test('should render search input', () => {
     const wrapper = mount(SearchInput, {
       localVue,
       propsData: {
-        placeholder: 'Search users...'
-      }
+        placeholder: 'Search users...',
+      },
     });
 
     const input = wrapper.find('input[type="text"]');
@@ -495,7 +493,7 @@ describe('SearchInput Component', () => {
 
   test('should emit input event on value change', async () => {
     const wrapper = mount(SearchInput, {
-      localVue
+      localVue,
     });
 
     const input = wrapper.find('input');
@@ -512,8 +510,8 @@ describe('SearchInput Component', () => {
       localVue,
       propsData: {
         debounce: 300,
-        onSearch: mockApi.searchUsers
-      }
+        onSearch: mockApi.searchUsers,
+      },
     });
 
     const input = wrapper.find('input');
@@ -537,9 +535,9 @@ describe('SearchInput Component', () => {
         showSuggestions: true,
         suggestions: [
           { id: 1, name: 'John Doe' },
-          { id: 2, name: 'Jane Smith' }
-        ]
-      }
+          { id: 2, name: 'Jane Smith' },
+        ],
+      },
     });
 
     const suggestionsList = wrapper.find('[data-testid="suggestions-list"]');
@@ -556,9 +554,9 @@ describe('SearchInput Component', () => {
         showSuggestions: true,
         suggestions: [
           { id: 1, name: 'John Doe' },
-          { id: 2, name: 'Jane Smith' }
-        ]
-      }
+          { id: 2, name: 'Jane Smith' },
+        ],
+      },
     });
 
     const input = wrapper.find('input');
@@ -592,7 +590,7 @@ describe('Modal Component', () => {
   test('should not render when not visible', () => {
     const wrapper = mount(Modal, {
       localVue,
-      propsData: { visible: false }
+      propsData: { visible: false },
     });
 
     expect(wrapper.find('[data-testid="modal-overlay"]').exists()).toBe(false);
@@ -603,8 +601,8 @@ describe('Modal Component', () => {
       localVue,
       propsData: { visible: true },
       slots: {
-        default: '<div>Modal content</div>'
-      }
+        default: '<div>Modal content</div>',
+      },
     });
 
     expect(wrapper.find('[data-testid="modal-overlay"]').exists()).toBe(true);
@@ -614,7 +612,7 @@ describe('Modal Component', () => {
   test('should emit close event when close button is clicked', async () => {
     const wrapper = mount(Modal, {
       localVue,
-      propsData: { visible: true }
+      propsData: { visible: true },
     });
 
     const closeButton = wrapper.find('[data-testid="close-button"]');
@@ -626,7 +624,7 @@ describe('Modal Component', () => {
   test('should emit close event when overlay is clicked', async () => {
     const wrapper = mount(Modal, {
       localVue,
-      propsData: { visible: true }
+      propsData: { visible: true },
     });
 
     const overlay = wrapper.find('[data-testid="modal-overlay"]');
@@ -638,7 +636,7 @@ describe('Modal Component', () => {
   test('should not close when modal content is clicked', async () => {
     const wrapper = mount(Modal, {
       localVue,
-      propsData: { visible: true }
+      propsData: { visible: true },
     });
 
     const modalContent = wrapper.find('[data-testid="modal-content"]');
@@ -651,7 +649,7 @@ describe('Modal Component', () => {
     const wrapper = mount(Modal, {
       localVue,
       propsData: { visible: true },
-      attachTo: document.body
+      attachTo: document.body,
     });
 
     await wrapper.trigger('keydown.esc');
@@ -666,8 +664,8 @@ describe('Modal Component', () => {
       localVue,
       propsData: {
         visible: true,
-        title: 'Custom Modal Title'
-      }
+        title: 'Custom Modal Title',
+      },
     });
 
     expect(wrapper.find('[data-testid="modal-title"]').text()).toBe('Custom Modal Title');
@@ -678,8 +676,8 @@ describe('Modal Component', () => {
       localVue,
       propsData: { visible: true },
       slots: {
-        footer: '<button>Custom Footer Button</button>'
-      }
+        footer: '<button>Custom Footer Button</button>',
+      },
     });
 
     expect(wrapper.find('[data-testid="modal-footer"]').html()).toContain('Custom Footer Button');
@@ -693,13 +691,13 @@ describe('DataTable Component', () => {
   const mockData = [
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
-    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator' }
+    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator' },
   ];
 
   const mockColumns = [
     { key: 'name', title: 'Name', sortable: true },
     { key: 'email', title: 'Email', sortable: true },
-    { key: 'role', title: 'Role', sortable: false }
+    { key: 'role', title: 'Role', sortable: false },
   ];
 
   beforeEach(() => {
@@ -713,8 +711,8 @@ describe('DataTable Component', () => {
       store,
       propsData: {
         data: mockData,
-        columns: mockColumns
-      }
+        columns: mockColumns,
+      },
     });
 
     // Check headers
@@ -736,8 +734,8 @@ describe('DataTable Component', () => {
       store,
       propsData: {
         data: mockData,
-        columns: mockColumns
-      }
+        columns: mockColumns,
+      },
     });
 
     const nameHeader = wrapper.find('[data-testid="header-name"]');
@@ -758,8 +756,8 @@ describe('DataTable Component', () => {
       store,
       propsData: {
         data: mockData,
-        columns: mockColumns
-      }
+        columns: mockColumns,
+      },
     });
 
     const roleHeader = wrapper.find('[data-testid="header-role"]');
@@ -780,8 +778,8 @@ describe('DataTable Component', () => {
       store,
       propsData: {
         data: mockData,
-        columns: mockColumns
-      }
+        columns: mockColumns,
+      },
     });
 
     const firstRow = wrapper.find('[data-testid="table-row-0"]');
@@ -801,9 +799,9 @@ describe('DataTable Component', () => {
         pagination: {
           page: 1,
           pageSize: 2,
-          total: 10
-        }
-      }
+          total: 10,
+        },
+      },
     });
 
     const pagination = wrapper.find('[data-testid="pagination"]');
@@ -817,8 +815,8 @@ describe('DataTable Component', () => {
       store,
       propsData: {
         data: [],
-        columns: mockColumns
-      }
+        columns: mockColumns,
+      },
     });
 
     const emptyState = wrapper.find('[data-testid="empty-state"]');
@@ -833,8 +831,8 @@ describe('DataTable Component', () => {
       propsData: {
         data: [],
         columns: mockColumns,
-        loading: true
-      }
+        loading: true,
+      },
     });
 
     const loadingState = wrapper.find('[data-testid="loading-state"]');
@@ -847,8 +845,8 @@ describe('DataTable Component', () => {
       {
         key: 'actions',
         title: 'Actions',
-        render: (value, row) => `<button data-id="${row.id}">Edit</button>`
-      }
+        render: (value, row) => `<button data-id="${row.id}">Edit</button>`,
+      },
     ];
 
     const wrapper = mount(DataTable, {
@@ -856,8 +854,8 @@ describe('DataTable Component', () => {
       store,
       propsData: {
         data: mockData,
-        columns: columnsWithCustom
-      }
+        columns: columnsWithCustom,
+      },
     });
 
     const actionButtons = wrapper.findAll('button[data-id]');
@@ -881,7 +879,7 @@ describe('Vuex Integration', () => {
       id: 1,
       name: 'John Updated',
       email: 'john.updated@example.com',
-      role: 'admin'
+      role: 'admin',
     };
 
     mockApi.updateUser.mockResolvedValue(updatedUser);
@@ -896,7 +894,7 @@ describe('Vuex Integration', () => {
     const users = [
       { id: 1, name: 'John', isActive: true },
       { id: 2, name: 'Jane', isActive: false },
-      { id: 3, name: 'Bob', isActive: true }
+      { id: 3, name: 'Bob', isActive: true },
     ];
 
     store.commit('SET_USERS', users);
@@ -925,8 +923,8 @@ describe('Vue Router Integration', () => {
       localVue,
       router,
       propsData: {
-        users: [{ id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' }]
-      }
+        users: [{ id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' }],
+      },
     });
 
     const userRow = wrapper.find('[data-testid="user-row-0"]');
@@ -941,7 +939,7 @@ describe('Vue Router Integration', () => {
 
     const wrapper = mount(UserProfile, {
       localVue,
-      router
+      router,
     });
 
     expect(wrapper.vm.$route.params.id).toBe('123');
@@ -961,7 +959,7 @@ describe('Component Lifecycle', () => {
 
     const TestComponent = {
       template: '<div>Test</div>',
-      mounted: mountedSpy
+      mounted: mountedSpy,
     };
 
     mount(TestComponent, { localVue });
@@ -974,7 +972,7 @@ describe('Component Lifecycle', () => {
 
     const TestComponent = {
       template: '<div>Test</div>',
-      destroyed: destroyedSpy
+      destroyed: destroyedSpy,
     };
 
     const wrapper = mount(TestComponent, { localVue });
@@ -986,12 +984,12 @@ describe('Component Lifecycle', () => {
   test('should react to prop changes', async () => {
     const TestComponent = {
       template: '<div>{{ message }}</div>',
-      props: ['message']
+      props: ['message'],
     };
 
     const wrapper = mount(TestComponent, {
       localVue,
-      propsData: { message: 'Hello' }
+      propsData: { message: 'Hello' },
     });
 
     expect(wrapper.text()).toBe('Hello');
@@ -1002,8 +1000,4 @@ describe('Component Lifecycle', () => {
   });
 });
 
-export {
-  createVueInstance,
-  createStore,
-  createRouter
-};
+export { createVueInstance, createStore, createRouter };

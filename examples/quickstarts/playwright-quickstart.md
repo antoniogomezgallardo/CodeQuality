@@ -26,6 +26,7 @@ npx playwright install
 ```
 
 This creates:
+
 ```
 tests/
 playwright.config.js
@@ -93,7 +94,6 @@ Create `tests/first-test.spec.js`:
 const { test, expect } = require('@playwright/test');
 
 test.describe('My First Playwright Test', () => {
-
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
@@ -164,6 +164,7 @@ npm run test:report
 ```
 
 **Expected Output:**
+
 ```
 Running 5 tests using 3 workers
 
@@ -265,8 +266,7 @@ const { test, expect } = require('./fixtures');
 
 test('should access dashboard', async ({ authenticatedPage }) => {
   // Already logged in via fixture
-  await expect(authenticatedPage.getByRole('heading', { name: 'Dashboard' }))
-    .toBeVisible();
+  await expect(authenticatedPage.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 });
 ```
 
@@ -290,8 +290,8 @@ test.describe('API Tests', () => {
     const response = await request.post('https://jsonplaceholder.typicode.com/users', {
       data: {
         name: 'John Doe',
-        email: 'john@example.com'
-      }
+        email: 'john@example.com',
+      },
     });
 
     expect(response.status()).toBe(201);
@@ -307,14 +307,14 @@ test.describe('API Tests', () => {
 ```javascript
 test('should mock API response', async ({ page }) => {
   // Intercept and mock
-  await page.route('**/api/users', (route) => {
+  await page.route('**/api/users', route => {
     route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify([
         { id: 1, name: 'John Doe' },
-        { id: 2, name: 'Jane Smith' }
-      ])
+        { id: 2, name: 'Jane Smith' },
+      ]),
     });
   });
 
@@ -410,6 +410,7 @@ test('conditional test', async ({ page, browserName }) => {
 ## 6. Troubleshooting
 
 ### Issue: Browsers not installed
+
 ```bash
 # Install all browsers
 npx playwright install
@@ -422,6 +423,7 @@ npx playwright install --with-deps
 ```
 
 ### Issue: Test timeout
+
 ```javascript
 // Increase timeout for specific test
 test('slow test', async ({ page }) => {
@@ -436,6 +438,7 @@ module.exports = defineConfig({
 ```
 
 ### Issue: Element not found
+
 ```javascript
 // Playwright auto-waits, but you can be explicit
 await page.waitForSelector('[data-testid="element"]');
@@ -445,6 +448,7 @@ await expect.soft(page.getByText('optional')).toBeVisible();
 ```
 
 ### Issue: Flaky tests
+
 ```javascript
 // Add retries in config
 module.exports = defineConfig({
@@ -459,6 +463,7 @@ test('flaky test', async ({ page }) => {
 ```
 
 ### Issue: Debugging
+
 ```bash
 # Run in debug mode
 npx playwright test --debug
@@ -474,6 +479,7 @@ DEBUG=pw:api npx playwright test
 ```
 
 ### Issue: Screenshots not saving
+
 ```javascript
 // Ensure directory exists and check config
 module.exports = defineConfig({

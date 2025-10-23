@@ -5,6 +5,7 @@ This directory contains comprehensive CI/CD pipeline configurations for various 
 ## 📋 Examples Included
 
 ### GitHub Actions
+
 - Node.js application pipeline
 - Multi-stage builds with quality gates
 - Matrix testing across environments
@@ -12,6 +13,7 @@ This directory contains comprehensive CI/CD pipeline configurations for various 
 - Automated deployments
 
 ### GitLab CI/CD
+
 - Complete pipeline with stages
 - Docker-based builds
 - Parallel test execution
@@ -19,6 +21,7 @@ This directory contains comprehensive CI/CD pipeline configurations for various 
 - Artifact management
 
 ### Jenkins
+
 - Declarative pipeline syntax
 - Groovy-based configurations
 - Plugin integrations
@@ -26,6 +29,7 @@ This directory contains comprehensive CI/CD pipeline configurations for various 
 - Blue Ocean compatibility
 
 ### Azure DevOps
+
 - YAML pipeline configurations
 - Multi-platform builds
 - Release management
@@ -108,4 +112,4 @@ Examples demonstrate:
 
 ---
 
-*CI/CD pipelines are the backbone of DevOps practices. These examples show how to implement robust, scalable, and maintainable pipelines that ensure quality and speed.*
+_CI/CD pipelines are the backbone of DevOps practices. These examples show how to implement robust, scalable, and maintainable pipelines that ensure quality and speed._

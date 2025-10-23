@@ -1,10 +1,13 @@
 # Shift-Left Testing Approach
 
 ## Purpose
+
 Comprehensive guide to shift-left testing—moving testing activities earlier in the development lifecycle to find and fix defects sooner, reducing costs and improving quality.
 
 ## Overview
+
 Shift-left testing means:
+
 - Testing earlier in development
 - Preventing defects vs finding them
 - Faster feedback loops
@@ -14,6 +17,7 @@ Shift-left testing means:
 ## What is Shift-Left Testing?
 
 ### Definition
+
 Shift-left testing is the practice of performing testing activities earlier in the software development lifecycle (SDLC), moving quality assurance "left" on the project timeline.
 
 ### The Cost of Defects
@@ -59,24 +63,28 @@ Requirements → Design → Development → Testing → Deployment
 # Requirements Review Checklist
 
 Completeness:
+
 - [ ] All user stories have acceptance criteria
 - [ ] All edge cases identified
 - [ ] Non-functional requirements defined
 - [ ] Dependencies documented
 
 Clarity:
+
 - [ ] No ambiguous language
 - [ ] Consistent terminology
 - [ ] Examples provided
 - [ ] Testable requirements
 
 Feasibility:
+
 - [ ] Technical feasibility confirmed
 - [ ] Resource availability checked
 - [ ] Timeline realistic
 - [ ] Risks identified
 
 Testability:
+
 - [ ] Clear success criteria
 - [ ] Measurable outcomes
 - [ ] Test data identifiable
@@ -127,23 +135,27 @@ Feature: User Registration
 # Architecture Review Questions
 
 Scalability:
+
 - Can the system handle expected load?
 - What are the bottlenecks?
 - How does it scale horizontally/vertically?
 
 Security:
+
 - Are security best practices followed?
 - Is data encrypted at rest and in transit?
 - Are authentication/authorization proper?
 - Are inputs validated?
 
 Testability:
+
 - Can components be tested in isolation?
 - Are dependencies injectable?
 - Is logging adequate?
 - Can we mock external services?
 
 Maintainability:
+
 - Is the architecture clear and documented?
 - Are responsibilities well-separated?
 - Is technical debt manageable?
@@ -324,6 +336,7 @@ jobs:
 # Pull Request Checklist
 
 Code Quality:
+
 - [ ] Code follows style guide
 - [ ] No code smells detected
 - [ ] Complexity is reasonable
@@ -331,6 +344,7 @@ Code Quality:
 - [ ] Dead code removed
 
 Testing:
+
 - [ ] Unit tests added/updated
 - [ ] All tests pass
 - [ ] Code coverage maintained/improved
@@ -338,6 +352,7 @@ Testing:
 - [ ] Error handling tested
 
 Security:
+
 - [ ] No hard-coded secrets
 - [ ] Input validation present
 - [ ] Authentication/authorization correct
@@ -345,12 +360,14 @@ Security:
 - [ ] XSS prevention in place
 
 Documentation:
+
 - [ ] Code is self-documenting
 - [ ] Complex logic commented
 - [ ] API documentation updated
 - [ ] README updated if needed
 
 Performance:
+
 - [ ] No obvious performance issues
 - [ ] Database queries optimized
 - [ ] Caching considered
@@ -639,30 +656,35 @@ Cultural Changes:
 ### Shift-Left Implementation Checklist
 
 **Foundation:**
+
 - [ ] Team trained on shift-left principles
 - [ ] Tools configured and ready
 - [ ] Processes documented
 - [ ] Metrics baseline established
 
 **Requirements Phase:**
+
 - [ ] Review process defined
 - [ ] Acceptance criteria templates
 - [ ] BDD scenarios written
 - [ ] Testability checklist used
 
 **Design Phase:**
+
 - [ ] Architecture reviews scheduled
 - [ ] Security reviews conducted
 - [ ] Design patterns validated
 - [ ] Testability confirmed
 
 **Development Phase:**
+
 - [ ] TDD/BDD practiced
 - [ ] Static analysis running
 - [ ] Code reviews mandatory
 - [ ] Automated tests comprehensive
 
 **Continuous:**
+
 - [ ] CI/CD pipeline with quality gates
 - [ ] Metrics tracked and reviewed
 - [ ] Process improvements identified
@@ -671,16 +693,19 @@ Cultural Changes:
 ## References
 
 ### Books
+
 - "Test-Driven Development: By Example" - Kent Beck
 - "Growing Object-Oriented Software, Guided by Tests" - Freeman & Pryce
 - "Continuous Delivery" - Jez Humble & David Farley
 - "The DevOps Handbook" - Gene Kim et al.
 
 ### Articles
+
 - [Shift Left Testing](https://www.ibm.com/topics/shift-left-testing)
 - [Cost of Fixing Bugs](https://www.cs.umd.edu/projects/SoftEng/ESEG/papers/82.78.pdf)
 
 ### Tools
+
 - **Testing**: Jest, pytest, JUnit, Cucumber
 - **Static Analysis**: ESLint, SonarQube, Checkmarx
 - **Security**: Snyk, OWASP Dependency Check, Bandit
@@ -696,4 +721,4 @@ Cultural Changes:
 
 ---
 
-*Part of: [Testing Strategy](README.md)*
+_Part of: [Testing Strategy](README.md)_

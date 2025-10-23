@@ -1,10 +1,13 @@
 # Clean Code Principles
 
 ## Purpose
+
 Comprehensive guide to clean code principles—writing code that is readable, maintainable, testable, and expressive, following industry best practices and design principles.
 
 ## Overview
+
 Clean code is:
+
 - Easy to read and understand
 - Simple and focused
 - Well-tested
@@ -14,6 +17,7 @@ Clean code is:
 ## What is Clean Code?
 
 ### Definition
+
 Clean code is code that is easy to understand and easy to change. It reads like well-written prose, clearly expressing intent while minimizing complexity.
 
 ### Why Clean Code Matters
@@ -265,15 +269,27 @@ interface Worker {
 }
 
 class HumanWorker implements Worker {
-  work() { /* ... */ }
-  eat() { /* ... */ }
-  sleep() { /* ... */ }
+  work() {
+    /* ... */
+  }
+  eat() {
+    /* ... */
+  }
+  sleep() {
+    /* ... */
+  }
 }
 
 class RobotWorker implements Worker {
-  work() { /* ... */ }
-  eat() { /* Robots don't eat */ }
-  sleep() { /* Robots don't sleep */ }
+  work() {
+    /* ... */
+  }
+  eat() {
+    /* Robots don't eat */
+  }
+  sleep() {
+    /* Robots don't sleep */
+  }
 }
 
 // ✅ Good: Segregated interfaces
@@ -290,13 +306,21 @@ interface Sleepable {
 }
 
 class HumanWorker implements Workable, Eatable, Sleepable {
-  work() { /* ... */ }
-  eat() { /* ... */ }
-  sleep() { /* ... */ }
+  work() {
+    /* ... */
+  }
+  eat() {
+    /* ... */
+  }
+  sleep() {
+    /* ... */
+  }
 }
 
 class RobotWorker implements Workable {
-  work() { /* ... */ }
+  work() {
+    /* ... */
+  }
 }
 ```
 
@@ -468,7 +492,7 @@ function validateOrder(order) {
 function calculateTotal(order) {
   order.total = order.items.reduce((total, item) => {
     const product = database.getProduct(item.productId);
-    return total + (product.price * item.quantity);
+    return total + product.price * item.quantity;
   }, 0);
 }
 
@@ -852,6 +876,7 @@ class ShoppingCart {
 ## Clean Code Checklist
 
 ### Function/Method Checklist
+
 - [ ] Does one thing and does it well
 - [ ] Has a clear, descriptive name
 - [ ] ≤ 20 lines of code
@@ -861,6 +886,7 @@ class ShoppingCart {
 - [ ] Handles errors appropriately
 
 ### Class Checklist
+
 - [ ] Single responsibility
 - [ ] ≤ 200 lines of code
 - [ ] Clear, focused purpose
@@ -869,6 +895,7 @@ class ShoppingCart {
 - [ ] Well-encapsulated
 
 ### Code Organization Checklist
+
 - [ ] No duplication (DRY)
 - [ ] Consistent naming conventions
 - [ ] Logical file structure
@@ -877,6 +904,7 @@ class ShoppingCart {
 - [ ] Appropriate abstraction levels
 
 ### Testing Checklist
+
 - [ ] Code is testable
 - [ ] Dependencies are injectable
 - [ ] No hidden dependencies
@@ -886,12 +914,14 @@ class ShoppingCart {
 ## References
 
 ### Books
+
 - "Clean Code" - Robert C. Martin
 - "Refactoring" - Martin Fowler
 - "Code Complete" - Steve McConnell
 - "The Pragmatic Programmer" - Hunt & Thomas
 
 ### Articles
+
 - [Clean Code Principles](https://www.freecodecamp.org/news/clean-coding-for-beginners/)
 - [SOLID Principles](https://www.digitalocean.com/community/conceptual_articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design)
 
@@ -904,4 +934,4 @@ class ShoppingCart {
 
 ---
 
-*Part of: [Development Practices](README.md)*
+_Part of: [Development Practices](README.md)_

@@ -17,6 +17,7 @@ Requirements validation ensures that requirements are correct, complete, consist
 ### 1. Reviews and Walkthroughs
 
 **Peer Review:**
+
 ```markdown
 - Requirements reviewed by team members
 - Focus on clarity, testability, completeness
@@ -25,6 +26,7 @@ Requirements validation ensures that requirements are correct, complete, consist
 ```
 
 **Stakeholder Walkthrough:**
+
 ```markdown
 - Present requirements to business stakeholders
 - Verify alignment with business needs
@@ -37,6 +39,7 @@ Requirements validation ensures that requirements are correct, complete, consist
 **Benefit:** Visualize requirements before full implementation
 
 **Types:**
+
 - UI mockups and wireframes
 - Interactive prototypes (Figma, InVision)
 - Paper prototypes for user testing
@@ -47,6 +50,7 @@ Requirements validation ensures that requirements are correct, complete, consist
 ### 3. Acceptance Criteria Validation
 
 **Given-When-Then Format:**
+
 ```gherkin
 Given I am a logged-in user
 When I add an item to cart
@@ -55,6 +59,7 @@ And the item appears in my cart
 ```
 
 **Validation Questions:**
+
 - Can we test this criterion?
 - Is it specific and measurable?
 - Does it cover edge cases?
@@ -64,10 +69,10 @@ And the item appears in my cart
 
 **Purpose:** Ensure all requirements link to business needs and tests
 
-| Requirement ID | User Story | Business Need | Test Case | Status |
-|----------------|------------|---------------|-----------|---------|
-| REQ-001 | User login | Security | TC-001, TC-002 | Validated |
-| REQ-002 | Password reset | User support | TC-003 | In Review |
+| Requirement ID | User Story     | Business Need | Test Case      | Status    |
+| -------------- | -------------- | ------------- | -------------- | --------- |
+| REQ-001        | User login     | Security      | TC-001, TC-002 | Validated |
+| REQ-002        | Password reset | User support  | TC-003         | In Review |
 
 ## Validation Checklist
 
@@ -149,4 +154,4 @@ And the item appears in my cart
 
 ---
 
-*Part of: [Requirements Engineering](README.md)*
+_Part of: [Requirements Engineering](README.md)_

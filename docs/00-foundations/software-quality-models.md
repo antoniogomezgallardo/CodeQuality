@@ -1,19 +1,24 @@
 # Software Quality Models
 
 ## Purpose
+
 Provide comprehensive understanding of established software quality models that guide quality assessment and improvement efforts.
 
 ## Context
+
 Quality models provide structured frameworks for defining, measuring, and improving software quality across multiple dimensions.
 
 ## Prerequisites
+
 - Basic understanding of software development
 - Familiarity with quality concepts from [Foundations README](README.md)
 
 ## ISO/IEC 25010 - System and Software Quality Models
 
 ### Overview
+
 The ISO/IEC 25010 standard, part of the SQuaRE (Systems and software Quality Requirements and Evaluation) series, defines:
+
 - Quality in Use Model
 - Product Quality Model
 - Data Quality Model
@@ -21,19 +26,23 @@ The ISO/IEC 25010 standard, part of the SQuaRE (Systems and software Quality Req
 ### Product Quality Model - Detailed Breakdown
 
 #### 1. Functional Suitability
-*Degree to which the product provides functions that meet stated and implied needs*
+
+_Degree to which the product provides functions that meet stated and implied needs_
 
 **Sub-characteristics:**
+
 - **Functional Completeness**: Degree to which functions cover all specified tasks
 - **Functional Correctness**: Degree to which product provides correct results
 - **Functional Appropriateness**: Degree to which functions facilitate task accomplishment
 
 **Metrics:**
+
 - Function implementation coverage
 - Functional correctness ratio
 - Functional appropriateness ratio
 
 **Example Scenarios:**
+
 ```
 E-commerce Platform:
 ✓ Completeness: All checkout steps implemented
@@ -42,19 +51,23 @@ E-commerce Platform:
 ```
 
 #### 2. Performance Efficiency
-*Performance relative to resources used under stated conditions*
+
+_Performance relative to resources used under stated conditions_
 
 **Sub-characteristics:**
+
 - **Time Behavior**: Response times, processing times, throughput
 - **Resource Utilization**: CPU, memory, disk, network usage
 - **Capacity**: Maximum limits of parameters
 
 **Metrics:**
+
 - Response time (P50, P95, P99)
 - Resource utilization percentage
 - Throughput (requests/second)
 
 **Performance Targets:**
+
 ```
 API Response Times:
 - P50: < 100ms
@@ -68,13 +81,16 @@ Resource Usage:
 ```
 
 #### 3. Compatibility
-*Ability to exchange information and perform functions while sharing environment*
+
+_Ability to exchange information and perform functions while sharing environment_
 
 **Sub-characteristics:**
+
 - **Co-existence**: Perform efficiently while sharing resources
 - **Interoperability**: Exchange and use information with other systems
 
 **Implementation Checklist:**
+
 - [ ] API versioning strategy
 - [ ] Standard data formats (JSON, XML)
 - [ ] Protocol compliance (REST, GraphQL)
@@ -82,9 +98,11 @@ Resource Usage:
 - [ ] Backward compatibility
 
 #### 4. Usability
-*Degree to which product can be used effectively, efficiently, and satisfactorily*
+
+_Degree to which product can be used effectively, efficiently, and satisfactorily_
 
 **Sub-characteristics:**
+
 - **Appropriateness Recognizability**: Users recognize suitability
 - **Learnability**: Easy to learn to use
 - **Operability**: Easy to operate and control
@@ -93,6 +111,7 @@ Resource Usage:
 - **Accessibility**: Usable by people with disabilities
 
 **Usability Metrics:**
+
 - Task completion rate
 - Time to learn
 - Error rate
@@ -100,15 +119,18 @@ Resource Usage:
 - Accessibility compliance (WCAG)
 
 #### 5. Reliability
-*Degree to which system performs specified functions under specified conditions*
+
+_Degree to which system performs specified functions under specified conditions_
 
 **Sub-characteristics:**
+
 - **Maturity**: Meets reliability needs under normal operation
 - **Availability**: Operational and accessible when required
 - **Fault Tolerance**: Operates despite hardware or software faults
 - **Recoverability**: Recover data and re-establish state
 
 **Reliability Targets:**
+
 ```
 SLA Levels:
 - 99.9% (8.77 hours downtime/year)
@@ -121,9 +143,11 @@ Recovery Objectives:
 ```
 
 #### 6. Security
-*Degree to which information and data are protected*
+
+_Degree to which information and data are protected_
 
 **Sub-characteristics:**
+
 - **Confidentiality**: Data accessible only to authorized
 - **Integrity**: Prevent unauthorized modification
 - **Non-repudiation**: Actions can be proven
@@ -131,6 +155,7 @@ Recovery Objectives:
 - **Accountability**: Actions traceable to entity
 
 **Security Implementation:**
+
 ```yaml
 Security Controls:
   Authentication:
@@ -148,9 +173,11 @@ Security Controls:
 ```
 
 #### 7. Maintainability
-*Degree of effectiveness and efficiency with which product can be modified*
+
+_Degree of effectiveness and efficiency with which product can be modified_
 
 **Sub-characteristics:**
+
 - **Modularity**: Composed of discrete components
 - **Reusability**: Assets can be used in multiple systems
 - **Analyzability**: Easy to assess impact of changes
@@ -158,6 +185,7 @@ Security Controls:
 - **Testability**: Test criteria can be established
 
 **Maintainability Metrics:**
+
 - Cyclomatic complexity < 10
 - Code duplication < 3%
 - Test coverage > 80%
@@ -165,14 +193,17 @@ Security Controls:
 - Code review turnaround time
 
 #### 8. Portability
-*Degree to which system can be transferred to different environments*
+
+_Degree to which system can be transferred to different environments_
 
 **Sub-characteristics:**
+
 - **Adaptability**: Can be adapted for different environments
 - **Installability**: Can be successfully installed
 - **Replaceability**: Can replace another product
 
 **Portability Checklist:**
+
 - [ ] Container-based deployment
 - [ ] Environment configuration externalized
 - [ ] Cross-platform compatibility
@@ -184,42 +215,52 @@ Security Controls:
 Characteristics from user's perspective:
 
 #### 1. Effectiveness
-*Accuracy and completeness of goals achieved*
+
+_Accuracy and completeness of goals achieved_
 
 Metrics:
+
 - Task completion rate
 - Error frequency
 - Goal achievement percentage
 
 #### 2. Efficiency
-*Resources expended in relation to effectiveness*
+
+_Resources expended in relation to effectiveness_
 
 Metrics:
+
 - Task completion time
 - Learning time
 - Support frequency
 
 #### 3. Satisfaction
-*Degree to which user needs are satisfied*
+
+_Degree to which user needs are satisfied_
 
 Components:
+
 - **Usefulness**: Achieve pragmatic goals
 - **Trust**: Confidence in product
 - **Pleasure**: Enjoyment from use
 - **Comfort**: Physical comfort
 
 #### 4. Freedom from Risk
-*Degree to which product mitigates risk*
+
+_Degree to which product mitigates risk_
 
 Risk Categories:
+
 - **Economic Risk**: Financial loss
 - **Health & Safety Risk**: Harm to people
 - **Environmental Risk**: Harm to environment
 
 #### 5. Context Coverage
-*Degree to which product can be used in all contexts*
+
+_Degree to which product can be used in all contexts_
 
 Contexts:
+
 - **Context Completeness**: All user contexts covered
 - **Flexibility**: Adaptable beyond specified requirements
 
@@ -228,6 +269,7 @@ Contexts:
 ### Quality Factors (External View)
 
 **Product Operation:**
+
 - **Correctness**: Does it do what I want?
 - **Reliability**: Does it do it accurately?
 - **Efficiency**: Will it run on my hardware?
@@ -235,11 +277,13 @@ Contexts:
 - **Usability**: Can I use it easily?
 
 **Product Revision:**
+
 - **Maintainability**: Can I fix it?
 - **Testability**: Can I test it?
 - **Flexibility**: Can I change it?
 
 **Product Transition:**
+
 - **Portability**: Can I use it elsewhere?
 - **Reusability**: Can I reuse components?
 - **Interoperability**: Will it work with other systems?
@@ -247,6 +291,7 @@ Contexts:
 ### Quality Criteria (Internal View)
 
 Maps factors to measurable criteria:
+
 - Traceability
 - Completeness
 - Consistency
@@ -291,28 +336,33 @@ Maps factors to measurable criteria:
 ### FURPS Categories
 
 **F - Functionality**
+
 - Features
 - Capabilities
 - Security
 
 **U - Usability**
+
 - Human factors
 - Aesthetics
 - Consistency
 - Documentation
 
 **R - Reliability**
+
 - Frequency of failure
 - Recoverability
 - Predictability
 
 **P - Performance**
+
 - Speed
 - Efficiency
 - Resource consumption
 - Throughput
 
 **S - Supportability**
+
 - Testability
 - Extensibility
 - Adaptability
@@ -321,19 +371,23 @@ Maps factors to measurable criteria:
 ### Plus (+) Categories
 
 **Design Constraints:**
+
 - Required standards
 - Languages
 - Platforms
 
 **Implementation:**
+
 - Resource limitations
 - Development tools
 
 **Interface:**
+
 - External system interfaces
 - User interfaces
 
 **Physical:**
+
 - Hardware requirements
 - Physical constraints
 
@@ -360,6 +414,7 @@ Maps factors to measurable criteria:
 Choose models based on:
 
 **Project Type:**
+
 ```
 Web Application → ISO 25010 + Usability focus
 Embedded System → Boehm + Performance focus
@@ -368,6 +423,7 @@ Mobile App → McCall + Context coverage
 ```
 
 **Industry Requirements:**
+
 ```
 Healthcare → Safety + Reliability + Compliance
 Finance → Security + Integrity + Auditability
@@ -378,6 +434,7 @@ Enterprise → Maintainability + Scalability + Integration
 ### Combining Models
 
 **Hybrid Approach Example:**
+
 ```yaml
 Quality Framework:
   Core: ISO 25010
@@ -432,6 +489,7 @@ Quality Requirements:
 ### Trends in Quality Models
 
 **Traditional → Modern:**
+
 ```
 Static Models → Dynamic Models
 Product Focus → User Experience Focus
@@ -440,6 +498,7 @@ Waterfall-based → Agile/DevOps-based
 ```
 
 **Emerging Aspects:**
+
 - AI/ML system quality
 - Cloud-native quality
 - Sustainability metrics
@@ -463,16 +522,19 @@ Waterfall-based → Agile/DevOps-based
 ## References
 
 ### Standards
+
 - ISO/IEC 25010:2011 - System and software quality models
 - ISO/IEC 25012:2008 - Data quality model
 - ISO/IEC 25040:2011 - Quality evaluation process
 
 ### Academic Papers
+
 - McCall, J.A., Richards, P.K., Walters, G.F. (1977). "Factors in Software Quality"
 - Boehm, B.W., Brown, J.R., Lipow, M. (1976). "Quantitative Evaluation of Software Quality"
 - Dromey, R.G. (1995). "A Model for Software Product Quality"
 
 ### Books
+
 - "Software Quality Engineering" - Jeff Tian
 - "Metrics and Models in Software Quality Engineering" - Stephen Kan
 
@@ -486,4 +548,4 @@ Waterfall-based → Agile/DevOps-based
 
 ---
 
-*Next: [Requirements Engineering](../01-requirements/README.md) - Building quality from the start*
+_Next: [Requirements Engineering](../01-requirements/README.md) - Building quality from the start_

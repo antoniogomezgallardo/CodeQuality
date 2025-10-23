@@ -1,12 +1,15 @@
 # Agent Frameworks: Comprehensive Guide to Building Agentic Systems
 
 ## Purpose
+
 Provide an in-depth comparison and implementation guide for the leading agent frameworks (LangGraph, AutoGen, CrewAI, Semantic Kernel), enabling teams to select the right framework for their use case and migrate between frameworks as needs evolve.
 
 ## Context
+
 Building agentic systems requires choosing the right orchestration framework. Each framework has different strengths: LangGraph excels at complex state machines, AutoGen at conversational multi-agent systems, CrewAI at role-based teams, and Semantic Kernel at enterprise .NET integration. This guide provides working examples of the same agent implemented in each framework to enable direct comparison.
 
 ## Prerequisites
+
 - Understanding of [Agentic Fundamentals](agentic-fundamentals.md)
 - Python 3.10+ or .NET 8.0+ (for Semantic Kernel)
 - Experience with async programming
@@ -18,39 +21,39 @@ Building agentic systems requires choosing the right orchestration framework. Ea
 
 ### Quick Comparison Matrix
 
-| Framework | Best For | Complexity | Learning Curve | Maturity | Community |
-|-----------|----------|------------|----------------|----------|-----------|
-| **LangGraph** | Complex workflows, state machines, human-in-loop | High | Steep | Production-ready | Large |
-| **AutoGen** | Conversational agents, multi-agent debates | Medium | Moderate | Mature | Growing |
-| **CrewAI** | Role-based teams, rapid prototyping | Low | Gentle | Emerging | Active |
-| **Semantic Kernel** | .NET integration, enterprise workflows | Medium | Moderate | Production-ready | Microsoft-backed |
+| Framework           | Best For                                         | Complexity | Learning Curve | Maturity         | Community        |
+| ------------------- | ------------------------------------------------ | ---------- | -------------- | ---------------- | ---------------- |
+| **LangGraph**       | Complex workflows, state machines, human-in-loop | High       | Steep          | Production-ready | Large            |
+| **AutoGen**         | Conversational agents, multi-agent debates       | Medium     | Moderate       | Mature           | Growing          |
+| **CrewAI**          | Role-based teams, rapid prototyping              | Low        | Gentle         | Emerging         | Active           |
+| **Semantic Kernel** | .NET integration, enterprise workflows           | Medium     | Moderate       | Production-ready | Microsoft-backed |
 
 ### Framework Philosophies
 
 ```yaml
 LangGraph:
-  philosophy: "Agents as stateful, controllable workflows"
-  approach: "Graph-based state machines with explicit transitions"
-  control_level: "Maximum control, minimal magic"
-  best_for: "Production systems requiring auditability"
+  philosophy: 'Agents as stateful, controllable workflows'
+  approach: 'Graph-based state machines with explicit transitions'
+  control_level: 'Maximum control, minimal magic'
+  best_for: 'Production systems requiring auditability'
 
 AutoGen:
-  philosophy: "Agents as conversational participants"
-  approach: "Message-passing between specialized agents"
-  control_level: "High-level orchestration, framework handles details"
-  best_for: "Research, experimentation, multi-agent reasoning"
+  philosophy: 'Agents as conversational participants'
+  approach: 'Message-passing between specialized agents'
+  control_level: 'High-level orchestration, framework handles details'
+  best_for: 'Research, experimentation, multi-agent reasoning'
 
 CrewAI:
-  philosophy: "Agents as team members with roles"
-  approach: "Declarative task definition with agent roles"
-  control_level: "Simple abstractions, opinionated patterns"
-  best_for: "Rapid development, non-technical stakeholders"
+  philosophy: 'Agents as team members with roles'
+  approach: 'Declarative task definition with agent roles'
+  control_level: 'Simple abstractions, opinionated patterns'
+  best_for: 'Rapid development, non-technical stakeholders'
 
 Semantic_Kernel:
-  philosophy: "Agents as orchestrated AI plugins"
-  approach: "Plugin-based architecture with planners"
-  control_level: "Enterprise-grade abstractions"
-  best_for: ".NET ecosystems, Microsoft Azure integration"
+  philosophy: 'Agents as orchestrated AI plugins'
+  approach: 'Plugin-based architecture with planners'
+  control_level: 'Enterprise-grade abstractions'
+  best_for: '.NET ecosystems, Microsoft Azure integration'
 ```
 
 ---
@@ -58,6 +61,7 @@ Semantic_Kernel:
 ## Framework 1: LangGraph
 
 ### Overview
+
 LangGraph is LangChain's framework for building stateful, multi-step agent workflows using directed graphs. Each node is a function, edges define transitions, and state persists across the graph execution.
 
 ### Key Concepts
@@ -116,9 +120,9 @@ strengths:
     - PostgreSQL/Redis backend support
 
 limitations:
-  complexity: "Steeper learning curve than alternatives"
-  verbosity: "More boilerplate code required"
-  python_only: "No official support for other languages"
+  complexity: 'Steeper learning curve than alternatives'
+  verbosity: 'More boilerplate code required'
+  python_only: 'No official support for other languages'
 ```
 
 ### Complete Example: Test Maintenance Agent
@@ -607,6 +611,7 @@ not_ideal_for:
 ## Framework 2: AutoGen
 
 ### Overview
+
 AutoGen (by Microsoft) enables multi-agent conversations where specialized agents communicate through message-passing. Agents can be LLM-backed or rule-based, enabling flexible team compositions.
 
 ### Key Concepts
@@ -672,9 +677,9 @@ strengths:
     - Iterative code improvement
 
 limitations:
-  control: "Less predictable than LangGraph"
-  costs: "Multi-agent debates can be expensive"
-  debugging: "Harder to trace decision flow"
+  control: 'Less predictable than LangGraph'
+  costs: 'Multi-agent debates can be expensive'
+  debugging: 'Harder to trace decision flow'
 ```
 
 ### Complete Example: Test Maintenance Agent
@@ -1037,6 +1042,7 @@ not_ideal_for:
 ## Framework 3: CrewAI
 
 ### Overview
+
 CrewAI provides a high-level, declarative API for building agent teams with roles, goals, and tasks. It's the simplest framework to start with, using natural language to define agent behavior.
 
 ### Key Concepts
@@ -1095,9 +1101,9 @@ strengths:
     - Hierarchical management patterns
 
 limitations:
-  flexibility: "Less control over agent interactions"
-  maturity: "Newer framework, evolving rapidly"
-  production: "Limited production examples so far"
+  flexibility: 'Less control over agent interactions'
+  maturity: 'Newer framework, evolving rapidly'
+  production: 'Limited production examples so far'
 ```
 
 ### Complete Example: Test Maintenance Agent
@@ -1488,6 +1494,7 @@ not_ideal_for:
 ## Framework 4: Semantic Kernel
 
 ### Overview
+
 Semantic Kernel (by Microsoft) is a .NET and Python SDK for building AI orchestration with a plugin-based architecture. It excels at enterprise integration with Azure, Microsoft 365, and .NET ecosystems.
 
 ### Key Concepts
@@ -1569,9 +1576,9 @@ strengths:
     - Performance monitoring
 
 limitations:
-  complexity: ".NET learning curve for Python teams"
-  ecosystem: "Smaller community than LangChain"
-  flexibility: "More opinionated than LangGraph"
+  complexity: '.NET learning curve for Python teams'
+  ecosystem: 'Smaller community than LangChain'
+  flexibility: 'More opinionated than LangGraph'
 ```
 
 ### Complete Example: Test Maintenance Agent (Python)
@@ -2037,56 +2044,56 @@ not_ideal_for:
 
 ### Feature Matrix
 
-| Feature | LangGraph | AutoGen | CrewAI | Semantic Kernel |
-|---------|-----------|---------|--------|-----------------|
-| **Language Support** | Python | Python | Python | Python, C#, Java |
-| **State Management** | ✅ Explicit schema | ❌ Implicit | ❌ Implicit | ✅ Context variables |
-| **Checkpointing** | ✅ Built-in | ❌ Manual | ❌ Limited | ✅ Built-in |
-| **Human-in-Loop** | ✅ Native | ✅ UserProxy | ✅ Human input | ✅ Approval gates |
-| **Streaming** | ✅ Full support | ❌ Limited | ❌ No | ✅ Partial |
-| **Observability** | ✅ LangSmith | ❌ Custom | ❌ Custom | ✅ App Insights |
-| **Multi-Agent** | ✅ Graph nodes | ✅ Core feature | ✅ Core feature | ✅ Plugins |
-| **Planning** | ❌ Manual | ❌ Manual | ✅ Built-in | ✅ Planners |
-| **Error Recovery** | ✅ Retry nodes | ❌ Manual | ❌ Limited | ✅ Retry policies |
-| **Cost Controls** | ❌ Manual | ❌ Manual | ✅ RPM limits | ❌ Manual |
-| **Testing Tools** | ✅ pytest support | ✅ pytest support | ❌ Limited | ✅ xUnit support |
-| **Production Examples** | ✅ Many | ✅ Several | ❌ Few | ✅ Microsoft docs |
-| **Learning Curve** | Steep | Moderate | Gentle | Moderate |
-| **Community Size** | Large | Growing | Active | Microsoft-backed |
-| **Update Frequency** | Weekly | Monthly | Weekly | Monthly |
+| Feature                 | LangGraph          | AutoGen           | CrewAI          | Semantic Kernel      |
+| ----------------------- | ------------------ | ----------------- | --------------- | -------------------- |
+| **Language Support**    | Python             | Python            | Python          | Python, C#, Java     |
+| **State Management**    | ✅ Explicit schema | ❌ Implicit       | ❌ Implicit     | ✅ Context variables |
+| **Checkpointing**       | ✅ Built-in        | ❌ Manual         | ❌ Limited      | ✅ Built-in          |
+| **Human-in-Loop**       | ✅ Native          | ✅ UserProxy      | ✅ Human input  | ✅ Approval gates    |
+| **Streaming**           | ✅ Full support    | ❌ Limited        | ❌ No           | ✅ Partial           |
+| **Observability**       | ✅ LangSmith       | ❌ Custom         | ❌ Custom       | ✅ App Insights      |
+| **Multi-Agent**         | ✅ Graph nodes     | ✅ Core feature   | ✅ Core feature | ✅ Plugins           |
+| **Planning**            | ❌ Manual          | ❌ Manual         | ✅ Built-in     | ✅ Planners          |
+| **Error Recovery**      | ✅ Retry nodes     | ❌ Manual         | ❌ Limited      | ✅ Retry policies    |
+| **Cost Controls**       | ❌ Manual          | ❌ Manual         | ✅ RPM limits   | ❌ Manual            |
+| **Testing Tools**       | ✅ pytest support  | ✅ pytest support | ❌ Limited      | ✅ xUnit support     |
+| **Production Examples** | ✅ Many            | ✅ Several        | ❌ Few          | ✅ Microsoft docs    |
+| **Learning Curve**      | Steep              | Moderate          | Gentle          | Moderate             |
+| **Community Size**      | Large              | Growing           | Active          | Microsoft-backed     |
+| **Update Frequency**    | Weekly             | Monthly           | Weekly          | Monthly              |
 
 ### Performance Comparison (Same Task)
 
 ```yaml
-task: "Analyze and fix 10 failing tests"
+task: 'Analyze and fix 10 failing tests'
 
 LangGraph:
   execution_time: 3.2 minutes
   llm_calls: 42
   cost: $0.63
   success_rate: 87%
-  notes: "Fast due to parallel node execution"
+  notes: 'Fast due to parallel node execution'
 
 AutoGen:
   execution_time: 5.8 minutes
   llm_calls: 68
   cost: $1.02
   success_rate: 85%
-  notes: "Slower due to agent debates, but thorough"
+  notes: 'Slower due to agent debates, but thorough'
 
 CrewAI:
   execution_time: 4.1 minutes
   llm_calls: 51
   cost: $0.77
   success_rate: 82%
-  notes: "Balanced performance, some retry overhead"
+  notes: 'Balanced performance, some retry overhead'
 
 Semantic_Kernel:
   execution_time: 3.7 minutes
   llm_calls: 45
   cost: $0.68
   success_rate: 88%
-  notes: "Efficient planning, minimal redundancy"
+  notes: 'Efficient planning, minimal redundancy'
 ```
 
 ### Code Comparison (Same Agent)
@@ -2099,22 +2106,22 @@ lines_of_code:
   Semantic_Kernel: 250 lines
 
 boilerplate_ratio:
-  LangGraph: 40%  # State schemas, graph building
-  AutoGen: 25%    # Agent config
-  CrewAI: 15%     # Minimal abstractions
-  Semantic_Kernel: 30%  # Plugin decorators
+  LangGraph: 40% # State schemas, graph building
+  AutoGen: 25% # Agent config
+  CrewAI: 15% # Minimal abstractions
+  Semantic_Kernel: 30% # Plugin decorators
 
 readability:
-  LangGraph: "Clear workflow visualization"
-  AutoGen: "Natural conversation flow"
-  CrewAI: "Most intuitive for non-developers"
-  Semantic_Kernel: "Enterprise-grade structure"
+  LangGraph: 'Clear workflow visualization'
+  AutoGen: 'Natural conversation flow'
+  CrewAI: 'Most intuitive for non-developers'
+  Semantic_Kernel: 'Enterprise-grade structure'
 
 maintainability:
-  LangGraph: "Easy to modify graph structure"
-  AutoGen: "Agent roles clearly defined"
-  CrewAI: "Simple task updates"
-  Semantic_Kernel: "Reusable plugin library"
+  LangGraph: 'Easy to modify graph structure'
+  AutoGen: 'Agent roles clearly defined'
+  CrewAI: 'Simple task updates'
+  Semantic_Kernel: 'Reusable plugin library'
 ```
 
 ---
@@ -2288,6 +2295,7 @@ result = app.invoke({"failures": [], "fixes": []})
 ```
 
 **Migration Checklist:**
+
 - [ ] Convert agent roles to state schema fields
 - [ ] Transform tasks into graph nodes (functions)
 - [ ] Map task dependencies to graph edges
@@ -2352,6 +2360,7 @@ graph.add_node("engineer", engineer_node)
 ```
 
 **Migration Checklist:**
+
 - [ ] Convert each agent to a LangGraph node
 - [ ] Map agent tools to node tools
 - [ ] Extract conversation flow into explicit edges
@@ -2403,6 +2412,7 @@ detective.initiate_chat(analyst, message="Run tests and report failures")
 ```
 
 **Why Migrate?**
+
 - Need more flexible agent collaboration
 - Want agents to debate solutions
 - Research project vs. production system
@@ -2440,6 +2450,7 @@ graph = StateGraph(State)
 ```
 
 **Migration Checklist:**
+
 - [ ] Convert SK plugins to LangChain tools
 - [ ] Map planner steps to graph nodes
 - [ ] Replace SK memory with LangGraph state
@@ -2896,11 +2907,11 @@ public class TestMaintenanceController : ControllerBase
 ```yaml
 trending_now:
   unified_memory:
-    description: "Shared memory across all agents in team"
-    frameworks: "LangGraph, AutoGen, CrewAI all adding support"
+    description: 'Shared memory across all agents in team'
+    frameworks: 'LangGraph, AutoGen, CrewAI all adding support'
 
   agentic_workflows_as_code:
-    description: "Define workflows in YAML/JSON"
+    description: 'Define workflows in YAML/JSON'
     example: |
       workflow:
         - agent: detective
@@ -2912,16 +2923,16 @@ trending_now:
           next: engineer
 
   agent_marketplaces:
-    description: "Pre-built agent templates and plugins"
-    platforms: "LangChain Hub, AutoGen Studio, CrewAI Marketplace"
+    description: 'Pre-built agent templates and plugins'
+    platforms: 'LangChain Hub, AutoGen Studio, CrewAI Marketplace'
 
   hybrid_orchestration:
-    description: "Mix multiple frameworks in one system"
-    pattern: "CrewAI for planning, LangGraph for execution"
+    description: 'Mix multiple frameworks in one system'
+    pattern: 'CrewAI for planning, LangGraph for execution'
 
   multimodal_agents:
-    description: "Agents that process images, video, audio"
-    use_case: "Visual testing agents analyzing screenshots"
+    description: 'Agents that process images, video, audio'
+    use_case: 'Visual testing agents analyzing screenshots'
 ```
 
 ### Recommendations by Team Size
@@ -2929,27 +2940,27 @@ trending_now:
 ```yaml
 startup_2_5_people:
   framework: CrewAI
-  reason: "Fastest to prototype, minimal learning curve"
-  deployment: "Serverless functions (Lambda, Cloud Functions)"
-  monitoring: "Basic logging, Sentry for errors"
+  reason: 'Fastest to prototype, minimal learning curve'
+  deployment: 'Serverless functions (Lambda, Cloud Functions)'
+  monitoring: 'Basic logging, Sentry for errors'
 
 small_team_5_15:
   framework: LangGraph
-  reason: "Balance of control and productivity"
-  deployment: "Docker containers on Cloud Run/ECS"
-  monitoring: "LangSmith + DataDog"
+  reason: 'Balance of control and productivity'
+  deployment: 'Docker containers on Cloud Run/ECS'
+  monitoring: 'LangSmith + DataDog'
 
 medium_team_15_50:
   framework: LangGraph + AutoGen
-  reason: "LangGraph for critical, AutoGen for research"
-  deployment: "Kubernetes cluster"
-  monitoring: "Full observability stack (Prometheus, Grafana, LangSmith)"
+  reason: 'LangGraph for critical, AutoGen for research'
+  deployment: 'Kubernetes cluster'
+  monitoring: 'Full observability stack (Prometheus, Grafana, LangSmith)'
 
 enterprise_50_plus:
   framework: Semantic Kernel
-  reason: "Enterprise integrations, compliance, C# expertise"
-  deployment: "Azure Kubernetes Service"
-  monitoring: "Application Insights, Azure Monitor"
+  reason: 'Enterprise integrations, compliance, C# expertise'
+  deployment: 'Azure Kubernetes Service'
+  monitoring: 'Application Insights, Azure Monitor'
 ```
 
 ### Framework Evolution Predictions
@@ -3059,38 +3070,38 @@ choose_framework({
 
 ```yaml
 general_guidance:
-  start_with: "CrewAI for learning, LangGraph for production"
+  start_with: 'CrewAI for learning, LangGraph for production'
 
-  avoid_premature_optimization: "Start simple, add complexity as needed"
+  avoid_premature_optimization: 'Start simple, add complexity as needed'
 
-  tool_reusability: "Write tools once, wrap for multiple frameworks"
+  tool_reusability: 'Write tools once, wrap for multiple frameworks'
 
-  migration_strategy: "Prototype in CrewAI, productionize in LangGraph"
+  migration_strategy: 'Prototype in CrewAI, productionize in LangGraph'
 
-  polyglot_approach: "Use different frameworks for different workflows"
+  polyglot_approach: 'Use different frameworks for different workflows'
 
 cost_optimization:
-  - "Use local models (Ollama) for development"
-  - "Cache agent plans and common patterns"
-  - "Route simple tasks to cheaper models"
-  - "Monitor costs per agent/task"
-  - "Set budget limits in code"
+  - 'Use local models (Ollama) for development'
+  - 'Cache agent plans and common patterns'
+  - 'Route simple tasks to cheaper models'
+  - 'Monitor costs per agent/task'
+  - 'Set budget limits in code'
 
 production_readiness:
-  - "Add comprehensive error handling"
-  - "Implement retry logic with backoff"
-  - "Use checkpointing for long workflows"
-  - "Add human approval for critical actions"
-  - "Monitor and alert on agent failures"
-  - "Log all agent decisions for audit"
+  - 'Add comprehensive error handling'
+  - 'Implement retry logic with backoff'
+  - 'Use checkpointing for long workflows'
+  - 'Add human approval for critical actions'
+  - 'Monitor and alert on agent failures'
+  - 'Log all agent decisions for audit'
 
 learning_path:
-  week_1: "CrewAI - Build first agent"
-  week_2: "LangGraph - Understand state machines"
-  week_3: "AutoGen - Multi-agent collaboration"
-  week_4: "Semantic Kernel - Enterprise patterns"
-  month_2: "Production deployment of chosen framework"
-  month_3: "Optimize and scale"
+  week_1: 'CrewAI - Build first agent'
+  week_2: 'LangGraph - Understand state machines'
+  week_3: 'AutoGen - Multi-agent collaboration'
+  week_4: 'Semantic Kernel - Enterprise patterns'
+  month_2: 'Production deployment of chosen framework'
+  month_3: 'Optimize and scale'
 ```
 
 ---
@@ -3098,24 +3109,28 @@ learning_path:
 ## Additional Resources
 
 ### Official Documentation
+
 - **LangGraph**: https://langchain-ai.github.io/langgraph/
 - **AutoGen**: https://microsoft.github.io/autogen/
 - **CrewAI**: https://docs.crewai.com/
 - **Semantic Kernel**: https://learn.microsoft.com/en-us/semantic-kernel/
 
 ### Tutorials & Courses
+
 - DeepLearning.AI - AI Agents in LangGraph (Free)
 - DeepLearning.AI - Multi AI Agent Systems with CrewAI (Free)
 - Microsoft Learn - Semantic Kernel Path (Free)
 - LangChain Academy - Agentic RAG (Free)
 
 ### Community & Support
+
 - LangChain Discord: #langgraph channel
 - AutoGen GitHub Discussions
 - CrewAI Discord Community
 - Semantic Kernel GitHub Issues
 
 ### Example Repositories
+
 - LangGraph Examples: https://github.com/langchain-ai/langgraph/tree/main/examples
 - AutoGen Examples: https://github.com/microsoft/autogen/tree/main/notebook
 - CrewAI Examples: https://github.com/joaomdmoura/crewAI-examples
@@ -3133,6 +3148,7 @@ learning_path:
 ---
 
 **Next Steps:**
+
 1. Review [Agentic Fundamentals](agentic-fundamentals.md) if new to agents
 2. Choose framework based on decision tree above
 3. Build the test maintenance example in your chosen framework
@@ -3141,5 +3157,5 @@ learning_path:
 
 ---
 
-*Last Updated: October 2024*
-*Status: Complete - Production-ready examples for all 4 frameworks*
+_Last Updated: October 2024_
+_Status: Complete - Production-ready examples for all 4 frameworks_

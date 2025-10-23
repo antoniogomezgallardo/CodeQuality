@@ -1,12 +1,15 @@
 3# Testing Strategy
 
 ## Purpose
+
 Develop a comprehensive testing strategy that implements shift-left and shift-right approaches to ensure quality throughout the software development lifecycle.
 
 ## Context
+
 Testing strategy determines how, when, and what to test to achieve optimal quality with efficient resource utilization. It encompasses the entire spectrum from unit tests to production monitoring.
 
 ## Prerequisites
+
 - Understanding of [Quality Foundations](../00-foundations/README.md)
 - Knowledge of [Requirements Engineering](../01-requirements/README.md)
 - Familiarity with development lifecycle
@@ -45,6 +48,7 @@ graph LR
 ### Modern Testing Pyramid Considerations
 
 **Testing Honeycomb (Alternative)**
+
 ```
     ╱───────╲
    ╱ E2E     ╲
@@ -60,6 +64,7 @@ graph LR
 ```
 
 **Key Principles:**
+
 1. **Fast Feedback**: Unit tests provide immediate feedback
 2. **Cost Efficiency**: Lower level tests are cheaper to maintain
 3. **Confidence**: Higher level tests provide system confidence
@@ -68,6 +73,7 @@ graph LR
 ## Shift-Left Testing
 
 ### Concept
+
 Move testing activities earlier in the development lifecycle to find and fix defects sooner when they're cheaper to resolve.
 
 ### Implementation Strategies
@@ -75,6 +81,7 @@ Move testing activities earlier in the development lifecycle to find and fix def
 #### Test-Driven Development (TDD)
 
 **Red-Green-Refactor Cycle:**
+
 ```mermaid
 graph LR
     A[Red: Write Failing Test] --> B[Green: Make It Pass]
@@ -83,6 +90,7 @@ graph LR
 ```
 
 **TDD Process:**
+
 ```javascript
 // 1. Write failing test first
 describe('Calculator', () => {
@@ -113,6 +121,7 @@ class Calculator {
 #### Behavior-Driven Development (BDD)
 
 **BDD Scenario Format:**
+
 ```gherkin
 Feature: User Login
   As a registered user
@@ -138,6 +147,7 @@ Scenario: Failed login with invalid credentials
 #### Static Analysis Integration
 
 **Early Quality Gates:**
+
 ```yaml
 # .github/workflows/quality-gates.yml
 name: Quality Gates
@@ -164,17 +174,18 @@ jobs:
 
 ### Shift-Left Benefits
 
-| Aspect | Traditional | Shift-Left |
-|--------|-------------|------------|
-| Bug Discovery | End of cycle | Start of cycle |
-| Fix Cost | High | Low |
-| Feedback Speed | Slow | Fast |
-| Developer Confidence | Low | High |
-| Technical Debt | Accumulates | Prevented |
+| Aspect               | Traditional  | Shift-Left     |
+| -------------------- | ------------ | -------------- |
+| Bug Discovery        | End of cycle | Start of cycle |
+| Fix Cost             | High         | Low            |
+| Feedback Speed       | Slow         | Fast           |
+| Developer Confidence | Low          | High           |
+| Technical Debt       | Accumulates  | Prevented      |
 
 ## Shift-Right Testing
 
 ### Concept
+
 Extend testing into production to validate real-world behavior and user experience.
 
 ### Production Testing Strategies
@@ -182,6 +193,7 @@ Extend testing into production to validate real-world behavior and user experien
 #### Feature Flags
 
 **Implementation Example:**
+
 ```javascript
 // Feature flag service
 class FeatureFlags {
@@ -210,20 +222,21 @@ if (featureFlags.isEnabled('new-checkout', user.id)) {
 #### Canary Deployments
 
 **Deployment Strategy:**
+
 ```yaml
 # Canary deployment configuration
 canary:
   steps:
-    - setWeight: 10  # 10% of traffic
-    - pause: {duration: 5m}
+    - setWeight: 10 # 10% of traffic
+    - pause: { duration: 5m }
     - analysis:
         templates:
           - templateName: success-rate
         args:
           - name: service-name
             value: myapp
-    - setWeight: 50  # 50% of traffic
-    - pause: {duration: 5m}
+    - setWeight: 50 # 50% of traffic
+    - pause: { duration: 5m }
     - analysis:
         templates:
           - templateName: success-rate
@@ -234,6 +247,7 @@ canary:
 #### A/B Testing
 
 **A/B Test Framework:**
+
 ```javascript
 class ABTest {
   constructor(experimentId, variations) {
@@ -243,9 +257,7 @@ class ABTest {
 
   getVariation(userId) {
     const bucket = this.getBucket(userId);
-    const variation = this.variations.find(v =>
-      bucket >= v.trafficStart && bucket < v.trafficEnd
-    );
+    const variation = this.variations.find(v => bucket >= v.trafficStart && bucket < v.trafficEnd);
 
     // Track assignment
     this.trackAssignment(userId, variation.id);
@@ -262,7 +274,7 @@ class ABTest {
 // Usage
 const checkoutTest = new ABTest('checkout-flow', [
   { id: 'control', trafficStart: 0, trafficEnd: 50 },
-  { id: 'variant', trafficStart: 50, trafficEnd: 100 }
+  { id: 'variant', trafficStart: 50, trafficEnd: 100 },
 ]);
 
 const variation = checkoutTest.getVariation(user.id);
@@ -276,6 +288,7 @@ if (variation.id === 'variant') {
 #### Synthetic Monitoring
 
 **Synthetic Test Example:**
+
 ```javascript
 // Synthetic user journey
 describe('User Journey: Purchase Flow', () => {
@@ -300,8 +313,8 @@ describe('User Journey: Purchase Flow', () => {
     await expect(page.locator('.success-message')).toBeVisible();
 
     // Check real metrics
-    const responseTime = await page.evaluate(() =>
-      performance.timing.loadEventEnd - performance.timing.navigationStart
+    const responseTime = await page.evaluate(
+      () => performance.timing.loadEventEnd - performance.timing.navigationStart
     );
     expect(responseTime).toBeLessThan(3000);
   });
@@ -311,6 +324,7 @@ describe('User Journey: Purchase Flow', () => {
 #### Real User Monitoring (RUM)
 
 **RUM Implementation:**
+
 ```javascript
 // Client-side monitoring
 class RumCollector {
@@ -336,12 +350,12 @@ class RumCollector {
   }
 
   trackError() {
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.sendMetric('javascript_error', {
         message: event.message,
         filename: event.filename,
         lineno: event.lineno,
-        stack: event.error?.stack
+        stack: event.error?.stack,
       });
     });
   }
@@ -349,7 +363,7 @@ class RumCollector {
   sendMetric(name, value) {
     fetch('/api/metrics', {
       method: 'POST',
-      body: JSON.stringify({ name, value, timestamp: Date.now() })
+      body: JSON.stringify({ name, value, timestamp: Date.now() }),
     });
   }
 }
@@ -388,6 +402,7 @@ graph TB
 ### Automation Criteria
 
 **Good Candidates for Automation:**
+
 - Repetitive tests
 - High-risk areas
 - Regression testing
@@ -395,6 +410,7 @@ graph TB
 - Performance tests
 
 **Poor Candidates for Automation:**
+
 - One-time tests
 - Usability testing
 - Ad-hoc testing
@@ -460,9 +476,9 @@ class UserFactory {
         street: faker.address.streetAddress(),
         city: faker.address.city(),
         zipCode: faker.address.zipCode(),
-        country: faker.address.country()
+        country: faker.address.country(),
       },
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -473,11 +489,11 @@ class UserFactory {
 
 // Usage
 const testUser = UserFactory.create({
-  email: 'test@example.com'
+  email: 'test@example.com',
 });
 
 const testUsers = UserFactory.createMany(10, {
-  country: 'USA'
+  country: 'USA',
 });
 ```
 
@@ -517,7 +533,7 @@ class OrderBuilder {
       customer: null,
       shippingAddress: null,
       billingAddress: null,
-      paymentMethod: null
+      paymentMethod: null,
     };
   }
 
@@ -554,15 +570,16 @@ const order = new OrderBuilder()
 
 ### Risk Assessment Matrix
 
-| Probability | Low Impact | Medium Impact | High Impact |
-|-------------|------------|---------------|-------------|
-| High | Medium Risk | High Risk | Critical Risk |
-| Medium | Low Risk | Medium Risk | High Risk |
-| Low | Low Risk | Low Risk | Medium Risk |
+| Probability | Low Impact  | Medium Impact | High Impact   |
+| ----------- | ----------- | ------------- | ------------- |
+| High        | Medium Risk | High Risk     | Critical Risk |
+| Medium      | Low Risk    | Medium Risk   | High Risk     |
+| Low         | Low Risk    | Low Risk      | Medium Risk   |
 
 ### Risk Factors
 
 **Technical Risks:**
+
 - New technology
 - Complex algorithms
 - Third-party integrations
@@ -570,6 +587,7 @@ const order = new OrderBuilder()
 - Security requirements
 
 **Business Risks:**
+
 - Revenue impact
 - Compliance requirements
 - User safety
@@ -588,7 +606,7 @@ class RiskAssessment {
     return {
       score: probability * impact,
       priority: this.getPriority(probability * impact),
-      recommendations: this.getRecommendations(probability, impact)
+      recommendations: this.getRecommendations(probability, impact),
     };
   }
 
@@ -628,6 +646,7 @@ class RiskAssessment {
 ### Performance Test Types
 
 #### Load Testing
+
 ```javascript
 // Load test configuration
 const loadTestConfig = {
@@ -640,16 +659,17 @@ const loadTestConfig = {
         { duration: '10m', target: 100 }, // Stay at 100 users
         { duration: '5m', target: 0 }, // Ramp down
       ],
-    }
+    },
   },
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests under 500ms
     http_req_failed: ['rate<0.01'], // Error rate under 1%
-  }
+  },
 };
 ```
 
 #### Stress Testing
+
 ```javascript
 const stressTestConfig = {
   scenarios: {
@@ -664,12 +684,13 @@ const stressTestConfig = {
         { duration: '5m', target: 300 }, // Breaking point
         { duration: '10m', target: 0 },
       ],
-    }
-  }
+    },
+  },
 };
 ```
 
 #### Spike Testing
+
 ```javascript
 const spikeTestConfig = {
   scenarios: {
@@ -684,8 +705,8 @@ const spikeTestConfig = {
         { duration: '3m', target: 100 },
         { duration: '10s', target: 0 },
       ],
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -720,7 +741,7 @@ dast:
   image: registry.gitlab.com/gitlab-org/security-products/dast:latest
   variables:
     DAST_WEBSITE: https://staging.example.com
-    DAST_FULL_SCAN_ENABLED: "true"
+    DAST_FULL_SCAN_ENABLED: 'true'
   artifacts:
     reports:
       dast: gl-dast-report.json
@@ -732,57 +753,67 @@ dast:
 ## OWASP Top 10 Testing Checklist
 
 ### A1: Injection
+
 - [ ] SQL injection testing
 - [ ] NoSQL injection testing
 - [ ] Command injection testing
 - [ ] LDAP injection testing
 
 ### A2: Broken Authentication
+
 - [ ] Weak password policies
 - [ ] Session management flaws
 - [ ] Multi-factor authentication bypass
 - [ ] Credential stuffing
 
 ### A3: Sensitive Data Exposure
+
 - [ ] Data encryption at rest
 - [ ] Data encryption in transit
 - [ ] Sensitive data in logs
 - [ ] PII handling
 
 ### A4: XML External Entities (XXE)
+
 - [ ] XML parser configuration
 - [ ] File inclusion attacks
 - [ ] SSRF via XXE
 
 ### A5: Broken Access Control
+
 - [ ] Horizontal privilege escalation
 - [ ] Vertical privilege escalation
 - [ ] Direct object references
 - [ ] Missing access controls
 
 ### A6: Security Misconfiguration
+
 - [ ] Default accounts
 - [ ] Unnecessary services
 - [ ] Error handling
 - [ ] Security headers
 
 ### A7: Cross-Site Scripting (XSS)
+
 - [ ] Reflected XSS
 - [ ] Stored XSS
 - [ ] DOM-based XSS
 - [ ] Input sanitization
 
 ### A8: Insecure Deserialization
+
 - [ ] Deserialization of untrusted data
 - [ ] Object injection
 - [ ] Remote code execution
 
 ### A9: Using Components with Known Vulnerabilities
+
 - [ ] Dependency scanning
 - [ ] Version management
 - [ ] Security patches
 
 ### A10: Insufficient Logging & Monitoring
+
 - [ ] Security event logging
 - [ ] Log integrity
 - [ ] Monitoring and alerting
@@ -809,27 +840,27 @@ graph LR
 # Environment configuration
 environments:
   development:
-    database_url: "postgres://localhost:5432/myapp_dev"
-    api_url: "http://localhost:3000"
-    log_level: "debug"
+    database_url: 'postgres://localhost:5432/myapp_dev'
+    api_url: 'http://localhost:3000'
+    log_level: 'debug'
     cache_enabled: false
 
   testing:
-    database_url: "postgres://localhost:5432/myapp_test"
-    api_url: "http://localhost:3001"
-    log_level: "error"
+    database_url: 'postgres://localhost:5432/myapp_test'
+    api_url: 'http://localhost:3001'
+    log_level: 'error'
     cache_enabled: false
 
   staging:
-    database_url: "${STAGING_DB_URL}"
-    api_url: "https://staging-api.example.com"
-    log_level: "info"
+    database_url: '${STAGING_DB_URL}'
+    api_url: 'https://staging-api.example.com'
+    log_level: 'info'
     cache_enabled: true
 
   production:
-    database_url: "${PROD_DB_URL}"
-    api_url: "https://api.example.com"
-    log_level: "warn"
+    database_url: '${PROD_DB_URL}'
+    api_url: 'https://api.example.com'
+    log_level: 'warn'
     cache_enabled: true
 ```
 
@@ -837,13 +868,13 @@ environments:
 
 ### Key Testing Metrics
 
-| Metric | Formula | Target |
-|--------|---------|--------|
-| Test Coverage | (Tested Lines / Total Lines) × 100 | > 80% |
-| Test Pass Rate | (Passed Tests / Total Tests) × 100 | > 95% |
-| Defect Density | Defects / KLOC | < 1 |
-| Test Effectiveness | (Defects Found by Tests / Total Defects) × 100 | > 80% |
-| Test Automation | (Automated Tests / Total Tests) × 100 | > 70% |
+| Metric             | Formula                                        | Target |
+| ------------------ | ---------------------------------------------- | ------ |
+| Test Coverage      | (Tested Lines / Total Lines) × 100             | > 80%  |
+| Test Pass Rate     | (Passed Tests / Total Tests) × 100             | > 95%  |
+| Defect Density     | Defects / KLOC                                 | < 1    |
+| Test Effectiveness | (Defects Found by Tests / Total Defects) × 100 | > 80%  |
+| Test Automation    | (Automated Tests / Total Tests) × 100          | > 70%  |
 
 ### Test Reporting Dashboard
 
@@ -860,7 +891,7 @@ class TestMetrics {
       status: test.status,
       duration: test.duration,
       timestamp: new Date(),
-      category: test.category
+      category: test.category,
     });
   }
 
@@ -875,10 +906,10 @@ class TestMetrics {
         passed,
         failed,
         passRate: (passed / total) * 100,
-        avgDuration: this.results.reduce((sum, r) => sum + r.duration, 0) / total
+        avgDuration: this.results.reduce((sum, r) => sum + r.duration, 0) / total,
       },
       trends: this.calculateTrends(),
-      categories: this.groupByCategory()
+      categories: this.groupByCategory(),
     };
   }
 }
@@ -889,6 +920,7 @@ class TestMetrics {
 ### Testing Strategy Checklist
 
 **Strategy Definition:**
+
 - [ ] Testing objectives defined
 - [ ] Risk assessment completed
 - [ ] Test levels identified
@@ -896,6 +928,7 @@ class TestMetrics {
 - [ ] Resource allocation planned
 
 **Test Design:**
+
 - [ ] Test cases designed
 - [ ] Test data prepared
 - [ ] Environment setup
@@ -903,6 +936,7 @@ class TestMetrics {
 - [ ] Test schedule created
 
 **Test Execution:**
+
 - [ ] Test environment validated
 - [ ] Test execution tracked
 - [ ] Defects logged and tracked
@@ -910,6 +944,7 @@ class TestMetrics {
 - [ ] Metrics collected
 
 **Test Reporting:**
+
 - [ ] Test summary report
 - [ ] Coverage analysis
 - [ ] Quality metrics
@@ -919,11 +954,13 @@ class TestMetrics {
 ## References
 
 ### Standards
+
 - ISO/IEC/IEEE 29119 - Software Testing
 - IEEE 829 - Test Documentation
 - ISTQB - Testing Qualifications
 
 ### Frameworks
+
 - Selenium - Web automation
 - Cypress - Modern web testing
 - Jest - JavaScript testing
@@ -931,6 +968,7 @@ class TestMetrics {
 - pytest - Python testing
 
 ### Books
+
 - "The Art of Software Testing" - Glenford Myers
 - "Growing Object-Oriented Software, Guided by Tests" - Freeman & Pryce
 - "Continuous Delivery" - Humble & Farley
@@ -944,4 +982,4 @@ class TestMetrics {
 
 ---
 
-*Next: [Shift-Left Approach](shift-left-approach.md) - Deep dive into early testing*
+_Next: [Shift-Left Approach](shift-left-approach.md) - Deep dive into early testing_

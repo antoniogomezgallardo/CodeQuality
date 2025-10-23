@@ -29,7 +29,7 @@
  */
 async function waitForFontsLoaded(page, timeout = 30000) {
   try {
-    await page.evaluate(async (timeoutMs) => {
+    await page.evaluate(async timeoutMs => {
       // Use document.fonts.ready API
       const fontsPromise = document.fonts.ready;
 
@@ -46,7 +46,10 @@ async function waitForFontsLoaded(page, timeout = 30000) {
       const allLoaded = fontFaces.every(font => font.status === 'loaded');
 
       if (!allLoaded) {
-        console.warn('Not all fonts loaded:', fontFaces.filter(f => f.status !== 'loaded'));
+        console.warn(
+          'Not all fonts loaded:',
+          fontFaces.filter(f => f.status !== 'loaded')
+        );
       }
 
       return allLoaded;
@@ -79,14 +82,14 @@ async function waitForFontsLoaded(page, timeout = 30000) {
  */
 async function waitForImagesLoaded(page, timeout = 30000) {
   try {
-    await page.evaluate(async (timeoutMs) => {
+    await page.evaluate(async timeoutMs => {
       const startTime = Date.now();
 
       /**
        * Wait for a single image element to load
        */
-      const waitForImage = (img) => {
-        return new Promise((resolve) => {
+      const waitForImage = img => {
+        return new Promise(resolve => {
           // Already loaded
           if (img.complete && img.naturalHeight !== 0) {
             resolve();
@@ -123,11 +126,10 @@ async function waitForImagesLoaded(page, timeout = 30000) {
       const images = Array.from(document.querySelectorAll('img'));
 
       // Get elements with background images
-      const elementsWithBg = Array.from(document.querySelectorAll('*'))
-        .filter(el => {
-          const bg = window.getComputedStyle(el).backgroundImage;
-          return bg && bg !== 'none' && bg.includes('url(');
-        });
+      const elementsWithBg = Array.from(document.querySelectorAll('*')).filter(el => {
+        const bg = window.getComputedStyle(el).backgroundImage;
+        return bg && bg !== 'none' && bg.includes('url(');
+      });
 
       // Create Image objects for background images to track loading
       const bgImagePromises = elementsWithBg.map(el => {
@@ -135,7 +137,7 @@ async function waitForImagesLoaded(page, timeout = 30000) {
         const urlMatch = bg.match(/url\(["']?(.+?)["']?\)/);
 
         if (urlMatch && urlMatch[1]) {
-          return new Promise((resolve) => {
+          return new Promise(resolve => {
             const img = new Image();
             img.onload = () => resolve();
             img.onerror = () => {
@@ -188,7 +190,7 @@ async function waitForImagesLoaded(page, timeout = 30000) {
  */
 async function hideDynamicContent(page, selectors) {
   try {
-    const hiddenCount = await page.evaluate((selectorList) => {
+    const hiddenCount = await page.evaluate(selectorList => {
       let count = 0;
 
       selectorList.forEach(selector => {
@@ -263,7 +265,7 @@ async function stabilizeAnimations(page) {
 
       // Disable requestAnimationFrame
       const originalRAF = window.requestAnimationFrame;
-      window.requestAnimationFrame = (callback) => {
+      window.requestAnimationFrame = callback => {
         return originalRAF(() => {
           callback(0);
         });
@@ -306,20 +308,24 @@ async function scrollToElement(page, selector, options = {}) {
   const scrollOptions = { ...defaultOptions, ...options };
 
   try {
-    const elementExists = await page.evaluate((sel, opts) => {
-      const element = document.querySelector(sel);
-      if (!element) {
-        return false;
-      }
+    const elementExists = await page.evaluate(
+      (sel, opts) => {
+        const element = document.querySelector(sel);
+        if (!element) {
+          return false;
+        }
 
-      element.scrollIntoView({
-        behavior: opts.behavior,
-        block: opts.block,
-        inline: 'nearest'
-      });
+        element.scrollIntoView({
+          behavior: opts.behavior,
+          block: opts.block,
+          inline: 'nearest'
+        });
 
-      return true;
-    }, selector, scrollOptions);
+        return true;
+      },
+      selector,
+      scrollOptions
+    );
 
     if (!elementExists) {
       console.warn(`Element not found: ${selector}`);
@@ -390,37 +396,41 @@ async function waitForNetworkIdle(page, idleTime = 500, timeout = 30000) {
  */
 async function setFixedTimestamps(page, fixedDate = '2025-10-08 12:00:00', selectors = []) {
   try {
-    const count = await page.evaluate((date, sels) => {
-      let replaced = 0;
+    const count = await page.evaluate(
+      (date, sels) => {
+        let replaced = 0;
 
-      sels.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
-          el.textContent = date;
-          replaced++;
+        sels.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            el.textContent = date;
+            replaced++;
+          });
         });
-      });
 
-      // Also override Date if needed
-      const originalDate = Date;
-      const fixedTime = new originalDate(date).getTime();
+        // Also override Date if needed
+        const originalDate = Date;
+        const fixedTime = new originalDate(date).getTime();
 
-      Date = class extends originalDate {
-        constructor(...args) {
-          if (args.length === 0) {
-            super(fixedTime);
-          } else {
-            super(...args);
+        Date = class extends originalDate {
+          constructor(...args) {
+            if (args.length === 0) {
+              super(fixedTime);
+            } else {
+              super(...args);
+            }
           }
-        }
 
-        static now() {
-          return fixedTime;
-        }
-      };
+          static now() {
+            return fixedTime;
+          }
+        };
 
-      return replaced;
-    }, fixedDate, selectors);
+        return replaced;
+      },
+      fixedDate,
+      selectors
+    );
 
     console.log(`Fixed ${count} timestamps to: ${fixedDate}`);
     return count;
@@ -450,40 +460,44 @@ async function waitForElementStable(page, selector, timeout = 10000) {
     await page.waitForSelector(selector, { state: 'visible', timeout });
 
     // Wait for element position to stabilize
-    await page.evaluate(async (sel, maxWait) => {
-      const element = document.querySelector(sel);
-      if (!element) return false;
+    await page.evaluate(
+      async (sel, maxWait) => {
+        const element = document.querySelector(sel);
+        if (!element) return false;
 
-      const startTime = Date.now();
-      let lastRect = element.getBoundingClientRect();
-      let stableCount = 0;
-      const requiredStableChecks = 3;
+        const startTime = Date.now();
+        let lastRect = element.getBoundingClientRect();
+        let stableCount = 0;
+        const requiredStableChecks = 3;
 
-      while (Date.now() - startTime < maxWait) {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        while (Date.now() - startTime < maxWait) {
+          await new Promise(resolve => setTimeout(resolve, 100));
 
-        const currentRect = element.getBoundingClientRect();
+          const currentRect = element.getBoundingClientRect();
 
-        // Check if position changed
-        const positionChanged =
-          Math.abs(currentRect.top - lastRect.top) > 1 ||
-          Math.abs(currentRect.left - lastRect.left) > 1 ||
-          Math.abs(currentRect.width - lastRect.width) > 1 ||
-          Math.abs(currentRect.height - lastRect.height) > 1;
+          // Check if position changed
+          const positionChanged =
+            Math.abs(currentRect.top - lastRect.top) > 1 ||
+            Math.abs(currentRect.left - lastRect.left) > 1 ||
+            Math.abs(currentRect.width - lastRect.width) > 1 ||
+            Math.abs(currentRect.height - lastRect.height) > 1;
 
-        if (positionChanged) {
-          stableCount = 0;
-          lastRect = currentRect;
-        } else {
-          stableCount++;
-          if (stableCount >= requiredStableChecks) {
-            return true;
+          if (positionChanged) {
+            stableCount = 0;
+            lastRect = currentRect;
+          } else {
+            stableCount++;
+            if (stableCount >= requiredStableChecks) {
+              return true;
+            }
           }
         }
-      }
 
-      return false;
-    }, selector, timeout);
+        return false;
+      },
+      selector,
+      timeout
+    );
 
     return true;
   } catch (error) {
@@ -512,7 +526,7 @@ async function waitForElementStable(page, selector, timeout = 10000) {
  */
 async function removeElements(page, selectors) {
   try {
-    const removedCount = await page.evaluate((selectorList) => {
+    const removedCount = await page.evaluate(selectorList => {
       let count = 0;
 
       selectorList.forEach(selector => {
@@ -565,7 +579,7 @@ async function triggerLazyLoading(page, options = {}) {
   const scrollOptions = { ...defaultOptions, ...options };
 
   try {
-    await page.evaluate(async (opts) => {
+    await page.evaluate(async opts => {
       const scrollHeight = document.documentElement.scrollHeight;
       const viewportHeight = window.innerHeight;
       const stepSize = (scrollHeight - viewportHeight) / opts.scrollSteps;

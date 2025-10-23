@@ -110,6 +110,7 @@ uvicorn api:app --reload --host 0.0.0.0 --port 8000
 ### Query Endpoint
 
 **Request:**
+
 ```bash
 curl -X POST "http://localhost:8000/query" \
   -H "Content-Type: application/json" \
@@ -121,6 +122,7 @@ curl -X POST "http://localhost:8000/query" \
 ```
 
 **Response:**
+
 ```json
 {
   "answer": "Test-driven development (TDD) is a software development approach where you write tests before writing the actual code. The cycle follows: 1) Write a failing test, 2) Write minimal code to pass the test, 3) Refactor the code while keeping tests green.",
@@ -198,22 +200,23 @@ rag.clear_session(session_id)
 
 ### RAGConfig Parameters
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `openai_api_key` | env var | OpenAI API key |
-| `embedding_model` | `text-embedding-3-small` | Embedding model |
-| `llm_model` | `gpt-4-turbo-preview` | LLM for generation |
-| `temperature` | `0.1` | LLM temperature (0-1) |
-| `chunk_size` | `1000` | Document chunk size |
-| `chunk_overlap` | `200` | Overlap between chunks |
-| `top_k_results` | `3` | Results to retrieve |
-| `similarity_threshold` | `0.7` | Min similarity score |
-| `max_history_length` | `5` | Conversation turns to keep |
-| `max_tokens` | `8000` | Max tokens per response |
+| Parameter              | Default                  | Description                |
+| ---------------------- | ------------------------ | -------------------------- |
+| `openai_api_key`       | env var                  | OpenAI API key             |
+| `embedding_model`      | `text-embedding-3-small` | Embedding model            |
+| `llm_model`            | `gpt-4-turbo-preview`    | LLM for generation         |
+| `temperature`          | `0.1`                    | LLM temperature (0-1)      |
+| `chunk_size`           | `1000`                   | Document chunk size        |
+| `chunk_overlap`        | `200`                    | Overlap between chunks     |
+| `top_k_results`        | `3`                      | Results to retrieve        |
+| `similarity_threshold` | `0.7`                    | Min similarity score       |
+| `max_history_length`   | `5`                      | Conversation turns to keep |
+| `max_tokens`           | `8000`                   | Max tokens per response    |
 
 ### Customization Examples
 
 **Use Different Models:**
+
 ```python
 config = RAGConfig(
     embedding_model="text-embedding-3-large",  # More accurate
@@ -222,6 +225,7 @@ config = RAGConfig(
 ```
 
 **Tune Retrieval:**
+
 ```python
 config = RAGConfig(
     chunk_size=500,            # Smaller chunks
@@ -231,6 +235,7 @@ config = RAGConfig(
 ```
 
 **Use Local LLM:**
+
 ```python
 from langchain.llms import Ollama
 
@@ -434,6 +439,7 @@ async def query_endpoint(request: QueryRequest):
 ### Common Issues
 
 **Issue: "Vector store not ready"**
+
 ```bash
 # Solution: Ingest documents first
 curl -X POST "http://localhost:8000/ingest" \
@@ -442,18 +448,21 @@ curl -X POST "http://localhost:8000/ingest" \
 ```
 
 **Issue: "OpenAI API key not found"**
+
 ```bash
 # Solution: Set environment variable
 export OPENAI_API_KEY="sk-..."
 ```
 
 **Issue: "Out of memory during ingestion"**
+
 ```python
 # Solution: Process in smaller batches
 config = RAGConfig(chunk_size=500, batch_size=50)
 ```
 
 **Issue: "Poor answer quality"**
+
 ```python
 # Solution: Tune retrieval parameters
 config = RAGConfig(
@@ -484,7 +493,7 @@ MAX_WORKERS=4
 ```yaml
 # docker-compose.yml
 healthcheck:
-  test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+  test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
   interval: 30s
   timeout: 10s
   retries: 3

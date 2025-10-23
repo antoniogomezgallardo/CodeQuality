@@ -33,6 +33,7 @@ Never used Jest? New to Cypress? Want to try k6? Our quick start guides get you 
 👉 **[Browse All Quick Start Guides](quickstarts/)** 👈
 
 **Featured Quick Starts:**
+
 - [Jest](quickstarts/jest-quickstart.md) - JavaScript unit testing (3 min)
 - [pytest](quickstarts/pytest-quickstart.md) - Python unit testing (3 min)
 - [JUnit 5](quickstarts/junit-quickstart.md) - Java unit testing (4 min)
@@ -44,6 +45,7 @@ Never used Jest? New to Cypress? Want to try k6? Our quick start guides get you 
 - [axe-core](quickstarts/axe-quickstart.md) - Accessibility testing (3 min)
 
 Each guide includes:
+
 - Minimal setup (< 1 minute)
 - Hello World example
 - Common troubleshooting
@@ -54,6 +56,7 @@ Each guide includes:
 ## 📚 Full Examples
 
 Each example directory contains:
+
 - `README.md` - Explanation and setup instructions
 - Working code examples with comments
 - Configuration files
@@ -70,6 +73,7 @@ Each example directory contains:
 ## 🔧 Prerequisites
 
 Most examples require:
+
 - Git
 - Node.js 14+ (for JavaScript examples)
 - Java 11+ (for Java examples)
@@ -79,18 +83,21 @@ Most examples require:
 ## 📚 Examples by Technology Stack
 
 ### JavaScript/TypeScript
+
 - Jest unit tests
 - Mocha + Chai integration tests
 - Cypress E2E tests
 - GitHub Actions CI/CD
 
 ### Java
+
 - JUnit 5 unit tests
 - Spring Boot integration tests
 - Selenium WebDriver E2E tests
 - Jenkins pipelines
 
 ### Python
+
 - pytest unit tests
 - API integration tests
 - Robot Framework E2E tests
@@ -139,6 +146,7 @@ Explore cutting-edge AI tools for QA automation:
 ## 🤝 Contributing
 
 To add new examples:
+
 1. Create a descriptive folder name
 2. Include a README with setup instructions
 3. Provide working, commented code
@@ -167,4 +175,4 @@ Run with: `npm test`
 
 ---
 
-*These examples are meant to be practical and immediately useful. They represent real-world scenarios and production-ready patterns.*
+_These examples are meant to be practical and immediately useful. They represent real-world scenarios and production-ready patterns._

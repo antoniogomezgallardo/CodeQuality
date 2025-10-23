@@ -32,7 +32,7 @@ function randomString(length = 10, charset = 'alphanumeric') {
     numeric: '0123456789',
     hex: '0123456789abcdef',
     lowercase: 'abcdefghijklmnopqrstuvwxyz',
-    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   };
 
   const chars = charsets[charset] || charsets.alphanumeric;
@@ -72,7 +72,7 @@ function randomCreditCard(type = 'visa') {
     visa: '4',
     mastercard: '5',
     amex: '3',
-    discover: '6'
+    discover: '6',
   };
 
   const prefix = prefixes[type] || prefixes.visa;
@@ -96,7 +96,7 @@ function randomAddress() {
     city: cities[randomInt(0, cities.length - 1)],
     state: states[randomInt(0, states.length - 1)],
     zipCode: randomString(5, 'numeric'),
-    country: 'US'
+    country: 'US',
   };
 }
 
@@ -117,7 +117,7 @@ function randomUser() {
     phone: randomPhoneNumber(),
     username: `${firstName.toLowerCase()}${lastName.toLowerCase()}${randomInt(1, 9999)}`,
     password: 'Test123!@#',
-    address: randomAddress()
+    address: randomAddress(),
   };
 }
 
@@ -164,10 +164,12 @@ const tokenStore = new Map();
  */
 function generateToken(userId, expiresIn = 3600) {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64');
-  const payload = Buffer.from(JSON.stringify({
-    userId,
-    exp: Math.floor(Date.now() / 1000) + expiresIn
-  })).toString('base64');
+  const payload = Buffer.from(
+    JSON.stringify({
+      userId,
+      exp: Math.floor(Date.now() / 1000) + expiresIn,
+    })
+  ).toString('base64');
   const signature = randomString(43, 'alphanumeric');
 
   return `${header}.${payload}.${signature}`;
@@ -179,7 +181,7 @@ function generateToken(userId, expiresIn = 3600) {
 function storeToken(userId, token) {
   tokenStore.set(userId, {
     token,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 }
 
@@ -207,7 +209,7 @@ function clearExpiredTokens(maxAge = 3600000) {
  * Create authorization header
  */
 function createAuthHeader(token, type = 'Bearer') {
-  return { 'Authorization': `${type} ${token}` };
+  return { Authorization: `${type} ${token}` };
 }
 
 // ============================================================================
@@ -223,7 +225,7 @@ function validateResponse(response, expectedStatus = 200) {
     hasBody: response.body && response.body.length > 0,
     hasContentType: response.headers['content-type'] !== undefined,
     isJSON: false,
-    responseTime: response.timings ? response.timings.duration : 0
+    responseTime: response.timings ? response.timings.duration : 0,
   };
 
   // Check if response is valid JSON
@@ -246,7 +248,7 @@ function checkSLA(responseTime, maxResponseTime = 500, errorRate = 0, maxErrorRa
   return {
     responseTimeOk: responseTime <= maxResponseTime,
     errorRateOk: errorRate <= maxErrorRate,
-    meetsAll: responseTime <= maxResponseTime && errorRate <= maxErrorRate
+    meetsAll: responseTime <= maxResponseTime && errorRate <= maxErrorRate,
   };
 }
 
@@ -279,7 +281,7 @@ function validateJSONSchema(data, schema) {
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -314,7 +316,7 @@ function calculateStats(values) {
       p90: 0,
       p95: 0,
       p99: 0,
-      stdDev: 0
+      stdDev: 0,
     };
   }
 
@@ -337,7 +339,7 @@ function calculateStats(values) {
     p90: calculatePercentile(values, 90),
     p95: calculatePercentile(values, 95),
     p99: calculatePercentile(values, 99),
-    stdDev: Math.round(stdDev * 100) / 100
+    stdDev: Math.round(stdDev * 100) / 100,
   };
 }
 
@@ -390,7 +392,7 @@ function generateSummary(testResults) {
     failedRequests,
     responseTimes,
     testDuration,
-    bytesReceived
+    bytesReceived,
   } = testResults;
 
   const stats = calculateStats(responseTimes);
@@ -405,7 +407,7 @@ function generateSummary(testResults) {
       errorRate: `${errorRate}%`,
       throughput: `${throughput} req/s`,
       duration: formatDuration(testDuration),
-      dataTransferred: formatBytes(bytesReceived)
+      dataTransferred: formatBytes(bytesReceived),
     },
     responseTime: {
       min: `${stats.min}ms`,
@@ -415,13 +417,13 @@ function generateSummary(testResults) {
       p90: `${stats.p90}ms`,
       p95: `${stats.p95}ms`,
       p99: `${stats.p99}ms`,
-      stdDev: `${stats.stdDev}ms`
+      stdDev: `${stats.stdDev}ms`,
     },
     slaCompliance: {
       p95Under500ms: stats.p95 < 500 ? 'PASS' : 'FAIL',
       p99Under1000ms: stats.p99 < 1000 ? 'PASS' : 'FAIL',
-      errorRateUnder1Percent: parseFloat(errorRate) < 1 ? 'PASS' : 'FAIL'
-    }
+      errorRateUnder1Percent: parseFloat(errorRate) < 1 ? 'PASS' : 'FAIL',
+    },
   };
 }
 
@@ -587,7 +589,7 @@ if (typeof module !== 'undefined' && module.exports) {
     setCustomHeaders,
     validateResponse,
     generateProductId,
-    generateUserData
+    generateUserData,
   };
 }
 

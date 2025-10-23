@@ -1,12 +1,15 @@
 # AI-Powered Code Quality
 
 ## Purpose
+
 Provide comprehensive guidance on using AI to improve code quality through automated code review, refactoring suggestions, technical debt detection, and code smell identification.
 
 ## Context
+
 Manual code reviews are time-consuming, inconsistent, and limited by human bandwidth. AI-powered code quality tools can provide instant, consistent feedback, detect subtle issues humans might miss, and suggest improvements based on patterns learned from millions of lines of code.
 
 ## Prerequisites
+
 - Understanding of [AI Fundamentals](ai-fundamentals.md)
 - Familiarity with [Code Review Process](../07-code-review/README.md)
 - Basic knowledge of code quality metrics
@@ -41,6 +44,7 @@ graph TB
 ### 1. Automated Code Review
 
 **What AI Can Do:**
+
 - Review code changes in real-time
 - Identify bugs before human review
 - Check compliance with coding standards
@@ -74,17 +78,17 @@ cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
 ```javascript
 // ❌ AI Detects Performance Issue
 function findDuplicates(items) {
-    const duplicates = [];
-    for (let i = 0; i < items.length; i++) {
-        for (let j = 0; j < items.length; j++) {
-            if (i !== j && items[i] === items[j]) {
-                if (!duplicates.includes(items[i])) {
-                    duplicates.push(items[i]);
-                }
-            }
+  const duplicates = [];
+  for (let i = 0; i < items.length; i++) {
+    for (let j = 0; j < items.length; j++) {
+      if (i !== j && items[i] === items[j]) {
+        if (!duplicates.includes(items[i])) {
+          duplicates.push(items[i]);
         }
+      }
     }
-    return duplicates;
+  }
+  return duplicates;
 }
 
 // AI Feedback:
@@ -96,15 +100,16 @@ function findDuplicates(items) {
 // Suggestion: Use Set for O(n) complexity
 // Example:
 function findDuplicates(items) {
-    const counts = new Map();
-    items.forEach(item => counts.set(item, (counts.get(item) || 0) + 1));
-    return [...counts].filter(([_, count]) => count > 1).map(([item]) => item);
+  const counts = new Map();
+  items.forEach(item => counts.set(item, (counts.get(item) || 0) + 1));
+  return [...counts].filter(([_, count]) => count > 1).map(([item]) => item);
 }
 ```
 
 ### 2. Refactoring Suggestions
 
 **What AI Can Do:**
+
 - Identify code that violates SOLID principles
 - Suggest design pattern applications
 - Recommend function extraction
@@ -200,6 +205,7 @@ def apply_shipping_cost(total):
 ### 3. Technical Debt Detection
 
 **What AI Can Do:**
+
 - Identify outdated dependencies
 - Detect deprecated API usage
 - Find TODO/FIXME comments
@@ -211,17 +217,17 @@ def apply_shipping_cost(total):
 ```yaml
 technical_debt_report:
   total_debt_hours: 127
-  debt_ratio: 15.2%  # 15.2% of development time to fix
-  trend: "increasing"  # +3% from last month
+  debt_ratio: 15.2% # 15.2% of development time to fix
+  trend: 'increasing' # +3% from last month
 
   categories:
     code_smells:
       count: 45
       effort_hours: 38
       top_issues:
-        - "Long methods (>50 lines): 12 occurrences"
-        - "High cyclomatic complexity (>10): 8 functions"
-        - "Duplicate code blocks: 15 instances"
+        - 'Long methods (>50 lines): 12 occurrences'
+        - 'High cyclomatic complexity (>10): 8 functions'
+        - 'Duplicate code blocks: 15 instances'
 
     outdated_dependencies:
       count: 18
@@ -230,15 +236,15 @@ technical_debt_report:
       high: 7
       medium: 8
       examples:
-        - "lodash 4.17.15 → 4.17.21 (security fix)"
-        - "react 16.14.0 → 18.2.0 (major version)"
+        - 'lodash 4.17.15 → 4.17.21 (security fix)'
+        - 'react 16.14.0 → 18.2.0 (major version)'
 
     deprecated_apis:
       count: 23
       effort_hours: 31
       examples:
-        - "moment.js → date-fns (deprecated library)"
-        - "componentWillMount → useEffect (React)"
+        - 'moment.js → date-fns (deprecated library)'
+        - 'componentWillMount → useEffect (React)'
 
     missing_tests:
       files_without_tests: 34
@@ -246,25 +252,26 @@ technical_debt_report:
       effort_hours: 34
 
   prioritized_actions:
-    - action: "Update critical security dependencies"
-      effort: "3 hours"
-      impact: "High"
-      risk_reduction: "85%"
+    - action: 'Update critical security dependencies'
+      effort: '3 hours'
+      impact: 'High'
+      risk_reduction: '85%'
 
-    - action: "Refactor payment processing module"
-      effort: "16 hours"
-      impact: "High"
-      complexity_reduction: "60%"
+    - action: 'Refactor payment processing module'
+      effort: '16 hours'
+      impact: 'High'
+      complexity_reduction: '60%'
 
-    - action: "Extract common validation logic"
-      effort: "8 hours"
-      impact: "Medium"
-      code_reduction: "450 lines"
+    - action: 'Extract common validation logic'
+      effort: '8 hours'
+      impact: 'Medium'
+      code_reduction: '450 lines'
 ```
 
 ### 4. Code Smell Detection
 
 **What AI Can Do:**
+
 - Identify design anti-patterns
 - Detect god objects/classes
 - Find feature envy
@@ -341,6 +348,7 @@ class UserNotificationService:
 ### 5. Automated Documentation
 
 **What AI Can Do:**
+
 - Generate function docstrings
 - Create API documentation
 - Explain complex algorithms
@@ -402,6 +410,7 @@ def calculate_compound_interest(principal, rate, time, frequency):
 ### Commercial Tools
 
 #### 1. **GitHub Copilot**
+
 ```yaml
 features:
   - Real-time code suggestions
@@ -435,6 +444,7 @@ cons:
 ```
 
 #### 2. **CodeRabbit**
+
 ```yaml
 features:
   - Automated PR reviews
@@ -467,6 +477,7 @@ cons:
 ```
 
 #### 3. **Tabnine**
+
 ```yaml
 features:
   - AI code completion
@@ -499,6 +510,7 @@ cons:
 ```
 
 #### 4. **Snyk Code**
+
 ```yaml
 features:
   - Security-first code analysis
@@ -532,6 +544,7 @@ cons:
 ### Open Source Tools
 
 #### 1. **SonarQube with AI Plugin**
+
 ```yaml
 features:
   - Code quality metrics
@@ -558,6 +571,7 @@ cons:
 ```
 
 #### 2. **CodeQL (GitHub)**
+
 ```yaml
 features:
   - Semantic code analysis
@@ -592,12 +606,14 @@ cons:
 **Impact:** Medium
 
 **Steps:**
+
 1. Install GitHub Copilot or Tabnine
 2. Configure for your language/framework
 3. Start using suggestions
 4. Provide feedback to improve
 
 **Example VS Code Setup:**
+
 ```json
 // .vscode/settings.json
 {
@@ -621,6 +637,7 @@ cons:
 **Impact:** High
 
 **Steps:**
+
 1. Select tool (CodeRabbit, Snyk, etc.)
 2. Configure repository integration
 3. Define review rules
@@ -628,6 +645,7 @@ cons:
 5. Iterate based on results
 
 **Example GitHub Actions Workflow:**
+
 ```yaml
 # .github/workflows/ai-code-review.yml
 name: AI Code Review
@@ -667,6 +685,7 @@ jobs:
 **Impact:** Very High
 
 **Steps:**
+
 1. Define code quality rules
 2. Build custom prompts
 3. Integrate with LLM API
@@ -678,30 +697,35 @@ See [Code Review Automation Example](../../examples/ai-assisted-qa/code-review-a
 ## Best Practices
 
 ### 1. Start with Non-Critical Code
+
 - Test AI suggestions on new features
 - Validate AI feedback thoroughly
 - Build trust gradually
 - Measure accuracy
 
 ### 2. Customize to Your Standards
+
 - Define team-specific rules
 - Create custom prompts
 - Train on your codebase
 - Incorporate team preferences
 
 ### 3. Human Review Required
+
 - AI suggests, humans decide
 - Critical code needs manual review
 - Security issues verified manually
 - Complex logic reviewed by humans
 
 ### 4. Monitor and Improve
+
 - Track false positive rate
 - Measure time saved
 - Collect team feedback
 - Iterate on configuration
 
 ### 5. Educate Your Team
+
 - Train on AI tool capabilities
 - Explain limitations
 - Share best practices
@@ -710,71 +734,75 @@ See [Code Review Automation Example](../../examples/ai-assisted-qa/code-review-a
 ## Metrics to Track
 
 ### Quality Metrics
+
 ```yaml
 code_quality_metrics:
   defects_prevented:
-    metric: "Bugs caught by AI before merge"
-    target: "> 20 per month"
+    metric: 'Bugs caught by AI before merge'
+    target: '> 20 per month'
 
   code_smells_reduced:
-    metric: "Code smells resolved"
-    target: "-30% per quarter"
+    metric: 'Code smells resolved'
+    target: '-30% per quarter'
 
   technical_debt_hours:
-    metric: "Technical debt hours"
-    target: "< 100 hours"
+    metric: 'Technical debt hours'
+    target: '< 100 hours'
 
   cyclomatic_complexity:
-    metric: "Average function complexity"
-    target: "< 5"
+    metric: 'Average function complexity'
+    target: '< 5'
 ```
 
 ### Efficiency Metrics
+
 ```yaml
 efficiency_metrics:
   review_time:
-    metric: "Average PR review time"
-    baseline: "4 hours"
-    target: "< 2 hours"
+    metric: 'Average PR review time'
+    baseline: '4 hours'
+    target: '< 2 hours'
 
   refactoring_time:
-    metric: "Time to refactor with AI suggestions"
-    improvement: "60% faster"
+    metric: 'Time to refactor with AI suggestions'
+    improvement: '60% faster'
 
   documentation_time:
-    metric: "Time to document code"
-    improvement: "75% faster"
+    metric: 'Time to document code'
+    improvement: '75% faster'
 ```
 
 ### Adoption Metrics
+
 ```yaml
 adoption_metrics:
   tool_usage:
-    metric: "% of PRs with AI review"
-    target: "> 90%"
+    metric: '% of PRs with AI review'
+    target: '> 90%'
 
   suggestion_acceptance:
-    metric: "% of AI suggestions accepted"
-    target: "> 60%"
+    metric: '% of AI suggestions accepted'
+    target: '> 60%'
 
   developer_satisfaction:
-    metric: "Team satisfaction score"
-    target: "> 4/5"
+    metric: 'Team satisfaction score'
+    target: '> 4/5'
 ```
 
 ## Cost-Benefit Analysis
 
 ### Monthly Costs (10-person team)
+
 ```yaml
 tools:
-  github_copilot: $100    # $10/user
-  coderabbit: $150        # $15/user
-  snyk: $250              # $25/user
+  github_copilot: $100 # $10/user
+  coderabbit: $150 # $15/user
+  snyk: $250 # $25/user
   total: $500/month
 
 roi:
-  time_saved: 80 hours/month    # $4,000 value
-  defects_prevented: 25/month   # $2,500 value (100 hours saved)
+  time_saved: 80 hours/month # $4,000 value
+  defects_prevented: 25/month # $2,500 value (100 hours saved)
   total_value: $6,500/month
 
   net_benefit: $6,000/month
@@ -785,22 +813,27 @@ roi:
 ## Common Pitfalls
 
 ### 1. Over-Reliance on AI
+
 ❌ **Wrong:** Accept all AI suggestions without review
 ✅ **Right:** Use AI as first pass, human verification required
 
 ### 2. Ignoring False Positives
+
 ❌ **Wrong:** Leave tool with 40% false positive rate
 ✅ **Right:** Tune rules, train model, reduce noise
 
 ### 3. No Team Training
+
 ❌ **Wrong:** Deploy tool without explanation
 ✅ **Right:** Train team, share best practices, iterate
 
 ### 4. Security Blind Spots
+
 ❌ **Wrong:** Trust AI for all security issues
 ✅ **Right:** Combine AI with dedicated security tools
 
 ### 5. Insufficient Customization
+
 ❌ **Wrong:** Use default settings for everything
 ✅ **Right:** Customize rules for your team's standards
 
@@ -821,4 +854,4 @@ roi:
 
 ---
 
-*AI-powered code quality tools catch issues faster, suggest better solutions, and free developers to focus on creative problem-solving.*
+_AI-powered code quality tools catch issues faster, suggest better solutions, and free developers to focus on creative problem-solving._

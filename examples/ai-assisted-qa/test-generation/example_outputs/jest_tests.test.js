@@ -520,7 +520,7 @@ describe('validateEmail - Parameterized Tests', () => {
       ['user@sub.example.com'],
       ['user@example.co.uk'],
       ['a@b.c'],
-    ])('should accept valid email: %s', (email) => {
+    ])('should accept valid email: %s', email => {
       expect(validateEmail(email)).toBe(true);
     });
   });
@@ -538,24 +538,18 @@ describe('validateEmail - Parameterized Tests', () => {
       ['user @example.com'],
       ['user@example com'],
       ['user@@example.com'],
-    ])('should reject invalid email: %s', (email) => {
+    ])('should reject invalid email: %s', email => {
       expect(validateEmail(email)).toBe(false);
     });
   });
 
   describe('Type Errors', () => {
-    test.each([
-      [null],
-      [undefined],
-      [123],
-      [true],
-      [false],
-      [{}],
-      [[]],
-      [() => {}],
-    ])('should throw TypeError for non-string: %p', (input) => {
-      expect(() => validateEmail(input)).toThrow(TypeError);
-    });
+    test.each([[null], [undefined], [123], [true], [false], [{}], [[]], [() => {}]])(
+      'should throw TypeError for non-string: %p',
+      input => {
+        expect(() => validateEmail(input)).toThrow(TypeError);
+      }
+    );
   });
 });
 

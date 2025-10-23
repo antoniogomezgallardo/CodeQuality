@@ -1,12 +1,15 @@
 # Development Practices
 
 ## Purpose
+
 Establish coding standards, design principles, and development practices that ensure maintainable, reliable, and high-quality software throughout the development lifecycle.
 
 ## Context
+
 Development practices form the foundation of software quality. They define how code is written, reviewed, and maintained, directly impacting long-term maintainability and team productivity.
 
 ## Prerequisites
+
 - Understanding of [Quality Foundations](../00-foundations/README.md)
 - Knowledge of [Testing Strategy](../04-testing-strategy/README.md)
 - Familiarity with programming fundamentals
@@ -59,7 +62,7 @@ function processUserData(userData) {
     email: userData.email,
     passwordHash: hashedPassword,
     salt: salt,
-    createdAt: new Date()
+    createdAt: new Date(),
   };
 
   return database.users.create(user);
@@ -97,7 +100,7 @@ function createUser(userData) {
     email: userData.email,
     passwordHash: hash,
     salt: salt,
-    createdAt: new Date()
+    createdAt: new Date(),
   };
 
   return database.users.create(user);
@@ -309,7 +312,8 @@ class DiscountCalculator {
       return amount;
     } else if (user.type === 'premium') {
       return amount * 0.9;
-    } else if (user.type === 'vip') { // Added later, modifying existing code
+    } else if (user.type === 'vip') {
+      // Added later, modifying existing code
       return amount * 0.8;
     }
     return amount;
@@ -346,7 +350,7 @@ class DiscountCalculator {
     this.strategies = new Map([
       ['regular', new RegularDiscountStrategy()],
       ['premium', new PremiumDiscountStrategy()],
-      ['vip', new VIPDiscountStrategy()]
+      ['vip', new VIPDiscountStrategy()],
     ]);
   }
 
@@ -440,10 +444,18 @@ class WorkerInterface {
 }
 
 class Developer extends WorkerInterface {
-  work() { this.code(); }
-  eat() { console.log('Eating...'); }
-  sleep() { console.log('Sleeping...'); }
-  code() { console.log('Coding...'); }
+  work() {
+    this.code();
+  }
+  eat() {
+    console.log('Eating...');
+  }
+  sleep() {
+    console.log('Sleeping...');
+  }
+  code() {
+    console.log('Coding...');
+  }
   manageTeam() {
     throw new Error('Developers do not manage teams'); // Forced to implement
   }
@@ -471,17 +483,33 @@ class Manageable {
 }
 
 class Developer extends Workable {
-  work() { this.code(); }
-  eat() { console.log('Eating...'); }
-  sleep() { console.log('Sleeping...'); }
-  code() { console.log('Coding...'); }
+  work() {
+    this.code();
+  }
+  eat() {
+    console.log('Eating...');
+  }
+  sleep() {
+    console.log('Sleeping...');
+  }
+  code() {
+    console.log('Coding...');
+  }
 }
 
 class Manager extends Workable {
-  work() { this.manageTeam(); }
-  eat() { console.log('Eating...'); }
-  sleep() { console.log('Sleeping...'); }
-  manageTeam() { console.log('Managing team...'); }
+  work() {
+    this.manageTeam();
+  }
+  eat() {
+    console.log('Eating...');
+  }
+  sleep() {
+    console.log('Sleeping...');
+  }
+  manageTeam() {
+    console.log('Managing team...');
+  }
 }
 ```
 
@@ -587,7 +615,7 @@ class EmailNotification {
     return await this.smtp.send({
       to: recipient,
       subject: message.subject,
-      body: message.body
+      body: message.body,
     });
   }
 }
@@ -604,11 +632,11 @@ class SMSNotification {
 
 // Usage
 const emailNotifier = NotificationFactory.create('email', {
-  smtp: { host: 'smtp.example.com', port: 587 }
+  smtp: { host: 'smtp.example.com', port: 587 },
 });
 
 const smsNotifier = NotificationFactory.create('sms', {
-  sms: { apiKey: 'xxx', provider: 'twilio' }
+  sms: { apiKey: 'xxx', provider: 'twilio' },
 });
 ```
 
@@ -642,7 +670,7 @@ class DatabaseConnection {
     return new DatabaseClient({
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
-      database: process.env.DB_NAME
+      database: process.env.DB_NAME,
     });
   }
 
@@ -677,13 +705,13 @@ class PayPalAdapter {
     const paypalPayment = {
       amount: {
         currency: paymentData.currency,
-        value: paymentData.amount
+        value: paymentData.amount,
       },
       payment_method: {
         payer: {
-          email_address: paymentData.customerEmail
-        }
-      }
+          email_address: paymentData.customerEmail,
+        },
+      },
     };
 
     const result = await this.paypal.payments.create(paypalPayment);
@@ -693,7 +721,7 @@ class PayPalAdapter {
       transactionId: result.id,
       status: result.status === 'COMPLETED' ? 'success' : 'failed',
       amount: result.purchase_units[0].amount.value,
-      processorResponse: result
+      processorResponse: result,
     };
   }
 }
@@ -709,7 +737,7 @@ class StripeAdapter {
       amount: paymentData.amount * 100, // Stripe uses cents
       currency: paymentData.currency.toLowerCase(),
       customer: paymentData.customerId,
-      description: paymentData.description
+      description: paymentData.description,
     };
 
     const result = await this.stripe.charges.create(stripePayment);
@@ -719,7 +747,7 @@ class StripeAdapter {
       transactionId: result.id,
       status: result.status === 'succeeded' ? 'success' : 'failed',
       amount: result.amount / 100,
-      processorResponse: result
+      processorResponse: result,
     };
   }
 }
@@ -750,7 +778,7 @@ await stripeProcessor.processPayment(paymentData);
 // Base coffee class
 class Coffee {
   cost() {
-    return 2.00;
+    return 2.0;
   }
 
   description() {
@@ -777,7 +805,7 @@ class CoffeeDecorator extends Coffee {
 // Concrete decorators
 class MilkDecorator extends CoffeeDecorator {
   cost() {
-    return this.coffee.cost() + 0.50;
+    return this.coffee.cost() + 0.5;
   }
 
   description() {
@@ -906,7 +934,7 @@ class AuditService {
     await this.auditLog.create({
       action: 'USER_CREATED',
       userId: user.id,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -915,7 +943,7 @@ class AuditService {
       action: 'USER_UPDATED',
       userId: newUser.id,
       changes: this.getChanges(oldUser, newUser),
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }
@@ -1107,14 +1135,14 @@ describe('UserService', () => {
 
     await userService.createUser({
       email: 'test@example.com',
-      name: 'Test User'
+      name: 'Test User',
     });
 
     expect(emailSpy).toHaveBeenCalledWith(
       'test@example.com',
       expect.objectContaining({
         subject: 'Welcome!',
-        template: 'welcome'
+        template: 'welcome',
       })
     );
   });
@@ -1127,13 +1155,13 @@ describe('UserService', () => {
 
     await userService.createUser({
       email: 'test@example.com',
-      name: 'Test User'
+      name: 'Test User',
     });
 
     expect(dbSpy).toHaveBeenCalledWith({
       email: 'test@example.com',
       name: 'Test User',
-      createdAt: expect.any(Date)
+      createdAt: expect.any(Date),
     });
   });
 });
@@ -1227,7 +1255,7 @@ Then('I should receive a welcome email', async function () {
     this.registrationData.email,
     expect.objectContaining({
       subject: 'Welcome!',
-      template: 'welcome'
+      template: 'welcome',
     })
   );
 });
@@ -1244,24 +1272,28 @@ Then('my account should be created', async function () {
 ### Code Review Checklist
 
 #### Functionality
+
 - [ ] Code does what it's supposed to do
 - [ ] Edge cases are handled appropriately
 - [ ] Error conditions are handled gracefully
 - [ ] No obvious bugs or logical errors
 
 #### Design & Architecture
+
 - [ ] Code follows SOLID principles
 - [ ] Appropriate design patterns are used
 - [ ] No over-engineering or premature optimization
 - [ ] Code is appropriately abstracted
 
 #### Performance
+
 - [ ] No obvious performance bottlenecks
 - [ ] Efficient algorithms and data structures
 - [ ] Appropriate caching strategies
 - [ ] Database queries are optimized
 
 #### Security
+
 - [ ] Input validation is performed
 - [ ] SQL injection prevention
 - [ ] XSS protection implemented
@@ -1269,12 +1301,14 @@ Then('my account should be created', async function () {
 - [ ] No sensitive data in logs or responses
 
 #### Testing
+
 - [ ] Adequate test coverage
 - [ ] Tests are meaningful and well-written
 - [ ] Edge cases are tested
 - [ ] Mocks and stubs are used appropriately
 
 #### Code Quality
+
 - [ ] Code is readable and well-documented
 - [ ] Naming conventions are followed
 - [ ] No dead or commented-out code
@@ -1282,6 +1316,7 @@ Then('my account should be created', async function () {
 - [ ] Functions and classes are reasonably sized
 
 #### Documentation
+
 - [ ] Complex logic is explained
 - [ ] API changes are documented
 - [ ] README is updated if necessary
@@ -1321,14 +1356,10 @@ Then('my account should be created', async function () {
 ```javascript
 // ESLint configuration for code review automation
 module.exports = {
-  extends: [
-    'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'prettier'
-  ],
+  extends: ['eslint:recommended', '@typescript-eslint/recommended', 'prettier'],
   rules: {
     // Complexity rules
-    'complexity': ['error', 10],
+    complexity: ['error', 10],
     'max-depth': ['error', 4],
     'max-lines-per-function': ['error', 50],
     'max-params': ['error', 4],
@@ -1346,10 +1377,10 @@ module.exports = {
     'no-new-func': 'error',
 
     // Best practices
-    'eqeqeq': 'error',
+    eqeqeq: 'error',
     'no-magic-numbers': ['warn', { ignore: [0, 1, -1] }],
-    'consistent-return': 'error'
-  }
+    'consistent-return': 'error',
+  },
 };
 
 // SonarJS rules for additional checks
@@ -1361,6 +1392,7 @@ module.exports = {
 ### Pair Programming Styles
 
 #### Driver-Navigator
+
 ```
 Driver:    Writes the code, focuses on tactical implementation
 Navigator: Reviews code in real-time, thinks strategically
@@ -1375,6 +1407,7 @@ Rotation: Switch roles every 15-30 minutes
 ```
 
 #### Ping-Pong Pairing
+
 ```
 Person A: Writes failing test
 Person B: Makes test pass, writes next failing test
@@ -1389,6 +1422,7 @@ Benefits:
 ```
 
 #### Strong-Style Pairing
+
 ```
 "For an idea to go from your head into the computer,
 it MUST go through someone else's hands"
@@ -1447,9 +1481,12 @@ class PairingSession {
     console.log(`${driver} driving, ${navigator} navigating`);
 
     // Set timer for role switch
-    setTimeout(() => {
-      this.switchRoles();
-    }, this.switchInterval * 60 * 1000);
+    setTimeout(
+      () => {
+        this.switchRoles();
+      },
+      this.switchInterval * 60 * 1000
+    );
   }
 
   switchRoles() {
@@ -1476,6 +1513,7 @@ class PairingSession {
 ### Development Practices Checklist
 
 **Clean Code:**
+
 - [ ] Meaningful and descriptive names
 - [ ] Functions do one thing well
 - [ ] Code is self-documenting
@@ -1484,6 +1522,7 @@ class PairingSession {
 - [ ] No dead or commented code
 
 **SOLID Principles:**
+
 - [ ] Single Responsibility Principle applied
 - [ ] Open/Closed Principle followed
 - [ ] Liskov Substitution Principle respected
@@ -1491,12 +1530,14 @@ class PairingSession {
 - [ ] Dependency Inversion practiced
 
 **Design Patterns:**
+
 - [ ] Appropriate patterns chosen
 - [ ] Not over-engineered
 - [ ] Patterns improve maintainability
 - [ ] Team understands patterns used
 
 **Testing Practices:**
+
 - [ ] TDD/BDD approach followed
 - [ ] Tests written before code
 - [ ] Good test coverage achieved
@@ -1504,6 +1545,7 @@ class PairingSession {
 - [ ] Edge cases covered
 
 **Code Review:**
+
 - [ ] All code reviewed before merge
 - [ ] Constructive feedback provided
 - [ ] Security considerations checked
@@ -1511,6 +1553,7 @@ class PairingSession {
 - [ ] Documentation updated
 
 **Collaboration:**
+
 - [ ] Pair programming sessions scheduled
 - [ ] Knowledge sharing encouraged
 - [ ] Code ownership shared
@@ -1520,6 +1563,7 @@ class PairingSession {
 ## References
 
 ### Books
+
 - "Clean Code" - Robert C. Martin
 - "Refactoring" - Martin Fowler
 - "Design Patterns" - Gang of Four
@@ -1527,11 +1571,13 @@ class PairingSession {
 - "The Pragmatic Programmer" - Hunt & Thomas
 
 ### Standards
+
 - SOLID Principles - Robert C. Martin
 - Gang of Four Design Patterns
 - IEEE 1061 - Software Quality Metrics
 
 ### Tools
+
 - **ESLint** - JavaScript linting
 - **SonarQube** - Code quality analysis
 - **Prettier** - Code formatting
@@ -1547,4 +1593,4 @@ class PairingSession {
 
 ---
 
-*Next: [Clean Code Principles](clean-code-principles.md) - Deep dive into clean code*
+_Next: [Clean Code Principles](clean-code-principles.md) - Deep dive into clean code_

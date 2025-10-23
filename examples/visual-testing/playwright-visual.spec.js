@@ -56,7 +56,6 @@ const VIEWPORTS = {
 };
 
 test.describe('Playwright Visual Testing - Full Page Screenshots', () => {
-
   test('should capture homepage full page screenshot', async ({ page }) => {
     await page.goto('https://example.com');
 
@@ -103,7 +102,6 @@ test.describe('Playwright Visual Testing - Full Page Screenshots', () => {
 });
 
 test.describe('Playwright Visual Testing - Element Screenshots', () => {
-
   test('should capture navigation header only', async ({ page }) => {
     await page.goto('https://example.com');
     await waitForFontsLoaded(page);
@@ -156,17 +154,13 @@ test.describe('Playwright Visual Testing - Element Screenshots', () => {
 });
 
 test.describe('Playwright Visual Testing - Responsive Layouts', () => {
-
   test('should capture homepage at mobile viewport', async ({ page }) => {
     await page.setViewportSize(VIEWPORTS.mobile);
     await page.goto('https://example.com');
     await waitForFontsLoaded(page);
     await waitForImagesLoaded(page);
 
-    await hideDynamicContent(page, [
-      '[data-testid="timestamp"]',
-      '.advertisement'
-    ]);
+    await hideDynamicContent(page, ['[data-testid="timestamp"]', '.advertisement']);
 
     await expect(page).toHaveScreenshot('homepage-mobile.png', {
       fullPage: true,
@@ -201,7 +195,11 @@ test.describe('Playwright Visual Testing - Responsive Layouts', () => {
   test('should capture responsive grid layout across viewports', async ({ page }) => {
     const viewports = [VIEWPORTS.mobile, VIEWPORTS.tablet, VIEWPORTS.desktop];
 
-    for (const [name, viewport] of Object.entries({ mobile: VIEWPORTS.mobile, tablet: VIEWPORTS.tablet, desktop: VIEWPORTS.desktop })) {
+    for (const [name, viewport] of Object.entries({
+      mobile: VIEWPORTS.mobile,
+      tablet: VIEWPORTS.tablet,
+      desktop: VIEWPORTS.desktop
+    })) {
       await page.setViewportSize(viewport);
       await page.goto('https://example.com/products');
       await waitForImagesLoaded(page);
@@ -215,7 +213,6 @@ test.describe('Playwright Visual Testing - Responsive Layouts', () => {
 });
 
 test.describe('Playwright Visual Testing - Interactive States', () => {
-
   test('should capture button hover state', async ({ page }) => {
     await page.goto('https://example.com/components/buttons');
     await waitForFontsLoaded(page);
@@ -302,7 +299,6 @@ test.describe('Playwright Visual Testing - Interactive States', () => {
 });
 
 test.describe('Playwright Visual Testing - Theme Variations', () => {
-
   test('should capture light theme', async ({ page }) => {
     await page.goto('https://example.com');
     await waitForFontsLoaded(page);
@@ -353,7 +349,6 @@ test.describe('Playwright Visual Testing - Theme Variations', () => {
 });
 
 test.describe('Playwright Visual Testing - Scrolling and Lazy Loading', () => {
-
   test('should capture page after scrolling to specific section', async ({ page }) => {
     await page.goto('https://example.com/long-page');
     await waitForFontsLoaded(page);
@@ -392,7 +387,6 @@ test.describe('Playwright Visual Testing - Scrolling and Lazy Loading', () => {
 });
 
 test.describe('Playwright Visual Testing - Error and Empty States', () => {
-
   test('should capture 404 error page', async ({ page }) => {
     await page.goto('https://example.com/non-existent-page');
 
@@ -448,7 +442,6 @@ test.describe('Playwright Visual Testing - Error and Empty States', () => {
 });
 
 test.describe('Playwright Visual Testing - Cross-Browser', () => {
-
   test('should capture in chromium', async ({ page, browserName }) => {
     test.skip(browserName !== 'chromium', 'Chromium-specific test');
 
@@ -487,7 +480,6 @@ test.describe('Playwright Visual Testing - Cross-Browser', () => {
 });
 
 test.describe('Playwright Visual Testing - Advanced Techniques', () => {
-
   test('should mask dynamic content regions', async ({ page }) => {
     await page.goto('https://example.com/dashboard');
     await waitForFontsLoaded(page);
@@ -563,7 +555,6 @@ test.describe('Playwright Visual Testing - Advanced Techniques', () => {
 });
 
 test.describe('Playwright Visual Testing - User Flows', () => {
-
   test('should capture multi-step checkout flow', async ({ page }) => {
     // Step 1: Cart
     await page.goto('https://example.com/cart');
@@ -626,7 +617,6 @@ test.describe('Playwright Visual Testing - User Flows', () => {
 });
 
 test.describe('Playwright Visual Testing - Accessibility States', () => {
-
   test('should capture focus indicators', async ({ page }) => {
     await page.goto('https://example.com/form');
     await waitForFontsLoaded(page);

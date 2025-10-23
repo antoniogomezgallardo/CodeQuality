@@ -3,6 +3,7 @@
 ## Pre-Review Checklist (Author)
 
 ### Before Submitting for Review
+
 - [ ] Self-review completed - read through your own code
 - [ ] All tests are passing locally
 - [ ] Code follows team style guidelines
@@ -12,6 +13,7 @@
 - [ ] Breaking changes clearly documented
 
 ### Pull Request Quality
+
 - [ ] PR is focused on a single feature/fix
 - [ ] PR size is reasonable (< 400 lines preferred)
 - [ ] Commit messages follow conventional format
@@ -23,6 +25,7 @@
 ## Code Review Checklist (Reviewer)
 
 ### Functionality
+
 - [ ] Code does what it's supposed to do
 - [ ] Code handles edge cases appropriately
 - [ ] Error conditions are handled gracefully
@@ -31,6 +34,7 @@
 - [ ] No obvious bugs present
 
 ### Design & Architecture
+
 - [ ] Code follows SOLID principles
 - [ ] Appropriate design patterns used
 - [ ] Code is modular and loosely coupled
@@ -39,6 +43,7 @@
 - [ ] Integration points are well-defined
 
 ### Code Quality
+
 - [ ] Variable and function names are descriptive
 - [ ] Functions are small and focused (single responsibility)
 - [ ] Code is DRY (Don't Repeat Yourself)
@@ -47,6 +52,7 @@
 - [ ] Consistent formatting and style
 
 ### Performance
+
 - [ ] No obvious performance bottlenecks
 - [ ] Efficient algorithms and data structures used
 - [ ] Database queries are optimized
@@ -55,6 +61,7 @@
 - [ ] Network calls are minimized
 
 ### Security
+
 - [ ] Input validation prevents injection attacks
 - [ ] Authentication/authorization implemented correctly
 - [ ] Sensitive data is not logged or exposed
@@ -63,6 +70,7 @@
 - [ ] No hardcoded secrets or credentials
 
 ### Testing
+
 - [ ] Unit tests cover new functionality
 - [ ] Tests are well-written and maintainable
 - [ ] Edge cases are tested
@@ -71,6 +79,7 @@
 - [ ] Test coverage is adequate (aim for 80%+)
 
 ### Documentation
+
 - [ ] Complex logic is documented
 - [ ] API changes are documented
 - [ ] README updated if necessary
@@ -79,12 +88,14 @@
 - [ ] Breaking changes clearly explained
 
 ### Dependencies
+
 - [ ] New dependencies are justified
 - [ ] Dependencies are up-to-date and secure
 - [ ] License compatibility verified
 - [ ] Dependency versions are pinned appropriately
 
 ### Error Handling
+
 - [ ] Exceptions are caught and handled appropriately
 - [ ] Error messages are user-friendly
 - [ ] Logging is appropriate and helpful
@@ -92,6 +103,7 @@
 - [ ] Retry logic included where appropriate
 
 ### Concurrency (if applicable)
+
 - [ ] Thread-safety considerations addressed
 - [ ] Race conditions avoided
 - [ ] Deadlock prevention measures
@@ -105,6 +117,7 @@
 ### Providing Constructive Feedback
 
 #### Use Positive Language
+
 ```
 ✅ Good: "Consider using a Map here for better performance"
 ❌ Avoid: "This is slow and wrong"
@@ -117,6 +130,7 @@
 ```
 
 #### Be Specific and Actionable
+
 ```
 ✅ Good: "Line 42: This could cause a NullPointerException if user is null. Consider adding a null check."
 ❌ Avoid: "This might have issues"
@@ -126,6 +140,7 @@
 ```
 
 #### Ask Questions for Clarification
+
 ```
 ✅ Good: "Could you explain why we need this delay here?"
 ✅ Good: "Is there a reason we're not using the existing UserService?"
@@ -133,6 +148,7 @@
 ```
 
 #### Categorize Comments
+
 - **🐛 Bug**: Functional issues that need fixing
 - **💡 Suggestion**: Improvements that could be made
 - **❓ Question**: Need clarification or explanation
@@ -143,18 +159,21 @@
 ### Comment Examples
 
 #### Security Issues
+
 ```
 🔒 Security: This endpoint appears to be missing authentication.
 Should we add middleware to verify user permissions?
 ```
 
 #### Performance Concerns
+
 ```
 ⚡ Performance: This N+1 query could be expensive with large datasets.
 Consider using a JOIN or batch loading.
 ```
 
 #### Design Suggestions
+
 ```
 💡 Suggestion: This function has multiple responsibilities.
 Consider splitting into:
@@ -164,6 +183,7 @@ Consider splitting into:
 ```
 
 #### Questions for Understanding
+
 ```
 ❓ Question: I see we're caching this data for 1 hour.
 What's the reasoning behind this duration?
@@ -174,6 +194,7 @@ What's the reasoning behind this duration?
 ## Special Review Types
 
 ### Security-Focused Review
+
 - [ ] Authentication mechanisms properly implemented
 - [ ] Authorization checks in place
 - [ ] Input sanitization and validation
@@ -184,6 +205,7 @@ What's the reasoning behind this duration?
 - [ ] Audit logging for sensitive operations
 
 ### Performance-Focused Review
+
 - [ ] Database query optimization
 - [ ] Caching strategy implementation
 - [ ] Algorithm efficiency
@@ -193,6 +215,7 @@ What's the reasoning behind this duration?
 - [ ] Scalability considerations
 
 ### API Review
+
 - [ ] RESTful design principles followed
 - [ ] Consistent naming conventions
 - [ ] Proper HTTP status codes
@@ -202,6 +225,7 @@ What's the reasoning behind this duration?
 - [ ] Documentation completeness
 
 ### Frontend Review
+
 - [ ] Component reusability
 - [ ] State management patterns
 - [ ] Performance optimizations (lazy loading, etc.)
@@ -215,6 +239,7 @@ What's the reasoning behind this duration?
 ## Post-Review Process
 
 ### For Authors
+
 - [ ] Address all reviewer comments
 - [ ] Ask for clarification if comments are unclear
 - [ ] Update tests if functionality changed
@@ -222,6 +247,7 @@ What's the reasoning behind this duration?
 - [ ] Thank reviewers for their time and feedback
 
 ### For Reviewers
+
 - [ ] Re-review changes after author updates
 - [ ] Approve when all concerns are addressed
 - [ ] Follow up on learning opportunities
@@ -232,6 +258,7 @@ What's the reasoning behind this duration?
 ## Review Metrics to Track
 
 ### Team Metrics
+
 - Average review turnaround time
 - Number of review iterations per PR
 - Defect detection rate in reviews
@@ -239,6 +266,7 @@ What's the reasoning behind this duration?
 - Review comment quality
 
 ### Individual Metrics
+
 - Time spent on reviews
 - Quality of review comments
 - Defects found in review
@@ -249,6 +277,7 @@ What's the reasoning behind this duration?
 ## Common Anti-Patterns to Avoid
 
 ### As a Reviewer
+
 - ❌ Nitpicking on personal style preferences
 - ❌ Reviewing implementation instead of design
 - ❌ Being too harsh or personal in comments
@@ -256,6 +285,7 @@ What's the reasoning behind this duration?
 - ❌ Focusing only on negatives
 
 ### As an Author
+
 - ❌ Taking feedback personally
 - ❌ Submitting work-in-progress for review
 - ❌ Making changes without updating tests
@@ -267,6 +297,7 @@ What's the reasoning behind this duration?
 ## Tools and Automation
 
 ### Automated Checks (should pass before human review)
+
 - [ ] Linting rules
 - [ ] Code formatting
 - [ ] Unit test execution
@@ -275,6 +306,7 @@ What's the reasoning behind this duration?
 - [ ] Build verification
 
 ### Review Tools Integration
+
 - [ ] IDE plugins for review tools
 - [ ] Automated reviewer assignment
 - [ ] Review analytics dashboards
@@ -285,12 +317,14 @@ What's the reasoning behind this duration?
 ## Continuous Improvement
 
 ### Regular Review Process Assessment
+
 - [ ] Monthly review of review effectiveness
 - [ ] Quarterly update of checklist
 - [ ] Annual training on review best practices
 - [ ] Feedback collection from team members
 
 ### Learning Opportunities
+
 - [ ] Share interesting findings from reviews
 - [ ] Discuss patterns and anti-patterns
 - [ ] Knowledge sharing sessions
@@ -298,4 +332,4 @@ What's the reasoning behind this duration?
 
 ---
 
-*Remember: The goal of code review is to improve code quality, share knowledge, and mentor team members. Keep discussions professional and focus on the code, not the person.*
+_Remember: The goal of code review is to improve code quality, share knowledge, and mentor team members. Keep discussions professional and focus on the code, not the person._

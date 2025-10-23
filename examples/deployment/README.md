@@ -8,12 +8,12 @@ Deployment strategies determine how new versions of applications are released to
 
 ## Deployment Strategy Comparison
 
-| Strategy | Downtime | Resource Usage | Rollback Speed | Complexity | Risk Level | Best For |
-|----------|----------|----------------|----------------|------------|------------|----------|
-| **Blue-Green** | Zero | 2x (temporary) | Instant | Medium | Low | Critical applications requiring instant rollback |
-| **Canary** | Zero | 1x + small overhead | Fast | High | Very Low | Gradual validation with real traffic |
-| **Rolling** | Zero | 1x | Medium | Low | Medium | Standard applications with no special requirements |
-| **Recreate** | Yes | 1x | Slow | Very Low | High | Development/testing environments |
+| Strategy       | Downtime | Resource Usage      | Rollback Speed | Complexity | Risk Level | Best For                                           |
+| -------------- | -------- | ------------------- | -------------- | ---------- | ---------- | -------------------------------------------------- |
+| **Blue-Green** | Zero     | 2x (temporary)      | Instant        | Medium     | Low        | Critical applications requiring instant rollback   |
+| **Canary**     | Zero     | 1x + small overhead | Fast           | High       | Very Low   | Gradual validation with real traffic               |
+| **Rolling**    | Zero     | 1x                  | Medium         | Low        | Medium     | Standard applications with no special requirements |
+| **Recreate**   | Yes      | 1x                  | Slow           | Very Low   | High       | Development/testing environments                   |
 
 ## Deployment Strategies Explained
 
@@ -22,6 +22,7 @@ Deployment strategies determine how new versions of applications are released to
 **Concept**: Maintain two identical production environments (Blue and Green). Deploy new version to inactive environment, then switch traffic instantly.
 
 **How It Works**:
+
 1. Blue environment runs current version (v1.0)
 2. Deploy new version (v2.0) to Green environment
 3. Test Green environment thoroughly
@@ -29,17 +30,20 @@ Deployment strategies determine how new versions of applications are released to
 5. Blue becomes standby for instant rollback
 
 **Advantages**:
+
 - Instant rollback by switching back to Blue
 - Zero downtime deployment
 - Complete testing before traffic switch
 - Clear separation between versions
 
 **Disadvantages**:
+
 - Requires 2x infrastructure temporarily
 - Database migrations can be complex
 - Shared resources need careful management
 
 **When to Use**:
+
 - Mission-critical applications
 - When instant rollback is essential
 - Applications with complex startup procedures
@@ -52,6 +56,7 @@ Deployment strategies determine how new versions of applications are released to
 **Concept**: Gradually roll out new version to small subset of users, monitoring metrics before full deployment.
 
 **How It Works**:
+
 1. Deploy new version alongside current version
 2. Route 1% of traffic to new version
 3. Monitor metrics (errors, latency, business KPIs)
@@ -59,18 +64,21 @@ Deployment strategies determine how new versions of applications are released to
 5. Automatically rollback if metrics degrade
 
 **Advantages**:
+
 - Lowest risk - early issue detection
 - Real production validation with minimal impact
 - Gradual confidence building
 - A/B testing capability
 
 **Disadvantages**:
+
 - Requires sophisticated monitoring
 - Complex traffic routing
 - Longer deployment timeline
 - Need service mesh or advanced load balancing
 
 **When to Use**:
+
 - High-traffic applications
 - When risk minimization is critical
 - Applications with unpredictable behavior
@@ -83,24 +91,28 @@ Deployment strategies determine how new versions of applications are released to
 **Concept**: Gradually replace instances of old version with new version, maintaining service availability.
 
 **How It Works**:
+
 1. Deploy new version to subset of instances
 2. Wait for health checks to pass
 3. Continue to next subset
 4. Repeat until all instances updated
 
 **Advantages**:
+
 - Zero downtime
 - No extra infrastructure needed
 - Simple to implement
 - Gradual rollout reduces blast radius
 
 **Disadvantages**:
+
 - Two versions run simultaneously
 - Rollback slower than Blue-Green
 - Database migrations complex with mixed versions
 - Not suitable for breaking changes
 
 **When to Use**:
+
 - Standard web applications
 - Microservices architectures
 - Applications with backward-compatible changes
@@ -113,6 +125,7 @@ Deployment strategies determine how new versions of applications are released to
 **Concept**: Deploy code with new features disabled, then gradually enable via feature flags without redeployment.
 
 **How It Works**:
+
 1. Deploy code with features behind flags
 2. Enable feature for internal users (1%)
 3. Gradually increase percentage
@@ -120,6 +133,7 @@ Deployment strategies determine how new versions of applications are released to
 5. Full rollout or instant rollback via flag
 
 **Advantages**:
+
 - Decouple deployment from release
 - Instant enable/disable (kill switch)
 - User segmentation (beta users, regions)
@@ -127,12 +141,14 @@ Deployment strategies determine how new versions of applications are released to
 - No redeployment for rollback
 
 **Disadvantages**:
+
 - Code complexity with flag checks
 - Technical debt if flags not removed
 - Requires feature flag service
 - Testing all flag combinations difficult
 
 **When to Use**:
+
 - SaaS applications with frequent releases
 - A/B testing requirements
 - Gradual feature rollout needed
@@ -209,6 +225,7 @@ Deployment strategies determine how new versions of applications are released to
 ## Prerequisites
 
 ### For Kubernetes Examples
+
 ```bash
 # Install kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -222,6 +239,7 @@ kubectl cluster-info
 ```
 
 ### For Docker Compose Examples
+
 ```bash
 # Install Docker and Docker Compose
 # https://docs.docker.com/get-docker/
@@ -232,6 +250,7 @@ docker-compose --version
 ```
 
 ### For Terraform Examples
+
 ```bash
 # Install Terraform
 # https://developer.hashicorp.com/terraform/downloads
@@ -245,6 +264,7 @@ terraform init
 ```
 
 ### For Feature Flag Examples
+
 ```bash
 # Install Node.js dependencies
 npm install
@@ -439,17 +459,20 @@ readinessProbe:
 Handle database changes carefully in zero-downtime deployments:
 
 **Strategy 1 - Backward Compatible Migrations**:
+
 1. Deploy code that works with old and new schema
 2. Run migration
 3. Deploy code that only uses new schema
 
 **Strategy 2 - Expand-Contract Pattern**:
+
 1. Expand: Add new columns/tables (keep old ones)
 2. Deploy new code using both old and new
 3. Migrate data
 4. Contract: Remove old columns/tables in next release
 
 **Example**:
+
 ```sql
 -- Phase 1: Expand (safe with old code)
 ALTER TABLE users ADD COLUMN email_new VARCHAR(255);
@@ -467,18 +490,21 @@ ALTER TABLE users RENAME COLUMN email_new TO email;
 Monitor these key metrics during deployment:
 
 **Golden Signals**:
+
 - **Latency**: Response time percentiles (p50, p95, p99)
 - **Traffic**: Requests per second
 - **Errors**: Error rate and types
 - **Saturation**: CPU, memory, disk, network usage
 
 **Business Metrics**:
+
 - Conversion rates
 - User signups
 - Transaction success rate
 - Revenue per minute
 
 **Deployment Metrics**:
+
 - Deployment frequency (DORA)
 - Lead time for changes (DORA)
 - Time to restore service (DORA)
@@ -492,7 +518,7 @@ Define clear criteria for automatic rollback:
 const rollbackCriteria = {
   errorRate: {
     threshold: 1.0, // 1% error rate
-    duration: 300,  // for 5 minutes
+    duration: 300, // for 5 minutes
   },
   latencyP95: {
     threshold: 2000, // 2 seconds
@@ -552,16 +578,19 @@ curl https://api.example.com/version
 Maintain clear communication during deployments:
 
 **Before Deployment**:
+
 - Notify stakeholders of deployment window
 - Update status page (maintenance scheduled)
 - Brief on-call team on changes
 
 **During Deployment**:
+
 - Update status page (deployment in progress)
 - Post updates in team chat
 - Monitor metrics actively
 
 **After Deployment**:
+
 - Confirm deployment success
 - Update status page (all systems operational)
 - Post summary with metrics
@@ -583,6 +612,7 @@ if (featureFlags.isEnabled('new-payment-processor')) {
 ### 2. Progressive Exposure
 
 Start with:
+
 1. Internal users (0.1%)
 2. Beta users (1%)
 3. Single region (5%)
@@ -610,19 +640,19 @@ metadata:
   name: myapp
 spec:
   hosts:
-  - myapp
+    - myapp
   http:
-  - match:
-    - uri:
-        prefix: /api
-    route:
-    - destination:
-        host: myapp-stable
-      weight: 100
-    mirror:
-      host: myapp-canary
-    mirrorPercentage:
-      value: 10.0
+    - match:
+        - uri:
+            prefix: /api
+      route:
+        - destination:
+            host: myapp-stable
+          weight: 100
+      mirror:
+        host: myapp-canary
+      mirrorPercentage:
+        value: 10.0
 ```
 
 ### 5. Synthetic Monitoring
@@ -709,18 +739,21 @@ curl http://localhost:8080/health
 ## Additional Resources
 
 ### Documentation
+
 - [Kubernetes Deployment Strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 - [Istio Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/)
 - [AWS CodeDeploy Blue-Green](https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-blue-green.html)
 - [Feature Flags Best Practices](https://launchdarkly.com/blog/dos-and-donts-of-feature-flag-testing/)
 
 ### Tools
+
 - **Service Meshes**: Istio, Linkerd, Consul
 - **Feature Flag Services**: LaunchDarkly, Unleash, Split.io
 - **Deployment Tools**: ArgoCD, Flux, Spinnaker
 - **Monitoring**: Prometheus, Grafana, Datadog, New Relic
 
 ### Books
+
 - "Continuous Delivery" by Jez Humble and David Farley
 - "The Phoenix Project" by Gene Kim, Kevin Behr, George Spafford
 - "Site Reliability Engineering" by Google
@@ -728,6 +761,7 @@ curl http://localhost:8080/health
 ## Contributing
 
 When adding new examples:
+
 1. Include complete, production-ready configurations
 2. Add comprehensive error handling
 3. Document all prerequisites

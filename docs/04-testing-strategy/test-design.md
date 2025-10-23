@@ -26,7 +26,7 @@ describe('Age Validation', () => {
   it('should reject negative age', () => {
     expect(validateAge(-1)).toEqual({
       valid: false,
-      error: 'Age must be positive'
+      error: 'Age must be positive',
     });
   });
 
@@ -34,7 +34,7 @@ describe('Age Validation', () => {
   it('should accept minor age', () => {
     expect(validateAge(10)).toEqual({
       valid: true,
-      category: 'minor'
+      category: 'minor',
     });
   });
 
@@ -42,7 +42,7 @@ describe('Age Validation', () => {
   it('should accept adult age', () => {
     expect(validateAge(30)).toEqual({
       valid: true,
-      category: 'adult'
+      category: 'adult',
     });
   });
 
@@ -50,7 +50,7 @@ describe('Age Validation', () => {
   it('should accept senior age', () => {
     expect(validateAge(70)).toEqual({
       valid: true,
-      category: 'senior'
+      category: 'senior',
     });
   });
 
@@ -58,7 +58,7 @@ describe('Age Validation', () => {
   it('should reject unrealistic age', () => {
     expect(validateAge(150)).toEqual({
       valid: false,
-      error: 'Age too high'
+      error: 'Age too high',
     });
   });
 });
@@ -135,43 +135,43 @@ describe('Discount Calculation', () => {
       customer: 'premium',
       amount: 150,
       years: 3,
-      expected: 0.20
+      expected: 0.2,
     },
     {
       name: 'Premium, high order, new',
       customer: 'premium',
       amount: 150,
       years: 1,
-      expected: 0.15
+      expected: 0.15,
     },
     {
       name: 'Premium, low order',
       customer: 'premium',
       amount: 50,
       years: 5,
-      expected: 0.10
+      expected: 0.1,
     },
     {
       name: 'Regular, high order, very loyal',
       customer: 'regular',
       amount: 150,
       years: 6,
-      expected: 0.10
+      expected: 0.1,
     },
     {
       name: 'Regular, high order, new',
       customer: 'regular',
       amount: 150,
       years: 2,
-      expected: 0.05
+      expected: 0.05,
     },
     {
       name: 'Regular, low order',
       customer: 'regular',
       amount: 50,
       years: 10,
-      expected: 0
-    }
+      expected: 0,
+    },
   ];
 
   testCases.forEach(({ name, customer, amount, years, expected }) => {
@@ -252,9 +252,7 @@ describe('Purchase Product Use Case', () => {
     // 3. User adds to cart
     await addToCart(product.id);
     const cart = await getCart();
-    expect(cart.items).toContainEqual(
-      expect.objectContaining({ productId: product.id })
-    );
+    expect(cart.items).toContainEqual(expect.objectContaining({ productId: product.id }));
 
     // 4. User proceeds to checkout
     const checkout = await initiateCheckout();
@@ -264,16 +262,14 @@ describe('Purchase Product Use Case', () => {
     const payment = await submitPayment({
       cardNumber: '4242424242424242',
       expiry: '12/25',
-      cvv: '123'
+      cvv: '123',
     });
     expect(payment.status).toBe('success');
 
     // 6. Order is created
     const order = await getOrder(payment.orderId);
     expect(order.status).toBe('confirmed');
-    expect(order.items).toContainEqual(
-      expect.objectContaining({ productId: product.id })
-    );
+    expect(order.items).toContainEqual(expect.objectContaining({ productId: product.id }));
 
     // 7. User receives confirmation
     const confirmation = await getOrderConfirmation(order.id);
@@ -285,7 +281,7 @@ describe('Purchase Product Use Case', () => {
     await initiateCheckout();
 
     const payment = await submitPayment({
-      cardNumber: '4000000000000002' // Declined card
+      cardNumber: '4000000000000002', // Declined card
     });
 
     expect(payment.status).toBe('failed');
@@ -342,14 +338,16 @@ describe('Error Guessing', () => {
 
   describe('Timing Issues', () => {
     it('should handle rapid sequential calls', async () => {
-      const promises = Array(100).fill().map(() => apiCall());
+      const promises = Array(100)
+        .fill()
+        .map(() => apiCall());
       await expect(Promise.all(promises)).resolves.toBeDefined();
     });
 
     it('should handle timeout', async () => {
-      await expect(
-        fetchWithTimeout('https://example.com', { timeout: 1 })
-      ).rejects.toThrow('Timeout');
+      await expect(fetchWithTimeout('https://example.com', { timeout: 1 })).rejects.toThrow(
+        'Timeout'
+      );
     });
   });
 });
@@ -366,26 +364,31 @@ describe('Error Guessing', () => {
 **Type:** Functional
 
 **Preconditions:**
+
 - User account exists
 - User is not already logged in
 
 **Test Steps:**
+
 1. Navigate to login page
 2. Enter valid email: test@example.com
 3. Enter valid password: SecurePass123
 4. Click "Login" button
 
 **Expected Results:**
+
 - User is redirected to dashboard
 - Welcome message displays user name
 - Session cookie is set
 - Login timestamp is recorded
 
 **Postconditions:**
+
 - User session is active
 - User can access protected pages
 
 **Test Data:**
+
 - Email: test@example.com
 - Password: SecurePass123
 
@@ -445,29 +448,29 @@ Feature: User Login
 ### Requirements Traceability Matrix
 
 ```markdown
-| Requirement ID | Requirement Description | Test Case IDs | Coverage |
-|----------------|------------------------|---------------|----------|
-| REQ-001 | User can log in | TC_LOGIN_001, TC_LOGIN_002, TC_LOGIN_003 | 100% |
-| REQ-002 | Password reset | TC_RESET_001, TC_RESET_002 | 100% |
-| REQ-003 | Profile update | TC_PROFILE_001 | 50% |
-| REQ-004 | Payment processing | TC_PAY_001, TC_PAY_002, TC_PAY_003 | 100% |
+| Requirement ID | Requirement Description | Test Case IDs                            | Coverage |
+| -------------- | ----------------------- | ---------------------------------------- | -------- |
+| REQ-001        | User can log in         | TC_LOGIN_001, TC_LOGIN_002, TC_LOGIN_003 | 100%     |
+| REQ-002        | Password reset          | TC_RESET_001, TC_RESET_002               | 100%     |
+| REQ-003        | Profile update          | TC_PROFILE_001                           | 50%      |
+| REQ-004        | Payment processing      | TC_PAY_001, TC_PAY_002, TC_PAY_003       | 100%     |
 ```
 
 ### Code Coverage Metrics
 
 ```javascript
 const coverageMetrics = {
-  statements: 85,    // % of statements executed
-  branches: 78,      // % of branches taken
-  functions: 92,     // % of functions called
-  lines: 85,         // % of lines executed
+  statements: 85, // % of statements executed
+  branches: 78, // % of branches taken
+  functions: 92, // % of functions called
+  lines: 85, // % of lines executed
 
   uncovered: {
     statements: 450,
     branches: 89,
     functions: 12,
-    lines: 423
-  }
+    lines: 423,
+  },
 };
 ```
 
@@ -494,9 +497,9 @@ function generateUser() {
       city: faker.location.city(),
       state: faker.location.state(),
       zipCode: faker.location.zipCode(),
-      country: faker.location.country()
+      country: faker.location.country(),
     },
-    createdAt: faker.date.past()
+    createdAt: faker.date.past(),
   };
 }
 
@@ -514,7 +517,7 @@ class UserBuilder {
       password: 'password123',
       firstName: 'Test',
       lastName: 'User',
-      role: 'user'
+      role: 'user',
     };
   }
 
@@ -541,10 +544,7 @@ class UserBuilder {
 // Usage
 const regularUser = new UserBuilder().build();
 const adminUser = new UserBuilder().asAdmin().build();
-const customUser = new UserBuilder()
-  .withEmail('custom@example.com')
-  .withRole('moderator')
-  .build();
+const customUser = new UserBuilder().withEmail('custom@example.com').withRole('moderator').build();
 ```
 
 ## Test Prioritization
@@ -553,36 +553,19 @@ const customUser = new UserBuilder()
 
 ```javascript
 const testPriority = {
-  critical: [
-    'User authentication',
-    'Payment processing',
-    'Data security'
-  ],
-  high: [
-    'Order creation',
-    'Product search',
-    'Checkout flow'
-  ],
-  medium: [
-    'Profile editing',
-    'Wishlist management',
-    'Email notifications'
-  ],
-  low: [
-    'UI animations',
-    'Color themes',
-    'Footer links'
-  ]
+  critical: ['User authentication', 'Payment processing', 'Data security'],
+  high: ['Order creation', 'Product search', 'Checkout flow'],
+  medium: ['Profile editing', 'Wishlist management', 'Email notifications'],
+  low: ['UI animations', 'Color themes', 'Footer links'],
 };
 
 // Prioritization formula
 function calculateTestPriority(test) {
-  const priority = (
+  const priority =
     test.businessImpact * 0.4 +
     test.failureProbability * 0.3 +
     test.technicalComplexity * 0.2 +
-    test.regulatoryRequirement * 0.1
-  );
+    test.regulatoryRequirement * 0.1;
 
   return priority;
 }
@@ -632,24 +615,24 @@ test('login with valid credentials', async ({ page }) => {
 ```javascript
 const testMetrics = {
   // Test coverage
-  requirementsCoverage: 95,      // % of requirements tested
-  codeCoverage: 85,              // % of code tested
-  branchCoverage: 78,            // % of branches tested
+  requirementsCoverage: 95, // % of requirements tested
+  codeCoverage: 85, // % of code tested
+  branchCoverage: 78, // % of branches tested
 
   // Test effectiveness
-  defectDetectionRate: 87,       // % of defects found by tests
-  falsePositiveRate: 3,          // % of test failures that aren't bugs
-  testExecutionRate: 92,         // % of planned tests executed
+  defectDetectionRate: 87, // % of defects found by tests
+  falsePositiveRate: 3, // % of test failures that aren't bugs
+  testExecutionRate: 92, // % of planned tests executed
 
   // Test efficiency
-  automationRate: 75,            // % of tests automated
-  avgTestExecutionTime: 45,      // minutes
-  testsPerDefect: 12,            // tests needed to find one defect
+  automationRate: 75, // % of tests automated
+  avgTestExecutionTime: 45, // minutes
+  testsPerDefect: 12, // tests needed to find one defect
 
   // Test maintenance
-  flakyTestRate: 4,              // % of unstable tests
-  avgFixTime: 30,                // minutes to fix failing test
-  testMaintenanceCost: 15        // % of test time spent on maintenance
+  flakyTestRate: 4, // % of unstable tests
+  avgFixTime: 30, // minutes to fix failing test
+  testMaintenanceCost: 15, // % of test time spent on maintenance
 };
 ```
 
@@ -669,4 +652,4 @@ const testMetrics = {
 
 ---
 
-*Part of: [Testing Strategy](README.md)*
+_Part of: [Testing Strategy](README.md)_

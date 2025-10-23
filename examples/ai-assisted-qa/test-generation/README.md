@@ -56,6 +56,7 @@ print(tests)
 ### 1. Unit Test Generation
 
 Generate comprehensive unit tests with:
+
 - ✅ Happy path tests
 - ✅ Edge cases and boundary conditions
 - ✅ Error handling tests
@@ -249,6 +250,7 @@ ROI Calculation:
 ### Common Issues and Fixes
 
 **Issue: Tests too generic**
+
 ```python
 # Fix: Add more context to prompt
 config = TestGenerationConfig(temperature=0.05)  # More deterministic
@@ -256,6 +258,7 @@ generator = AITestGenerator(config)
 ```
 
 **Issue: Missing edge cases**
+
 ```python
 # Fix: Explicitly request edge cases
 tests = generator.generate_unit_tests(
@@ -268,6 +271,7 @@ tests = generator.generate_unit_tests(
 ```
 
 **Issue: Tests don't match project style**
+
 ```python
 # Fix: Add style guide to prompt
 prompt = f"""
@@ -427,6 +431,7 @@ generate_tests_for_directory("src/", "tests/")
 ### Integration with IDEs
 
 **VS Code Extension:**
+
 ```json
 // .vscode/settings.json
 {

@@ -22,6 +22,7 @@ Production-ready prompts for common QA agent tasks. These prompts have been test
 ### Structure
 
 Every prompt should include:
+
 1. **Role**: Define the agent's expertise
 2. **Task**: Clear description of what to do
 3. **Context**: Relevant background information
@@ -56,7 +57,7 @@ Output format:
 
 ### 1. Unit Test Generation (Python/pytest)
 
-```python
+````python
 UNIT_TEST_GENERATION_PROMPT = """You are a senior software engineer specializing in test-driven development and comprehensive test coverage.
 
 Your task is to generate complete unit tests for the provided function using pytest.
@@ -87,12 +88,13 @@ Provide complete, runnable pytest code including:
 Code to test:
 ```python
 {code_to_test}
-```
+````
 
 Generate comprehensive pytest tests:
 """
 
 # Usage example
+
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -101,10 +103,11 @@ prompt_template = ChatPromptTemplate.from_template(UNIT_TEST_GENERATION_PROMPT)
 
 result = prompt_template | llm
 tests = result.invoke({
-    "context_description": "user authentication",
-    "code_to_test": "def validate_email(email: str) -> bool: ..."
+"context_description": "user authentication",
+"code_to_test": "def validate_email(email: str) -> bool: ..."
 })
-```
+
+````
 
 ---
 
@@ -140,7 +143,7 @@ User Flow:
 
 Generate Playwright test code:
 """
-```
+````
 
 ---
 
@@ -774,4 +777,4 @@ When adding new prompts:
 
 ---
 
-*These prompts are production-tested and continuously improved based on real-world usage. Always version your prompts and track performance metrics.*
+_These prompts are production-tested and continuously improved based on real-world usage. Always version your prompts and track performance metrics._

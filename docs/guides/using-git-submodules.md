@@ -1,9 +1,11 @@
 # Complete Guide to Using Git Submodules with CodeQuality
 
 ## Purpose
+
 This guide shows you exactly how to use the CodeQuality documentation repository as a reference in your own projects using Git submodules. This allows you to always have access to the latest quality standards, templates, and examples without duplicating code.
 
 ## Table of Contents
+
 1. [What You'll Achieve](#what-youll-achieve)
 2. [Prerequisites](#prerequisites)
 3. [Quick Start (5 Minutes)](#quick-start-5-minutes)
@@ -19,6 +21,7 @@ This guide shows you exactly how to use the CodeQuality documentation repository
 ## What You'll Achieve
 
 By the end of this guide, you'll be able to:
+
 - ✅ Add CodeQuality docs to any project as a reference
 - ✅ Access templates, examples, and guides from within your project
 - ✅ Keep the documentation up-to-date with one command
@@ -26,6 +29,7 @@ By the end of this guide, you'll be able to:
 - ✅ Pin to specific versions for stability
 
 **Example project structure you'll create:**
+
 ```
 your-project/
 ├── src/
@@ -45,6 +49,7 @@ your-project/
 ## Prerequisites
 
 **Required:**
+
 - Git installed (version 2.13+)
   ```bash
   git --version  # Should show 2.13.0 or higher
@@ -53,6 +58,7 @@ your-project/
 - Access to the CodeQuality repository
 
 **Optional but helpful:**
+
 - Basic Git knowledge (commit, push, pull)
 - A GitHub/GitLab account
 
@@ -91,6 +97,7 @@ That's it! Skip to [Daily Usage Workflows](#daily-usage-workflows) to see how to
 First, decide where you want the CodeQuality documentation to live. Common locations:
 
 **Option A: Under `docs/` (Recommended)**
+
 ```
 your-project/
 └── docs/
@@ -100,6 +107,7 @@ your-project/
 ```
 
 **Option B: At root level**
+
 ```
 your-project/
 ├── src/
@@ -108,6 +116,7 @@ your-project/
 ```
 
 **Option C: Under a `references/` folder**
+
 ```
 your-project/
 ├── src/
@@ -134,11 +143,13 @@ git submodule add https://github.com/your-org/CodeQuality.git docs/quality-stand
 ```
 
 **What happens:**
+
 1. Git clones the CodeQuality repository into `docs/quality-standards/`
 2. Creates a `.gitmodules` file in your project root
 3. Registers the submodule in `.git/config`
 
 **You should see output like:**
+
 ```
 Cloning into '/Users/you/projects/my-actual-project/docs/quality-standards'...
 remote: Enumerating objects: 1234, done.
@@ -168,6 +179,7 @@ cat .gitmodules
 ```
 
 **Expected `.gitmodules` content:**
+
 ```ini
 [submodule "docs/quality-standards"]
 	path = docs/quality-standards
@@ -198,6 +210,7 @@ git push origin main
 ```
 
 **What gets committed:**
+
 - `.gitmodules` file (configuration)
 - A **pointer** to the specific commit in CodeQuality (not the files themselves!)
 
@@ -207,7 +220,7 @@ git push origin main
 
 Make it easy for your team to find the documentation:
 
-```bash
+````bash
 # Create a quick reference file
 cat > docs/QUALITY-REFERENCE.md << 'EOF'
 # Quality Standards Reference
@@ -243,22 +256,26 @@ To update to the latest version:
 git submodule update --remote docs/quality-standards
 git add docs/quality-standards
 git commit -m "docs: update quality standards to latest"
-```
+````
 
 ## For New Team Members
 
 If the `docs/quality-standards/` folder is empty after cloning:
+
 ```bash
 git submodule init
 git submodule update
 ```
+
 EOF
 
 # Commit the reference file
+
 git add docs/QUALITY-REFERENCE.md
 git commit -m "docs: add quality standards quick reference"
 git push
-```
+
+````
 
 ---
 
@@ -278,7 +295,7 @@ ls docs/quality-standards/examples/unit-tests/
 
 # 4. Reference the example when writing your tests
 cat docs/quality-standards/examples/unit-tests/jest-example.test.js
-```
+````
 
 ### Workflow 2: Before Submitting a PR
 
@@ -357,12 +374,14 @@ cat docs/quality-standards/docs/08-cicd-pipeline/README.md
 When someone clones your project, the submodule folder will be **empty** by default.
 
 **Option 1: Clone with submodules (Recommended)**
+
 ```bash
 # Tell new team members to use this command:
 git clone --recurse-submodules https://github.com/your-org/your-project.git
 ```
 
 **Option 2: Initialize submodules after cloning**
+
 ```bash
 # If they already cloned without --recurse-submodules:
 git clone https://github.com/your-org/your-project.git
@@ -374,7 +393,8 @@ git submodule update
 ```
 
 **Add this to your project's README.md:**
-```markdown
+
+````markdown
 ## Setup for New Developers
 
 ### Cloning the Repository
@@ -389,11 +409,13 @@ git clone --recurse-submodules https://github.com/your-org/your-project.git
 git submodule init
 git submodule update
 ```
+````
 
 The quality standards will be available in `docs/quality-standards/`
 
 See [Quality Reference](docs/QUALITY-REFERENCE.md) for quick links.
-```
+
+````
 
 ---
 
@@ -415,9 +437,10 @@ cd ../..
 git add docs/quality-standards
 git commit -m "docs: update quality standards to include Module 17"
 git push
-```
+````
 
 **Your team members will see:**
+
 ```bash
 # When they pull your changes
 git pull
@@ -432,6 +455,7 @@ git submodule update
 **Make it automatic:**
 
 Create a Git hook in `.git/hooks/post-merge`:
+
 ```bash
 #!/bin/bash
 # Automatically update submodules after git pull
@@ -440,6 +464,7 @@ git submodule update --init --recursive
 ```
 
 Or tell your team to use this alias:
+
 ```bash
 # Add to ~/.gitconfig or .git/config
 [alias]
@@ -479,6 +504,7 @@ git push
 Now everyone on your team will use v3.0.0 until you explicitly update.
 
 **To update to a newer version later:**
+
 ```bash
 cd docs/quality-standards
 git checkout v3.1.0  # Or: git checkout main
@@ -495,12 +521,14 @@ git push
 ### Problem 1: Submodule folder is empty
 
 **Symptoms:**
+
 ```bash
 ls docs/quality-standards/
 # (empty - no files)
 ```
 
 **Solution:**
+
 ```bash
 # Initialize and update submodules
 git submodule init
@@ -515,6 +543,7 @@ git submodule update --init --recursive
 ### Problem 2: "fatal: No url found for submodule"
 
 **Symptoms:**
+
 ```bash
 git submodule update
 # fatal: No url found for submodule path 'docs/quality-standards' in .gitmodules
@@ -536,6 +565,7 @@ git submodule add https://github.com/your-org/CodeQuality.git docs/quality-stand
 ### Problem 3: Submodule in "detached HEAD" state
 
 **Symptoms:**
+
 ```bash
 cd docs/quality-standards
 git status
@@ -545,6 +575,7 @@ git status
 **This is normal!** Submodules are designed to point to specific commits, not branches.
 
 **If you need to make changes in the submodule:**
+
 ```bash
 cd docs/quality-standards
 
@@ -569,12 +600,14 @@ git commit -m "docs: update submodule to include my changes"
 ### Problem 4: Merge conflicts with submodule
 
 **Symptoms:**
+
 ```bash
 git pull
 # CONFLICT (submodule): Merge conflict in docs/quality-standards
 ```
 
 **Solution:**
+
 ```bash
 # Choose which version to use
 
@@ -603,6 +636,7 @@ git commit
 You updated CodeQuality, but your project still shows old version.
 
 **Solution:**
+
 ```bash
 # Update the submodule
 cd docs/quality-standards
@@ -713,6 +747,7 @@ git commit -m "docs: remove quality-standards submodule"
    - Make changes in the original CodeQuality repo, then update
 
 2. **Do update regularly**
+
    ```bash
    # At least quarterly
    git submodule update --remote docs/quality-standards
@@ -721,6 +756,7 @@ git commit -m "docs: remove quality-standards submodule"
    ```
 
 3. **Do document in your README**
+
    ```markdown
    ## Quality Standards
 
@@ -742,6 +778,7 @@ git commit -m "docs: remove quality-standards submodule"
 ### ❌ Don'ts
 
 1. **Don't modify files in the submodule directly**
+
    ```bash
    # ❌ Bad
    cd docs/quality-standards
@@ -758,6 +795,7 @@ git commit -m "docs: remove quality-standards submodule"
    - Keep secrets in your main project only
 
 3. **Don't forget to update after git pull**
+
    ```bash
    # After git pull, always:
    git submodule update
@@ -876,6 +914,7 @@ Let's walk through a complete real-world scenario:
 ### Scenario: Adding CodeQuality to Your E-Commerce Project
 
 **1. Initial Setup**
+
 ```bash
 # You're working on an e-commerce app
 cd ~/projects/shop-smart
@@ -890,6 +929,7 @@ git push
 ```
 
 **2. Starting a New Feature: Shopping Cart**
+
 ```bash
 # Check the user story template
 cat docs/quality-standards/templates/user-story.md
@@ -905,6 +945,7 @@ cat docs/quality-standards/examples/unit-tests/jest-example.test.js
 ```
 
 **3. Writing Tests**
+
 ```bash
 # Reference the examples
 ls docs/quality-standards/examples/unit-tests/
@@ -919,6 +960,7 @@ python docs/quality-standards/examples/agentic-qa/autonomous-test-suite/main.py 
 ```
 
 **4. Before PR**
+
 ```bash
 # Check code review checklist
 cat docs/quality-standards/templates/code-review-checklist.md
@@ -931,6 +973,7 @@ python docs/quality-standards/examples/agentic-qa/multi-agent-code-review/review
 ```
 
 **5. Update Quality Standards (Quarterly)**
+
 ```bash
 # New version of CodeQuality released
 git submodule update --remote docs/quality-standards
@@ -950,6 +993,7 @@ git push
 ```
 
 **6. New Team Member Joins**
+
 ```bash
 # They clone the project
 git clone --recurse-submodules https://github.com/company/shop-smart.git
@@ -968,16 +1012,17 @@ cat docs/QUALITY-REFERENCE.md
 
 ### Git Submodule vs Other Approaches
 
-| Approach | Pros | Cons | Best For |
-|----------|------|------|----------|
-| **Git Submodule** | Version controlled, separate repos, updates cleanly | Extra commands, can be confusing | Shared documentation, libraries |
-| **Git Subtree** | Simpler for team, no special commands | Merges history, harder to update | Vendored dependencies |
-| **Copy Files** | Simple, no git complexity | Out of sync, no updates, duplication | One-time templates |
-| **Symlinks** | Fast, no duplication | Breaks on Windows, not in git | Local development only |
-| **Package Manager** | Designed for dependencies, versioning | Requires packaging, publishing | Actual code dependencies |
-| **Monorepo** | Everything together, easy refactoring | Large repo, more complex tooling | Tightly coupled projects |
+| Approach            | Pros                                                | Cons                                 | Best For                        |
+| ------------------- | --------------------------------------------------- | ------------------------------------ | ------------------------------- |
+| **Git Submodule**   | Version controlled, separate repos, updates cleanly | Extra commands, can be confusing     | Shared documentation, libraries |
+| **Git Subtree**     | Simpler for team, no special commands               | Merges history, harder to update     | Vendored dependencies           |
+| **Copy Files**      | Simple, no git complexity                           | Out of sync, no updates, duplication | One-time templates              |
+| **Symlinks**        | Fast, no duplication                                | Breaks on Windows, not in git        | Local development only          |
+| **Package Manager** | Designed for dependencies, versioning               | Requires packaging, publishing       | Actual code dependencies        |
+| **Monorepo**        | Everything together, easy refactoring               | Large repo, more complex tooling     | Tightly coupled projects        |
 
 **For CodeQuality documentation:** **Git Submodule is ideal** because:
+
 - ✅ Documentation updates frequently
 - ✅ You want to reference specific versions
 - ✅ Multiple teams/projects use the same standards
@@ -992,6 +1037,7 @@ cat docs/QUALITY-REFERENCE.md
 Update your CI/CD to initialize submodules:
 
 **GitHub Actions:**
+
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -1004,7 +1050,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: recursive  # ← Important!
+          submodules: recursive # ← Important!
 
       - name: Verify quality standards
         run: |
@@ -1014,10 +1060,11 @@ jobs:
 ```
 
 **GitLab CI:**
+
 ```yaml
 # .gitlab-ci.yml
 variables:
-  GIT_SUBMODULE_STRATEGY: recursive  # ← Important!
+  GIT_SUBMODULE_STRATEGY: recursive # ← Important!
 
 test:
   script:
@@ -1061,6 +1108,7 @@ RUN cat docs/quality-standards/templates/user-story.md
 ### Quick Wins
 
 **Immediately after setup, you can:**
+
 - Reference any template: `cat docs/quality-standards/templates/user-story.md`
 - Copy examples: `cp docs/quality-standards/examples/unit-tests/jest-example.test.js tests/`
 - Run AI agents: `python docs/quality-standards/examples/agentic-qa/...`
@@ -1079,16 +1127,19 @@ RUN cat docs/quality-standards/templates/user-story.md
 ## Additional Resources
 
 ### Official Git Documentation
+
 - [Git Submodules Guide](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 - [Pro Git Book - Chapter 7.11](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
 ### CodeQuality Resources
+
 - [Main README](../../README.md) - Overview of all modules
 - [Module 16: Agentic Workflows](../16-agentic-workflows/16-README.md) - Autonomous AI agents
 - [Templates Directory](../../templates/) - All available templates
 - [Examples Directory](../../examples/) - Working code examples
 
 ### Video Tutorials
+
 - Git Submodules Basics (YouTube)
 - Advanced Git Submodules (YouTube)
 
@@ -1127,6 +1178,7 @@ A: Create a post-merge Git hook or a `pullall` alias (see [Team Collaboration](#
 Git submodules are a powerful way to reference external repositories while maintaining clean separation and version control. By following this guide, you've set up your project to always have access to the latest quality standards, templates, and examples from CodeQuality.
 
 **Remember:**
+
 - Submodules are **references**, not copies
 - Update **intentionally**, not automatically
 - Use as **read-only documentation**

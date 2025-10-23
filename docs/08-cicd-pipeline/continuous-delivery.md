@@ -28,10 +28,11 @@ stages:
   - deploy-production
 ```
 
-###  2. Work in Small Batches
+### 2. Work in Small Batches
 
 ```markdown
 **Small Batch Benefits:**
+
 - Easier to identify issues
 - Faster feedback
 - Lower risk
@@ -82,6 +83,7 @@ jobs:
 
 ```markdown
 **Shared Ownership:**
+
 - Developers deploy their own code
 - On-call rotation for all team members
 - No separate "ops" team
@@ -92,6 +94,7 @@ jobs:
 
 ```markdown
 **Metrics to Track:**
+
 - Deployment frequency
 - Lead time for changes
 - Change failure rate
@@ -303,19 +306,19 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 2  # Max 2 extra pods during update
-      maxUnavailable: 1  # Max 1 pod down during update
+      maxSurge: 2 # Max 2 extra pods during update
+      maxUnavailable: 1 # Max 1 pod down during update
   template:
     spec:
       containers:
-      - name: app
-        image: myapp:latest
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: app
+          image: myapp:latest
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ```
 
 ## Feature Flags in CD
@@ -337,10 +340,10 @@ class FeatureFlags {
   // Gradual rollout
   async enableGradually(featureName) {
     const schedule = [
-      { day: 1, percentage: 1 },   // 1% of users
-      { day: 2, percentage: 5 },   // 5% of users
-      { day: 3, percentage: 25 },  // 25% of users
-      { day: 5, percentage: 100 }  // All users
+      { day: 1, percentage: 1 }, // 1% of users
+      { day: 2, percentage: 5 }, // 5% of users
+      { day: 3, percentage: 25 }, // 25% of users
+      { day: 5, percentage: 100 }, // All users
     ];
 
     for (const stage of schedule) {
@@ -447,24 +450,24 @@ jobs:
 const cdMetrics = {
   // Deployment Frequency
   deploymentFrequency: {
-    perDay: 8,  // Elite: multiple per day
+    perDay: 8, // Elite: multiple per day
     perWeek: 56,
-    perMonth: 240
+    perMonth: 240,
   },
 
   // Lead Time for Changes
   leadTime: {
-    commitToDeployMinutes: 45,  // Elite: <1 hour
-    codeToProdHours: 2
+    commitToDeployMinutes: 45, // Elite: <1 hour
+    codeToProdHours: 2,
   },
 
   // Change Failure Rate
-  changeFailureRate: 8,  // % (Elite: 0-15%)
+  changeFailureRate: 8, // % (Elite: 0-15%)
 
   // Mean Time to Recovery
   mttr: {
-    minutes: 15  // Elite: <1 hour
-  }
+    minutes: 15, // Elite: <1 hour
+  },
 };
 ```
 
@@ -486,7 +489,7 @@ DEPLOYMENT_TAG=v${APP_VERSION}
 class UserMigration {
   async up() {
     // 1. Add new column (nullable)
-    await db.schema.table('users', (table) => {
+    await db.schema.table('users', table => {
       table.string('email').nullable();
     });
 
@@ -505,7 +508,7 @@ app.get('/health', async (req, res) => {
   const checks = {
     database: await checkDatabase(),
     redis: await checkRedis(),
-    externalAPI: await checkExternalAPI()
+    externalAPI: await checkExternalAPI(),
   };
 
   const healthy = Object.values(checks).every(c => c.healthy);
@@ -514,7 +517,7 @@ app.get('/health', async (req, res) => {
     status: healthy ? 'healthy' : 'unhealthy',
     checks,
     version: process.env.APP_VERSION,
-    timestamp: new Date()
+    timestamp: new Date(),
   });
 });
 ```
@@ -562,4 +565,4 @@ rollback() {
 
 ---
 
-*Part of: [CI/CD Pipeline](README.md)*
+_Part of: [CI/CD Pipeline](README.md)_

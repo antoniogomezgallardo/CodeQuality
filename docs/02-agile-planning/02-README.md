@@ -1,12 +1,15 @@
 # Agile Planning
 
 ## Purpose
+
 Master agile planning practices to deliver high-quality software incrementally through well-defined user stories, clear acceptance criteria, and robust definitions of ready and done.
 
 ## Context
+
 Agile planning transforms requirements into actionable work items that teams can deliver in short iterations, ensuring continuous value delivery and quality.
 
 ## Prerequisites
+
 - Understanding of [Requirements Engineering](../01-requirements/README.md)
 - Basic knowledge of Agile/Scrum methodology
 - Familiarity with iterative development
@@ -50,9 +53,11 @@ graph TD
 ### INVEST Criteria Deep Dive
 
 #### Independent
+
 **Why It Matters:** Reduces dependencies and allows flexible prioritization
 
 **Good Example:**
+
 ```
 Story A: User can register with email
 Story B: User can login with email
@@ -60,6 +65,7 @@ Story B: User can login with email
 ```
 
 **Bad Example:**
+
 ```
 Story A: User sees dashboard
 Story B: Dashboard shows user data
@@ -67,9 +73,11 @@ Story B: Dashboard shows user data
 ```
 
 #### Negotiable
+
 **Why It Matters:** Details emerge through conversation, not rigid specifications
 
 **Good Approach:**
+
 ```
 Story: User can export data
 Negotiable aspects:
@@ -79,14 +87,17 @@ Negotiable aspects:
 ```
 
 #### Valuable
+
 **Why It Matters:** Every story must deliver business or user value
 
 **Value Types:**
+
 - **User Value:** Solves user problem
 - **Business Value:** Increases revenue, reduces cost
 - **Technical Value:** Reduces debt, improves performance
 
 **Value Statement Template:**
+
 ```
 This story provides value by:
 - Reducing [metric] by [amount]
@@ -96,23 +107,28 @@ This story provides value by:
 ```
 
 #### Estimable
+
 **Why It Matters:** Teams need to plan and commit to work
 
 **Making Stories Estimable:**
+
 1. Break down if too large
 2. Spike if too uncertain
 3. Clarify acceptance criteria
 4. Identify technical approach
 
 **Estimation Techniques:**
+
 - Planning Poker
 - T-Shirt Sizing (XS, S, M, L, XL)
 - Fibonacci Sequence (1, 2, 3, 5, 8, 13)
 
 #### Small
+
 **Why It Matters:** Fits within a sprint and provides fast feedback
 
 **Size Guidelines:**
+
 ```
 1-2 points: 1-2 days
 3-5 points: 2-3 days
@@ -121,9 +137,11 @@ This story provides value by:
 ```
 
 #### Testable
+
 **Why It Matters:** Confirms story completion and quality
 
 **Testability Checklist:**
+
 - [ ] Clear success criteria
 - [ ] Measurable outcomes
 - [ ] Defined test scenarios
@@ -132,6 +150,7 @@ This story provides value by:
 ### User Story Templates
 
 #### Basic Template
+
 ```markdown
 ## Story: [Title]
 
@@ -140,17 +159,21 @@ This story provides value by:
 **So that** [benefit]
 
 ### Acceptance Criteria
+
 - [ ] Given [context], when [action], then [outcome]
 - [ ] Given [context], when [action], then [outcome]
 
 ### Technical Notes
+
 [Implementation considerations]
 
 ### Dependencies
+
 [Other stories or systems]
 ```
 
 #### Job Story Alternative
+
 ```
 When [situation]
 I want to [motivation]
@@ -163,6 +186,7 @@ So I can ensure inventory availability
 ```
 
 #### Feature Story Format
+
 ```
 Feature: [Feature name]
 In order to [benefit]
@@ -180,6 +204,7 @@ Then [expected result]
 ### Writing Effective Acceptance Criteria
 
 #### Characteristics
+
 - **Specific:** No ambiguity
 - **Measurable:** Can verify completion
 - **Achievable:** Possible to implement
@@ -217,6 +242,7 @@ Scenario: Failed login
 ### Acceptance Criteria: User Profile Update
 
 Functional:
+
 - [ ] User can update first name
 - [ ] User can update last name
 - [ ] User can update email
@@ -225,12 +251,14 @@ Functional:
 - [ ] Confirmation message displayed
 
 Validation:
+
 - [ ] Email format validated
 - [ ] Required fields enforced
 - [ ] Image size limit enforced
 - [ ] Duplicate email prevented
 
 Security:
+
 - [ ] Authentication required
 - [ ] Can only edit own profile
 - [ ] Audit log created
@@ -257,6 +285,7 @@ Security:
 ### Scenarios for Shopping Cart
 
 **Scenario 1: Adding items**
+
 - User browses products
 - User clicks "Add to Cart"
 - Cart icon updates with count
@@ -264,6 +293,7 @@ Security:
 - Item appears in cart view
 
 **Scenario 2: Updating quantity**
+
 - User opens cart
 - User changes quantity
 - Price updates automatically
@@ -271,6 +301,7 @@ Security:
 - Total recalculated
 
 **Scenario 3: Removing items**
+
 - User clicks remove button
 - Confirmation dialog appears
 - Item removed on confirm
@@ -281,6 +312,7 @@ Security:
 ## Definition of Ready (DoR)
 
 ### Purpose
+
 Ensures stories are properly prepared before development begins, reducing waste and rework.
 
 ### DoR Checklist
@@ -289,35 +321,41 @@ Ensures stories are properly prepared before development begins, reducing waste 
 ## Definition of Ready Checklist
 
 ### Story Quality
+
 - [ ] User story follows INVEST criteria
 - [ ] Business value is clear
 - [ ] User/stakeholder identified
 
 ### Requirements
+
 - [ ] Acceptance criteria defined
 - [ ] Dependencies identified
 - [ ] Non-functional requirements specified
 - [ ] Edge cases considered
 
 ### Design & Technical
+
 - [ ] Technical approach discussed
 - [ ] Architecture impact assessed
 - [ ] API contracts defined (if applicable)
 - [ ] UI/UX designs available (if applicable)
 
 ### Estimation & Planning
+
 - [ ] Story estimated by team
 - [ ] Fits within sprint capacity
 - [ ] Prioritized by Product Owner
 - [ ] No blocking dependencies
 
 ### Testing
+
 - [ ] Test scenarios identified
 - [ ] Test data requirements known
 - [ ] Performance criteria defined
 - [ ] Security requirements clear
 
 ### Team Alignment
+
 - [ ] Questions answered
 - [ ] Team understands story
 - [ ] Definition of Done applicable
@@ -327,12 +365,14 @@ Ensures stories are properly prepared before development begins, reducing waste 
 ### DoR Enforcement
 
 **Benefits of Enforcement:**
+
 - Reduces mid-sprint surprises
 - Improves estimation accuracy
 - Increases team velocity
 - Enhances quality
 
 **When to Be Flexible:**
+
 - Emergency fixes
 - Time-sensitive features
 - Spike/research stories
@@ -341,6 +381,7 @@ Ensures stories are properly prepared before development begins, reducing waste 
 ## Definition of Done (DoD)
 
 ### Purpose
+
 Shared understanding of work completion ensuring quality and preventing technical debt accumulation.
 
 ### DoD Levels
@@ -351,12 +392,14 @@ Shared understanding of work completion ensuring quality and preventing technica
 ## Definition of Done - User Story
 
 ### Code
+
 - [ ] Code complete and follows standards
 - [ ] Code reviewed by peer
 - [ ] No commented-out code
 - [ ] Technical debt logged if created
 
 ### Testing
+
 - [ ] Unit tests written and passing
 - [ ] Integration tests passing
 - [ ] Acceptance criteria verified
@@ -364,12 +407,14 @@ Shared understanding of work completion ensuring quality and preventing technica
 - [ ] Edge cases tested
 
 ### Documentation
+
 - [ ] Code commented appropriately
 - [ ] API documentation updated
 - [ ] User documentation updated
 - [ ] README updated if needed
 
 ### Quality
+
 - [ ] No critical bugs
 - [ ] Code coverage > 80%
 - [ ] Security scan passed
@@ -377,12 +422,14 @@ Shared understanding of work completion ensuring quality and preventing technica
 - [ ] Accessibility standards met
 
 ### Integration
+
 - [ ] Merged to main branch
 - [ ] Build pipeline green
 - [ ] Deployed to staging
 - [ ] No regression issues
 
 ### Review
+
 - [ ] Demo to Product Owner
 - [ ] Acceptance confirmed
 - [ ] Metrics updated
@@ -394,26 +441,31 @@ Shared understanding of work completion ensuring quality and preventing technica
 ## Definition of Done - Sprint
 
 ### Delivery
+
 - [ ] All committed stories completed
 - [ ] Sprint goal achieved
 - [ ] No incomplete work
 
 ### Quality
+
 - [ ] Zero critical defects
 - [ ] Technical debt not increased
 - [ ] Performance benchmarks met
 
 ### Documentation
+
 - [ ] Release notes prepared
 - [ ] Known issues documented
 - [ ] Deployment guide updated
 
 ### Demonstration
+
 - [ ] Sprint demo prepared
 - [ ] Stakeholders invited
 - [ ] Feedback collected
 
 ### Retrospective
+
 - [ ] Retrospective conducted
 - [ ] Action items identified
 - [ ] Improvements planned
@@ -425,29 +477,34 @@ Shared understanding of work completion ensuring quality and preventing technica
 ## Definition of Done - Release
 
 ### Functionality
+
 - [ ] All release features complete
 - [ ] Feature toggles configured
 - [ ] Backward compatibility verified
 
 ### Testing
+
 - [ ] Full regression testing passed
 - [ ] Performance testing completed
 - [ ] Security testing passed
 - [ ] User acceptance testing done
 
 ### Documentation
+
 - [ ] User guides updated
 - [ ] API documentation published
 - [ ] Training materials ready
 - [ ] Support documentation prepared
 
 ### Deployment
+
 - [ ] Production deployment plan ready
 - [ ] Rollback plan documented
 - [ ] Monitoring configured
 - [ ] Alerts set up
 
 ### Business
+
 - [ ] Marketing materials ready
 - [ ] Support team trained
 - [ ] Legal review completed
@@ -466,6 +523,7 @@ graph LR
 ```
 
 **Evolution Examples:**
+
 - Month 1: Code complete, basic tests
 - Month 3: + Code review, 70% coverage
 - Month 6: + Security scan, 80% coverage
@@ -476,6 +534,7 @@ graph LR
 ### Planning Poker
 
 **Process:**
+
 1. PO presents story
 2. Team asks questions
 3. Everyone selects card
@@ -485,6 +544,7 @@ graph LR
 7. Reach consensus
 
 **Fibonacci Scale:**
+
 ```
 1 - Trivial (few hours)
 2 - Simple (half day)
@@ -498,6 +558,7 @@ graph LR
 ### T-Shirt Sizing
 
 **Scale:**
+
 ```
 XS - Few hours
 S  - 1 day
@@ -507,6 +568,7 @@ XL - 1 week+
 ```
 
 **When to Use:**
+
 - Initial backlog estimation
 - Rough capacity planning
 - Quick prioritization
@@ -514,6 +576,7 @@ XL - 1 week+
 ### Affinity Estimation
 
 **Process:**
+
 1. Write all stories on cards
 2. Team silently groups by size
 3. Discuss outliers
@@ -537,9 +600,11 @@ Estimate = (2 + 12 + 6) / 6 = 3.3 days
 ### Sprint Planning Meeting
 
 #### Part 1: What (Sprint Goal)
+
 **Duration:** 2 hours (2-week sprint)
 
 **Agenda:**
+
 1. Review product backlog
 2. Discuss sprint goal
 3. Select stories for sprint
@@ -547,6 +612,7 @@ Estimate = (2 + 12 + 6) / 6 = 3.3 days
 5. Commit to sprint goal
 
 **Sprint Goal Template:**
+
 ```
 By the end of this sprint, we will have [deliverable]
 that enables [user/business value]
@@ -554,9 +620,11 @@ as measured by [success metric]
 ```
 
 #### Part 2: How (Task Breakdown)
+
 **Duration:** 2 hours (2-week sprint)
 
 **Activities:**
+
 1. Break stories into tasks
 2. Estimate task hours
 3. Identify dependencies
@@ -564,6 +632,7 @@ as measured by [success metric]
 5. Validate feasibility
 
 **Task Breakdown Example:**
+
 ```
 Story: User Login
 ├── Frontend Tasks
@@ -586,14 +655,15 @@ Total: 25 hours
 ```markdown
 ## Sprint Capacity Calculator
 
-Team Member | Available Days | Hours/Day | Total Hours | Buffer (20%) | Net Capacity
-------------|---------------|-----------|-------------|--------------|-------------
-Developer 1 | 9 | 6 | 54 | 11 | 43
-Developer 2 | 10 | 6 | 60 | 12 | 48
-Tester | 10 | 6 | 60 | 12 | 48
-**Total** | - | - | **174** | **35** | **139**
+| Team Member | Available Days | Hours/Day | Total Hours | Buffer (20%) | Net Capacity |
+| ----------- | -------------- | --------- | ----------- | ------------ | ------------ |
+| Developer 1 | 9              | 6         | 54          | 11           | 43           |
+| Developer 2 | 10             | 6         | 60          | 12           | 48           |
+| Tester      | 10             | 6         | 60          | 12           | 48           |
+| **Total**   | -              | -         | **174**     | **35**       | **139**      |
 
 Velocity-Based:
+
 - Last 3 sprints: 28, 32, 30 points
 - Average: 30 points
 - Capacity: 30 points
@@ -606,6 +676,7 @@ Velocity-Based:
 **When:** Weekly, 5-10% of sprint time
 
 **Activities:**
+
 - Add new stories
 - Remove obsolete items
 - Re-prioritize based on value
@@ -616,6 +687,7 @@ Velocity-Based:
 ### Prioritization Techniques
 
 #### MoSCoW Method
+
 - **M**ust have: Critical for release
 - **S**hould have: Important but not critical
 - **C**ould have: Nice to have
@@ -651,6 +723,7 @@ Priority: Story B first
 ### Velocity
 
 **Calculation:**
+
 ```
 Velocity = Story Points Completed / Sprint
 
@@ -662,6 +735,7 @@ Average Velocity: 30 points
 ```
 
 **Use Cases:**
+
 - Sprint planning
 - Release forecasting
 - Team capacity understanding
@@ -718,16 +792,19 @@ Cycle Time: 2.25 days
 ### Planning Anti-Patterns
 
 **Over-commitment**
+
 - Taking more than velocity suggests
 - Not accounting for meetings/overhead
 - Ignoring team feedback
 
 **Under-specification**
+
 - Vague acceptance criteria
 - Missing non-functional requirements
 - Unclear dependencies
 
 **Horizontal Slicing**
+
 - All backend in one sprint
 - All frontend in next sprint
 - No deliverable value
@@ -750,15 +827,16 @@ Cycle Time: 2.25 days
 
 ### Digital Tools
 
-| Tool | Best For | Key Features |
-|------|----------|--------------|
-| Jira | Large teams | Customizable workflows |
-| Azure DevOps | Microsoft stack | Full integration |
-| Trello | Simple projects | Visual boards |
-| Asana | Cross-functional | Multiple views |
-| Linear | Modern teams | Speed and simplicity |
+| Tool         | Best For         | Key Features           |
+| ------------ | ---------------- | ---------------------- |
+| Jira         | Large teams      | Customizable workflows |
+| Azure DevOps | Microsoft stack  | Full integration       |
+| Trello       | Simple projects  | Visual boards          |
+| Asana        | Cross-functional | Multiple views         |
+| Linear       | Modern teams     | Speed and simplicity   |
 
 ### Physical Tools
+
 - Story cards
 - Planning poker cards
 - Task board
@@ -770,12 +848,14 @@ Cycle Time: 2.25 days
 ### Sprint Planning Checklist
 
 **Pre-Planning:**
+
 - [ ] Backlog refined
 - [ ] Stories ready (DoR met)
 - [ ] Team capacity known
 - [ ] Previous retrospective actions reviewed
 
 **During Planning:**
+
 - [ ] Sprint goal defined
 - [ ] Stories selected and estimated
 - [ ] Tasks identified
@@ -783,6 +863,7 @@ Cycle Time: 2.25 days
 - [ ] Risks discussed
 
 **Post-Planning:**
+
 - [ ] Sprint backlog created
 - [ ] Burndown chart initialized
 - [ ] Team committed
@@ -791,16 +872,19 @@ Cycle Time: 2.25 days
 ## References
 
 ### Books
+
 - "User Stories Applied" - Mike Cohn
 - "Agile Estimating and Planning" - Mike Cohn
 - "Scrum: The Art of Doing Twice the Work in Half the Time" - Jeff Sutherland
 
 ### Frameworks
+
 - Scrum Guide - scrumguides.org
 - SAFe - scaledagileframework.com
 - LeSS - less.works
 
 ### Certifications
+
 - Certified Scrum Master (CSM)
 - Professional Scrum Master (PSM)
 - PMI-ACP
@@ -816,4 +900,4 @@ Cycle Time: 2.25 days
 
 ---
 
-*Next: [Definition of Ready](definition-of-ready.md) - Detailed DoR implementation*
+_Next: [Definition of Ready](definition-of-ready.md) - Detailed DoR implementation_

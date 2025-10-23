@@ -142,7 +142,7 @@ class CanaryDeployment {
   async deployCanary(version, percentage) {
     // Calculate replica counts
     const totalReplicas = 10;
-    const canaryReplicas = Math.ceil(totalReplicas * percentage / 100);
+    const canaryReplicas = Math.ceil((totalReplicas * percentage) / 100);
     const stableReplicas = totalReplicas - canaryReplicas;
 
     // Update deployments
@@ -156,7 +156,7 @@ class CanaryDeployment {
     return (
       metrics.errorRate < 0.01 && // <1% error rate
       metrics.latencyP99 < 1000 && // <1s p99 latency
-      metrics.successRate > 0.99   // >99% success rate
+      metrics.successRate > 0.99 // >99% success rate
     );
   }
 }
@@ -233,28 +233,28 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: app
-        image: myapp:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: database-url
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        - name: app
+          image: myapp:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: database-url
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
 ```
 
 ## Deployment Scripts
@@ -319,7 +319,7 @@ class DatabaseMigration {
       for (const migration of pending) {
         console.log(`Running migration: ${migration.name}`);
 
-        await this.db.transaction(async (trx) => {
+        await this.db.transaction(async trx => {
           await migration.up(trx);
           await this.recordMigration(migration.name, trx);
         });
@@ -339,7 +339,7 @@ class DatabaseMigration {
       name: '2024_01_15_add_email_to_users',
       async up(db) {
         // Step 1: Add column (nullable)
-        await db.schema.alterTable('users', (table) => {
+        await db.schema.alterTable('users', table => {
           table.string('email').nullable();
         });
 
@@ -352,15 +352,15 @@ class DatabaseMigration {
         }
 
         // Step 3: Make non-nullable
-        await db.schema.alterTable('users', (table) => {
+        await db.schema.alterTable('users', table => {
           table.string('email').notNullable().alter();
         });
 
         // Step 4: Add unique constraint
-        await db.schema.alterTable('users', (table) => {
+        await db.schema.alterTable('users', table => {
           table.unique(['email']);
         });
-      }
+      },
     };
   }
 }
@@ -413,7 +413,7 @@ class DeploymentVerification {
       this.healthCheck(environment),
       this.smokeTests(environment),
       this.metricsCheck(environment),
-      this.logCheck(environment)
+      this.logCheck(environment),
     ];
 
     const results = await Promise.all(checks);
@@ -434,7 +434,7 @@ class DeploymentVerification {
     const response = await fetch(`https://${env}.example.com/health`);
     return {
       name: 'Health Check',
-      passed: response.ok
+      passed: response.ok,
     };
   }
 
@@ -443,7 +443,7 @@ class DeploymentVerification {
     const tests = [
       () => this.testUserLogin(env),
       () => this.testDataRetrieval(env),
-      () => this.testCriticalFeature(env)
+      () => this.testCriticalFeature(env),
     ];
 
     const results = await Promise.all(tests.map(t => t()));
@@ -451,7 +451,7 @@ class DeploymentVerification {
 
     return {
       name: 'Smoke Tests',
-      passed
+      passed,
     };
   }
 
@@ -459,14 +459,11 @@ class DeploymentVerification {
     // Check error rates, latency
     const metrics = await this.getMetrics(env);
 
-    const passed = (
-      metrics.errorRate < 0.01 &&
-      metrics.latencyP99 < 1000
-    );
+    const passed = metrics.errorRate < 0.01 && metrics.latencyP99 < 1000;
 
     return {
       name: 'Metrics Check',
-      passed
+      passed,
     };
   }
 }
@@ -489,7 +486,7 @@ const deploymentMetrics = {
   rollbackRate: 2, // %
 
   // Time to rollback
-  avgRollbackTime: 3 // minutes
+  avgRollbackTime: 3, // minutes
 };
 ```
 
@@ -507,4 +504,4 @@ const deploymentMetrics = {
 
 ---
 
-*Part of: [CI/CD Pipeline](README.md)*
+_Part of: [CI/CD Pipeline](README.md)_

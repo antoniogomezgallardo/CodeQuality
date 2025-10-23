@@ -265,9 +265,7 @@ async function detectAnomalies(service) {
   `;
 
   const currentTraffic = await queryPrometheus(trafficQuery);
-  const historicalTraffic = await queryPrometheus(
-    `${trafficQuery} offset 1h`
-  );
+  const historicalTraffic = await queryPrometheus(`${trafficQuery} offset 1h`);
 
   if (currentTraffic.length > 0 && historicalTraffic.length > 0) {
     const current = parseFloat(currentTraffic[0].value[1]);
@@ -339,16 +337,12 @@ async function createPagerDutyIncident(incident) {
       },
     };
 
-    const response = await axios.post(
-      'https://events.pagerduty.com/v2/enqueue',
-      payload,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token token=${config.pagerduty.apiKey}`,
-        },
-      }
-    );
+    const response = await axios.post('https://events.pagerduty.com/v2/enqueue', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token token=${config.pagerduty.apiKey}`,
+      },
+    });
 
     console.log(`PagerDuty incident created: ${response.data.dedup_key}`);
     return response.data;
@@ -420,7 +414,7 @@ async function sendSlackNotification(incident, action = 'created') {
     if (incident.violations && incident.violations.length > 0) {
       payload.attachments[0].fields.push({
         title: 'SLO Violations',
-        value: incident.violations.map((v) => `• ${v.message}`).join('\n'),
+        value: incident.violations.map(v => `• ${v.message}`).join('\n'),
         short: false,
       });
     }
@@ -428,7 +422,7 @@ async function sendSlackNotification(incident, action = 'created') {
     if (incident.anomalies && incident.anomalies.length > 0) {
       payload.attachments[0].fields.push({
         title: 'Anomalies Detected',
-        value: incident.anomalies.map((a) => `• ${a.message}`).join('\n'),
+        value: incident.anomalies.map(a => `• ${a.message}`).join('\n'),
         short: false,
       });
     }
@@ -462,7 +456,7 @@ async function monitorServices() {
     const violations = await checkSLOCompliance(service);
     if (violations.length > 0) {
       console.log(`  SLO Violations: ${violations.length}`);
-      violations.forEach((v) => console.log(`    - ${v.message}`));
+      violations.forEach(v => console.log(`    - ${v.message}`));
     } else {
       console.log(`  SLO Compliance: ✓ All metrics within SLO`);
     }
@@ -471,7 +465,7 @@ async function monitorServices() {
     const anomalies = await detectAnomalies(service);
     if (anomalies.length > 0) {
       console.log(`  Anomalies: ${anomalies.length}`);
-      anomalies.forEach((a) => console.log(`    - ${a.message}`));
+      anomalies.forEach(a => console.log(`    - ${a.message}`));
     }
 
     // Determine if we should create an incident
@@ -480,9 +474,10 @@ async function monitorServices() {
     if (!health.healthy || violations.length > 0) {
       // Create incident if not already active
       if (!incidentTracker.isActive(incidentKey)) {
-        const severity = !health.healthy || violations.some((v) => v.severity === 'critical')
-          ? 'critical'
-          : 'warning';
+        const severity =
+          !health.healthy || violations.some(v => v.severity === 'critical')
+            ? 'critical'
+            : 'warning';
 
         const incident = incidentTracker.createIncident(incidentKey, {
           service: service.name,
@@ -502,14 +497,18 @@ async function monitorServices() {
           await sendSlackNotification(incident, 'created');
         }
       } else {
-        console.log(`  ℹ️  Incident already active: ${incidentTracker.getActiveIncident(incidentKey).id}`);
+        console.log(
+          `  ℹ️  Incident already active: ${incidentTracker.getActiveIncident(incidentKey).id}`
+        );
       }
     } else {
       // Resolve incident if it exists
       if (incidentTracker.isActive(incidentKey)) {
         const incident = incidentTracker.resolveIncident(incidentKey);
         if (incident) {
-          console.log(`\n  ✅ INCIDENT RESOLVED: ${incident.id} (Duration: ${Math.round(incident.duration / 1000)}s)`);
+          console.log(
+            `\n  ✅ INCIDENT RESOLVED: ${incident.id} (Duration: ${Math.round(incident.duration / 1000)}s)`
+          );
           await sendSlackNotification(incident, 'resolved');
         }
       }
@@ -568,7 +567,7 @@ async function main() {
 
 // Run if executed directly
 if (require.main === module) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error('Fatal error:', error);
     process.exit(1);
   });

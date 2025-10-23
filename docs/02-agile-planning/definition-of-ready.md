@@ -73,14 +73,17 @@ The Definition of Ready (DoR) is a checklist of criteria that a user story or re
 ### Requirements Clarity
 
 #### User Story Elements
+
 ```markdown
 **Required:**
+
 - [ ] User role/persona identified
 - [ ] Desired functionality described
 - [ ] Business value/benefit stated
 - [ ] Priority assigned (MoSCoW, numeric, etc.)
 
 **Supporting Information:**
+
 - [ ] Background/context provided
 - [ ] Related user stories linked
 - [ ] Screenshots/mockups attached (if UI work)
@@ -88,6 +91,7 @@ The Definition of Ready (DoR) is a checklist of criteria that a user story or re
 ```
 
 #### Acceptance Criteria
+
 ```gherkin
 **Format: Given-When-Then**
 
@@ -104,6 +108,7 @@ And the file includes all transactions from the past 12 months
 
 ```markdown
 **Checklist:**
+
 - [ ] At least 3-5 testable acceptance criteria defined
 - [ ] Positive and negative scenarios included
 - [ ] Edge cases considered
@@ -115,6 +120,7 @@ And the file includes all transactions from the past 12 months
 ### Technical Readiness
 
 #### Architecture and Design
+
 ```markdown
 - [ ] Technical approach discussed and agreed upon
 - [ ] Architectural concerns addressed
@@ -125,6 +131,7 @@ And the file includes all transactions from the past 12 months
 ```
 
 #### Dependencies
+
 ```markdown
 - [ ] External dependencies identified and available
 - [ ] Internal dependencies mapped
@@ -134,6 +141,7 @@ And the file includes all transactions from the past 12 months
 ```
 
 #### Technical Debt
+
 ```markdown
 - [ ] Known technical debt documented
 - [ ] Refactoring needs identified
@@ -144,6 +152,7 @@ And the file includes all transactions from the past 12 months
 ### Team Understanding
 
 #### Knowledge Transfer
+
 ```markdown
 - [ ] Product Owner available for questions
 - [ ] Domain expert consulted (if needed)
@@ -153,6 +162,7 @@ And the file includes all transactions from the past 12 months
 ```
 
 #### Estimation
+
 ```markdown
 - [ ] Team participated in estimation
 - [ ] Story points/hours assigned
@@ -163,6 +173,7 @@ And the file includes all transactions from the past 12 months
 ### Compliance and Quality
 
 #### Non-Functional Requirements
+
 ```markdown
 - [ ] Performance targets defined
 - [ ] Security requirements specified
@@ -172,6 +183,7 @@ And the file includes all transactions from the past 12 months
 ```
 
 #### Quality Standards
+
 ```markdown
 - [ ] Test strategy defined
 - [ ] Code review process understood
@@ -185,6 +197,7 @@ And the file includes all transactions from the past 12 months
 
 ```markdown
 **Before Refinement:**
+
 1. Write user story with clear value proposition
 2. Gather supporting materials (mockups, examples, data)
 3. Define initial acceptance criteria
@@ -192,6 +205,7 @@ And the file includes all transactions from the past 12 months
 5. Assess priority and value
 
 **During Refinement:**
+
 1. Present story context and rationale
 2. Walk through acceptance criteria
 3. Answer team questions
@@ -199,6 +213,7 @@ And the file includes all transactions from the past 12 months
 5. Document decisions and clarifications
 
 **After Refinement:**
+
 1. Update story with agreed changes
 2. Ensure all DoR criteria are met
 3. Mark story as "Ready" in backlog
@@ -209,6 +224,7 @@ And the file includes all transactions from the past 12 months
 
 ```markdown
 **During Refinement:**
+
 1. Ask clarifying questions
 2. Identify technical concerns early
 3. Propose technical approaches
@@ -216,6 +232,7 @@ And the file includes all transactions from the past 12 months
 5. Suggest splitting if too large
 
 **Before Sprint Planning:**
+
 1. Review ready stories
 2. Identify any new questions
 3. Flag stories missing DoR criteria
@@ -226,6 +243,7 @@ And the file includes all transactions from the past 12 months
 
 ```markdown
 **Facilitate DoR Process:**
+
 1. Ensure DoR is documented and visible
 2. Coach team on DoR criteria
 3. Facilitate refinement sessions
@@ -233,6 +251,7 @@ And the file includes all transactions from the past 12 months
 5. Track DoR metrics (% stories meeting DoR)
 
 **Continuous Improvement:**
+
 1. Review DoR effectiveness in retrospectives
 2. Update criteria based on team feedback
 3. Address recurring DoR gaps
@@ -254,6 +273,7 @@ So that I can purchase them later without searching again
 **Priority:** High (P1)
 
 **Acceptance Criteria:**
+
 1. Given I'm logged in
    When I click "Add to Wishlist" on a product page
    Then the item is saved to my wishlist
@@ -269,11 +289,13 @@ So that I can purchase them later without searching again
    And I can choose to be notified when it's available
 
 **Technical Notes:**
+
 - Use existing user_items table with new item_type='wishlist'
 - Implement Redis caching for wishlist counts (header badge)
 - Max 100 items per wishlist
 
 **DoR Status:** ✅ Ready
+
 - Clear user value and business need
 - All acceptance criteria testable
 - Technical approach agreed (discussed in refinement)
@@ -295,6 +317,7 @@ So that I don't experience timeouts or performance issues
 **Priority:** Medium (P2)
 
 **Acceptance Criteria:**
+
 1. Given I request a collection endpoint (e.g., /api/v1/users)
    When the response contains >100 items
    Then the response is paginated with 100 items per page
@@ -312,16 +335,19 @@ So that I don't experience timeouts or performance issues
    Then I receive a 404 error with helpful message
 
 **Technical Notes:**
+
 - Implement cursor-based pagination for user-facing endpoints
 - Offset pagination acceptable for admin endpoints
 - Default page_size=100, max page_size=500
 - Add pagination to: /users, /products, /orders, /transactions
 
 **Dependencies:**
+
 - Database indexes on common sort fields (completed)
 - API versioning strategy in place (v1)
 
 **DoR Status:** ✅ Ready
+
 - Technical spike completed
 - Database performance tested with 10M records
 - All affected endpoints identified
@@ -342,6 +368,7 @@ So that I can select dates without the calendar closing unexpectedly
 **Priority:** Critical (P0)
 
 **Acceptance Criteria:**
+
 1. Given I open the date picker
    When I select a date
    Then the calendar remains open until I click outside or press Escape
@@ -355,6 +382,7 @@ So that I can select dates without the calendar closing unexpectedly
    Then the calendar doesn't close and reopen (no flicker)
 
 **Steps to Reproduce:**
+
 1. Navigate to any page with date picker
 2. Click on date input field
 3. Click on any date
@@ -362,12 +390,14 @@ So that I can select dates without the calendar closing unexpectedly
 5. Expected: Calendar should stay open for further selection
 
 **Technical Notes:**
+
 - Issue is in DatePicker.tsx line 145
 - Event propagation preventing default behavior
 - Fix requires updating onClick handler and adding stopPropagation
 - Regression test needed to prevent future breaks
 
 **DoR Status:** ✅ Ready
+
 - Root cause identified
 - Fix approach validated
 - Test scenario documented
@@ -378,6 +408,7 @@ So that I can select dates without the calendar closing unexpectedly
 ## Common DoR Anti-Patterns
 
 ### 1. Waterfall DoR
+
 ```markdown
 ❌ **Problem:** DoR requires detailed design docs before development
 
@@ -385,6 +416,7 @@ So that I can select dates without the calendar closing unexpectedly
 ```
 
 ### 2. Analysis Paralysis
+
 ```markdown
 ❌ **Problem:** Team endlessly refines stories trying to answer every question
 
@@ -392,6 +424,7 @@ So that I can select dates without the calendar closing unexpectedly
 ```
 
 ### 3. One-Size-Fits-All
+
 ```markdown
 ❌ **Problem:** Same DoR criteria for bugs, features, spikes, and technical stories
 
@@ -399,6 +432,7 @@ So that I can select dates without the calendar closing unexpectedly
 ```
 
 ### 4. DoR as Gate
+
 ```markdown
 ❌ **Problem:** DoR used to reject work or blame Product Owner
 
@@ -406,6 +440,7 @@ So that I can select dates without the calendar closing unexpectedly
 ```
 
 ### 5. Rigid Checklist
+
 ```markdown
 ❌ **Problem:** DoR checklist rigidly enforced regardless of context
 
@@ -429,7 +464,7 @@ const dorMetrics = {
   refinementEfficiency: totalRefinementHours / storiesRefined,
 
   // Stories meeting DoR on first refinement
-  firstTimeReadyRate: (storiesReadyFirstTime / totalStories) * 100
+  firstTimeReadyRate: (storiesReadyFirstTime / totalStories) * 100,
 };
 
 // Target metrics
@@ -443,6 +478,7 @@ const dorMetrics = {
 
 ```markdown
 **Indicators of Healthy DoR:**
+
 - ✅ 90%+ of stories meet DoR before sprint planning
 - ✅ <5% of stories pulled back from sprint due to lack of clarity
 - ✅ Minimal mid-sprint requirements changes
@@ -450,6 +486,7 @@ const dorMetrics = {
 - ✅ Sprint goals consistently achieved
 
 **Warning Signs:**
+
 - ⚠️ Frequent mid-sprint clarifications needed
 - ⚠️ Stories regularly carry over sprints
 - ⚠️ Team hesitant to commit to stories
@@ -460,6 +497,7 @@ const dorMetrics = {
 ## DoR Variants by Work Type
 
 ### Feature Stories
+
 ```markdown
 ✅ User value clearly stated
 ✅ Acceptance criteria defined (3-5 criteria)
@@ -469,6 +507,7 @@ const dorMetrics = {
 ```
 
 ### Technical Stories
+
 ```markdown
 ✅ Technical justification provided
 ✅ Business impact explained
@@ -478,6 +517,7 @@ const dorMetrics = {
 ```
 
 ### Bug Fixes
+
 ```markdown
 ✅ Steps to reproduce documented
 ✅ Expected vs. actual behavior clear
@@ -487,6 +527,7 @@ const dorMetrics = {
 ```
 
 ### Spikes
+
 ```markdown
 ✅ Research question clearly stated
 ✅ Time-boxed (usually 1-3 days)
@@ -511,4 +552,4 @@ const dorMetrics = {
 
 ---
 
-*Part of: [Agile Planning](README.md)*
+_Part of: [Agile Planning](README.md)_

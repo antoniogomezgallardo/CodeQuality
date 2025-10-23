@@ -1,10 +1,13 @@
 # Industry Standards for Software Quality
 
 ## Purpose
+
 Comprehensive reference for international and industry standards that guide software quality practices, testing, development, and security.
 
 ## Overview
+
 Industry standards provide:
+
 - Common terminology and definitions
 - Proven best practices
 - Quality benchmarks
@@ -18,7 +21,9 @@ Industry standards provide:
 The comprehensive international standard for software testing.
 
 #### Part 1: Concepts and Definitions
+
 **Key Concepts:**
+
 - Test process definition
 - Testing terminology
 - Risk-based testing
@@ -26,6 +31,7 @@ The comprehensive international standard for software testing.
 - Test organization roles
 
 **Testing Principles:**
+
 1. Testing shows presence of defects, not absence
 2. Exhaustive testing is impossible
 3. Early testing saves time and money
@@ -37,12 +43,14 @@ The comprehensive international standard for software testing.
 #### Part 2: Test Processes
 
 **Organizational Test Process:**
+
 - Test policy and strategy
 - Test management
 - Test monitoring and control
 - Test completion
 
 **Test Management Process:**
+
 ```
 Planning → Monitoring → Control → Completion
     ↓          ↓          ↓          ↓
@@ -50,6 +58,7 @@ Resources  Metrics    Actions   Reports
 ```
 
 **Dynamic Test Process:**
+
 1. Test design and implementation
 2. Test environment setup
 3. Test execution
@@ -58,6 +67,7 @@ Resources  Metrics    Actions   Reports
 #### Part 3: Test Documentation
 
 **Test Plan Template:**
+
 ```markdown
 1. Test Plan Identifier
 2. Introduction
@@ -78,6 +88,7 @@ Resources  Metrics    Actions   Reports
 ```
 
 **Test Case Specification:**
+
 - Test case identifier
 - Test objective
 - Preconditions
@@ -89,6 +100,7 @@ Resources  Metrics    Actions   Reports
 #### Part 4: Test Techniques
 
 **Black-Box Techniques:**
+
 - Equivalence partitioning
 - Boundary value analysis
 - Decision tables
@@ -97,6 +109,7 @@ Resources  Metrics    Actions   Reports
 - Classification tree method
 
 **White-Box Techniques:**
+
 - Statement coverage
 - Decision coverage
 - Condition coverage
@@ -104,6 +117,7 @@ Resources  Metrics    Actions   Reports
 - Path coverage
 
 **Experience-Based Techniques:**
+
 - Error guessing
 - Exploratory testing
 - Checklist-based testing
@@ -111,6 +125,7 @@ Resources  Metrics    Actions   Reports
 #### Part 5: Keyword-Driven Testing
 
 **Keyword Structure:**
+
 ```
 Keyword: LoginUser
 Arguments: [username, password]
@@ -128,48 +143,56 @@ Steps:
 Classic standard for test documentation (now incorporated into ISO/IEC/IEEE 29119).
 
 **Test Plan (TP)**
+
 - Scope and objectives
 - Test strategy
 - Resources and schedule
 - Risks and contingencies
 
 **Test Design Specification (TDS)**
+
 - Features to test
 - Test approach refinement
 - Pass/fail criteria
 - Test case identification
 
 **Test Case Specification (TCS)**
+
 - Input specifications
 - Output specifications
 - Environmental needs
 - Special procedural requirements
 
 **Test Procedure Specification (TPS)**
+
 - Step-by-step instructions
 - Setup requirements
 - Expected results for each step
 - Cleanup procedures
 
 **Test Item Transmittal Report (TTR)**
+
 - Items transmitted for testing
 - Location of items
 - Status of items
 - Approvals
 
 **Test Log (TL)**
+
 - Test execution chronology
 - Test environment details
 - Tester information
 - Observations
 
 **Test Incident Report (TIR)**
+
 - Incident description
 - Impact assessment
 - Priority and severity
 - Steps to reproduce
 
 **Test Summary Report (TSR)**
+
 - Testing summary
 - Comprehensive assessment
 - Evaluation against criteria
@@ -244,6 +267,7 @@ Classic standard for test documentation (now incorporated into ISO/IEC/IEEE 2911
 ```
 
 **Quality Characteristics:**
+
 - Correct
 - Unambiguous
 - Complete
@@ -258,10 +282,12 @@ Classic standard for test documentation (now incorporated into ISO/IEC/IEEE 2911
 **Process Categories:**
 
 #### 1. Agreement Processes
+
 - **Acquisition Process**: Obtain product/service
 - **Supply Process**: Provide product/service
 
 #### 2. Organizational Project-Enabling Processes
+
 - **Life Cycle Model Management**: Define and maintain processes
 - **Infrastructure Management**: Provide infrastructure
 - **Portfolio Management**: Initiate and sustain projects
@@ -269,6 +295,7 @@ Classic standard for test documentation (now incorporated into ISO/IEC/IEEE 2911
 - **Quality Management**: Ensure quality products/services
 
 #### 3. Technical Management Processes
+
 - **Project Planning**: Establish plans
 - **Project Assessment and Control**: Monitor and control
 - **Decision Management**: Make informed decisions
@@ -279,6 +306,7 @@ Classic standard for test documentation (now incorporated into ISO/IEC/IEEE 2911
 - **Quality Assurance**: Provide assurance
 
 #### 4. Technical Processes
+
 - **Business or Mission Analysis**: Define stakeholder needs
 - **Stakeholder Needs and Requirements**: Elicit requirements
 - **System Requirements Definition**: Transform needs to requirements
@@ -348,6 +376,7 @@ Portability
 ```
 
 **Quality in Use Model:**
+
 - Effectiveness
 - Efficiency
 - Satisfaction
@@ -361,51 +390,61 @@ Portability
 #### OWASP Top 10 (2021)
 
 **A01: Broken Access Control**
+
 - Bypassing access checks
 - Viewing/editing unauthorized data
 - Elevation of privilege
 
 **A02: Cryptographic Failures**
+
 - Transmission of data in clear text
 - Use of weak cryptographic algorithms
 - Missing or improper certificate validation
 
 **A03: Injection**
+
 - SQL, NoSQL, OS command injection
 - LDAP injection
 - Expression language injection
 
 **A04: Insecure Design**
+
 - Missing or ineffective control design
 - Lack of threat modeling
 - Insecure design patterns
 
 **A05: Security Misconfiguration**
+
 - Missing security hardening
 - Unnecessary features enabled
 - Default accounts and passwords
 
 **A06: Vulnerable and Outdated Components**
+
 - Unsupported/outdated software
 - Unknown component versions
 - Unpatched vulnerabilities
 
 **A07: Identification and Authentication Failures**
+
 - Permits automated attacks
 - Weak passwords
 - Missing or ineffective MFA
 
 **A08: Software and Data Integrity Failures**
+
 - Unverified CI/CD pipeline
 - Auto-update without integrity verification
 - Insecure deserialization
 
 **A09: Security Logging and Monitoring Failures**
+
 - Missing logging of critical events
 - Inadequate log monitoring
 - Delayed incident detection
 
 **A10: Server-Side Request Forgery (SSRF)**
+
 - Fetching remote resources without validation
 - URL manipulation
 - Firewall bypass
@@ -413,11 +452,13 @@ Portability
 #### OWASP ASVS (Application Security Verification Standard)
 
 **Verification Levels:**
+
 - **Level 1**: Basic security (all applications)
 - **Level 2**: Standard security (most applications)
 - **Level 3**: Advanced security (critical applications)
 
 **Requirements Categories:**
+
 1. Architecture, Design and Threat Modeling
 2. Authentication
 3. Session Management
@@ -436,6 +477,7 @@ Portability
 #### OWASP Testing Guide
 
 **Testing Categories:**
+
 1. Information Gathering
 2. Configuration and Deployment Management
 3. Identity Management
@@ -481,22 +523,26 @@ Act
 **Control Categories (Annex A):**
 
 **Organizational Controls:**
+
 - Information security policies
 - Organization of information security
 - Human resource security
 - Asset management
 
 **People Controls:**
+
 - Access control
 - Cryptography
 - Physical and environmental security
 
 **Physical Controls:**
+
 - Secure areas
 - Equipment security
 - Media handling
 
 **Technological Controls:**
+
 - System acquisition, development and maintenance
 - Supplier relationships
 - Incident management
@@ -510,49 +556,67 @@ Act
 **Four Principles (POUR):**
 
 #### 1. Perceivable
+
 **Guideline 1.1: Text Alternatives**
+
 - Provide text alternatives for non-text content
 
 **Guideline 1.2: Time-based Media**
+
 - Provide alternatives for time-based media
 
 **Guideline 1.3: Adaptable**
+
 - Create content in different ways without losing information
 
 **Guideline 1.4: Distinguishable**
+
 - Make it easier to see and hear content
 
 #### 2. Operable
+
 **Guideline 2.1: Keyboard Accessible**
+
 - All functionality available from keyboard
 
 **Guideline 2.2: Enough Time**
+
 - Provide users enough time to read and use content
 
 **Guideline 2.3: Seizures and Physical Reactions**
+
 - Do not design content known to cause seizures
 
 **Guideline 2.4: Navigable**
+
 - Help users navigate and find content
 
 **Guideline 2.5: Input Modalities**
+
 - Make it easier to operate functionality through various inputs
 
 #### 3. Understandable
+
 **Guideline 3.1: Readable**
+
 - Make text content readable and understandable
 
 **Guideline 3.2: Predictable**
+
 - Make web pages appear and operate in predictable ways
 
 **Guideline 3.3: Input Assistance**
+
 - Help users avoid and correct mistakes
 
 #### 4. Robust
+
 **Guideline 4.1: Compatible**
+
 - Maximize compatibility with current and future tools
 
 **Conformance Levels:**
+
 - **Level A**: Minimum level (must satisfy)
 - **Level AA**: Recommended level (should satisfy)
 - **Level AAA**: Enhanced level (may satisfy)
@@ -564,6 +628,7 @@ Act
 **Code Metrics:**
 
 **Maintainability Metrics:**
+
 - Cyclomatic complexity
 - Lines of code
 - Comment density
@@ -571,11 +636,13 @@ Act
 - Depth of inheritance tree
 
 **Reliability Metrics:**
+
 - Defect density
 - Mean time between failures
 - Error handling coverage
 
 **Security Metrics:**
+
 - Known vulnerability density
 - Security test coverage
 - Cryptographic strength
@@ -583,6 +650,7 @@ Act
 ### MISRA (Motor Industry Software Reliability Association)
 
 **For Safety-Critical Systems:**
+
 - C/C++ coding standards
 - Mandatory/required/advisory rules
 - Static analysis compliance
@@ -593,6 +661,7 @@ Act
 ### GDPR (General Data Protection Regulation)
 
 **Key Principles:**
+
 1. Lawfulness, fairness and transparency
 2. Purpose limitation
 3. Data minimization
@@ -602,6 +671,7 @@ Act
 7. Accountability
 
 **Technical Requirements:**
+
 - Privacy by design
 - Data protection impact assessment
 - Data breach notification
@@ -613,17 +683,20 @@ Act
 **Security Rule Requirements:**
 
 **Administrative Safeguards:**
+
 - Security management process
 - Assigned security responsibility
 - Workforce security
 - Information access management
 
 **Physical Safeguards:**
+
 - Facility access controls
 - Workstation use and security
 - Device and media controls
 
 **Technical Safeguards:**
+
 - Access control
 - Audit controls
 - Integrity controls
@@ -632,6 +705,7 @@ Act
 ### SOC 2 (Service Organization Control 2)
 
 **Trust Service Criteria:**
+
 - **Security**: Protection against unauthorized access
 - **Availability**: System available for operation and use
 - **Processing Integrity**: Complete, valid, accurate, timely
@@ -643,12 +717,14 @@ Act
 ### SAFe (Scaled Agile Framework)
 
 **Core Values:**
+
 1. Alignment
 2. Built-in Quality
 3. Transparency
 4. Program Execution
 
 **Quality Practices:**
+
 - Continuous Integration
 - Test-Driven Development
 - Pair Programming
@@ -659,12 +735,14 @@ Act
 ### DevOps Standards
 
 **DORA Metrics (State of DevOps):**
+
 - Deployment Frequency
 - Lead Time for Changes
 - Time to Restore Service
 - Change Failure Rate
 
 **The Three Ways:**
+
 1. **Flow**: Optimize delivery from dev to ops
 2. **Feedback**: Amplify feedback loops
 3. **Continual Learning**: Experimentation and learning
@@ -673,17 +751,18 @@ Act
 
 ### Standards Selection Matrix
 
-| Project Type | Core Standards | Optional Standards |
-|-------------|---------------|-------------------|
-| Web Application | ISO/IEC 25010, OWASP Top 10 | WCAG 2.1, SOC 2 |
-| Mobile App | ISO/IEC 25010, OWASP Mobile | IEEE 829, WCAG 2.1 |
-| Enterprise System | ISO/IEC 12207, ISO 27001 | SAFe, CMMI |
-| Medical Device | IEC 62304, ISO 14971 | MISRA, DO-178C |
-| Safety-Critical | ISO 26262, MISRA | DO-178C, IEC 61508 |
+| Project Type      | Core Standards              | Optional Standards |
+| ----------------- | --------------------------- | ------------------ |
+| Web Application   | ISO/IEC 25010, OWASP Top 10 | WCAG 2.1, SOC 2    |
+| Mobile App        | ISO/IEC 25010, OWASP Mobile | IEEE 829, WCAG 2.1 |
+| Enterprise System | ISO/IEC 12207, ISO 27001    | SAFe, CMMI         |
+| Medical Device    | IEC 62304, ISO 14971        | MISRA, DO-178C     |
+| Safety-Critical   | ISO 26262, MISRA            | DO-178C, IEC 61508 |
 
 ### Implementation Checklist
 
 **Planning Phase:**
+
 - [ ] Identify applicable standards
 - [ ] Understand compliance requirements
 - [ ] Assess current compliance level
@@ -691,6 +770,7 @@ Act
 - [ ] Allocate resources
 
 **Implementation Phase:**
+
 - [ ] Train team on standards
 - [ ] Update processes and procedures
 - [ ] Implement required documentation
@@ -698,6 +778,7 @@ Act
 - [ ] Establish verification process
 
 **Verification Phase:**
+
 - [ ] Conduct internal audits
 - [ ] Review documentation completeness
 - [ ] Verify process compliance
@@ -705,6 +786,7 @@ Act
 - [ ] Prepare for external audit
 
 **Maintenance Phase:**
+
 - [ ] Monitor standard updates
 - [ ] Update processes accordingly
 - [ ] Conduct regular reviews
@@ -714,6 +796,7 @@ Act
 ## References
 
 ### Standards Organizations
+
 - [ISO](https://www.iso.org) - International Organization for Standardization
 - [IEC](https://www.iec.ch) - International Electrotechnical Commission
 - [IEEE](https://www.ieee.org) - Institute of Electrical and Electronics Engineers
@@ -722,6 +805,7 @@ Act
 - [ISTQB](https://www.istqb.org) - International Software Testing Qualifications Board
 
 ### Standard Documents
+
 - ISO/IEC/IEEE 29119 (Software Testing)
 - ISO/IEC 25010 (Software Quality Models)
 - ISO/IEC 12207 (Software Life Cycle Processes)
@@ -736,4 +820,4 @@ Act
 
 ---
 
-*Part of: [Foundations of Software Quality](README.md)*
+_Part of: [Foundations of Software Quality](README.md)_

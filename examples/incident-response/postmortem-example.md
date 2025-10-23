@@ -18,12 +18,14 @@ On March 15, 2024, from 14:32 UTC to 16:47 UTC, the Payment Service experienced 
 ## Impact
 
 ### User Impact
+
 - **Affected Users:** ~12,000 users (15% of active users during incident window)
 - **Failed Transactions:** 1,847 payment attempts failed
 - **Delayed Transactions:** 3,422 payments were delayed by 5-30 minutes
 - **Customer Support Tickets:** 67 tickets filed during incident
 
 ### Business Impact
+
 - **Revenue Impact:** $45,000 in failed/delayed transactions
 - **SLO Impact:**
   - Payment Service availability: 98.1% (SLO: 99.5%)
@@ -31,6 +33,7 @@ On March 15, 2024, from 14:32 UTC to 16:47 UTC, the Payment Service experienced 
 - **Reputation:** Minimal - incident resolved before significant social media attention
 
 ### Technical Impact
+
 - **Services Affected:**
   - Payment Service (Primary)
   - Order Service (Degraded - retry queue backed up)
@@ -47,6 +50,7 @@ On March 15, 2024, from 14:32 UTC to 16:47 UTC, the Payment Service experienced 
 ### Detection (14:32 - 14:35)
 
 **14:32** - Automated alert fired: "Payment Service error rate exceeds 5% threshold"
+
 ```
 Alert: payment_service_error_rate
 Severity: Warning
@@ -64,11 +68,13 @@ Message: Error rate: 8.3% (threshold: 5%)
 **14:36** - Alice created incident Slack channel: #incident-2024-03-15-payment
 
 **14:37** - Checked service logs - found database connection timeout errors:
+
 ```
 ERROR: Unable to acquire database connection from pool
 ```
 
 **14:39** - Checked database metrics:
+
 - Connection count: 100/100 (maxed out)
 - CPU usage: 95%
 - Slow query log showing payment_transactions queries taking 5-8 seconds
@@ -76,6 +82,7 @@ ERROR: Unable to acquire database connection from pool
 **14:42** - Bob Smith (Tech Lead) joined incident as Technical Lead
 
 **14:44** - Identified slow query introduced in v2.3.1 (deployed at 14:15):
+
 ```sql
 SELECT * FROM payment_transactions pt
 LEFT JOIN customer_data cd ON pt.customer_id = cd.id
@@ -91,15 +98,18 @@ ORDER BY pt.created_at DESC
 ### Mitigation Attempts (14:50 - 16:30)
 
 **14:52** - **Attempt 1:** Add index to production database
+
 ```sql
 CREATE INDEX CONCURRENTLY idx_payment_transactions_created_at
 ON payment_transactions(created_at);
 ```
+
 **Result:** Index creation started but estimated 45 minutes to complete (table has 50M rows)
 
 **15:05** - **Attempt 2:** Increase database connection pool size from 100 to 150
+
 - Edited ConfigMap and restarted pods
-**Result:** Temporary improvement (error rate dropped to 3%) but issue persisted
+  **Result:** Temporary improvement (error rate dropped to 3%) but issue persisted
 
 **15:20** - **Attempt 3:** Scale Payment Service from 3 to 8 replicas
 **Result:** Made issue worse - more pods competing for database connections
@@ -107,6 +117,7 @@ ON payment_transactions(created_at);
 **15:35** - **Decision:** Rollback to v2.3.0 (previous stable version)
 
 **15:37** - Initiated rollback:
+
 ```bash
 kubectl rollout undo deployment/payment-service
 ```
@@ -122,6 +133,7 @@ kubectl rollout undo deployment/payment-service
 **16:30** - Index creation completed on database
 
 **16:32** - Deployed hotfix version v2.3.2 with:
+
 - Optimized query with proper JOIN order
 - Added index migration
 - Increased query timeout from 5s to 10s
@@ -129,6 +141,7 @@ kubectl rollout undo deployment/payment-service
 **16:38** - Hotfix deployment complete
 
 **16:40** - Verified metrics back to normal:
+
 - Error rate: 0.1%
 - p95 latency: 145ms (normal: <200ms)
 - Database connections: 38/150
@@ -152,6 +165,7 @@ kubectl rollout undo deployment/payment-service
 ## Root Cause Analysis
 
 ### Immediate Cause
+
 Database connection pool exhaustion caused by long-running queries holding connections.
 
 ### Contributing Factors
@@ -252,34 +266,34 @@ Database connection pool exhaustion caused by long-running queries holding conne
 
 ### Immediate (Complete within 1 week)
 
-| Action | Owner | Due Date | Status |
-|--------|-------|----------|--------|
-| Add database connection pool utilization alert (>80% warning, >90% critical) | Bob Smith | 2024-03-18 | ✅ Complete |
-| Add slow query count alert (>10 queries/min taking >2s) | Bob Smith | 2024-03-18 | ✅ Complete |
-| Implement automatic rollback on sustained error rate >5% for >5 minutes | Alice Johnson | 2024-03-20 | ✅ Complete |
-| Update deployment runbook with database index verification checklist | Alice Johnson | 2024-03-19 | ✅ Complete |
-| Add database metrics to primary service dashboard | Bob Smith | 2024-03-18 | ✅ Complete |
+| Action                                                                       | Owner         | Due Date   | Status      |
+| ---------------------------------------------------------------------------- | ------------- | ---------- | ----------- |
+| Add database connection pool utilization alert (>80% warning, >90% critical) | Bob Smith     | 2024-03-18 | ✅ Complete |
+| Add slow query count alert (>10 queries/min taking >2s)                      | Bob Smith     | 2024-03-18 | ✅ Complete |
+| Implement automatic rollback on sustained error rate >5% for >5 minutes      | Alice Johnson | 2024-03-20 | ✅ Complete |
+| Update deployment runbook with database index verification checklist         | Alice Johnson | 2024-03-19 | ✅ Complete |
+| Add database metrics to primary service dashboard                            | Bob Smith     | 2024-03-18 | ✅ Complete |
 
 ### Short-term (Complete within 1 month)
 
-| Action | Owner | Due Date | Status |
-|--------|-------|----------|--------|
-| Implement canary deployment strategy (10% → 50% → 100%) | DevOps Team | 2024-04-01 | 🔄 In Progress |
-| Add database query performance tests to CI/CD pipeline | QA Team | 2024-04-05 | 🔄 In Progress |
-| Increase staging database to 1M records minimum | Platform Team | 2024-03-25 | ✅ Complete |
-| Create load testing suite for payment service | QA Team | 2024-04-10 | 🔄 In Progress |
-| Implement query performance regression testing | Bob Smith | 2024-04-08 | 📋 Planned |
-| Add migration review checklist to PR template | Engineering | 2024-03-22 | ✅ Complete |
+| Action                                                  | Owner         | Due Date   | Status         |
+| ------------------------------------------------------- | ------------- | ---------- | -------------- |
+| Implement canary deployment strategy (10% → 50% → 100%) | DevOps Team   | 2024-04-01 | 🔄 In Progress |
+| Add database query performance tests to CI/CD pipeline  | QA Team       | 2024-04-05 | 🔄 In Progress |
+| Increase staging database to 1M records minimum         | Platform Team | 2024-03-25 | ✅ Complete    |
+| Create load testing suite for payment service           | QA Team       | 2024-04-10 | 🔄 In Progress |
+| Implement query performance regression testing          | Bob Smith     | 2024-04-08 | 📋 Planned     |
+| Add migration review checklist to PR template           | Engineering   | 2024-03-22 | ✅ Complete    |
 
 ### Long-term (Complete within 3 months)
 
-| Action | Owner | Due Date | Status |
-|--------|-------|----------|--------|
+| Action                                                         | Owner         | Due Date   | Status     |
+| -------------------------------------------------------------- | ------------- | ---------- | ---------- |
 | Implement production load testing environment (shadow traffic) | Platform Team | 2024-05-15 | 📋 Planned |
-| Set up automated query plan comparison between releases | Database Team | 2024-06-01 | 📋 Planned |
-| Implement chaos engineering for database failures | SRE Team | 2024-05-30 | 📋 Planned |
-| Create database performance training for developers | Bob Smith | 2024-04-30 | 📋 Planned |
-| Implement automatic connection pool sizing based on load | Platform Team | 2024-06-15 | 📋 Planned |
+| Set up automated query plan comparison between releases        | Database Team | 2024-06-01 | 📋 Planned |
+| Implement chaos engineering for database failures              | SRE Team      | 2024-05-30 | 📋 Planned |
+| Create database performance training for developers            | Bob Smith     | 2024-04-30 | 📋 Planned |
+| Implement automatic connection pool sizing based on load       | Platform Team | 2024-06-15 | 📋 Planned |
 
 ---
 
@@ -336,6 +350,7 @@ Database connection pool exhaustion caused by long-running queries holding conne
 ### Metrics and Graphs
 
 **Error Rate During Incident:**
+
 ```
 14:00 - 14:30:  0.1% (normal)
 14:30 - 15:00: 8.3% (incident starts)
@@ -346,6 +361,7 @@ Database connection pool exhaustion caused by long-running queries holding conne
 ```
 
 **Database Connection Pool:**
+
 ```
 14:00 - 14:30: 35-45 connections (normal)
 14:30 - 15:00: 100 connections (maxed)
@@ -373,16 +389,19 @@ Database connection pool exhaustion caused by long-running queries holding conne
 ## Feedback and Questions
 
 This postmortem was reviewed by:
+
 - Engineering Team (2024-03-16)
 - Platform Team (2024-03-16)
 - Leadership Team (2024-03-18)
 
 Feedback received:
+
 - "Excellent detail on timeline and root cause" - CTO
 - "Action items are clear and comprehensive" - VP Engineering
 - "Would like to see more on customer impact quantification" - Customer Success
 
 Questions raised:
+
 1. **Q:** Why didn't canary deployment catch this?
    **A:** Canary deployment was not configured for this service. Action item added.
 
@@ -404,6 +423,7 @@ Questions raised:
 ---
 
 **Distribution:**
+
 - Engineering team
 - Leadership team
 - Customer success team

@@ -1,11 +1,13 @@
 # AI Test Generation Prompt Templates
 
 ## Overview
+
 This document provides proven prompt templates for generating high-quality tests using AI tools like ChatGPT, Claude, GitHub Copilot, or custom LLM integrations.
 
 ## General Principles
 
 **Good prompts include:**
+
 1. **Role** - Define the AI's expertise
 2. **Context** - Provide relevant background
 3. **Task** - Clearly state what you want
@@ -17,17 +19,20 @@ This document provides proven prompt templates for generating high-quality tests
 
 ## Template 1: Unit Test Generation (Basic)
 
-```markdown
+````markdown
 You are an expert QA engineer specializing in [LANGUAGE/FRAMEWORK].
 
 Task: Generate comprehensive unit tests for the following code.
 
 Code to test:
+
 ```[LANGUAGE]
 [PASTE_CODE_HERE]
 ```
+````
 
 Requirements:
+
 - Use [TESTING_FRAMEWORK] framework
 - Follow AAA (Arrange, Act, Assert) pattern
 - Include happy path tests
@@ -37,15 +42,18 @@ Requirements:
 - Add comments explaining complex test logic
 
 Output: Complete, runnable test file with all necessary imports.
+
 ```
 
 **Example Usage:**
 ```
+
 You are an expert QA engineer specializing in Python.
 
 Task: Generate comprehensive unit tests for the following code.
 
 Code to test:
+
 ```python
 def calculate_discount(price, discount_percent):
     if price < 0:
@@ -56,6 +64,7 @@ def calculate_discount(price, discount_percent):
 ```
 
 Requirements:
+
 - Use pytest framework
 - Follow AAA (Arrange, Act, Assert) pattern
 - Include happy path tests
@@ -65,7 +74,8 @@ Requirements:
 - Add comments explaining complex test logic
 
 Output: Complete, runnable test file with all necessary imports.
-```
+
+````
 
 ---
 
@@ -84,9 +94,10 @@ Task: Generate production-quality unit tests for the function below.
 Function to test:
 ```[LANGUAGE]
 [PASTE_CODE_HERE]
-```
+````
 
 Test Requirements:
+
 1. Testing Framework: [FRAMEWORK]
 2. Coverage Goals: [PERCENTAGE]% line coverage
 3. Test Types Required:
@@ -114,19 +125,22 @@ Test Requirements:
    - Extract test data to constants when reused
 
 Constraints:
+
 - Maximum test file length: [NUMBER] lines
 - Each test should be independent
 - Tests must be deterministic (no random values)
 - Use [ASSERTION_LIBRARY] for assertions
 
 Output Format:
+
 ```[LANGUAGE]
 // Full, runnable test file
 // Include all imports
 // Include setup/teardown
 // Include helper functions if needed
 ```
-```
+
+````
 
 ---
 
@@ -166,7 +180,7 @@ Test Structure:
 - Assertions: Verify status codes, response structure, database state
 
 Output: Complete integration test suite with setup/teardown.
-```
+````
 
 ---
 
@@ -181,6 +195,7 @@ User Story:
 """
 
 Acceptance Criteria:
+
 1. [CRITERION_1]
 2. [CRITERION_2]
 3. [CRITERION_3]
@@ -188,6 +203,7 @@ Acceptance Criteria:
 Task: Generate comprehensive E2E tests that validate this user story.
 
 Requirements:
+
 1. Framework: [PLAYWRIGHT/CYPRESS/SELENIUM]
 2. Pattern: Use Page Object Model
 3. Test Data: Use fixtures
@@ -196,12 +212,14 @@ Requirements:
 6. Assertions: Check both UI state and API responses where applicable
 
 Test Scenarios:
+
 - Happy path (user completes flow successfully)
 - Alternative paths (user takes different route)
 - Error scenarios (invalid inputs, network errors)
 - Edge cases (boundary values, special characters)
 
 Output:
+
 1. Page Object classes for each page/component
 2. Test file with all scenarios
 3. Fixture file with test data
@@ -212,17 +230,20 @@ Output:
 
 ## Template 5: Test Data Generation
 
-```markdown
+````markdown
 You are a test data specialist.
 
 Task: Generate realistic, diverse test data for the following schema/interface.
 
 Schema:
+
 ```[FORMAT]
 [PASTE_SCHEMA_HERE]
 ```
+````
 
 Requirements:
+
 - Generate [NUMBER] test data samples
 - Data Type: [VALID/INVALID/EDGE_CASE]
 - Diversity: Include various demographics, locales, formats
@@ -230,17 +251,20 @@ Requirements:
 - Format: Output as [JSON/CSV/SQL/OTHER]
 
 For VALID data:
+
 - Follow all validation rules
 - Ensure referential integrity
 - Use realistic values
 
 For INVALID data:
+
 - Violate specific validation rules systematically
 - Include boundary violations
 - Include type mismatches
 - Include SQL injection attempts (if testing security)
 
 For EDGE CASE data:
+
 - Minimum/maximum values
 - Empty strings, nulls, undefined
 - Special characters, Unicode
@@ -248,7 +272,8 @@ For EDGE CASE data:
 - Unusual but valid formats
 
 Output: [FORMAT] with [NUMBER] samples
-```
+
+````
 
 ---
 
@@ -262,9 +287,10 @@ Task: Refactor the following test code to improve quality and maintainability.
 Current Test Code:
 ```[LANGUAGE]
 [PASTE_CURRENT_TESTS]
-```
+````
 
 Improvements Needed:
+
 - [ ] Remove code duplication
 - [ ] Extract common setup to fixtures/beforeEach
 - [ ] Improve test names and descriptions
@@ -277,12 +303,14 @@ Improvements Needed:
 - [ ] Follow [STYLE_GUIDE]
 
 Constraints:
+
 - Maintain 100% test coverage
 - Do not change test behavior (tests must still pass)
 - Keep existing test names if they're good
 
 Output: Refactored test code with explanatory comments highlighting changes.
-```
+
+````
 
 ---
 
@@ -300,9 +328,10 @@ Task: Analyze the code and existing tests, then generate tests for uncovered cod
 Source Code:
 ```[LANGUAGE]
 [PASTE_SOURCE_CODE]
-```
+````
 
 Existing Tests:
+
 ```[LANGUAGE]
 [PASTE_EXISTING_TESTS]
 ```
@@ -311,6 +340,7 @@ Coverage Report (uncovered lines):
 [PASTE_COVERAGE_REPORT or LIST_UNCOVERED_LINES]
 
 Requirements:
+
 1. Analyze which code paths are not covered
 2. Generate tests specifically for uncovered lines
 3. Prioritize:
@@ -321,10 +351,12 @@ Requirements:
 5. Do not duplicate existing test scenarios
 
 Output:
+
 - List of uncovered scenarios (bullet points)
 - New test cases to add to existing test file
 - Explanation of what each new test covers
-```
+
+````
 
 ---
 
@@ -374,7 +406,7 @@ Requirements:
 - Document expected security behavior in comments
 
 Output: Security test suite with explanatory comments.
-```
+````
 
 ---
 
@@ -389,6 +421,7 @@ System Under Test:
 [DESCRIBE_SYSTEM]
 
 Performance Requirements:
+
 - Response Time: [P50/P95/P99 targets]
 - Throughput: [RPS target]
 - Concurrent Users: [NUMBER]
@@ -397,6 +430,7 @@ Performance Requirements:
 Test Tool: [K6/JMETER/GATLING/LOCUST]
 
 Scenarios to Generate:
+
 1. **Baseline Test**
    - Single user
    - Verify functionality under no load
@@ -420,6 +454,7 @@ Scenarios to Generate:
    - Detect memory leaks, resource exhaustion
 
 Output:
+
 - Performance test scripts
 - Configuration for each scenario
 - Success criteria/thresholds
@@ -437,9 +472,11 @@ Task: Generate a test that reproduces and validates the fix for the following bu
 
 Bug Report:
 ```
+
 Title: [BUG_TITLE]
 Description: [BUG_DESCRIPTION]
 Steps to Reproduce:
+
 1. [STEP_1]
 2. [STEP_2]
 3. [STEP_3]
@@ -448,14 +485,16 @@ Expected: [EXPECTED_BEHAVIOR]
 Actual: [ACTUAL_BEHAVIOR]
 
 Environment: [ENVIRONMENT_DETAILS]
-```
+
+````
 
 Fix Applied:
 ```[LANGUAGE]
 [PASTE_FIX_CODE or DESCRIBE_FIX]
-```
+````
 
 Requirements:
+
 1. Test must reproduce the original bug scenario
 2. Test must fail with old code, pass with fixed code
 3. Test must be specific enough to catch regression
@@ -463,10 +502,12 @@ Requirements:
 5. Add comment explaining what bug this prevents
 
 Output:
+
 - Regression test that validates the fix
-- Test name: test_[bug_id]_[brief_description]
+- Test name: test*[bug_id]*[brief_description]
 - Comment with bug ID and link
-```
+
+````
 
 ---
 
@@ -490,10 +531,11 @@ def test_valid_email():
 
     # Assert
     assert result is True
-```
+````
 
 Now generate tests for the validate_phone() function following the same pattern.
-```
+
+````
 
 ### Iterate and Refine
 1. Start with basic prompt
@@ -509,7 +551,7 @@ Before generating tests, first:
 2. Identify edge cases and boundary conditions
 3. List potential error scenarios
 4. Then generate comprehensive tests covering all items above
-```
+````
 
 ---
 

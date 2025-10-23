@@ -11,7 +11,7 @@
  * Check if an element has a visible focus indicator
  */
 async function hasVisibleFocusIndicator(page, selector) {
-  return await page.evaluate((sel) => {
+  return await page.evaluate(sel => {
     const element = document.querySelector(sel);
     if (!element) return false;
 
@@ -72,7 +72,7 @@ async function getFocusableElements(page) {
  * Check if an element is keyboard accessible
  */
 async function isKeyboardAccessible(page, selector) {
-  return await page.evaluate((sel) => {
+  return await page.evaluate(sel => {
     const element = document.querySelector(sel);
     if (!element) return false;
 
@@ -326,18 +326,54 @@ async function checkLandmarks(page) {
 async function checkARIAAttributes(page) {
   return await page.evaluate(() => {
     const validAriaAttrs = [
-      'aria-activedescendant', 'aria-atomic', 'aria-autocomplete', 'aria-busy',
-      'aria-checked', 'aria-colcount', 'aria-colindex', 'aria-colspan',
-      'aria-controls', 'aria-current', 'aria-describedby', 'aria-details',
-      'aria-disabled', 'aria-dropeffect', 'aria-errormessage', 'aria-expanded',
-      'aria-flowto', 'aria-grabbed', 'aria-haspopup', 'aria-hidden',
-      'aria-invalid', 'aria-keyshortcuts', 'aria-label', 'aria-labelledby',
-      'aria-level', 'aria-live', 'aria-modal', 'aria-multiline',
-      'aria-multiselectable', 'aria-orientation', 'aria-owns', 'aria-placeholder',
-      'aria-posinset', 'aria-pressed', 'aria-readonly', 'aria-relevant',
-      'aria-required', 'aria-roledescription', 'aria-rowcount', 'aria-rowindex',
-      'aria-rowspan', 'aria-selected', 'aria-setsize', 'aria-sort',
-      'aria-valuemax', 'aria-valuemin', 'aria-valuenow', 'aria-valuetext',
+      'aria-activedescendant',
+      'aria-atomic',
+      'aria-autocomplete',
+      'aria-busy',
+      'aria-checked',
+      'aria-colcount',
+      'aria-colindex',
+      'aria-colspan',
+      'aria-controls',
+      'aria-current',
+      'aria-describedby',
+      'aria-details',
+      'aria-disabled',
+      'aria-dropeffect',
+      'aria-errormessage',
+      'aria-expanded',
+      'aria-flowto',
+      'aria-grabbed',
+      'aria-haspopup',
+      'aria-hidden',
+      'aria-invalid',
+      'aria-keyshortcuts',
+      'aria-label',
+      'aria-labelledby',
+      'aria-level',
+      'aria-live',
+      'aria-modal',
+      'aria-multiline',
+      'aria-multiselectable',
+      'aria-orientation',
+      'aria-owns',
+      'aria-placeholder',
+      'aria-posinset',
+      'aria-pressed',
+      'aria-readonly',
+      'aria-relevant',
+      'aria-required',
+      'aria-roledescription',
+      'aria-rowcount',
+      'aria-rowindex',
+      'aria-rowspan',
+      'aria-selected',
+      'aria-setsize',
+      'aria-sort',
+      'aria-valuemax',
+      'aria-valuemin',
+      'aria-valuenow',
+      'aria-valuetext',
     ];
 
     const issues = [];
@@ -394,7 +430,7 @@ async function testModalFocusTrap(page, modalSelector) {
   await page.waitForSelector(modalSelector, { state: 'visible' });
 
   const modal = await page.locator(modalSelector);
-  const focusableCount = await modal.evaluate((el) => {
+  const focusableCount = await modal.evaluate(el => {
     const focusable = el.querySelectorAll(
       'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
@@ -407,7 +443,7 @@ async function testModalFocusTrap(page, modalSelector) {
     await page.keyboard.press('Tab');
     await page.waitForTimeout(50);
 
-    const isInModal = await page.evaluate((sel) => {
+    const isInModal = await page.evaluate(sel => {
       const modal = document.querySelector(sel);
       const focused = document.activeElement;
       return modal.contains(focused);
@@ -429,14 +465,7 @@ async function testModalFocusTrap(page, modalSelector) {
 async function generateAccessibilityReport(page) {
   console.log('Generating comprehensive accessibility report...\n');
 
-  const [
-    headings,
-    images,
-    forms,
-    links,
-    landmarks,
-    aria,
-  ] = await Promise.all([
+  const [headings, images, forms, links, landmarks, aria] = await Promise.all([
     checkHeadingHierarchy(page),
     checkImageAltText(page),
     checkFormLabels(page),
@@ -483,39 +512,43 @@ const customMatchers = {
     };
   },
 
-  toHaveValidHeadingHierarchy: async (page) => {
+  toHaveValidHeadingHierarchy: async page => {
     const result = await checkHeadingHierarchy(page);
     return {
       pass: result.issues.length === 0,
-      message: () => `Expected valid heading hierarchy, found issues: ${JSON.stringify(result.issues)}`,
+      message: () =>
+        `Expected valid heading hierarchy, found issues: ${JSON.stringify(result.issues)}`,
     };
   },
 
-  toHaveProperAltText: async (page) => {
+  toHaveProperAltText: async page => {
     const result = await checkImageAltText(page);
     return {
       pass: result.issues.length === 0,
-      message: () => `Expected all images to have proper alt text, found ${result.issues.length} issues`,
+      message: () =>
+        `Expected all images to have proper alt text, found ${result.issues.length} issues`,
     };
   },
 
-  toHaveFormLabels: async (page) => {
+  toHaveFormLabels: async page => {
     const result = await checkFormLabels(page);
     return {
       pass: result.issues.length === 0,
-      message: () => `Expected all form inputs to have labels, found ${result.issues.length} issues`,
+      message: () =>
+        `Expected all form inputs to have labels, found ${result.issues.length} issues`,
     };
   },
 
-  toHaveDescriptiveLinks: async (page) => {
+  toHaveDescriptiveLinks: async page => {
     const result = await checkLinkText(page);
     return {
       pass: result.issues.length === 0,
-      message: () => `Expected all links to have descriptive text, found ${result.issues.length} issues`,
+      message: () =>
+        `Expected all links to have descriptive text, found ${result.issues.length} issues`,
     };
   },
 
-  toHaveProperLandmarks: async (page) => {
+  toHaveProperLandmarks: async page => {
     const result = await checkLandmarks(page);
     return {
       pass: result.issues.length === 0,

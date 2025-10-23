@@ -71,33 +71,33 @@ npm run test:all
 Edit the URLs in each test file:
 
 **axe-automated-tests.spec.js**:
+
 ```javascript
 await page.goto('https://your-site.com');
 ```
 
 **pa11y-ci-config.json**:
+
 ```json
 {
-  "urls": [
-    "https://your-site.com",
-    "https://your-site.com/products"
-  ]
+  "urls": ["https://your-site.com", "https://your-site.com/products"]
 }
 ```
 
 **lighthouse-accessibility.js**:
+
 ```javascript
-const testUrls = [
-  { url: 'https://your-site.com', name: 'Homepage' }
-];
+const testUrls = [{ url: 'https://your-site.com', name: 'Homepage' }];
 ```
 
 ## Understanding Results
 
 ### Test Passes ✅
+
 All tests pass means your site meets WCAG 2.1 Level AA standards for tested criteria.
 
 ### Test Failures ❌
+
 Failures indicate accessibility issues that need fixing:
 
 1. **Check the console output** for detailed error messages
@@ -109,28 +109,31 @@ Failures indicate accessibility issues that need fixing:
 ## Common Issues and Fixes
 
 ### Missing Alt Text
+
 ```html
 <!-- ❌ Bad -->
-<img src="logo.png">
+<img src="logo.png" />
 
 <!-- ✅ Good -->
-<img src="logo.png" alt="Company Logo">
+<img src="logo.png" alt="Company Logo" />
 
 <!-- ✅ Decorative -->
-<img src="decoration.png" alt="">
+<img src="decoration.png" alt="" />
 ```
 
 ### Missing Form Labels
+
 ```html
 <!-- ❌ Bad -->
-<input type="text" placeholder="Name">
+<input type="text" placeholder="Name" />
 
 <!-- ✅ Good -->
 <label for="name">Name</label>
-<input id="name" type="text">
+<input id="name" type="text" />
 ```
 
 ### Poor Color Contrast
+
 ```css
 /* ❌ Bad - 2.5:1 ratio */
 color: #777;
@@ -142,6 +145,7 @@ background: #fff;
 ```
 
 ### Missing ARIA Labels
+
 ```html
 <!-- ❌ Bad -->
 <button><i class="icon-close"></i></button>
@@ -198,12 +202,14 @@ accessibility-tests:
 Don't forget manual testing! Automated tools catch ~30% of issues.
 
 ### Keyboard Navigation (5 minutes)
+
 1. Unplug your mouse
 2. Navigate entire site using only Tab, Enter, Space, Arrow keys
 3. Verify all interactive elements are reachable
 4. Check focus indicators are visible
 
 ### Screen Reader Testing (15 minutes)
+
 1. **Windows**: Install [NVDA](https://www.nvaccess.org/download/) (free)
 2. **Mac**: Enable VoiceOver (`Cmd + F5`)
 3. Navigate key pages listening to announcements
@@ -229,12 +235,15 @@ reports/
 ## Troubleshooting
 
 ### Browsers not installed
+
 ```bash
 npx playwright install
 ```
 
 ### Pa11y timeout errors
+
 Increase timeout in `pa11y-ci-config.json`:
+
 ```json
 {
   "defaults": {
@@ -244,14 +253,18 @@ Increase timeout in `pa11y-ci-config.json`:
 ```
 
 ### Lighthouse errors
+
 Ensure Chrome/Chromium is installed:
+
 ```bash
 # On Ubuntu/Debian
 sudo apt-get install chromium-browser
 ```
 
 ### False positives
+
 Disable specific rules with justification:
+
 ```javascript
 // In axe-automated-tests.spec.js
 await new AxeBuilder({ page })
@@ -278,6 +291,7 @@ await new AxeBuilder({ page })
 ## Support
 
 For issues or questions:
+
 1. Check `README.md` for detailed documentation
 2. Review `screen-reader-tests.md` for manual testing
 3. Consult WCAG guidelines for specific criteria

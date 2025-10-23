@@ -25,13 +25,13 @@ import { sleep, check } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '2m', target: 100 },   // Ramp up to 100 users
-    { duration: '5m', target: 100 },   // Stay at 100 users
-    { duration: '2m', target: 0 },     // Ramp down to 0
+    { duration: '2m', target: 100 }, // Ramp up to 100 users
+    { duration: '5m', target: 100 }, // Stay at 100 users
+    { duration: '2m', target: 0 }, // Ramp down to 0
   ],
   thresholds: {
-    http_req_duration: ['p(95)<500'],  // 95% requests < 500ms
-    http_req_failed: ['rate<0.01'],    // Error rate < 1%
+    http_req_duration: ['p(95)<500'], // 95% requests < 500ms
+    http_req_failed: ['rate<0.01'], // Error rate < 1%
   },
 };
 
@@ -39,8 +39,8 @@ export default function () {
   const res = http.get('https://api.example.com/products');
 
   check(res, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 500ms': (r) => r.timings.duration < 500,
+    'status is 200': r => r.status === 200,
+    'response time < 500ms': r => r.timings.duration < 500,
   });
 
   sleep(1);
@@ -55,12 +55,12 @@ Testing system beyond normal capacity to find breaking point.
 // k6 stress test
 export const options = {
   stages: [
-    { duration: '2m', target: 100 },   // Normal load
-    { duration: '5m', target: 200 },   // Peak load
-    { duration: '2m', target: 300 },   // Stress load
-    { duration: '5m', target: 300 },   // Sustain stress
-    { duration: '5m', target: 400 },   // Beyond capacity
-    { duration: '10m', target: 0 },    // Recovery
+    { duration: '2m', target: 100 }, // Normal load
+    { duration: '5m', target: 200 }, // Peak load
+    { duration: '2m', target: 300 }, // Stress load
+    { duration: '5m', target: 300 }, // Sustain stress
+    { duration: '5m', target: 400 }, // Beyond capacity
+    { duration: '10m', target: 0 }, // Recovery
   ],
 };
 ```
@@ -73,11 +73,11 @@ Testing system response to sudden traffic spikes.
 // k6 spike test
 export const options = {
   stages: [
-    { duration: '10s', target: 100 },   // Normal
-    { duration: '1m', target: 2000 },   // Sudden spike
-    { duration: '3m', target: 2000 },   // Sustain spike
-    { duration: '10s', target: 100 },   // Back to normal
-    { duration: '3m', target: 0 },      // Recovery
+    { duration: '10s', target: 100 }, // Normal
+    { duration: '1m', target: 2000 }, // Sudden spike
+    { duration: '3m', target: 2000 }, // Sustain spike
+    { duration: '10s', target: 100 }, // Back to normal
+    { duration: '3m', target: 0 }, // Recovery
   ],
 };
 ```
@@ -90,9 +90,9 @@ Testing system stability over extended period.
 // k6 soak test
 export const options = {
   stages: [
-    { duration: '2m', target: 100 },    // Ramp up
-    { duration: '24h', target: 100 },   // Sustained load for 24 hours
-    { duration: '2m', target: 0 },      // Ramp down
+    { duration: '2m', target: 100 }, // Ramp up
+    { duration: '24h', target: 100 }, // Sustained load for 24 hours
+    { duration: '2m', target: 0 }, // Ramp down
   ],
 };
 ```
@@ -132,7 +132,7 @@ export default function () {
     password: 'password',
   });
 
-  check(loginRes, { 'login successful': (r) => r.status === 200 });
+  check(loginRes, { 'login successful': r => r.status === 200 });
 
   const token = loginRes.json('token');
 
@@ -159,7 +159,7 @@ export default function () {
   checkoutDuration.add(checkoutTime);
 
   const success = check(checkoutRes, {
-    'checkout successful': (r) => r.status === 200,
+    'checkout successful': r => r.status === 200,
   });
 
   checkoutSuccess.add(success);
@@ -310,44 +310,44 @@ class EcommerceUser(HttpUser):
 const performanceMetrics = {
   // Response time metrics
   responseTime: {
-    average: 245,      // ms
-    p50: 180,          // median
-    p95: 450,          // 95th percentile
-    p99: 850,          // 99th percentile
-    max: 2100          // maximum
+    average: 245, // ms
+    p50: 180, // median
+    p95: 450, // 95th percentile
+    p99: 850, // 99th percentile
+    max: 2100, // maximum
   },
 
   // Throughput
   throughput: {
     requestsPerSecond: 1250,
-    transactionsPerSecond: 1100
+    transactionsPerSecond: 1100,
   },
 
   // Error rate
   errors: {
     total: 45,
-    rate: 0.008,       // 0.8%
+    rate: 0.008, // 0.8%
     types: {
-      '500': 30,
-      '503': 10,
-      '504': 5
-    }
+      500: 30,
+      503: 10,
+      504: 5,
+    },
   },
 
   // Resource utilization
   resources: {
-    cpu: 65,           // % average
-    memory: 78,        // % used
-    network: 125,      // Mbps
-    disk: 45           // % I/O wait
+    cpu: 65, // % average
+    memory: 78, // % used
+    network: 125, // Mbps
+    disk: 45, // % I/O wait
   },
 
   // Concurrent users
   users: {
     active: 500,
     peak: 750,
-    target: 1000
-  }
+    target: 1000,
+  },
 };
 ```
 
@@ -357,25 +357,25 @@ const performanceMetrics = {
 // Define acceptable performance criteria
 const thresholds = {
   // Response time
-  'http_req_duration': {
-    'p(95)<500': true,    // 95% of requests < 500ms
-    'p(99)<1000': true,   // 99% of requests < 1s
+  http_req_duration: {
+    'p(95)<500': true, // 95% of requests < 500ms
+    'p(99)<1000': true, // 99% of requests < 1s
   },
 
   // Error rate
-  'http_req_failed': {
-    'rate<0.01': true,    // < 1% error rate
+  http_req_failed: {
+    'rate<0.01': true, // < 1% error rate
   },
 
   // Throughput
-  'http_reqs': {
-    'rate>100': true,     // > 100 req/s
+  http_reqs: {
+    'rate>100': true, // > 100 req/s
   },
 
   // Custom business metrics
-  'checkout_duration': {
-    'p(95)<2000': true,   // Checkout < 2s for 95%
-  }
+  checkout_duration: {
+    'p(95)<2000': true, // Checkout < 2s for 95%
+  },
 };
 ```
 
@@ -441,7 +441,7 @@ const progressiveLoad = {
 
     // Ramp down
     { duration: '5m', target: 0 },
-  ]
+  ],
 };
 ```
 
@@ -492,16 +492,16 @@ function analyzePerformance(results) {
   const degradation = {
     responseTime: {
       increase: ((peak.p95 - baseline.p95) / baseline.p95) * 100,
-      acceptable: (peak.p95 - baseline.p95) / baseline.p95 < 0.5  // < 50% increase
+      acceptable: (peak.p95 - baseline.p95) / baseline.p95 < 0.5, // < 50% increase
     },
     throughput: {
       increase: ((peak.rps - baseline.rps) / baseline.rps) * 100,
-      scaling: peak.rps / baseline.rps / 10  // Should scale ~linearly
+      scaling: peak.rps / baseline.rps / 10, // Should scale ~linearly
     },
     errors: {
       increase: peak.errorRate - baseline.errorRate,
-      acceptable: peak.errorRate < 0.01  // < 1%
-    }
+      acceptable: peak.errorRate < 0.01, // < 1%
+    },
   };
 
   return degradation;
@@ -516,24 +516,24 @@ const bottleneckChecklist = {
   application: {
     'CPU usage > 80%': 'Optimize algorithms or scale horizontally',
     'Memory usage increasing': 'Check for memory leaks',
-    'Thread pool exhausted': 'Increase pool size or optimize blocking operations'
+    'Thread pool exhausted': 'Increase pool size or optimize blocking operations',
   },
 
   database: {
     'Query time increasing': 'Add indexes, optimize queries',
     'Connection pool exhausted': 'Increase pool size',
-    'Lock contention': 'Optimize transactions, reduce lock scope'
+    'Lock contention': 'Optimize transactions, reduce lock scope',
   },
 
   network: {
     'Bandwidth saturated': 'Optimize payload size, use CDN',
-    'Latency increasing': 'Use caching, move services closer'
+    'Latency increasing': 'Use caching, move services closer',
   },
 
   external: {
     'Third-party API slow': 'Implement caching, circuit breakers',
-    'Timeout errors': 'Increase timeouts, add retry logic'
-  }
+    'Timeout errors': 'Increase timeouts, add retry logic',
+  },
 };
 ```
 
@@ -545,8 +545,8 @@ name: Load Test
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Daily at 2 AM
-  workflow_dispatch:      # Manual trigger
+    - cron: '0 2 * * *' # Daily at 2 AM
+  workflow_dispatch: # Manual trigger
 
 jobs:
   load-test:
@@ -578,33 +578,39 @@ jobs:
 
 ```markdown
 **1. Test Production-Like Environment**
+
 - Same infrastructure specs
 - Same data volume
 - Same configuration
 
 **2. Isolate Test Environment**
+
 - Don't test against production
 - Prevent impact on real users
 - Use production data copies (anonymized)
 
 **3. Realistic Test Data**
+
 - Varied data sets
 - Edge cases included
 - Production-like distribution
 
 **4. Monitor Everything**
+
 - Application metrics
 - Infrastructure metrics
 - Database metrics
 - External dependencies
 
 **5. Incremental Load Increase**
+
 - Start with baseline
 - Gradually increase load
 - Monitor for degradation
 - Find breaking point
 
 **6. Run Multiple Test Types**
+
 - Load test (normal)
 - Stress test (peak)
 - Spike test (sudden)
@@ -627,4 +633,4 @@ jobs:
 
 ---
 
-*Part of: [Quality Attributes](README.md)*
+_Part of: [Quality Attributes](README.md)_

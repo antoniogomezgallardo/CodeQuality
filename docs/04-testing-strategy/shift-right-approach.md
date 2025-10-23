@@ -1,10 +1,13 @@
 # Shift-Right Testing Approach
 
 ## Purpose
+
 Comprehensive guide to shift-right testing—extending testing into production to validate real-world behavior, gather user feedback, and ensure quality in live environments.
 
 ## Overview
+
 Shift-right testing means:
+
 - Testing in production environments
 - Validating with real users and data
 - Continuous monitoring and observability
@@ -14,6 +17,7 @@ Shift-right testing means:
 ## What is Shift-Right Testing?
 
 ### Definition
+
 Shift-right testing extends quality assurance activities beyond traditional pre-production phases into production environments, validating software with real users, real data, and real conditions.
 
 ### Shift-Left vs Shift-Right
@@ -119,7 +123,7 @@ class FeatureFlags {
       flag: flagName,
       user: userId,
       enabled,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }
@@ -131,7 +135,7 @@ export function CheckoutPage({ user }) {
   const newCheckoutEnabled = featureFlags.isEnabled('new-checkout-v2', {
     userId: user.id,
     userSegment: user.segment,
-    country: user.country
+    country: user.country,
   });
 
   if (newCheckoutEnabled) {
@@ -149,11 +153,11 @@ export function CheckoutPage({ user }) {
 flags:
   new-checkout-v2:
     enabled: true
-    rollout: 25  # 25% of users
-    description: "New streamlined checkout flow"
+    rollout: 25 # 25% of users
+    description: 'New streamlined checkout flow'
     targeting:
-      userSegments: ["beta-testers", "premium-users"]
-      countries: ["US", "CA"]
+      userSegments: ['beta-testers', 'premium-users']
+      countries: ['US', 'CA']
     created: 2024-10-01
     owner: checkout-team
     metrics:
@@ -163,16 +167,16 @@ flags:
 
   ml-powered-recommendations:
     enabled: true
-    rollout: 10  # 10% rollout
-    description: "ML-based product recommendations"
+    rollout: 10 # 10% rollout
+    description: 'ML-based product recommendations'
     targeting:
-      userSegments: ["high-engagement"]
+      userSegments: ['high-engagement']
     jira: FEAT-123
 
   experimental-search:
     enabled: false
     rollout: 0
-    description: "Experimental search algorithm"
+    description: 'Experimental search algorithm'
     owner: search-team
 ```
 
@@ -222,7 +226,7 @@ spec:
         url: http://loadtester.default/
         timeout: 5s
         metadata:
-          cmd: "hey -z 1m -q 10 -c 2 http://myapp-canary.default:8080"
+          cmd: 'hey -z 1m -q 10 -c 2 http://myapp-canary.default:8080'
 ```
 
 #### Canary Analysis
@@ -243,7 +247,7 @@ class CanaryAnalyzer {
       errorRate: this.compareErrorRates(canaryMetrics, baselineMetrics),
       latency: this.compareLatencies(canaryMetrics, baselineMetrics),
       successRate: this.compareSuccessRates(canaryMetrics, baselineMetrics),
-      recommendation: 'proceed'
+      recommendation: 'proceed',
     };
 
     // Decision logic
@@ -271,7 +275,7 @@ class CanaryAnalyzer {
       canary: canary.errorRate,
       baseline: baseline.errorRate,
       increase,
-      passed: increase <= 50
+      passed: increase <= 50,
     };
   }
 }
@@ -293,16 +297,14 @@ class ABTest {
   assignVariation(userId) {
     // Consistent assignment
     const bucket = this.getBucket(userId);
-    const variation = this.variations.find(v =>
-      bucket >= v.trafficStart && bucket < v.trafficEnd
-    );
+    const variation = this.variations.find(v => bucket >= v.trafficStart && bucket < v.trafficEnd);
 
     // Track assignment
     this.analytics.track('experiment_assignment', {
       experiment: this.experimentId,
       user: userId,
       variation: variation.id,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return variation;
@@ -314,7 +316,7 @@ class ABTest {
       user: userId,
       event,
       value,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -330,7 +332,7 @@ const checkoutExperiment = new ABTest(
   [
     { id: 'control', trafficStart: 0, trafficEnd: 50 },
     { id: 'variant-a', trafficStart: 50, trafficEnd: 75 },
-    { id: 'variant-b', trafficStart: 75, trafficEnd: 100 }
+    { id: 'variant-b', trafficStart: 75, trafficEnd: 100 },
   ],
   analyticsService
 );
@@ -338,12 +340,8 @@ const checkoutExperiment = new ABTest(
 export function CheckoutPage({ user }) {
   const variation = checkoutExperiment.assignVariation(user.id);
 
-  const handleCheckoutComplete = (orderData) => {
-    checkoutExperiment.trackConversion(
-      user.id,
-      'checkout_completed',
-      orderData.total
-    );
+  const handleCheckoutComplete = orderData => {
+    checkoutExperiment.trackConversion(user.id, 'checkout_completed', orderData.total);
   };
 
   switch (variation.id) {
@@ -387,15 +385,15 @@ class ABTestAnalyzer {
       lift: lift.toFixed(2),
       pValue: pValue.toFixed(4),
       significant: pValue < 0.05,
-      confidence: ((1 - pValue) * 100).toFixed(2)
+      confidence: ((1 - pValue) * 100).toFixed(2),
     };
   }
 }
 
 // Example results
 const results = analyzer.calculateStatisticalSignificance(
-  { visitors: 10000, conversions: 850 },  // Control
-  { visitors: 10000, conversions: 920 }   // Variant
+  { visitors: 10000, conversions: 850 }, // Control
+  { visitors: 10000, conversions: 920 } // Variant
 );
 
 console.log(`
@@ -419,7 +417,7 @@ metadata:
 spec:
   selector:
     app: myapp
-    version: blue  # Switch to 'green' for cutover
+    version: blue # Switch to 'green' for cutover
   ports:
     - protocol: TCP
       port: 80
@@ -529,12 +527,10 @@ async function syntheticCheckout() {
     await sendMetric('synthetic_checkout_success', 1);
 
     console.log(`✅ Synthetic checkout completed in ${duration}ms`);
-
   } catch (error) {
     await sendMetric('synthetic_checkout_success', 0);
     await sendAlert('Synthetic checkout failed', error);
     console.error(`❌ Synthetic checkout failed:`, error);
-
   } finally {
     await browser.close();
   }
@@ -572,83 +568,83 @@ class RealUserMonitoring {
         domContentLoaded: navigation.domContentLoadedEventEnd,
         firstPaint: this.getFirstPaint(),
         firstContentfulPaint: this.getFirstContentfulPaint(),
-        timeToInteractive: this.getTTI()
+        timeToInteractive: this.getTTI(),
       });
     });
   }
 
   trackUserInteractions() {
     // Track clicks
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', event => {
       const target = event.target;
       this.send('user_interaction', {
         type: 'click',
         element: target.tagName,
         id: target.id,
         class: target.className,
-        text: target.textContent?.substring(0, 50)
+        text: target.textContent?.substring(0, 50),
       });
     });
 
     // Track form submissions
-    document.addEventListener('submit', (event) => {
+    document.addEventListener('submit', event => {
       const form = event.target;
       this.send('form_submission', {
         formId: form.id,
         action: form.action,
-        method: form.method
+        method: form.method,
       });
     });
   }
 
   trackErrors() {
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.send('javascript_error', {
         message: event.message,
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
         stack: event.error?.stack,
-        url: window.location.href
+        url: window.location.href,
       });
     });
 
     // Track unhandled promise rejections
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.send('unhandled_rejection', {
         reason: event.reason,
-        url: window.location.href
+        url: window.location.href,
       });
     });
   }
 
   trackWebVitals() {
     // Core Web Vitals
-    new PerformanceObserver((list) => {
+    new PerformanceObserver(list => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'largest-contentful-paint') {
           this.send('web_vital', {
             metric: 'LCP',
             value: entry.renderTime || entry.loadTime,
-            rating: this.getLCPRating(entry.renderTime)
+            rating: this.getLCPRating(entry.renderTime),
           });
         }
       }
     }).observe({ entryTypes: ['largest-contentful-paint'] });
 
     // First Input Delay
-    new PerformanceObserver((list) => {
+    new PerformanceObserver(list => {
       const firstInput = list.getEntries()[0];
       this.send('web_vital', {
         metric: 'FID',
         value: firstInput.processingStart - firstInput.startTime,
-        rating: this.getFIDRating(firstInput.processingStart - firstInput.startTime)
+        rating: this.getFIDRating(firstInput.processingStart - firstInput.startTime),
       });
     }).observe({ type: 'first-input', buffered: true });
 
     // Cumulative Layout Shift
     let clsValue = 0;
-    new PerformanceObserver((list) => {
+    new PerformanceObserver(list => {
       for (const entry of list.getEntries()) {
         if (!entry.hadRecentInput) {
           clsValue += entry.value;
@@ -657,7 +653,7 @@ class RealUserMonitoring {
       this.send('web_vital', {
         metric: 'CLS',
         value: clsValue,
-        rating: this.getCLSRating(clsValue)
+        rating: this.getCLSRating(clsValue),
       });
     }).observe({ type: 'layout-shift', buffered: true });
   }
@@ -670,9 +666,9 @@ class RealUserMonitoring {
       userAgent: navigator.userAgent,
       viewport: {
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       },
-      ...data
+      ...data,
     };
 
     // Send to backend
@@ -682,7 +678,7 @@ class RealUserMonitoring {
       fetch(this.endpoint, {
         method: 'POST',
         body: JSON.stringify(payload),
-        keepalive: true
+        keepalive: true,
       });
     }
   }
@@ -750,7 +746,7 @@ class ChaosExperiment {
     return {
       errorRate: await this.getErrorRate(),
       latency: await this.getLatency(),
-      throughput: await this.getThroughput()
+      throughput: await this.getThroughput(),
     };
   }
 
@@ -775,7 +771,7 @@ const latencyExperiment = new ChaosExperiment('database-latency', {
   delay: 5000, // 5 second delay
   duration: 300000, // 5 minutes
   target: 'database-service',
-  hypothesis: 'System remains responsive with database latency'
+  hypothesis: 'System remains responsive with database latency',
 });
 
 await latencyExperiment.run();
@@ -796,7 +792,7 @@ logger.info('User logged in', {
   ipAddress: request.ip,
   userAgent: request.headers['user-agent'],
   timestamp: new Date(),
-  correlationId: request.headers['x-correlation-id']
+  correlationId: request.headers['x-correlation-id'],
 });
 
 logger.error('Payment processing failed', {
@@ -808,7 +804,7 @@ logger.error('Payment processing failed', {
   errorCode: error.code,
   errorMessage: error.message,
   stack: error.stack,
-  correlationId: request.headers['x-correlation-id']
+  correlationId: request.headers['x-correlation-id'],
 });
 ```
 
@@ -822,7 +818,7 @@ const promClient = require('prom-client');
 const httpRequestsTotal = new promClient.Counter({
   name: 'http_requests_total',
   help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status_code']
+  labelNames: ['method', 'route', 'status_code'],
 });
 
 // Histogram: Request duration
@@ -830,13 +826,13 @@ const httpRequestDuration = new promClient.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
   labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.1, 0.5, 1, 2, 5]
+  buckets: [0.1, 0.5, 1, 2, 5],
 });
 
 // Gauge: Current value
 const activeConnections = new promClient.Gauge({
   name: 'active_connections',
-  help: 'Number of active connections'
+  help: 'Number of active connections',
 });
 
 // Middleware to record metrics
@@ -849,14 +845,14 @@ app.use((req, res, next) => {
     httpRequestsTotal.inc({
       method: req.method,
       route: req.route?.path || 'unknown',
-      status_code: res.statusCode
+      status_code: res.statusCode,
     });
 
     httpRequestDuration.observe(
       {
         method: req.method,
         route: req.route?.path || 'unknown',
-        status_code: res.statusCode
+        status_code: res.statusCode,
       },
       duration
     );
@@ -874,19 +870,19 @@ const { trace } = require('@opentelemetry/api');
 const tracer = trace.getTracer('myapp');
 
 async function processOrder(orderData) {
-  return await tracer.startActiveSpan('process-order', async (span) => {
+  return await tracer.startActiveSpan('process-order', async span => {
     try {
       span.setAttribute('order.id', orderData.id);
       span.setAttribute('order.total', orderData.total);
 
       // Validate order
-      await tracer.startActiveSpan('validate-order', async (validateSpan) => {
+      await tracer.startActiveSpan('validate-order', async validateSpan => {
         await validateOrder(orderData);
         validateSpan.end();
       });
 
       // Process payment
-      await tracer.startActiveSpan('process-payment', async (paymentSpan) => {
+      await tracer.startActiveSpan('process-payment', async paymentSpan => {
         paymentSpan.setAttribute('payment.method', orderData.paymentMethod);
         const payment = await processPayment(orderData);
         paymentSpan.setAttribute('payment.id', payment.id);
@@ -894,25 +890,23 @@ async function processOrder(orderData) {
       });
 
       // Update inventory
-      await tracer.startActiveSpan('update-inventory', async (inventorySpan) => {
+      await tracer.startActiveSpan('update-inventory', async inventorySpan => {
         await updateInventory(orderData.items);
         inventorySpan.end();
       });
 
       // Send confirmation
-      await tracer.startActiveSpan('send-confirmation', async (emailSpan) => {
+      await tracer.startActiveSpan('send-confirmation', async emailSpan => {
         await sendConfirmationEmail(orderData);
         emailSpan.end();
       });
 
       span.setStatus({ code: SpanStatusCode.OK });
       return { success: true };
-
     } catch (error) {
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
       throw error;
-
     } finally {
       span.end();
     }
@@ -979,11 +973,8 @@ class DeploymentMonitor {
     const metrics = await this.getMetrics(deployment);
 
     return {
-      healthy:
-        metrics.errorRate < 5 &&
-        metrics.p95Latency < 1000 &&
-        metrics.successRate > 99,
-      metrics
+      healthy: metrics.errorRate < 5 && metrics.p95Latency < 1000 && metrics.successRate > 99,
+      metrics,
     };
   }
 
@@ -991,8 +982,8 @@ class DeploymentMonitor {
     // Switch traffic back to previous version
     await kubectl.apply('service', {
       selector: {
-        version: deployment.previousVersion
-      }
+        version: deployment.previousVersion,
+      },
     });
 
     // Scale down new version
@@ -1007,24 +998,28 @@ class DeploymentMonitor {
 # Deployment Success Criteria
 
 ## Health Metrics:
+
 - [ ] Error rate < 1%
 - [ ] P95 latency < 500ms
 - [ ] Success rate > 99.5%
 - [ ] No critical alerts
 
 ## Business Metrics:
+
 - [ ] Conversion rate maintained or improved
 - [ ] User engagement stable
 - [ ] Revenue impact neutral or positive
 - [ ] No increase in support tickets
 
 ## Technical Metrics:
+
 - [ ] CPU usage < 70%
 - [ ] Memory usage < 80%
 - [ ] Database connections normal
 - [ ] Cache hit rate maintained
 
 ## User Experience:
+
 - [ ] No customer complaints
 - [ ] App store ratings stable
 - [ ] Social media sentiment neutral/positive
@@ -1036,24 +1031,28 @@ class DeploymentMonitor {
 ### Shift-Right Implementation Checklist
 
 **Foundation:**
+
 - [ ] Feature flag system implemented
 - [ ] Monitoring and observability setup
 - [ ] Alerting configured
 - [ ] Rollback procedures documented
 
 **Deployment:**
+
 - [ ] Canary deployment configured
 - [ ] Health checks defined
 - [ ] Success criteria documented
 - [ ] Rollback automation ready
 
 **Monitoring:**
+
 - [ ] Synthetic monitoring running
 - [ ] Real user monitoring active
 - [ ] Distributed tracing enabled
 - [ ] Log aggregation configured
 
 **Validation:**
+
 - [ ] A/B tests planned
 - [ ] Metrics dashboards created
 - [ ] Alerts configured
@@ -1062,15 +1061,18 @@ class DeploymentMonitor {
 ## References
 
 ### Books
+
 - "Site Reliability Engineering" - Google
 - "The DevOps Handbook" - Gene Kim et al.
 - "Accelerate" - Nicole Forsgren et al.
 
 ### Articles
+
 - [Testing in Production](https://copyconstruct.medium.com/testing-in-production-the-safe-way-18ca102d0ef1)
 - [Chaos Engineering](https://principlesofchaos.org/)
 
 ### Tools
+
 - **Feature Flags**: LaunchDarkly, Split, Unleash
 - **Monitoring**: Datadog, New Relic, Prometheus
 - **Tracing**: Jaeger, Zipkin, OpenTelemetry
@@ -1085,4 +1087,4 @@ class DeploymentMonitor {
 
 ---
 
-*Part of: [Testing Strategy](README.md)*
+_Part of: [Testing Strategy](README.md)_

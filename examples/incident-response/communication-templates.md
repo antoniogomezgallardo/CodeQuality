@@ -653,12 +653,14 @@ Please let me know if you have questions.
 ## Tone Guidelines
 
 ### Internal Communications
+
 - **Direct and factual**
 - Professional but casual
 - Use emoji sparingly (status indicators okay: ✅ ❌ 🔄)
 - Focus on actions and facts
 
 ### External Communications
+
 - **Professional and empathetic**
 - No jargon or technical terms
 - Customer-focused language
@@ -666,6 +668,7 @@ Please let me know if you have questions.
 - Solution-oriented
 
 ### Executive Communications
+
 - **Concise and business-focused**
 - Lead with impact
 - Include business metrics
@@ -676,13 +679,13 @@ Please let me know if you have questions.
 
 ## Quick Reference
 
-| Audience | Channel | Frequency | Tone |
-|----------|---------|-----------|------|
-| On-Call Team | Slack | Real-time | Direct, technical |
-| Broader Engineering | Slack/Email | Major updates | Professional, informative |
-| Leadership | Email | Every 30-60 min | Concise, business-focused |
-| Customers | Email/Status Page | Hourly or major updates | Empathetic, clear |
-| Support Team | Slack/Email | Every update | Clear, with talking points |
+| Audience            | Channel           | Frequency               | Tone                       |
+| ------------------- | ----------------- | ----------------------- | -------------------------- |
+| On-Call Team        | Slack             | Real-time               | Direct, technical          |
+| Broader Engineering | Slack/Email       | Major updates           | Professional, informative  |
+| Leadership          | Email             | Every 30-60 min         | Concise, business-focused  |
+| Customers           | Email/Status Page | Hourly or major updates | Empathetic, clear          |
+| Support Team        | Slack/Email       | Every update            | Clear, with talking points |
 
 ---
 

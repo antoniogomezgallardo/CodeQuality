@@ -60,7 +60,6 @@ const PERCY_OPTIONS = {
 };
 
 test.describe('Percy Visual Testing - Homepage', () => {
-
   test.beforeEach(async ({ page }) => {
     // Navigate to the application
     await page.goto('https://example.com');
@@ -109,7 +108,6 @@ test.describe('Percy Visual Testing - Homepage', () => {
 });
 
 test.describe('Percy Visual Testing - Component States', () => {
-
   test.beforeEach(async ({ page }) => {
     await page.goto('https://example.com/components');
     await waitForFontsLoaded(page);
@@ -181,7 +179,6 @@ test.describe('Percy Visual Testing - Component States', () => {
 });
 
 test.describe('Percy Visual Testing - Responsive Design', () => {
-
   test('should capture responsive navigation across breakpoints', async ({ page }) => {
     await page.goto('https://example.com');
 
@@ -234,7 +231,6 @@ test.describe('Percy Visual Testing - Responsive Design', () => {
 });
 
 test.describe('Percy Visual Testing - Dynamic Content Handling', () => {
-
   test('should handle dynamic timestamps', async ({ page }) => {
     await page.goto('https://example.com/dashboard');
 
@@ -290,11 +286,7 @@ test.describe('Percy Visual Testing - Dynamic Content Handling', () => {
     await page.goto('https://example.com/contact');
 
     // Hide third-party widgets that may vary
-    await hideDynamicContent(page, [
-      '#google-maps-embed',
-      '.chat-widget',
-      '.social-media-feed'
-    ]);
+    await hideDynamicContent(page, ['#google-maps-embed', '.chat-widget', '.social-media-feed']);
 
     await percySnapshot(page, 'Contact Page - Without Third-party Widgets', {
       widths: [768, 1280]
@@ -303,14 +295,13 @@ test.describe('Percy Visual Testing - Dynamic Content Handling', () => {
 });
 
 test.describe('Percy Visual Testing - Cross-Browser Scenarios', () => {
-
   test('should capture browser-specific rendering', async ({ page, browserName }) => {
     await page.goto('https://example.com');
     await waitForFontsLoaded(page);
 
     // Percy will automatically test across browsers when configured
     await percySnapshot(page, `Homepage - ${browserName}`, {
-      widths: [1280],
+      widths: [1280]
       // Percy handles cross-browser testing automatically
       // Just ensure consistent state before snapshot
     });
@@ -328,7 +319,6 @@ test.describe('Percy Visual Testing - Cross-Browser Scenarios', () => {
 });
 
 test.describe('Percy Visual Testing - User Flows', () => {
-
   test('should capture checkout flow screens', async ({ page }) => {
     // Step 1: Shopping cart
     await page.goto('https://example.com/cart');
@@ -384,7 +374,6 @@ test.describe('Percy Visual Testing - User Flows', () => {
 });
 
 test.describe('Percy Visual Testing - Accessibility States', () => {
-
   test('should capture high contrast mode', async ({ page }) => {
     await page.goto('https://example.com');
 
@@ -421,7 +410,6 @@ test.describe('Percy Visual Testing - Accessibility States', () => {
 });
 
 test.describe('Percy Visual Testing - Error States', () => {
-
   test('should capture 404 page', async ({ page }) => {
     await page.goto('https://example.com/non-existent-page');
 
@@ -474,7 +462,6 @@ test.describe('Percy Visual Testing - Error States', () => {
 });
 
 test.describe('Percy Visual Testing - Advanced Techniques', () => {
-
   test('should use Percy CSS to hide elements', async ({ page }) => {
     await page.goto('https://example.com');
 
@@ -557,12 +544,10 @@ test.describe('Percy Visual Testing - Advanced Techniques', () => {
  * Environment-specific snapshot handling
  */
 test.describe('Percy Visual Testing - Environment Configuration', () => {
-
   test('should handle staging vs production differences', async ({ page }) => {
     const environment = process.env.TEST_ENV || 'staging';
-    const baseUrl = environment === 'production'
-      ? 'https://example.com'
-      : 'https://staging.example.com';
+    const baseUrl =
+      environment === 'production' ? 'https://example.com' : 'https://staging.example.com';
 
     await page.goto(`${baseUrl}/`);
     await waitForFontsLoaded(page);
@@ -578,7 +563,6 @@ test.describe('Percy Visual Testing - Environment Configuration', () => {
  * Performance considerations for visual tests
  */
 test.describe('Percy Visual Testing - Performance Optimization', () => {
-
   test('should batch related snapshots efficiently', async ({ page }) => {
     await page.goto('https://example.com/components');
     await waitForFontsLoaded(page);

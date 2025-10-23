@@ -34,10 +34,7 @@ class OrderService {
       customerId: orderData.customerId,
       status: 'pending',
       items: orderData.items,
-      totalAmount: orderData.items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      ),
+      totalAmount: orderData.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
       shippingAddress: orderData.shippingAddress,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -83,7 +80,7 @@ class OrderService {
 
   getOrdersByCustomer(customerId) {
     const orderIds = this.customerOrders.get(customerId) || [];
-    return orderIds.map((id) => this.orders.get(id)).filter(Boolean);
+    return orderIds.map(id => this.orders.get(id)).filter(Boolean);
   }
 
   reset() {
@@ -180,10 +177,7 @@ function createApp() {
 
         orderService.orders.set(order1.orderId, order1);
         orderService.orders.set(order2.orderId, order2);
-        orderService.customerOrders.set('customer-123', [
-          order1.orderId,
-          order2.orderId,
-        ]);
+        orderService.customerOrders.set('customer-123', [order1.orderId, order2.orderId]);
         break;
 
       case 'customer has no orders':
@@ -318,7 +312,7 @@ describe('Order Service Provider Verification', () => {
   let server;
   const PORT = 8080;
 
-  beforeAll((done) => {
+  beforeAll(done => {
     const app = createApp();
     server = app.listen(PORT, () => {
       console.log(`Provider service running on port ${PORT}`);
@@ -326,7 +320,7 @@ describe('Order Service Provider Verification', () => {
     });
   });
 
-  afterAll((done) => {
+  afterAll(done => {
     if (server) {
       server.close(done);
     } else {
@@ -341,13 +335,7 @@ describe('Order Service Provider Verification', () => {
       providerBaseUrl: `http://localhost:${PORT}`,
 
       // Pact URLs - can be local files or Pact Broker URLs
-      pactUrls: [
-        path.resolve(
-          process.cwd(),
-          'pacts',
-          'orderconsumer-orderprovider.json'
-        ),
-      ],
+      pactUrls: [path.resolve(process.cwd(), 'pacts', 'orderconsumer-orderprovider.json')],
 
       // Pact Broker configuration (optional)
       // Uncomment when using Pact Broker

@@ -6,66 +6,69 @@ Get up and running with essential QA tools in 5 minutes or less. Each guide prov
 
 ### Testing Frameworks
 
-| Tool | Time | Focus | Link |
-|------|------|-------|------|
-| **Jest** | 3 min | JavaScript unit testing | [→ Start](jest-quickstart.md) |
-| **pytest** | 3 min | Python unit testing | [→ Start](pytest-quickstart.md) |
-| **JUnit 5** | 4 min | Java unit testing | [→ Start](junit-quickstart.md) |
-| **Cypress** | 5 min | E2E web testing | [→ Start](cypress-quickstart.md) |
-| **Playwright** | 5 min | Modern E2E testing | [→ Start](playwright-quickstart.md) |
-| **Supertest** | 3 min | API testing | [→ Start](supertest-quickstart.md) |
-| **Postman** | 4 min | API testing & docs | [→ Start](postman-quickstart.md) |
+| Tool           | Time  | Focus                   | Link                                |
+| -------------- | ----- | ----------------------- | ----------------------------------- |
+| **Jest**       | 3 min | JavaScript unit testing | [→ Start](jest-quickstart.md)       |
+| **pytest**     | 3 min | Python unit testing     | [→ Start](pytest-quickstart.md)     |
+| **JUnit 5**    | 4 min | Java unit testing       | [→ Start](junit-quickstart.md)      |
+| **Cypress**    | 5 min | E2E web testing         | [→ Start](cypress-quickstart.md)    |
+| **Playwright** | 5 min | Modern E2E testing      | [→ Start](playwright-quickstart.md) |
+| **Supertest**  | 3 min | API testing             | [→ Start](supertest-quickstart.md)  |
+| **Postman**    | 4 min | API testing & docs      | [→ Start](postman-quickstart.md)    |
 
 ### Performance & Load Testing
 
-| Tool | Time | Focus | Link |
-|------|------|-------|------|
-| **k6** | 4 min | Modern load testing | [→ Start](k6-quickstart.md) |
+| Tool       | Time  | Focus                   | Link                            |
+| ---------- | ----- | ----------------------- | ------------------------------- |
+| **k6**     | 4 min | Modern load testing     | [→ Start](k6-quickstart.md)     |
 | **JMeter** | 5 min | Enterprise load testing | [→ Start](jmeter-quickstart.md) |
 
 ### CI/CD Platforms
 
-| Tool | Time | Focus | Link |
-|------|------|-------|------|
-| **GitHub Actions** | 5 min | GitHub CI/CD | [→ Start](github-actions-quickstart.md) |
-| **GitLab CI** | 5 min | GitLab CI/CD | [→ Start](gitlab-ci-quickstart.md) |
-| **Jenkins** | 5 min | Self-hosted CI/CD | [→ Start](jenkins-quickstart.md) |
+| Tool               | Time  | Focus             | Link                                    |
+| ------------------ | ----- | ----------------- | --------------------------------------- |
+| **GitHub Actions** | 5 min | GitHub CI/CD      | [→ Start](github-actions-quickstart.md) |
+| **GitLab CI**      | 5 min | GitLab CI/CD      | [→ Start](gitlab-ci-quickstart.md)      |
+| **Jenkins**        | 5 min | Self-hosted CI/CD | [→ Start](jenkins-quickstart.md)        |
 
 ### Monitoring & Observability
 
-| Tool | Time | Focus | Link |
-|------|------|-------|------|
-| **Prometheus** | 5 min | Metrics collection | [→ Start](prometheus-quickstart.md) |
-| **Grafana** | 4 min | Metrics visualization | [→ Start](grafana-quickstart.md) |
+| Tool           | Time  | Focus                 | Link                                |
+| -------------- | ----- | --------------------- | ----------------------------------- |
+| **Prometheus** | 5 min | Metrics collection    | [→ Start](prometheus-quickstart.md) |
+| **Grafana**    | 4 min | Metrics visualization | [→ Start](grafana-quickstart.md)    |
 
 ### Security Testing
 
-| Tool | Time | Focus | Link |
-|------|------|-------|------|
-| **OWASP ZAP** | 5 min | Security scanning | [→ Start](owasp-zap-quickstart.md) |
-| **Snyk** | 3 min | Dependency scanning | [→ Start](snyk-quickstart.md) |
+| Tool          | Time  | Focus               | Link                               |
+| ------------- | ----- | ------------------- | ---------------------------------- |
+| **OWASP ZAP** | 5 min | Security scanning   | [→ Start](owasp-zap-quickstart.md) |
+| **Snyk**      | 3 min | Dependency scanning | [→ Start](snyk-quickstart.md)      |
 
 ### Accessibility Testing
 
-| Tool | Time | Focus | Link |
-|------|------|-------|------|
-| **axe-core** | 3 min | Automated a11y testing | [→ Start](axe-quickstart.md) |
-| **Pa11y** | 4 min | Command-line a11y | [→ Start](pa11y-quickstart.md) |
+| Tool         | Time  | Focus                  | Link                           |
+| ------------ | ----- | ---------------------- | ------------------------------ |
+| **axe-core** | 3 min | Automated a11y testing | [→ Start](axe-quickstart.md)   |
+| **Pa11y**    | 4 min | Command-line a11y      | [→ Start](pa11y-quickstart.md) |
 
 ## 🎯 How to Use These Guides
 
 ### For Beginners
+
 1. Start with your language's unit testing framework (Jest/pytest/JUnit)
 2. Move to E2E testing (Cypress or Playwright)
 3. Add CI/CD (GitHub Actions or GitLab CI)
 4. Integrate monitoring (Prometheus + Grafana)
 
 ### For Experienced Users
+
 - Jump to specific tools you need
 - Use as reference for setup commands
 - Check troubleshooting sections for common issues
 
 ### For Teams
+
 - Share relevant guides during onboarding
 - Use as templates for internal documentation
 - Customize for your specific stack
@@ -82,10 +85,15 @@ Each guide follows this structure:
 **What You'll Learn:** Brief description
 
 ## 1. Install (30 seconds)
+
 ## 2. Configure (1 minute)
+
 ## 3. Hello World (2 minutes)
+
 ## 4. Run Tests (1 minute)
+
 ## 5. Next Steps
+
 ## 6. Troubleshooting
 ```
 
@@ -103,6 +111,7 @@ Most guides assume you have:
 ## 💡 Pro Tips
 
 ### Speed Up Installation
+
 ```bash
 # Use package manager for faster installs
 # macOS
@@ -116,6 +125,7 @@ choco install nodejs python openjdk17
 ```
 
 ### Common Environment Setup
+
 ```bash
 # Create .tool-versions file for multiple projects
 cat > ~/.tool-versions << EOF
@@ -126,6 +136,7 @@ EOF
 ```
 
 ### Docker Alternative
+
 Many tools can run in Docker if you prefer not to install locally:
 
 ```bash
@@ -139,6 +150,7 @@ docker run -v $(pwd):/scripts grafana/k6 run /scripts/load-test.js
 ## 🚨 Common Pitfalls
 
 ### Path Issues
+
 ```bash
 # Add to your shell profile (~/.bashrc, ~/.zshrc)
 export PATH="$HOME/.local/bin:$PATH"
@@ -146,6 +158,7 @@ export PATH="/usr/local/bin:$PATH"
 ```
 
 ### Permission Errors
+
 ```bash
 # Don't use sudo with npm (can cause issues)
 # Instead, configure npm prefix
@@ -154,6 +167,7 @@ export PATH=~/.npm-global/bin:$PATH
 ```
 
 ### Version Conflicts
+
 ```bash
 # Use version managers
 nvm use 20    # Node Version Manager

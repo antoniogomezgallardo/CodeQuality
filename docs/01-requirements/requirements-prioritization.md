@@ -18,22 +18,26 @@ Requirements prioritization is the process of ranking and ordering requirements,
 
 ```markdown
 **M - Must Have**
+
 - Critical for release
 - Without it, solution doesn't work
 - Legal/regulatory requirement
 - Core business functionality
 
 **S - Should Have**
+
 - Important but not critical
 - Significant value, but workarounds exist
 - High priority for users
 
 **C - Could Have**
+
 - Desirable but not necessary
 - Nice-to-have features
 - Minimal impact if excluded
 
 **W - Won't Have (This Time)**
+
 - Out of scope for current release
 - Future consideration
 - Explicitly deferred
@@ -42,22 +46,26 @@ Requirements prioritization is the process of ranking and ordering requirements,
 Release 1.0 - Shopping Cart
 
 **Must Have:**
+
 - Browse products
 - Add items to cart
 - Checkout and payment
 - Order confirmation
 
 **Should Have:**
+
 - Product search
 - Filter by category
 - Save cart for later
 
 **Could Have:**
+
 - Product recommendations
 - Wishlist
 - Product comparison
 
 **Won't Have:**
+
 - Subscription service
 - Loyalty program
 - AR product preview
@@ -76,21 +84,25 @@ Low Value, High Effort (Money Pits) → Avoid
 **Example Matrix:**
 
 Quick Wins (High Value, Low Effort):
+
 - Password reset
 - Export to CSV
 - Email notifications
 
 Major Projects (High Value, High Effort):
+
 - Multi-currency support
 - Advanced analytics dashboard
 - Mobile app
 
 Fill-Ins (Low Value, Low Effort):
+
 - UI color theme
 - Keyboard shortcuts
 - Tooltips
 
 Money Pits (Low Value, High Effort):
+
 - Custom report builder
 - Video chat integration
 - Blockchain integration
@@ -115,12 +127,12 @@ const riceScore = {
   effort: 2, // 2 person-months
 
   // Calculate RICE Score
-  score: function() {
+  score: function () {
     return (this.reach * this.impact * this.confidence) / this.effort;
     // = (1000 × 2 × 0.8) / 2
     // = 1600 / 2
     // = 800
-  }
+  },
 };
 
 // Higher scores = higher priority
@@ -128,12 +140,12 @@ const riceScore = {
 
 **Example:**
 
-| Feature | Reach | Impact | Confidence | Effort | RICE | Priority |
-|---------|-------|--------|------------|--------|------|----------|
-| Password reset | 500 | 3 | 100% | 0.5 | 3000 | 1 |
-| Social login | 1000 | 1 | 80% | 1 | 800 | 2 |
-| Advanced search | 300 | 2 | 70% | 2 | 210 | 3 |
-| Dark mode | 800 | 0.5 | 90% | 1 | 360 | 4 |
+| Feature         | Reach | Impact | Confidence | Effort | RICE | Priority |
+| --------------- | ----- | ------ | ---------- | ------ | ---- | -------- |
+| Password reset  | 500   | 3      | 100%       | 0.5    | 3000 | 1        |
+| Social login    | 1000  | 1      | 80%        | 1      | 800  | 2        |
+| Advanced search | 300   | 2      | 70%        | 2      | 210  | 3        |
+| Dark mode       | 800   | 0.5    | 90%        | 1      | 360  | 4        |
 
 ### 4. Kano Model
 
@@ -141,28 +153,33 @@ const riceScore = {
 **Categories:**
 
 **Basic (Must-Be):**
+
 - Expected features (users assume they exist)
 - Absence causes dissatisfaction
 - Presence doesn't increase satisfaction
 - Example: Login, logout, data security
 
 **Performance (One-Dimensional):**
+
 - More is better
 - Linear satisfaction curve
 - Example: Speed, accuracy, capacity
 
 **Excitement (Delighters):**
+
 - Unexpected features
 - Absence doesn't cause dissatisfaction
 - Presence creates delight
 - Example: AI recommendations, gamification
 
 **Indifferent:**
+
 - Users don't care either way
 - Low priority
 - Example: Logo animation, unused features
 
 **Reverse:**
+
 - More feature = less satisfaction
 - Avoid or make optional
 - Example: Intrusive notifications, complex UIs
@@ -189,6 +206,7 @@ Feature: Real-time notifications
 **WSJF:** 21 / 3 = 7
 
 Compare across features:
+
 - Feature A: WSJF = 7 (priority 1)
 - Feature B: WSJF = 4.5 (priority 3)
 - Feature C: WSJF = 5.2 (priority 2)
@@ -198,27 +216,30 @@ Compare across features:
 
 ```markdown
 **Process:**
+
 1. List all items
 2. Force-rank from 1 to N (no ties)
 3. Must choose between any two items
 
 **Example:**
 
-| Rank | Feature | Justification |
-|------|---------|---------------|
-| 1 | User authentication | Can't launch without it |
-| 2 | Product catalog | Core functionality |
-| 3 | Shopping cart | Revenue-generating |
-| 4 | Search | Usability critical |
-| 5 | Filters | Nice-to-have |
-| 6 | Wishlist | Future enhancement |
+| Rank | Feature             | Justification           |
+| ---- | ------------------- | ----------------------- |
+| 1    | User authentication | Can't launch without it |
+| 2    | Product catalog     | Core functionality      |
+| 3    | Shopping cart       | Revenue-generating      |
+| 4    | Search              | Usability critical      |
+| 5    | Filters             | Nice-to-have            |
+| 6    | Wishlist            | Future enhancement      |
 
 **Benefits:**
+
 - Forces hard decisions
 - No ambiguity
 - Clear priority order
 
 **Drawbacks:**
+
 - Time-consuming for large backlogs
 - Can be contentious
 - Doesn't account for dependencies
@@ -230,17 +251,20 @@ Compare across features:
 
 ```markdown
 **Revenue Impact:**
+
 - Direct revenue generation
 - Cost reduction
 - Customer acquisition
 - Customer retention
 
 **Strategic Alignment:**
+
 - Company goals
 - Product vision
 - Market positioning
 
 **Customer Value:**
+
 - Solves pain points
 - Improves user experience
 - Competitive advantage
@@ -250,18 +274,21 @@ Compare across features:
 
 ```markdown
 **Technical Risk:**
+
 - Complexity
 - Unknowns
 - Dependencies
 - Technical debt
 
 **Business Risk:**
+
 - Regulatory compliance
 - Security vulnerabilities
 - Competitive threats
 - Market windows
 
 **Learning Opportunity:**
+
 - Validate assumptions
 - Gather user feedback
 - Prove/disprove hypothesis
@@ -271,11 +298,13 @@ Compare across features:
 
 ```markdown
 **Technical Dependencies:**
+
 - Infrastructure requirements
 - Platform constraints
 - Integration points
 
 **Business Dependencies:**
+
 - Legal/compliance
 - Marketing campaigns
 - Partner agreements
@@ -286,12 +315,14 @@ Compare across features:
 
 ```markdown
 **Time-Sensitive:**
+
 - Regulatory deadlines
 - Contractual commitments
 - Market windows
 - Event-driven (Black Friday, holidays)
 
 **Cost of Delay:**
+
 - Revenue loss per week/month
 - Customer churn risk
 - Competitive disadvantage
@@ -303,6 +334,7 @@ Compare across features:
 
 ```markdown
 **Stakeholders:**
+
 - Product Owner/Manager
 - Customers/Users
 - Development Team
@@ -310,6 +342,7 @@ Compare across features:
 - Sales/Support Teams
 
 **Data Sources:**
+
 - User feedback
 - Analytics data
 - Market research
@@ -321,6 +354,7 @@ Compare across features:
 
 ```markdown
 **Choose appropriate framework:**
+
 - MoSCoW for releases
 - RICE for feature backlogs
 - WSJF for flow-based teams
@@ -331,6 +365,7 @@ Compare across features:
 
 ```markdown
 **Validation Questions:**
+
 - Does this align with strategy?
 - Are dependencies considered?
 - Is sequencing logical?
@@ -342,12 +377,14 @@ Compare across features:
 
 ```markdown
 **Communication:**
+
 - Share rationale for priorities
 - Explain trade-offs made
 - Set expectations on timing
 - Document decisions
 
 **Commit:**
+
 - Lock priorities for sprint/release
 - Resist mid-sprint changes
 - Review and adjust regularly
@@ -361,6 +398,7 @@ Compare across features:
 ❌ **Problem:** All features marked as "critical"
 
 ✅ **Solution:**
+
 - Force-rank (only one #1)
 - Use objective frameworks (RICE, WSJF)
 - Educate on cost of context switching
@@ -373,6 +411,7 @@ Compare across features:
 ❌ **Problem:** Executive overrides data-driven priorities
 
 ✅ **Solution:**
+
 - Use data to support decisions
 - Show impact analysis
 - Propose experiments/pilots
@@ -385,6 +424,7 @@ Compare across features:
 ❌ **Problem:** Constantly chasing new ideas
 
 ✅ **Solution:**
+
 - Time-box new idea evaluation
 - Add to backlog, prioritize later
 - Finish in-progress work first
@@ -397,6 +437,7 @@ Compare across features:
 ❌ **Problem:** Only prioritizing features, never refactoring
 
 ✅ **Solution:**
+
 - Reserve 20% capacity for technical work
 - Quantify debt impact (speed, quality)
 - Make technical work visible
@@ -420,4 +461,4 @@ Compare across features:
 
 ---
 
-*Part of: [Requirements Engineering](README.md)*
+_Part of: [Requirements Engineering](README.md)_

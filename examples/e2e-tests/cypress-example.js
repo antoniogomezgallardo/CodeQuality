@@ -42,8 +42,7 @@ describe('User Authentication Flow', () => {
 
     // Should redirect to dashboard
     cy.url().should('include', '/dashboard');
-    cy.get('[data-cy=welcome-message]')
-      .should('contain', 'Welcome, John!');
+    cy.get('[data-cy=welcome-message]').should('contain', 'Welcome, John!');
   });
 
   it('should validate registration form fields', () => {
@@ -51,22 +50,19 @@ describe('User Authentication Flow', () => {
 
     // Test empty form submission
     cy.get('[data-cy=register-button]').click();
-    cy.get('[data-cy=error-message]')
-      .should('contain', 'Please fill in all required fields');
+    cy.get('[data-cy=error-message]').should('contain', 'Please fill in all required fields');
 
     // Test invalid email
     cy.get('[data-cy=email]').type('invalid-email');
     cy.get('[data-cy=register-button]').click();
-    cy.get('[data-cy=email-error]')
-      .should('contain', 'Please enter a valid email address');
+    cy.get('[data-cy=email-error]').should('contain', 'Please enter a valid email address');
 
     // Test password mismatch
     cy.get('[data-cy=email]').clear().type('valid@example.com');
     cy.get('[data-cy=password]').type('password123');
     cy.get('[data-cy=confirm-password]').type('different-password');
     cy.get('[data-cy=register-button]').click();
-    cy.get('[data-cy=password-error]')
-      .should('contain', 'Passwords do not match');
+    cy.get('[data-cy=password-error]').should('contain', 'Passwords do not match');
   });
 
   it('should login with valid credentials', () => {
@@ -92,9 +88,7 @@ describe('User Authentication Flow', () => {
     cy.get('[data-cy=password]').type('wrongpassword');
     cy.get('[data-cy=login-button]').click();
 
-    cy.get('[data-cy=error-message]')
-      .should('be.visible')
-      .and('contain', 'Invalid credentials');
+    cy.get('[data-cy=error-message]').should('be.visible').and('contain', 'Invalid credentials');
 
     // Should remain on login page
     cy.url().should('include', '/login');
@@ -114,19 +108,23 @@ describe('Shopping Cart Flow', () => {
 
   it('should add products to cart and complete checkout', () => {
     // Add first product to cart
-    cy.get('[data-cy=product-card]').first().within(() => {
-      cy.get('[data-cy=product-name]').invoke('text').as('firstProductName');
-      cy.get('[data-cy=product-price]').invoke('text').as('firstProductPrice');
-      cy.get('[data-cy=add-to-cart-btn]').click();
-    });
+    cy.get('[data-cy=product-card]')
+      .first()
+      .within(() => {
+        cy.get('[data-cy=product-name]').invoke('text').as('firstProductName');
+        cy.get('[data-cy=product-price]').invoke('text').as('firstProductPrice');
+        cy.get('[data-cy=add-to-cart-btn]').click();
+      });
 
     // Verify cart badge updates
     cy.get('[data-cy=cart-badge]').should('contain', '1');
 
     // Add second product
-    cy.get('[data-cy=product-card]').eq(1).within(() => {
-      cy.get('[data-cy=add-to-cart-btn]').click();
-    });
+    cy.get('[data-cy=product-card]')
+      .eq(1)
+      .within(() => {
+        cy.get('[data-cy=add-to-cart-btn]').click();
+      });
 
     cy.get('[data-cy=cart-badge]').should('contain', '2');
 
@@ -160,16 +158,17 @@ describe('Shopping Cart Flow', () => {
 
     // Verify order success
     cy.url().should('include', '/order-confirmation');
-    cy.get('[data-cy=order-success-message]')
-      .should('contain', 'Order placed successfully');
+    cy.get('[data-cy=order-success-message]').should('contain', 'Order placed successfully');
     cy.get('[data-cy=order-number]').should('be.visible');
   });
 
   it('should handle cart item removal', () => {
     // Add product to cart
-    cy.get('[data-cy=product-card]').first().within(() => {
-      cy.get('[data-cy=add-to-cart-btn]').click();
-    });
+    cy.get('[data-cy=product-card]')
+      .first()
+      .within(() => {
+        cy.get('[data-cy=add-to-cart-btn]').click();
+      });
 
     // View cart
     cy.get('[data-cy=cart-icon]').click();
@@ -200,8 +199,7 @@ describe('Contact Form', () => {
     cy.get('[data-cy=contact-name]').type('Jane Smith');
     cy.get('[data-cy=contact-email]').type('jane@example.com');
     cy.get('[data-cy=contact-subject]').select('General Inquiry');
-    cy.get('[data-cy=contact-message]')
-      .type('This is a test message for the contact form.');
+    cy.get('[data-cy=contact-message]').type('This is a test message for the contact form.');
 
     // Submit form
     cy.get('[data-cy=submit-contact-btn]').click();
@@ -254,7 +252,7 @@ describe('Product Search and Filtering', () => {
 
     // Verify search results
     cy.get('[data-cy=search-results]').should('be.visible');
-    cy.get('[data-cy=product-card]').each(($card) => {
+    cy.get('[data-cy=product-card]').each($card => {
       cy.wrap($card)
         .find('[data-cy=product-name]')
         .invoke('text')
@@ -282,11 +280,11 @@ describe('Product Search and Filtering', () => {
     cy.get('[data-cy=apply-filters-btn]').click();
 
     // Verify products are within price range
-    cy.get('[data-cy=product-card]').each(($card) => {
+    cy.get('[data-cy=product-card]').each($card => {
       cy.wrap($card)
         .find('[data-cy=product-price]')
         .invoke('text')
-        .then((priceText) => {
+        .then(priceText => {
           const price = parseFloat(priceText.replace('$', ''));
           expect(price).to.be.within(100, 500);
         });
@@ -297,9 +295,7 @@ describe('Product Search and Filtering', () => {
     cy.get('[data-cy=search-input]').type('nonexistentproduct123');
     cy.get('[data-cy=search-btn]').click();
 
-    cy.get('[data-cy=no-results]')
-      .should('be.visible')
-      .and('contain', 'No products found');
+    cy.get('[data-cy=no-results]').should('be.visible').and('contain', 'No products found');
     cy.get('[data-cy=product-card]').should('not.exist');
   });
 });
@@ -312,7 +308,7 @@ describe('Responsive Design', () => {
   const viewports = [
     { device: 'iPhone 6', width: 375, height: 667 },
     { device: 'iPad', width: 768, height: 1024 },
-    { device: 'Desktop', width: 1920, height: 1080 }
+    { device: 'Desktop', width: 1920, height: 1080 },
   ];
 
   viewports.forEach(({ device, width, height }) => {
@@ -335,18 +331,15 @@ describe('Responsive Design', () => {
       cy.visit('/products');
       if (width < 768) {
         // Mobile: single column
-        cy.get('[data-cy=product-grid]')
-          .should('have.class', 'grid-cols-1');
+        cy.get('[data-cy=product-grid]').should('have.class', 'grid-cols-1');
       } else if (width < 1024) {
         // Tablet: two columns
-        cy.get('[data-cy=product-grid]')
-          .should('have.class', 'grid-cols-2');
+        cy.get('[data-cy=product-grid]').should('have.class', 'grid-cols-2');
       } else {
         // Desktop: three or more columns
-        cy.get('[data-cy=product-grid]')
-          .should('satisfy', ($el) => {
-            return $el.hasClass('grid-cols-3') || $el.hasClass('grid-cols-4');
-          });
+        cy.get('[data-cy=product-grid]').should('satisfy', $el => {
+          return $el.hasClass('grid-cols-3') || $el.hasClass('grid-cols-4');
+        });
       }
     });
   });
@@ -401,12 +394,10 @@ describe('Accessibility', () => {
       .and('have.attr', 'aria-label', 'Main navigation');
 
     // Check search form
-    cy.get('[data-cy=search-input]')
-      .should('have.attr', 'aria-label', 'Search products');
+    cy.get('[data-cy=search-input]').should('have.attr', 'aria-label', 'Search products');
 
     // Check buttons
-    cy.get('[data-cy=search-btn]')
-      .should('have.attr', 'aria-label', 'Search');
+    cy.get('[data-cy=search-btn]').should('have.attr', 'aria-label', 'Search');
   });
 
   it('should have sufficient color contrast', () => {
@@ -426,16 +417,16 @@ describe('Performance', () => {
   it('should load pages within acceptable time', () => {
     // Measure page load time
     cy.visit('/', {
-      onBeforeLoad: (win) => {
+      onBeforeLoad: win => {
         win.performance.mark('start');
       },
-      onLoad: (win) => {
+      onLoad: win => {
         win.performance.mark('end');
         win.performance.measure('pageLoad', 'start', 'end');
-      }
+      },
     });
 
-    cy.window().then((win) => {
+    cy.window().then(win => {
       const measure = win.performance.getEntriesByName('pageLoad')[0];
       expect(measure.duration).to.be.lessThan(3000); // 3 seconds
     });
@@ -446,7 +437,8 @@ describe('Performance', () => {
 
     // Check that images below the fold have loading="lazy"
     cy.get('[data-cy=product-image]').each(($img, index) => {
-      if (index > 6) { // Images below the fold
+      if (index > 6) {
+        // Images below the fold
         cy.wrap($img).should('have.attr', 'loading', 'lazy');
       }
     });
@@ -467,14 +459,16 @@ Cypress.Commands.add('loginAsUser', (email, password) => {
   });
 });
 
-Cypress.Commands.add('addProductToCart', (productName) => {
+Cypress.Commands.add('addProductToCart', productName => {
   cy.visit('/products');
-  cy.get('[data-cy=product-card]').contains(productName).within(() => {
-    cy.get('[data-cy=add-to-cart-btn]').click();
-  });
+  cy.get('[data-cy=product-card]')
+    .contains(productName)
+    .within(() => {
+      cy.get('[data-cy=add-to-cart-btn]').click();
+    });
 });
 
-Cypress.Commands.add('tab', { prevSubject: 'optional' }, (subject) => {
+Cypress.Commands.add('tab', { prevSubject: 'optional' }, subject => {
   return cy.wrap(subject).trigger('keydown', {
     key: 'Tab',
     code: 'Tab',

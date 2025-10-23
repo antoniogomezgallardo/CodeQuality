@@ -1,12 +1,15 @@
 # AI-Powered Test Automation
 
 ## Purpose
+
 Provide comprehensive guidance on using AI to enhance test automation through self-healing tests, smart test selection, visual regression testing, and intelligent test maintenance.
 
 ## Context
+
 Traditional test automation faces challenges with brittle tests, high maintenance costs, and inefficient test execution. AI can make tests more resilient, reduce maintenance burden, and intelligently prioritize test execution to catch defects faster.
 
 ## Prerequisites
+
 - Understanding of [AI Fundamentals](ai-fundamentals.md)
 - Familiarity with [Testing Strategy](../04-testing-strategy/README.md)
 - Experience with test automation frameworks
@@ -46,6 +49,7 @@ graph TB
 Tests that automatically adapt to UI changes without manual intervention.
 
 **How It Works:**
+
 ```python
 # Traditional Test (Breaks on UI changes)
 driver.find_element(By.ID, "submit-button").click()
@@ -136,6 +140,7 @@ driver.find_element_smart(By.ID, "submit-button").click()
 ```
 
 **Commercial Tools:**
+
 - **Testim**: AI-powered self-healing for web tests
 - **Mabl**: Intelligent test maintenance
 - **Functionize**: ML-driven test automation
@@ -146,6 +151,7 @@ driver.find_element_smart(By.ID, "submit-button").click()
 Intelligently select which tests to run based on code changes and risk.
 
 **How It Works:**
+
 ```python
 class SmartTestSelector:
     """
@@ -298,6 +304,7 @@ Confidence: 94% of defects will be caught
 Use AI to detect meaningful visual changes while ignoring irrelevant differences.
 
 **How It Works:**
+
 ```python
 class AIVisualTester:
     """
@@ -425,6 +432,7 @@ async def test_homepage_visual():
 Automatically identify and fix flaky (intermittently failing) tests.
 
 **How It Works:**
+
 ```python
 class FlakySmart testDetector:
     """
@@ -575,6 +583,7 @@ Priority: High (blocks 12 other tests)
 Generate realistic, diverse test data using AI.
 
 **Example:**
+
 ```python
 class AITestDataGenerator:
     """Generate realistic test data using LLM"""
@@ -635,17 +644,18 @@ test_users = generator.generate_test_data(user_schema, count=50)
 
 ### Tool Comparison Matrix
 
-| Tool | Self-Healing | Smart Selection | Visual Testing | Price/Month |
-|------|--------------|-----------------|----------------|-------------|
-| **Testim** | ✅ Excellent | ✅ Yes | ✅ Yes | $450 |
-| **Mabl** | ✅ Excellent | ✅ Yes | ✅ Yes | $400 |
-| **Functionize** | ✅ Very Good | ✅ Yes | ⚠️ Limited | $500 |
-| **Applitools** | ⚠️ Limited | ❌ No | ✅ Excellent | $200 |
-| **Percy** | ❌ No | ❌ No | ✅ Very Good | $149 |
+| Tool            | Self-Healing | Smart Selection | Visual Testing | Price/Month |
+| --------------- | ------------ | --------------- | -------------- | ----------- |
+| **Testim**      | ✅ Excellent | ✅ Yes          | ✅ Yes         | $450        |
+| **Mabl**        | ✅ Excellent | ✅ Yes          | ✅ Yes         | $400        |
+| **Functionize** | ✅ Very Good | ✅ Yes          | ⚠️ Limited     | $500        |
+| **Applitools**  | ⚠️ Limited   | ❌ No           | ✅ Excellent   | $200        |
+| **Percy**       | ❌ No        | ❌ No           | ✅ Very Good   | $149        |
 
 ### Detailed Tool Reviews
 
 #### Testim
+
 ```yaml
 strengths:
   - Best-in-class self-healing
@@ -665,6 +675,7 @@ best_for:
 ```
 
 #### Mabl
+
 ```yaml
 strengths:
   - End-to-end platform
@@ -686,21 +697,25 @@ best_for:
 ## Implementation Roadmap
 
 ### Phase 1: Self-Healing Tests (Week 1-2)
+
 - Implement basic self-healing for top 10 flaky tests
 - Deploy Testim or Mabl pilot
 - Measure reduction in maintenance time
 
 ### Phase 2: Smart Test Selection (Week 3-4)
+
 - Build change impact analysis
 - Implement risk-based selection
 - Integrate with CI/CD
 
 ### Phase 3: Visual Testing (Week 5-6)
+
 - Add Applitools or Percy
 - Create baseline screenshots
 - Integrate into pipeline
 
 ### Phase 4: Optimization (Week 7-8)
+
 - Fix all flaky tests
 - Optimize test data generation
 - Full team rollout
@@ -708,21 +723,25 @@ best_for:
 ## Best Practices
 
 ### 1. Start with Problem Tests
+
 - Identify most flaky tests
 - Apply AI to fix those first
 - Build confidence incrementally
 
 ### 2. Validate AI Decisions
+
 - Review healed locators
 - Verify test selections
 - Monitor false positives
 
 ### 3. Combine with Traditional Methods
+
 - AI + conventional waits
 - AI + manual test design
 - AI + human review
 
 ### 4. Measure Everything
+
 - Track heal success rate
 - Measure time savings
 - Monitor test stability
@@ -732,24 +751,24 @@ best_for:
 ```yaml
 test_automation_metrics:
   maintenance_time:
-    baseline: "40 hours/month"
-    target: "< 10 hours/month"
-    improvement: "75%"
+    baseline: '40 hours/month'
+    target: '< 10 hours/month'
+    improvement: '75%'
 
   flaky_test_rate:
-    baseline: "15%"
-    target: "< 3%"
-    improvement: "80%"
+    baseline: '15%'
+    target: '< 3%'
+    improvement: '80%'
 
   test_execution_time:
-    baseline: "45 minutes"
-    target: "< 15 minutes"
-    improvement: "67%"
+    baseline: '45 minutes'
+    target: '< 15 minutes'
+    improvement: '67%'
 
   defect_detection_rate:
-    baseline: "65%"
-    target: "> 85%"
-    improvement: "31%"
+    baseline: '65%'
+    target: '> 85%'
+    improvement: '31%'
 ```
 
 ## Related Topics
@@ -768,4 +787,4 @@ test_automation_metrics:
 
 ---
 
-*AI-powered test automation makes tests more reliable, reduces maintenance burden by 75%, and catches defects faster through intelligent test selection.*
+_AI-powered test automation makes tests more reliable, reduces maintenance burden by 75%, and catches defects faster through intelligent test selection._

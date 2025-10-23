@@ -19,6 +19,7 @@ Code review is the systematic examination of source code by peers to identify bu
 
 ```markdown
 **Before Creating Pull Request:**
+
 - [ ] Code is complete and tested
 - [ ] All tests pass locally
 - [ ] Code follows style guide
@@ -28,27 +29,33 @@ Code review is the systematic examination of source code by peers to identify bu
 - [ ] Related issue is linked
 
 **Pull Request Template:**
+
 ## Description
+
 [What changes were made and why]
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation
 
 ## Testing
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests pass
 - [ ] Manual testing completed
 
 ## Checklist
+
 - [ ] Code follows style guide
 - [ ] Self-reviewed
 - [ ] Documentation updated
 - [ ] No new warnings
 
 ## Screenshots (if applicable)
+
 [Add screenshots]
 ```
 
@@ -56,6 +63,7 @@ Code review is the systematic examination of source code by peers to identify bu
 
 ```markdown
 **Review Checklist:**
+
 - [ ] Code solves the stated problem
 - [ ] Logic is correct and efficient
 - [ ] Error handling is appropriate
@@ -130,11 +138,13 @@ Code review is the systematic examination of source code by peers to identify bu
 ❌ "You must use map()"
 
 **Balance Feedback:**
+
 - Point out positives, not just issues
 - Prioritize critical issues
 - Don't nitpick excessively
 
 **Review Promptly:**
+
 - Within 24 hours
 - Block time for reviews daily
 - Use notifications effectively
@@ -156,7 +166,7 @@ for (let i = 0; i < array.length; i++) {
 }
 
 // Review Comment:
-"This loop will throw an error on the last iteration. Use i < array.length instead."
+('This loop will throw an error on the last iteration. Use i < array.length instead.');
 ```
 
 ### 2. Error Handling
@@ -186,7 +196,7 @@ async function getUser(id) {
 }
 
 // Review Comment:
-"Add error handling for failed requests and JSON parsing errors"
+('Add error handling for failed requests and JSON parsing errors');
 ```
 
 ### 3. Security
@@ -200,7 +210,7 @@ const query = 'SELECT * FROM users WHERE email = ?';
 db.query(query, [email]);
 
 // Review Comment:
-"⚠️ Security: This is vulnerable to SQL injection. Use parameterized queries."
+('⚠️ Security: This is vulnerable to SQL injection. Use parameterized queries.');
 ```
 
 ### 4. Performance
@@ -219,7 +229,7 @@ users.forEach(user => {
 });
 
 // Review Comment:
-"This will make N database queries. Fetch all orders in one query instead."
+('This will make N database queries. Fetch all orders in one query instead.');
 ```
 
 ### 5. Readability
@@ -240,7 +250,7 @@ if (isActiveUser && isPremiumOrEnterprise && isNotDeleted) {
 }
 
 // Review Comment:
-"Consider extracting this condition to a well-named variable or function for clarity"
+('Consider extracting this condition to a well-named variable or function for clarity');
 ```
 
 ## Code Review Metrics
@@ -263,7 +273,7 @@ const reviewMetrics = {
   approvalRate: 40, // % (typical: 30-50%)
 
   // Defects found in review vs. production
-  defectCatchRate: 85 // % (target: >80%)
+  defectCatchRate: 85, // % (target: >80%)
 };
 ```
 
@@ -305,4 +315,4 @@ const reviewMetrics = {
 
 ---
 
-*Part of: [Development Practices](README.md)*
+_Part of: [Development Practices](README.md)_

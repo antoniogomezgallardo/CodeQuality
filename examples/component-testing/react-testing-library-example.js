@@ -23,7 +23,7 @@ jest.mock('../src/services/api', () => ({
   fetchUser: jest.fn(),
   updateUser: jest.fn(),
   deleteUser: jest.fn(),
-  searchUsers: jest.fn()
+  searchUsers: jest.fn(),
 }));
 
 const mockApi = require('../src/services/api');
@@ -33,15 +33,13 @@ const createWrapper = ({ children }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false },
-      mutations: { retry: false }
-    }
+      mutations: { retry: false },
+    },
   });
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {children}
-      </BrowserRouter>
+      <BrowserRouter>{children}</BrowserRouter>
     </QueryClientProvider>
   );
 };
@@ -58,7 +56,7 @@ describe('UserProfile Component', () => {
     role: 'admin',
     avatar: 'https://example.com/avatar.jpg',
     isActive: true,
-    lastLogin: '2023-01-15T10:30:00Z'
+    lastLogin: '2023-01-15T10:30:00Z',
   };
 
   beforeEach(() => {
@@ -74,7 +72,7 @@ describe('UserProfile Component', () => {
     expect(screen.getByText('admin')).toBeInTheDocument();
 
     // Test avatar rendering
-    const avatar = screen.getByAltText('John Doe\'s avatar');
+    const avatar = screen.getByAltText("John Doe's avatar");
     expect(avatar).toBeInTheDocument();
     expect(avatar).toHaveAttribute('src', mockUser.avatar);
   });
@@ -144,7 +142,7 @@ describe('UserForm Component', () => {
     const initialValues = {
       name: 'John Doe',
       email: 'john.doe@example.com',
-      role: 'admin'
+      role: 'admin',
     };
 
     renderWithProviders(<UserForm initialValues={initialValues} />);
@@ -195,7 +193,7 @@ describe('UserForm Component', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         name: 'Jane Smith',
         email: 'jane.smith@example.com',
-        role: 'user'
+        role: 'user',
       });
     });
   });
@@ -227,7 +225,7 @@ describe('UserList Component', () => {
   const mockUsers = [
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
-    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator' }
+    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator' },
   ];
 
   test('should render list of users', () => {
@@ -293,7 +291,7 @@ describe('SearchableDropdown Component', () => {
   const mockOptions = [
     { value: 'admin', label: 'Administrator' },
     { value: 'user', label: 'User' },
-    { value: 'moderator', label: 'Moderator' }
+    { value: 'moderator', label: 'Moderator' },
   ];
 
   beforeEach(() => {
@@ -301,20 +299,13 @@ describe('SearchableDropdown Component', () => {
   });
 
   test('should render dropdown with placeholder', () => {
-    renderWithProviders(
-      <SearchableDropdown
-        options={mockOptions}
-        placeholder="Select role"
-      />
-    );
+    renderWithProviders(<SearchableDropdown options={mockOptions} placeholder="Select role" />);
 
     expect(screen.getByText('Select role')).toBeInTheDocument();
   });
 
   test('should show options when clicked', async () => {
-    renderWithProviders(
-      <SearchableDropdown options={mockOptions} />
-    );
+    renderWithProviders(<SearchableDropdown options={mockOptions} />);
 
     const dropdown = screen.getByRole('combobox');
     await userEvent.click(dropdown);
@@ -325,9 +316,7 @@ describe('SearchableDropdown Component', () => {
   });
 
   test('should filter options by search term', async () => {
-    renderWithProviders(
-      <SearchableDropdown options={mockOptions} searchable />
-    );
+    renderWithProviders(<SearchableDropdown options={mockOptions} searchable />);
 
     const dropdown = screen.getByRole('combobox');
     await userEvent.click(dropdown);
@@ -340,12 +329,7 @@ describe('SearchableDropdown Component', () => {
 
   test('should call onChange when option is selected', async () => {
     const mockOnChange = jest.fn();
-    renderWithProviders(
-      <SearchableDropdown
-        options={mockOptions}
-        onChange={mockOnChange}
-      />
-    );
+    renderWithProviders(<SearchableDropdown options={mockOptions} onChange={mockOnChange} />);
 
     const dropdown = screen.getByRole('combobox');
     await userEvent.click(dropdown);
@@ -358,10 +342,7 @@ describe('SearchableDropdown Component', () => {
 
   test('should support async option loading', async () => {
     renderWithProviders(
-      <SearchableDropdown
-        loadOptions={mockApi.searchUsers}
-        placeholder="Search users..."
-      />
+      <SearchableDropdown loadOptions={mockApi.searchUsers} placeholder="Search users..." />
     );
 
     const dropdown = screen.getByRole('combobox');
@@ -480,20 +461,18 @@ describe('DataTable Component', () => {
   const mockData = [
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin', status: 'active' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user', status: 'inactive' },
-    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator', status: 'active' }
+    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'moderator', status: 'active' },
   ];
 
   const mockColumns = [
     { key: 'name', title: 'Name', sortable: true },
     { key: 'email', title: 'Email', sortable: true },
     { key: 'role', title: 'Role', sortable: false },
-    { key: 'status', title: 'Status', sortable: true }
+    { key: 'status', title: 'Status', sortable: true },
   ];
 
   test('should render table with data and columns', () => {
-    renderWithProviders(
-      <DataTable data={mockData} columns={mockColumns} />
-    );
+    renderWithProviders(<DataTable data={mockData} columns={mockColumns} />);
 
     // Check headers
     mockColumns.forEach(column => {
@@ -510,9 +489,7 @@ describe('DataTable Component', () => {
   });
 
   test('should sort data when sortable column header is clicked', async () => {
-    renderWithProviders(
-      <DataTable data={mockData} columns={mockColumns} />
-    );
+    renderWithProviders(<DataTable data={mockData} columns={mockColumns} />);
 
     const nameHeader = screen.getByText('Name');
     await userEvent.click(nameHeader);
@@ -549,11 +526,7 @@ describe('DataTable Component', () => {
   test('should call onRowClick when row is clicked', async () => {
     const mockOnRowClick = jest.fn();
     renderWithProviders(
-      <DataTable
-        data={mockData}
-        columns={mockColumns}
-        onRowClick={mockOnRowClick}
-      />
+      <DataTable data={mockData} columns={mockColumns} onRowClick={mockOnRowClick} />
     );
 
     const firstRow = screen.getByTestId('table-row-0');
@@ -563,17 +536,13 @@ describe('DataTable Component', () => {
   });
 
   test('should show empty state when no data', () => {
-    renderWithProviders(
-      <DataTable data={[]} columns={mockColumns} />
-    );
+    renderWithProviders(<DataTable data={[]} columns={mockColumns} />);
 
     expect(screen.getByText(/no data available/i)).toBeInTheDocument();
   });
 
   test('should show loading state', () => {
-    renderWithProviders(
-      <DataTable data={[]} columns={mockColumns} loading={true} />
-    );
+    renderWithProviders(<DataTable data={[]} columns={mockColumns} loading={true} />);
 
     expect(screen.getAllByTestId('skeleton-row')).toHaveLength(5);
   });
@@ -632,7 +601,7 @@ describe('Accessibility Tests', () => {
       id: 1,
       name: 'John Doe',
       email: 'john.doe@example.com',
-      role: 'admin'
+      role: 'admin',
     };
 
     renderWithProviders(<UserProfile user={mockUser} />);
@@ -667,7 +636,4 @@ describe('Accessibility Tests', () => {
   });
 });
 
-export {
-  renderWithProviders,
-  createWrapper
-};
+export { renderWithProviders, createWrapper };

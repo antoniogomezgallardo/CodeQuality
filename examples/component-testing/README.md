@@ -9,6 +9,7 @@ Component testing verifies that individual UI components behave correctly in iso
 ## 📋 Examples Included
 
 ### React Component Testing
+
 - React Testing Library examples
 - Jest snapshot testing
 - User interaction simulation
@@ -16,12 +17,14 @@ Component testing verifies that individual UI components behave correctly in iso
 - Custom hooks testing
 
 ### Vue Component Testing
+
 - Vue Test Utils examples
 - Component lifecycle testing
 - Event handling verification
 - Slot and scoped slot testing
 
 ### Angular Component Testing
+
 - Angular Testing Utilities
 - Component DOM testing
 - Service injection testing
@@ -75,4 +78,4 @@ ng test
 
 ---
 
-*Component testing ensures your UI components work correctly in isolation, providing fast feedback and preventing regressions at the component level.*
+_Component testing ensures your UI components work correctly in isolation, providing fast feedback and preventing regressions at the component level._

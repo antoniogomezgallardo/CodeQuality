@@ -1,15 +1,19 @@
 # AI Fundamentals for QA Engineers
 
 ## Purpose
+
 Provide QA professionals with a solid foundation in AI and Machine Learning concepts, focusing on practical understanding of technologies like LLMs, RAG, embeddings, and prompt engineering that are directly applicable to quality assurance workflows.
 
 ## Context
+
 You don't need a PhD in machine learning to use AI effectively in QA. This guide explains AI concepts in practical terms, focusing on what you need to know to leverage AI tools and build AI-enhanced QA solutions.
 
 ## What is Artificial Intelligence?
 
 ### The Basics
+
 **Artificial Intelligence (AI)** is the ability of machines to perform tasks that typically require human intelligence:
+
 - Understanding language
 - Recognizing patterns
 - Making decisions
@@ -31,9 +35,11 @@ graph TB
 ```
 
 #### 1. Rule-Based AI (Traditional)
+
 **How it works**: Explicit rules programmed by humans
 
 **Example in QA:**
+
 ```python
 # Rule-based test case selector
 def should_run_test(test, code_changes):
@@ -48,14 +54,17 @@ def should_run_test(test, code_changes):
 ```
 
 **Limitations**:
+
 - Requires all rules to be predefined
 - Doesn't learn from data
 - Brittle when situations change
 
 #### 2. Machine Learning (ML)
+
 **How it works**: Learns patterns from data
 
 **Example in QA:**
+
 ```python
 # ML-based defect predictor
 # Learns which code changes cause bugs
@@ -79,14 +88,17 @@ prediction = model.predict([[new_complexity, new_churn, ...]])
 ```
 
 **Advantages**:
+
 - Learns from historical data
 - Adapts to new patterns
 - Finds non-obvious correlations
 
 #### 3. Deep Learning
+
 **How it works**: Neural networks with many layers
 
 **Example in QA:**
+
 ```python
 # Deep learning for log anomaly detection
 import tensorflow as tf
@@ -103,6 +115,7 @@ model = tf.keras.Sequential([
 ```
 
 **When to use**:
+
 - Complex pattern recognition
 - Large amounts of data available
 - Image/text/sequential data
@@ -127,17 +140,21 @@ graph LR
 ```
 
 **Step-by-step:**
+
 1. **Tokenization**: Break text into pieces (tokens)
+
    ```
    "Generate tests" → ["Generate", " tests"]
    ```
 
 2. **Embeddings**: Convert tokens to numbers
+
    ```
    "Generate" → [0.2, -0.5, 0.8, ...]
    ```
 
 3. **Processing**: Neural network predicts next token
+
    ```
    "Generate tests" → 90% "for" | 5% "to" | 3% "that"
    ```
@@ -149,6 +166,7 @@ graph LR
 #### Commercial Models
 
 **OpenAI GPT-4 / GPT-4 Turbo**
+
 ```yaml
 strengths:
   - Excellent code generation
@@ -164,11 +182,11 @@ costs:
   input: $0.01 per 1K tokens
   output: $0.03 per 1K tokens
 
-example_usage:
-  "Generate unit tests for this Python function..."
+example_usage: 'Generate unit tests for this Python function...'
 ```
 
 **Anthropic Claude 3 (Opus, Sonnet, Haiku)**
+
 ```yaml
 strengths:
   - Very long context (200K tokens)
@@ -186,6 +204,7 @@ costs:
 ```
 
 **GitHub Copilot**
+
 ```yaml
 strengths:
   - IDE integration
@@ -197,13 +216,13 @@ use_cases:
   - Quick test generation
   - Boilerplate code
 
-costs:
-  $10-19/user/month
+costs: $10-19/user/month
 ```
 
 #### Open Source Models
 
 **Meta Llama 3**
+
 ```yaml
 strengths:
   - Can run locally
@@ -221,6 +240,7 @@ requirements:
 ```
 
 **Mistral / Mixtral**
+
 ```yaml
 strengths:
   - Efficient
@@ -238,6 +258,7 @@ use_cases:
 **What is it?**: Maximum amount of text an LLM can process at once
 
 **Why it matters for QA:**
+
 ```
 Small context (4K tokens):
 ✗ Can't analyze entire test suite
@@ -250,6 +271,7 @@ Large context (128K+ tokens):
 ```
 
 **Token approximation:**
+
 - 1 token ≈ 0.75 words
 - 1,000 tokens ≈ 750 words
 - 10,000 tokens ≈ 30 pages
@@ -297,6 +319,7 @@ High-dimensional space:
 ### Why Embeddings Matter for QA
 
 **Use Case 1: Similar Test Case Finding**
+
 ```python
 # Find tests similar to a new requirement
 from openai import OpenAI
@@ -327,6 +350,7 @@ similarities = [
 ```
 
 **Use Case 2: Semantic Code Search**
+
 ```python
 # Search codebase by meaning, not keywords
 
@@ -339,6 +363,7 @@ query = "How do we validate user input?"
 ### Popular Embedding Models
 
 **OpenAI text-embedding-3-small**
+
 ```yaml
 dimensions: 1536
 cost: $0.00002 per 1K tokens
@@ -347,6 +372,7 @@ quality: Excellent
 ```
 
 **OpenAI text-embedding-3-large**
+
 ```yaml
 dimensions: 3072
 cost: $0.00013 per 1K tokens
@@ -355,6 +381,7 @@ quality: Best-in-class
 ```
 
 **Open Source: Sentence-BERT**
+
 ```yaml
 dimensions: 384-768
 cost: Free (run locally)
@@ -393,6 +420,7 @@ graph TB
 **Scenario**: Team asks AI about your testing standards
 
 **Without RAG:**
+
 ```
 User: "What are our code coverage requirements?"
 LLM: "Generally, 80% code coverage is considered good..."
@@ -400,6 +428,7 @@ LLM: "Generally, 80% code coverage is considered good..."
 ```
 
 **With RAG:**
+
 ```
 User: "What are our code coverage requirements?"
 
@@ -505,13 +534,13 @@ answer = assistant.answer_question("What testing framework should I use?")
 
 ### RAG vs Fine-Tuning
 
-| Aspect | RAG | Fine-Tuning |
-|--------|-----|-------------|
-| **Cost** | Low ($0.01-0.10 per query) | High ($100-1000+ one-time) |
-| **Updates** | Instant (add new docs) | Slow (retrain model) |
-| **Accuracy** | Excellent for facts | Better for style/tone |
-| **Setup Time** | Hours to days | Weeks |
-| **Best For** | QA docs, standards, processes | Specialized tasks |
+| Aspect         | RAG                           | Fine-Tuning                |
+| -------------- | ----------------------------- | -------------------------- |
+| **Cost**       | Low ($0.01-0.10 per query)    | High ($100-1000+ one-time) |
+| **Updates**    | Instant (add new docs)        | Slow (retrain model)       |
+| **Accuracy**   | Excellent for facts           | Better for style/tone      |
+| **Setup Time** | Hours to days                 | Weeks                      |
+| **Best For**   | QA docs, standards, processes | Specialized tasks          |
 
 **Recommendation for QA**: Start with RAG. It's faster, cheaper, and easier to maintain.
 
@@ -547,16 +576,20 @@ answer = assistant.answer_question("What testing framework should I use?")
 ### Prompt Examples for QA
 
 #### Bad Prompt ❌
+
 ```
 Generate tests
 ```
+
 **Problems:**
+
 - No context about what to test
 - No format specification
 - No testing framework mentioned
 - Unclear expectations
 
 #### Good Prompt ✅
+
 ```
 You are an expert QA engineer specializing in JavaScript testing.
 
@@ -588,6 +621,7 @@ Constraints:
 ### Prompt Patterns for QA
 
 #### Pattern 1: Test Generation
+
 ```
 Role: Expert QA engineer in {language/framework}
 Context: {Brief description of system}
@@ -602,6 +636,7 @@ Constraints:
 ```
 
 #### Pattern 2: Code Review
+
 ```
 Role: Senior software engineer and security expert
 Context: This PR adds {feature_description}
@@ -621,6 +656,7 @@ Constraints:
 ```
 
 #### Pattern 3: Bug Analysis
+
 ```
 Role: Debugging expert with deep system knowledge
 Context: Production issue - {brief description}
@@ -640,7 +676,9 @@ Evidence:
 ### Advanced Prompt Techniques
 
 #### Chain of Thought (CoT)
+
 Force step-by-step reasoning:
+
 ```
 Analyze this code for potential bugs.
 Think through this step-by-step:
@@ -651,7 +689,9 @@ Think through this step-by-step:
 ```
 
 #### Few-Shot Learning
+
 Provide examples:
+
 ```
 Generate tests following these examples:
 
@@ -673,7 +713,9 @@ Function: validatePhoneNumber(phone)
 ```
 
 #### Self-Consistency
+
 Ask for multiple approaches:
+
 ```
 Provide 3 different approaches to test this async function.
 Evaluate pros and cons of each approach.
@@ -687,6 +729,7 @@ Recommend the best approach for our use case.
 **What is a token?** Roughly a word or part of a word.
 
 **Token examples:**
+
 ```
 Text: "Generate unit tests"
 Tokens: ["Generate", " unit", " tests"]
@@ -703,12 +746,12 @@ Count: 4 tokens
 
 ### Token Limits by Model
 
-| Model | Context Window | ~Pages | ~Code Files |
-|-------|---------------|---------|-------------|
-| GPT-3.5 Turbo | 16K tokens | 50 | 5-10 small |
-| GPT-4 Turbo | 128K tokens | 400 | 20-40 |
-| Claude 3 Opus | 200K tokens | 625 | 40-80 |
-| Claude 3 Haiku | 200K tokens | 625 | 40-80 |
+| Model          | Context Window | ~Pages | ~Code Files |
+| -------------- | -------------- | ------ | ----------- |
+| GPT-3.5 Turbo  | 16K tokens     | 50     | 5-10 small  |
+| GPT-4 Turbo    | 128K tokens    | 400    | 20-40       |
+| Claude 3 Opus  | 200K tokens    | 625    | 40-80       |
+| Claude 3 Haiku | 200K tokens    | 625    | 40-80       |
 
 ### Managing Token Usage
 
@@ -717,6 +760,7 @@ Count: 4 tokens
 **Solutions:**
 
 **1. Chunking**
+
 ```python
 # Split large file into chunks
 def chunk_code(code, max_tokens=4000):
@@ -740,6 +784,7 @@ def chunk_code(code, max_tokens=4000):
 ```
 
 **2. Summarization**
+
 ```python
 # Summarize less important parts
 def prepare_context(full_code):
@@ -756,6 +801,7 @@ def prepare_context(full_code):
 ```
 
 **3. Selective Context**
+
 ```python
 # Only include relevant files
 def get_relevant_context(query, codebase):
@@ -769,14 +815,17 @@ def get_relevant_context(query, codebase):
 ## AI Model Types for QA
 
 ### Classification Models
+
 **What they do**: Categorize items into predefined classes
 
 **QA Use Cases:**
+
 - Bug severity classification (Critical/High/Medium/Low)
 - Test type classification (Unit/Integration/E2E)
 - Log level detection (Error/Warning/Info)
 
 **Example:**
+
 ```python
 from sklearn.ensemble import RandomForestClassifier
 
@@ -792,14 +841,17 @@ new_bug_severity = model.predict(extract_features(new_bug))
 ```
 
 ### Regression Models
+
 **What they do**: Predict continuous numerical values
 
 **QA Use Cases:**
+
 - Estimate bug fix time
 - Predict test execution time
 - Forecast defect density
 
 **Example:**
+
 ```python
 from sklearn.linear_model import LinearRegression
 
@@ -815,14 +867,17 @@ estimated_hours = model.predict([[bug_complexity, dev_experience, priority]])
 ```
 
 ### Anomaly Detection Models
+
 **What they do**: Identify unusual patterns
 
 **QA Use Cases:**
+
 - Detect performance anomalies
 - Find unusual test failures
 - Identify security threats
 
 **Example:**
+
 ```python
 from sklearn.ensemble import IsolationForest
 
@@ -839,14 +894,17 @@ anomalies = [rt for rt, pred in zip(response_times, predictions) if pred == -1]
 ```
 
 ### Generative Models
+
 **What they do**: Create new content (text, code, etc.)
 
 **QA Use Cases:**
+
 - Generate test cases
 - Create test data
 - Write documentation
 
 **Example (using LLM):**
+
 ```python
 from openai import OpenAI
 
@@ -868,12 +926,14 @@ test_cases = response.choices[0].message.content
 ### When to Train Your Own Model
 
 **Use Pre-trained (LLMs, embeddings)**:
+
 - ✅ Need general language understanding
 - ✅ Want immediate results
 - ✅ Have limited ML expertise
 - ✅ Don't have large datasets
 
 **Train Custom Model**:
+
 - ✅ Have specific domain requirements
 - ✅ Need privacy (no external APIs)
 - ✅ Have historical data (1000+ examples)
@@ -935,6 +995,7 @@ def predict_defect_risk(code_change):
 **Hallucination**: AI generating false information confidently
 
 **Examples:**
+
 ```
 User: "What testing framework does our project use?"
 AI: "Your project uses TestNG with Selenium Grid."
@@ -943,6 +1004,7 @@ Reality: Project uses Jest, AI made it up ❌
 ```
 
 **Mitigation:**
+
 - ✅ Always verify AI outputs
 - ✅ Use RAG to ground responses in facts
 - ✅ Ask AI to cite sources
@@ -951,12 +1013,14 @@ Reality: Project uses Jest, AI made it up ❌
 ### AI Doesn't Replace Judgment
 
 **AI is good at:**
+
 - ✅ Pattern recognition
 - ✅ Repetitive tasks
 - ✅ Generating options
 - ✅ Finding anomalies
 
 **Humans are better at:**
+
 - ✅ Context understanding
 - ✅ Ethical decisions
 - ✅ Creative problem-solving
@@ -965,6 +1029,7 @@ Reality: Project uses Jest, AI made it up ❌
 ### Validation Checklist
 
 When using AI-generated code/tests:
+
 - [ ] Does it compile/run?
 - [ ] Does it actually test what it claims?
 - [ ] Are edge cases covered?
@@ -978,6 +1043,7 @@ When using AI-generated code/tests:
 ### Cost Breakdown
 
 **LLM API Costs:**
+
 ```
 Test generation session:
 - Input: 2,000 tokens (code + prompt)
@@ -989,6 +1055,7 @@ Monthly team usage (10 people, 50 generations each):
 ```
 
 **Embedding costs:**
+
 ```
 Index 1,000 documentation pages:
 - Average 500 tokens per page
@@ -1002,6 +1069,7 @@ Query cost:
 ### Optimization Strategies
 
 **1. Use Cheaper Models for Simple Tasks**
+
 ```python
 def choose_model(task_complexity):
     if task_complexity == 'simple':
@@ -1013,6 +1081,7 @@ def choose_model(task_complexity):
 ```
 
 **2. Cache Common Responses**
+
 ```python
 import hashlib
 import redis
@@ -1035,6 +1104,7 @@ def get_ai_response(prompt):
 ```
 
 **3. Batch Requests**
+
 ```python
 # Instead of 10 separate requests
 for file in files:
@@ -1048,24 +1118,28 @@ all_tests = generate_tests_batch(all_code)  # 1 API call
 ## Practical Next Steps
 
 ### Week 1: Foundation
+
 - [ ] Create OpenAI/Anthropic account
 - [ ] Try generating tests with ChatGPT
 - [ ] Experiment with different prompts
 - [ ] Calculate token usage for your use cases
 
 ### Week 2: Integration
+
 - [ ] Install GitHub Copilot or similar
 - [ ] Use AI for code completion
 - [ ] Generate tests for existing code
 - [ ] Measure time savings
 
 ### Week 3: RAG Basics
+
 - [ ] Choose vector database (start with Chroma)
 - [ ] Index team documentation
 - [ ] Build simple Q&A bot
 - [ ] Share with team
 
 ### Week 4: Production
+
 - [ ] Integrate AI into CI/CD
 - [ ] Set up code review automation
 - [ ] Monitor costs and quality
@@ -1110,4 +1184,4 @@ A: Always review. AI is a junior developer that needs supervision. Use it to acc
 
 ---
 
-*Next: [AI-Assisted Testing](ai-assisted-testing.md) - Learn how to generate and maintain tests with AI*
+_Next: [AI-Assisted Testing](ai-assisted-testing.md) - Learn how to generate and maintain tests with AI_

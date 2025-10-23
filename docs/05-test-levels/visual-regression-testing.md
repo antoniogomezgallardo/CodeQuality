@@ -1,10 +1,13 @@
 # Visual Regression Testing
 
 ## Purpose
+
 In-depth guide to visual regression testing—implementing systematic approaches to detect and prevent unintended visual changes in web applications through automated baseline comparison and intelligent diff analysis.
 
 ## Overview
+
 Visual regression testing is:
+
 - Automated detection of visual changes
 - Systematic baseline management
 - Intelligent image comparison algorithms
@@ -14,6 +17,7 @@ Visual regression testing is:
 ## What is Visual Regression Testing?
 
 ### Definition
+
 Visual regression testing is the practice of automatically comparing visual snapshots of web pages or components against baseline images to detect unintended visual changes that may indicate bugs or regressions.
 
 ### The Visual Regression Problem
@@ -109,8 +113,8 @@ class PixelPerfectComparator {
         error: 'Image dimensions do not match',
         dimensions: {
           baseline: { width: baseline.width, height: baseline.height },
-          current: { width: current.width, height: current.height }
-        }
+          current: { width: current.width, height: current.height },
+        },
       };
     }
 
@@ -155,7 +159,7 @@ class PixelPerfectComparator {
       mismatchedPixels,
       totalPixels,
       mismatchPercentage: mismatchPercentage.toFixed(4),
-      diffImage
+      diffImage,
     };
   }
 
@@ -163,7 +167,7 @@ class PixelPerfectComparator {
     return new Promise((resolve, reject) => {
       fs.createReadStream(path)
         .pipe(new PNG())
-        .on('parsed', function() {
+        .on('parsed', function () {
           resolve(this);
         })
         .on('error', reject);
@@ -200,7 +204,7 @@ class PerceptualDiffComparator {
       alpha: options.alpha || 0.1,
       aaColor: options.aaColor || [255, 255, 0],
       diffColor: options.diffColor || [255, 0, 0],
-      diffColorAlt: options.diffColorAlt || [0, 255, 0]
+      diffColorAlt: options.diffColorAlt || [0, 255, 0],
     };
   }
 
@@ -218,7 +222,7 @@ class PerceptualDiffComparator {
     if (width !== current.width || height !== current.height) {
       throw new Error(
         `Image dimensions do not match: ` +
-        `${width}x${height} vs ${current.width}x${current.height}`
+          `${width}x${height} vs ${current.width}x${current.height}`
       );
     }
 
@@ -248,7 +252,7 @@ class PerceptualDiffComparator {
       totalPixels,
       mismatchPercentage: mismatchPercentage.toFixed(4),
       dimensions: { width, height },
-      diffImagePath: diffPath
+      diffImagePath: diffPath,
     };
   }
 
@@ -288,7 +292,7 @@ class PerceptualDiffComparator {
     for (let i = 0; i < mask.length; i++) {
       if (mask[i] === 1) {
         const idx = i << 2;
-        image.data[idx] = 0;     // R
+        image.data[idx] = 0; // R
         image.data[idx + 1] = 0; // G
         image.data[idx + 2] = 0; // B
         image.data[idx + 3] = 0; // A
@@ -326,11 +330,7 @@ class AntiAliasingAwareComparator {
       for (let x = 0; x < baseline.width; x++) {
         const idx = (baseline.width * y + x) << 2;
 
-        const delta = this.colorDelta(
-          baseline.data,
-          current.data,
-          idx
-        );
+        const delta = this.colorDelta(baseline.data, current.data, idx);
 
         if (delta > this.threshold) {
           // Check if this is anti-aliasing
@@ -343,9 +343,7 @@ class AntiAliasingAwareComparator {
       }
     }
 
-    const totalMismatches = this.includeAA ?
-      mismatchedPixels + aaPixels :
-      mismatchedPixels;
+    const totalMismatches = this.includeAA ? mismatchedPixels + aaPixels : mismatchedPixels;
 
     return {
       match: totalMismatches === 0,
@@ -353,7 +351,7 @@ class AntiAliasingAwareComparator {
       aaPixels,
       totalPixels,
       mismatchPercentage: ((totalMismatches / totalPixels) * 100).toFixed(4),
-      aaPercentage: ((aaPixels / totalPixels) * 100).toFixed(4)
+      aaPercentage: ((aaPixels / totalPixels) * 100).toFixed(4),
     };
   }
 
@@ -369,11 +367,7 @@ class AntiAliasingAwareComparator {
   isAntiAliasing(img1, img2, x, y, idx) {
     // Check neighboring pixels for similar colors
     const neighbors = this.getNeighbors(img1, x, y);
-    const currentColor = [
-      img2.data[idx],
-      img2.data[idx + 1],
-      img2.data[idx + 2]
-    ];
+    const currentColor = [img2.data[idx], img2.data[idx + 1], img2.data[idx + 2]];
 
     // If any neighbor in baseline is similar to current pixel,
     // this is likely anti-aliasing
@@ -386,9 +380,14 @@ class AntiAliasingAwareComparator {
   getNeighbors(img, x, y) {
     const neighbors = [];
     const offsets = [
-      [-1, -1], [0, -1], [1, -1],
-      [-1, 0],           [1, 0],
-      [-1, 1],  [0, 1],  [1, 1]
+      [-1, -1],
+      [0, -1],
+      [1, -1],
+      [-1, 0],
+      [1, 0],
+      [-1, 1],
+      [0, 1],
+      [1, 1],
     ];
 
     for (const [dx, dy] of offsets) {
@@ -397,11 +396,7 @@ class AntiAliasingAwareComparator {
 
       if (nx >= 0 && nx < img.width && ny >= 0 && ny < img.height) {
         const idx = (img.width * ny + nx) << 2;
-        neighbors.push([
-          img.data[idx],
-          img.data[idx + 1],
-          img.data[idx + 2]
-        ]);
+        neighbors.push([img.data[idx], img.data[idx + 1], img.data[idx + 2]]);
       }
     }
 
@@ -422,7 +417,7 @@ class AntiAliasingAwareComparator {
     return new Promise((resolve, reject) => {
       fs.createReadStream(path)
         .pipe(new PNG())
-        .on('parsed', function() {
+        .on('parsed', function () {
           resolve(this);
         })
         .on('error', reject);
@@ -464,7 +459,7 @@ class BaselineManager {
       await this.saveMetadata({
         version: '1.0.0',
         created: new Date().toISOString(),
-        baselines: {}
+        baselines: {},
       });
     }
   }
@@ -474,11 +469,7 @@ class BaselineManager {
    */
   async saveBaseline(name, imagePath, metadata = {}) {
     const hash = await this.hashFile(imagePath);
-    const baselinePath = path.join(
-      this.baseDir,
-      'images',
-      `${name}-${hash}.png`
-    );
+    const baselinePath = path.join(this.baseDir, 'images', `${name}-${hash}.png`);
 
     // Copy image to baseline directory
     await fs.copyFile(imagePath, baselinePath);
@@ -489,7 +480,7 @@ class BaselineManager {
       hash,
       path: baselinePath,
       created: new Date().toISOString(),
-      ...metadata
+      ...metadata,
     };
     await this.saveMetadata(meta);
 
@@ -519,7 +510,7 @@ class BaselineManager {
 
     // Save new baseline
     return this.saveBaseline(name, newImagePath, {
-      updated: new Date().toISOString()
+      updated: new Date().toISOString(),
     });
   }
 
@@ -537,10 +528,7 @@ class BaselineManager {
     const archiveDir = path.join(this.baseDir, 'archive');
     await fs.mkdir(archiveDir, { recursive: true });
 
-    const archivePath = path.join(
-      archiveDir,
-      `${name}-${Date.now()}.png`
-    );
+    const archivePath = path.join(archiveDir, `${name}-${Date.now()}.png`);
 
     await fs.copyFile(baseline.path, archivePath);
   }
@@ -618,11 +606,7 @@ class BaselineManager {
 
     // Save diff if there are differences
     if (!result.match && result.diffImage) {
-      const diffPath = path.join(
-        this.baseDir,
-        'diffs',
-        `${name}-${Date.now()}.png`
-      );
+      const diffPath = path.join(this.baseDir, 'diffs', `${name}-${Date.now()}.png`);
       await comparator.saveDiffImage(result.diffImage, diffPath);
       result.diffPath = diffPath;
     }
@@ -643,10 +627,7 @@ class BaselineManager {
   }
 
   async saveMetadata(metadata) {
-    await fs.writeFile(
-      this.metadataFile,
-      JSON.stringify(metadata, null, 2)
-    );
+    await fs.writeFile(this.metadataFile, JSON.stringify(metadata, null, 2));
   }
 }
 
@@ -694,15 +675,10 @@ class GitBaselineManager extends BaselineManager {
     const tempPath = `/tmp/${name}-${commitHash}.png`;
 
     try {
-      execSync(
-        `git show ${commitHash}:${baseline.path} > ${tempPath}`,
-        { cwd: process.cwd() }
-      );
+      execSync(`git show ${commitHash}:${baseline.path} > ${tempPath}`, { cwd: process.cwd() });
       return tempPath;
     } catch (error) {
-      throw new Error(
-        `Failed to retrieve baseline from commit ${commitHash}: ${error.message}`
-      );
+      throw new Error(`Failed to retrieve baseline from commit ${commitHash}: ${error.message}`);
     }
   }
 
@@ -710,10 +686,10 @@ class GitBaselineManager extends BaselineManager {
    * Compare current with baseline from specific branch
    */
   async compareWithBranch(name, currentImagePath, branch = 'main') {
-    const latestCommit = execSync(
-      `git rev-parse ${branch}`,
-      { cwd: process.cwd(), encoding: 'utf8' }
-    ).trim();
+    const latestCommit = execSync(`git rev-parse ${branch}`, {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    }).trim();
 
     const baselinePath = await this.getBaselineFromCommit(name, latestCommit);
     return this.compare(name, currentImagePath, baselinePath);
@@ -724,10 +700,7 @@ class GitBaselineManager extends BaselineManager {
    */
   async tagBaselines(tagName, message) {
     try {
-      execSync(
-        `git tag -a ${tagName} -m "${message}"`,
-        { cwd: process.cwd() }
-      );
+      execSync(`git tag -a ${tagName} -m "${message}"`, { cwd: process.cwd() });
       execSync(`git push origin ${tagName}`, { cwd: process.cwd() });
       return true;
     } catch (error) {
@@ -769,7 +742,7 @@ class AdaptiveThresholdCalculator {
 
     // Set threshold at mean + 2 standard deviations
     // This allows for normal variation while catching outliers
-    const calculatedThreshold = mean + (2 * stdDev);
+    const calculatedThreshold = mean + 2 * stdDev;
 
     return Math.max(defaultThreshold, calculatedThreshold);
   }
@@ -782,7 +755,7 @@ class AdaptiveThresholdCalculator {
       testName,
       mismatchPercentage,
       passed,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Limit history size
@@ -831,22 +804,22 @@ class ContextAwareThreshold {
   constructor() {
     this.thresholds = {
       // Element-specific thresholds
-      logo: 0.01,           // Very strict
-      icons: 0.05,          // Strict
-      text: 0.1,            // Moderate (anti-aliasing)
-      images: 0.5,          // Lenient (compression)
-      charts: 2.0,          // Very lenient (dynamic data)
-      ads: 5.0,             // Extremely lenient
+      logo: 0.01, // Very strict
+      icons: 0.05, // Strict
+      text: 0.1, // Moderate (anti-aliasing)
+      images: 0.5, // Lenient (compression)
+      charts: 2.0, // Very lenient (dynamic data)
+      ads: 5.0, // Extremely lenient
 
       // Browser-specific thresholds
       chrome: 0.1,
-      firefox: 0.15,        // More lenient for Firefox
-      safari: 0.2,          // Most lenient for Safari
+      firefox: 0.15, // More lenient for Firefox
+      safari: 0.2, // Most lenient for Safari
 
       // Viewport-specific thresholds
-      mobile: 0.2,          // More lenient on mobile
+      mobile: 0.2, // More lenient on mobile
       tablet: 0.15,
-      desktop: 0.1
+      desktop: 0.1,
     };
   }
 
@@ -854,13 +827,7 @@ class ContextAwareThreshold {
    * Get threshold based on context
    */
   getThreshold(context) {
-    const {
-      elementType,
-      browser,
-      viewport,
-      hasAnimations,
-      hasDynamicContent
-    } = context;
+    const { elementType, browser, viewport, hasAnimations, hasDynamicContent } = context;
 
     let threshold = 0.1; // Default
 
@@ -922,18 +889,18 @@ class FalsePositiveDetector {
       {
         name: 'timestamp',
         regex: /\d{4}-\d{2}-\d{2}|\d{2}:\d{2}:\d{2}/,
-        description: 'Date/time stamps'
+        description: 'Date/time stamps',
       },
       {
         name: 'random-id',
         regex: /id-[a-f0-9]{8}-[a-f0-9]{4}/,
-        description: 'Random IDs'
+        description: 'Random IDs',
       },
       {
         name: 'counter',
         regex: /\d+\s+(views?|likes?|comments?)/i,
-        description: 'Dynamic counters'
-      }
+        description: 'Dynamic counters',
+      },
     ];
   }
 
@@ -945,18 +912,14 @@ class FalsePositiveDetector {
 
     // Check for common false positive patterns
     for (const pattern of this.patterns) {
-      const detected = await this.detectPattern(
-        baselineImagePath,
-        currentImagePath,
-        pattern
-      );
+      const detected = await this.detectPattern(baselineImagePath, currentImagePath, pattern);
 
       if (detected) {
         issues.push({
           type: 'false-positive',
           pattern: pattern.name,
           description: pattern.description,
-          recommendation: `Consider hiding elements matching: ${pattern.regex}`
+          recommendation: `Consider hiding elements matching: ${pattern.regex}`,
         });
       }
     }
@@ -968,27 +931,24 @@ class FalsePositiveDetector {
         type: 'isolated-difference',
         count: isolatedDiffs.length,
         regions: isolatedDiffs,
-        recommendation: 'Review if these are intentional changes'
+        recommendation: 'Review if these are intentional changes',
       });
     }
 
     // Check for anti-aliasing differences
-    const aaIssues = await this.detectAntiAliasingIssues(
-      baselineImagePath,
-      currentImagePath
-    );
+    const aaIssues = await this.detectAntiAliasingIssues(baselineImagePath, currentImagePath);
     if (aaIssues) {
       issues.push({
         type: 'anti-aliasing',
         percentage: aaIssues.percentage,
-        recommendation: 'Consider enabling anti-aliasing detection'
+        recommendation: 'Consider enabling anti-aliasing detection',
       });
     }
 
     return {
       hasFalsePositives: issues.length > 0,
       issues,
-      confidence: this.calculateConfidence(issues)
+      confidence: this.calculateConfidence(issues),
     };
   }
 
@@ -1031,13 +991,10 @@ class FalsePositiveDetector {
     const weights = {
       'false-positive': 0.8,
       'isolated-difference': 0.6,
-      'anti-aliasing': 0.9
+      'anti-aliasing': 0.9,
     };
 
-    const totalWeight = issues.reduce(
-      (sum, issue) => sum + (weights[issue.type] || 0.5),
-      0
-    );
+    const totalWeight = issues.reduce((sum, issue) => sum + (weights[issue.type] || 0.5), 0);
 
     return (totalWeight / issues.length) * 100;
   }
@@ -1086,12 +1043,12 @@ class FalsePositiveFilter {
           ...result,
           filtered: true,
           falsePositive: true,
-          analysis
+          analysis,
         });
       } else {
         filtered.push({
           ...result,
-          analysis
+          analysis,
         });
       }
     }
@@ -1117,10 +1074,10 @@ class FalsePositiveFilter {
       filterRate: ((filtered / total) * 100).toFixed(2),
       results: results.map(r => ({
         name: r.name,
-        status: r.match ? 'pass' : (r.filtered ? 'filtered' : 'fail'),
+        status: r.match ? 'pass' : r.filtered ? 'filtered' : 'fail',
         mismatchPercentage: r.mismatchPercentage,
-        analysis: r.analysis
-      }))
+        analysis: r.analysis,
+      })),
     };
   }
 }
@@ -1145,23 +1102,23 @@ class VisualTestingToolComparison {
           'Responsive testing built-in',
           'Smart baseline management',
           'Great diff viewer',
-          'Team collaboration features'
+          'Team collaboration features',
         ],
         cons: [
           'Requires paid subscription',
           'External service dependency',
           'Limited customization',
-          'Network latency on uploads'
+          'Network latency on uploads',
         ],
         bestFor: [
           'Teams needing collaboration',
           'CI/CD pipelines',
           'Multi-browser testing',
-          'Production applications'
+          'Production applications',
         ],
         pricing: 'Paid (free tier available)',
         setup: 'Easy',
-        maintenance: 'Low'
+        maintenance: 'Low',
       },
 
       chromatic: {
@@ -1172,23 +1129,23 @@ class VisualTestingToolComparison {
           'UI Review workflow',
           'Visual test coverage tracking',
           'Interaction testing',
-          'Accessibility checks'
+          'Accessibility checks',
         ],
         cons: [
           'Requires Storybook',
           'Paid for private projects',
           'Limited to component testing',
-          'External dependency'
+          'External dependency',
         ],
         bestFor: [
           'Component libraries',
           'Design systems',
           'Storybook users',
-          'Frontend components'
+          'Frontend components',
         ],
         pricing: 'Paid (free for open source)',
         setup: 'Easy (with Storybook)',
-        maintenance: 'Low'
+        maintenance: 'Low',
       },
 
       backstopjs: {
@@ -1199,24 +1156,24 @@ class VisualTestingToolComparison {
           'No external dependencies',
           'Flexible scripting',
           'Good reporting',
-          'Self-hosted'
+          'Self-hosted',
         ],
         cons: [
           'Manual setup required',
           'No cloud features',
           'Limited parallel execution',
           'Basic diff viewer',
-          'Higher maintenance'
+          'Higher maintenance',
         ],
         bestFor: [
           'Full page testing',
           'Budget-conscious teams',
           'Custom workflows',
-          'Complete control needed'
+          'Complete control needed',
         ],
         pricing: 'Free',
         setup: 'Moderate',
-        maintenance: 'Moderate to High'
+        maintenance: 'Moderate to High',
       },
 
       wraith: {
@@ -1226,22 +1183,18 @@ class VisualTestingToolComparison {
           'Multi-domain comparison',
           'Good for migrations',
           'Simple configuration',
-          'Self-hosted'
+          'Self-hosted',
         ],
         cons: [
           'Limited active development',
           'Basic features',
           'Manual baseline management',
-          'Limited browser support'
+          'Limited browser support',
         ],
-        bestFor: [
-          'Site migrations',
-          'Comparing environments',
-          'Simple use cases'
-        ],
+        bestFor: ['Site migrations', 'Comparing environments', 'Simple use cases'],
         pricing: 'Free',
         setup: 'Easy',
-        maintenance: 'Moderate'
+        maintenance: 'Moderate',
       },
 
       applitools: {
@@ -1252,24 +1205,24 @@ class VisualTestingToolComparison {
           'Smart diff detection',
           'Cross-browser cloud',
           'Advanced features',
-          'Root cause analysis'
+          'Root cause analysis',
         ],
         cons: [
           'Expensive',
           'External dependency',
           'Learning curve',
-          'Overkill for simple projects'
+          'Overkill for simple projects',
         ],
         bestFor: [
           'Enterprise applications',
           'Complex UIs',
           'Multi-platform testing',
-          'AI-powered analysis'
+          'AI-powered analysis',
         ],
         pricing: 'Expensive',
         setup: 'Easy to Moderate',
-        maintenance: 'Low'
-      }
+        maintenance: 'Low',
+      },
     };
   }
 
@@ -1315,7 +1268,7 @@ class VisualTestingToolComparison {
       .map(([name, score]) => ({
         name: this.tools[name].name,
         score,
-        details: this.tools[name]
+        details: this.tools[name],
       }));
   }
 
@@ -1327,9 +1280,9 @@ class VisualTestingToolComparison {
       'component-library': 'chromatic',
       'full-application': 'percy',
       'budget-conscious': 'backstopjs',
-      'enterprise': 'applitools',
-      'migration': 'wraith',
-      'ci-cd': 'percy'
+      enterprise: 'applitools',
+      migration: 'wraith',
+      'ci-cd': 'percy',
     };
 
     const toolKey = recommendations[useCase];
@@ -1345,7 +1298,7 @@ class VisualTestingToolComparison {
       tool.name,
       tool.pricing,
       tool.setup,
-      tool.bestFor.join(', ')
+      tool.bestFor.join(', '),
     ]);
 
     return { headers, rows };
@@ -1375,14 +1328,12 @@ class MLVisualTesting {
     this.trainingData = labeledData;
 
     // Extract features from images
-    const features = await Promise.all(
-      labeledData.map(data => this.extractFeatures(data.image))
-    );
+    const features = await Promise.all(labeledData.map(data => this.extractFeatures(data.image)));
 
     // Train model (simplified)
     this.model = {
       features,
-      labels: labeledData.map(d => d.label)
+      labels: labeledData.map(d => d.label),
     };
   }
 
@@ -1401,10 +1352,7 @@ class MLVisualTesting {
     let prediction = null;
 
     for (let i = 0; i < this.model.features.length; i++) {
-      const distance = this.calculateDistance(
-        features,
-        this.model.features[i]
-      );
+      const distance = this.calculateDistance(features, this.model.features[i]);
 
       if (distance < minDistance) {
         minDistance = distance;
@@ -1414,7 +1362,7 @@ class MLVisualTesting {
 
     return {
       prediction,
-      confidence: 1 - (minDistance / 100)
+      confidence: 1 - minDistance / 100,
     };
   }
 
@@ -1427,7 +1375,7 @@ class MLVisualTesting {
     return {
       histogram: await this.calculateHistogram(imagePath),
       edges: await this.detectEdges(imagePath),
-      corners: await this.detectCorners(imagePath)
+      corners: await this.detectCorners(imagePath),
     };
   }
 
@@ -1477,7 +1425,7 @@ class RootCauseAnalyzer {
         type: 'layout',
         description: 'Layout structure changed',
         severity: 'high',
-        details: layoutChange
+        details: layoutChange,
       });
     }
 
@@ -1488,7 +1436,7 @@ class RootCauseAnalyzer {
         type: 'color',
         description: 'Color scheme changed',
         severity: 'medium',
-        details: colorChange
+        details: colorChange,
       });
     }
 
@@ -1499,7 +1447,7 @@ class RootCauseAnalyzer {
         type: 'text',
         description: 'Text content or font changed',
         severity: 'low',
-        details: textChange
+        details: textChange,
       });
     }
 
@@ -1510,14 +1458,14 @@ class RootCauseAnalyzer {
         type: 'size',
         description: 'Element sizes changed',
         severity: 'high',
-        details: sizeChange
+        details: sizeChange,
       });
     }
 
     return {
       causes,
       primaryCause: causes.length > 0 ? causes[0] : null,
-      recommendation: this.generateRecommendation(causes)
+      recommendation: this.generateRecommendation(causes),
     };
   }
 
@@ -1551,7 +1499,7 @@ class RootCauseAnalyzer {
       layout: 'Check CSS changes, flexbox/grid properties, and responsive breakpoints',
       color: 'Review theme changes, CSS variables, and color palette updates',
       text: 'Verify font loading, text content changes, and typography settings',
-      size: 'Check padding, margin, width/height properties, and container sizes'
+      size: 'Check padding, margin, width/height properties, and container sizes',
     };
 
     return recommendations[primaryCause.type] || 'Review recent code changes';
@@ -1569,51 +1517,31 @@ module.exports = RootCauseAnalyzer;
 // config/visual-test-coverage.js
 module.exports = {
   // Core pages (must test)
-  corePaths: [
-    '/',
-    '/products',
-    '/checkout',
-    '/login',
-    '/dashboard'
-  ],
+  corePaths: ['/', '/products', '/checkout', '/login', '/dashboard'],
 
   // Component library
-  components: [
-    'button',
-    'form',
-    'modal',
-    'card',
-    'navigation'
-  ],
+  components: ['button', 'form', 'modal', 'card', 'navigation'],
 
   // Responsive breakpoints
   viewports: [
     { name: 'mobile', width: 375, height: 667 },
     { name: 'tablet', width: 768, height: 1024 },
-    { name: 'desktop', width: 1280, height: 800 }
+    { name: 'desktop', width: 1280, height: 800 },
   ],
 
   // Browser matrix
   browsers: ['chrome', 'firefox', 'safari'],
 
   // States to test
-  states: [
-    'default',
-    'hover',
-    'focus',
-    'active',
-    'disabled',
-    'error',
-    'loading'
-  ],
+  states: ['default', 'hover', 'focus', 'active', 'disabled', 'error', 'loading'],
 
   // Coverage targets
   targets: {
-    pages: 100,      // All critical pages
-    components: 90,  // Most components
-    states: 70,      // Key states
-    browsers: 100    // All supported browsers
-  }
+    pages: 100, // All critical pages
+    components: 90, // Most components
+    states: 70, // Key states
+    browsers: 100, // All supported browsers
+  },
 };
 ```
 
@@ -1662,6 +1590,7 @@ module.exports = MaintenanceSchedule;
 ### Visual Regression Testing Implementation Checklist
 
 **Setup:**
+
 - [ ] Choose comparison algorithm
 - [ ] Configure baseline management
 - [ ] Set up version control for baselines
@@ -1670,6 +1599,7 @@ module.exports = MaintenanceSchedule;
 - [ ] Set up reporting and notifications
 
 **Baseline Management:**
+
 - [ ] Create initial baselines
 - [ ] Review and approve baselines
 - [ ] Version control baselines
@@ -1678,6 +1608,7 @@ module.exports = MaintenanceSchedule;
 - [ ] Implement baseline cleanup
 
 **Threshold Configuration:**
+
 - [ ] Set default thresholds
 - [ ] Configure element-specific thresholds
 - [ ] Adjust for browser differences
@@ -1686,6 +1617,7 @@ module.exports = MaintenanceSchedule;
 - [ ] Review threshold effectiveness
 
 **False Positive Handling:**
+
 - [ ] Identify common false positives
 - [ ] Implement auto-filtering
 - [ ] Configure ignore regions
@@ -1694,6 +1626,7 @@ module.exports = MaintenanceSchedule;
 - [ ] Regular false positive review
 
 **Comparison Strategy:**
+
 - [ ] Choose appropriate algorithm
 - [ ] Configure anti-aliasing detection
 - [ ] Handle responsive layouts
@@ -1702,6 +1635,7 @@ module.exports = MaintenanceSchedule;
 - [ ] Optimize comparison performance
 
 **Maintenance:**
+
 - [ ] Regular baseline updates
 - [ ] Threshold adjustments
 - [ ] Tool version updates
@@ -1712,11 +1646,13 @@ module.exports = MaintenanceSchedule;
 ## References
 
 ### Standards and Guidelines
+
 - **WCAG 2.1** - Accessibility guidelines
 - **ISO 9241-210** - Human-centered design
 - **W3C** - Web standards
 
 ### Tools and Frameworks
+
 - **Percy** - Visual testing platform
 - **Chromatic** - Storybook visual testing
 - **BackstopJS** - Visual regression testing
@@ -1724,6 +1660,7 @@ module.exports = MaintenanceSchedule;
 - **Resemble.js** - Image analysis
 
 ### Research Papers
+
 - "Perceptual Color Difference Metrics" - Delta E algorithms
 - "Anti-Aliasing in Computer Graphics" - AA detection
 - "Image Comparison Algorithms" - Various approaches
@@ -1737,4 +1674,4 @@ module.exports = MaintenanceSchedule;
 
 ---
 
-*Part of: [Test Levels](05-README.md)*
+_Part of: [Test Levels](05-README.md)_

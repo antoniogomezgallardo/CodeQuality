@@ -32,9 +32,7 @@ describe('User Service Provider Tests', () => {
         providerBaseUrl: `http://localhost:${PORT}`,
 
         // Option 1: Verify against local pact files
-        pactUrls: [
-          path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')
-        ],
+        pactUrls: [path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')],
 
         // Option 2: Verify against Pact Broker
         // pactBrokerUrl: 'https://your-pact-broker.com',
@@ -60,7 +58,7 @@ describe('User Service Provider Tests', () => {
               email: 'john.doe@example.com',
               role: 'admin',
               createdAt: '2023-01-15T10:30:00Z',
-              isActive: true
+              isActive: true,
             });
           },
 
@@ -75,22 +73,22 @@ describe('User Service Provider Tests', () => {
                 name: 'John Doe',
                 email: 'john.doe@example.com',
                 role: 'admin',
-                isActive: true
+                isActive: true,
               },
               {
                 id: 2,
                 name: 'Jane Smith',
                 email: 'jane.smith@example.com',
                 role: 'user',
-                isActive: true
+                isActive: true,
               },
               {
                 id: 3,
                 name: 'Bob Wilson',
                 email: 'bob.wilson@example.com',
                 role: 'moderator',
-                isActive: false
-              }
+                isActive: false,
+              },
             ]);
           },
 
@@ -105,7 +103,7 @@ describe('User Service Provider Tests', () => {
               email: 'john.doe@example.com',
               role: 'admin',
               createdAt: '2023-01-15T10:30:00Z',
-              isActive: true
+              isActive: true,
             });
           },
 
@@ -116,7 +114,7 @@ describe('User Service Provider Tests', () => {
               email: 'john.doe@example.com',
               role: 'admin',
               createdAt: '2023-01-15T10:30:00Z',
-              isActive: true
+              isActive: true,
             });
           },
 
@@ -126,7 +124,7 @@ describe('User Service Provider Tests', () => {
 
           'system validates user input': () => {
             return Promise.resolve();
-          }
+          },
         },
 
         // Request filters for authentication
@@ -136,7 +134,7 @@ describe('User Service Provider Tests', () => {
             req.user = {
               id: 'test-user',
               role: 'admin',
-              permissions: ['read:users', 'write:users', 'delete:users']
+              permissions: ['read:users', 'write:users', 'delete:users'],
             };
           }
           next();
@@ -146,7 +144,7 @@ describe('User Service Provider Tests', () => {
         timeout: 30000,
 
         // Log level for debugging
-        logLevel: 'INFO'
+        logLevel: 'INFO',
       };
 
       return new Verifier(opts).verifyProvider();
@@ -233,15 +231,10 @@ describe('Advanced Provider Verification', () => {
     const opts = {
       provider: 'UserService',
       providerBaseUrl: `http://localhost:${PORT}`,
-      pactUrls: [
-        path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')
-      ],
+      pactUrls: [path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')],
 
       // Custom matchers for flexible verification
-      customProviderHeaders: [
-        'X-API-Version: 1.0',
-        'X-Service-Name: UserService'
-      ],
+      customProviderHeaders: ['X-API-Version: 1.0', 'X-Service-Name: UserService'],
 
       // Before hooks for setup
       beforeEach: async () => {
@@ -265,13 +258,13 @@ describe('Advanced Provider Verification', () => {
             userId: 123,
             name: 'John Doe',
             email: 'john.doe@example.com',
-            timestamp: new Date().toISOString()
-          }
-        })
+            timestamp: new Date().toISOString(),
+          },
+        }),
       },
 
       // Verbose logging for debugging
-      verbose: process.env.NODE_ENV === 'development'
+      verbose: process.env.NODE_ENV === 'development',
     };
 
     return new Verifier(opts).verifyProvider();
@@ -303,15 +296,12 @@ describe('Pact Broker Integration', () => {
         { tag: 'main', latest: true },
         { tag: 'develop', latest: true },
         { deployed: 'production' },
-        { deployed: 'staging' }
+        { deployed: 'staging' },
       ],
 
       // Provider version and tags
       providerVersion: process.env.GIT_COMMIT || 'unknown',
-      providerVersionTags: [
-        process.env.GIT_BRANCH || 'unknown',
-        process.env.NODE_ENV || 'test'
-      ],
+      providerVersionTags: [process.env.GIT_BRANCH || 'unknown', process.env.NODE_ENV || 'test'],
 
       // Publish verification results back to broker
       publishVerificationResult: true,
@@ -322,16 +312,17 @@ describe('Pact Broker Integration', () => {
 
       // State handlers (same as above)
       stateHandlers: {
-        'user with ID 123 exists': () => setupUserState(123, {
-          id: 123,
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          role: 'admin',
-          createdAt: '2023-01-15T10:30:00Z',
-          isActive: true
-        })
+        'user with ID 123 exists': () =>
+          setupUserState(123, {
+            id: 123,
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            role: 'admin',
+            createdAt: '2023-01-15T10:30:00Z',
+            isActive: true,
+          }),
         // ... other state handlers
-      }
+      },
     };
 
     return new Verifier(opts).verifyProvider();
@@ -347,30 +338,24 @@ describe('Provider Verification Edge Cases', () => {
     const opts = {
       provider: 'UserService',
       providerBaseUrl: 'http://localhost:9999', // Non-existent port
-      pactUrls: [
-        path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')
-      ],
-      timeout: 5000
+      pactUrls: [path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')],
+      timeout: 5000,
     };
 
-    await expect(new Verifier(opts).verifyProvider())
-      .rejects.toThrow();
+    await expect(new Verifier(opts).verifyProvider()).rejects.toThrow();
   });
 
   test('should handle missing state handlers', async () => {
     const opts = {
       provider: 'UserService',
       providerBaseUrl: `http://localhost:${PORT}`,
-      pactUrls: [
-        path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')
-      ],
+      pactUrls: [path.resolve(process.cwd(), 'pacts', 'userwebapp-userservice.json')],
       // Intentionally missing state handlers
-      stateHandlers: {}
+      stateHandlers: {},
     };
 
     // This should fail because required states are not handled
-    await expect(new Verifier(opts).verifyProvider())
-      .rejects.toThrow();
+    await expect(new Verifier(opts).verifyProvider()).rejects.toThrow();
   });
 });
 
@@ -378,5 +363,5 @@ module.exports = {
   setupUserState,
   clearUserState,
   setupMultipleUsersState,
-  setupDatabaseForUserCreation
+  setupDatabaseForUserCreation,
 };

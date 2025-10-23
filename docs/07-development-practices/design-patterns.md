@@ -1,10 +1,13 @@
 # Design Patterns
 
 ## Purpose
+
 Comprehensive guide to software design patterns—reusable solutions to commonly occurring problems in software design, providing proven approaches to create maintainable, flexible, and scalable code.
 
 ## Overview
+
 Design patterns are:
+
 - Proven solutions to recurring problems
 - Language-independent concepts
 - Best practices from experienced developers
@@ -15,9 +18,11 @@ Design patterns are:
 ## What are Design Patterns?
 
 ### Definition
+
 A design pattern is a general, reusable solution to a commonly occurring problem within a given context in software design. It is a description or template for how to solve a problem that can be used in many different situations.
 
 ### History
+
 - **1977**: Christopher Alexander introduces patterns in architecture
 - **1987**: Ward Cunningham and Kent Beck adapt patterns to programming
 - **1994**: Gang of Four publish "Design Patterns: Elements of Reusable Object-Oriented Software"
@@ -80,6 +85,7 @@ Related Patterns
 ## Pattern Categories
 
 ### Creational Patterns
+
 Focus on object creation mechanisms
 
 ```
@@ -95,6 +101,7 @@ Focus on object creation mechanisms
 ```
 
 ### Structural Patterns
+
 Focus on composition of classes/objects
 
 ```
@@ -112,6 +119,7 @@ Focus on composition of classes/objects
 ```
 
 ### Behavioral Patterns
+
 Focus on communication between objects
 
 ```
@@ -138,11 +146,13 @@ Focus on communication between objects
 **Intent:** Ensure a class has only one instance and provide global access to it.
 
 **Use When:**
+
 - Exactly one instance needed
 - Global access required
 - Lazy initialization desired
 
 **Implementation:**
+
 ```typescript
 // Traditional Singleton
 class DatabaseConnection {
@@ -163,7 +173,9 @@ class DatabaseConnection {
 
   private createConnection(): any {
     // Create database connection
-    return { /* connection object */ };
+    return {
+      /* connection object */
+    };
   }
 
   public query(sql: string): any {
@@ -185,7 +197,9 @@ class Database {
   }
 
   private createConnection(): any {
-    return { /* connection */ };
+    return {
+      /* connection */
+    };
   }
 
   public query(sql: string): any {
@@ -202,6 +216,7 @@ database.query('SELECT * FROM users');
 ```
 
 **Thread-Safe Singleton:**
+
 ```typescript
 class Logger {
   private static instance: Logger;
@@ -234,6 +249,7 @@ class Logger {
 ```
 
 **Caution:**
+
 - Can make testing difficult (global state)
 - May violate Single Responsibility Principle
 - Consider dependency injection instead
@@ -243,11 +259,13 @@ class Logger {
 **Intent:** Define an interface for creating objects, but let subclasses decide which class to instantiate.
 
 **Use When:**
+
 - Class can't anticipate type of objects to create
 - Class wants subclasses to specify objects created
 - Classes delegate responsibility to helper subclasses
 
 **Implementation:**
+
 ```typescript
 // Product interface
 interface PaymentProcessor {
@@ -263,7 +281,7 @@ class CreditCardProcessor implements PaymentProcessor {
     return {
       success: true,
       transactionId: `CC-${Date.now()}`,
-      amount
+      amount,
     };
   }
 
@@ -279,7 +297,7 @@ class PayPalProcessor implements PaymentProcessor {
     return {
       success: true,
       transactionId: `PP-${Date.now()}`,
-      amount
+      amount,
     };
   }
 
@@ -295,7 +313,7 @@ class CryptoProcessor implements PaymentProcessor {
     return {
       success: true,
       transactionId: `BTC-${Date.now()}`,
-      amount
+      amount,
     };
   }
 
@@ -321,10 +339,7 @@ abstract class PaymentProcessorFactory {
     return result;
   }
 
-  private async saveTransaction(
-    orderId: string,
-    result: PaymentResult
-  ): Promise<void> {
+  private async saveTransaction(orderId: string, result: PaymentResult): Promise<void> {
     // Save to database
   }
 }
@@ -396,12 +411,14 @@ await processor.processPayment(100);
 **Intent:** Provide an interface for creating families of related objects without specifying concrete classes.
 
 **Use When:**
+
 - System should be independent of how products are created
 - System should be configured with multiple families of products
 - Family of related products designed to be used together
 - You want to provide class library revealing interfaces, not implementations
 
 **Implementation:**
+
 ```typescript
 // Abstract products
 interface Button {
@@ -656,12 +673,14 @@ app.setupEventHandlers();
 **Intent:** Separate construction of complex object from its representation, allowing same construction process to create different representations.
 
 **Use When:**
+
 - Algorithm for creating complex object should be independent of parts
 - Construction process must allow different representations
 - Object has many optional parameters
 - Want to avoid telescoping constructors
 
 **Implementation:**
+
 ```typescript
 // Product
 class Computer {
@@ -937,12 +956,14 @@ const request = new HttpRequestBuilder()
 **Intent:** Specify kinds of objects to create using prototypical instance, and create new objects by copying this prototype.
 
 **Use When:**
+
 - System should be independent of how products created
 - Classes to instantiate specified at runtime
 - Avoid building class hierarchies of factories
 - Instances of class have few state combinations
 
 **Implementation:**
+
 ```typescript
 // Prototype interface
 interface Prototype {
@@ -962,14 +983,9 @@ class Monster implements Prototype {
 
   clone(): Monster {
     // Deep clone
-    return new Monster(
-      this.name,
-      this.health,
-      this.attack,
-      this.defense,
-      [...this.abilities],
-      { ...this.position }
-    );
+    return new Monster(this.name, this.health, this.attack, this.defense, [...this.abilities], {
+      ...this.position,
+    });
   }
 
   display(): void {
@@ -1002,23 +1018,12 @@ class MonsterRegistry {
 const registry = new MonsterRegistry();
 
 // Register prototypes
-const goblin = new Monster(
-  'Goblin',
-  50,
-  10,
-  5,
-  ['Quick Strike', 'Dodge'],
-  { x: 0, y: 0 }
-);
+const goblin = new Monster('Goblin', 50, 10, 5, ['Quick Strike', 'Dodge'], { x: 0, y: 0 });
 
-const dragon = new Monster(
-  'Dragon',
-  500,
-  100,
-  50,
-  ['Fire Breath', 'Fly', 'Tail Swipe'],
-  { x: 0, y: 0 }
-);
+const dragon = new Monster('Dragon', 500, 100, 50, ['Fire Breath', 'Fly', 'Tail Swipe'], {
+  x: 0,
+  y: 0,
+});
 
 registry.register('goblin', goblin);
 registry.register('dragon', dragon);
@@ -1044,11 +1049,8 @@ const documentPrototype = {
   createdAt: new Date(),
 
   clone() {
-    return Object.create(
-      Object.getPrototypeOf(this),
-      Object.getOwnPropertyDescriptors(this)
-    );
-  }
+    return Object.create(Object.getPrototypeOf(this), Object.getOwnPropertyDescriptors(this));
+  },
 };
 
 const doc1 = Object.create(documentPrototype);
@@ -1066,11 +1068,13 @@ doc2.title = 'Document 2';
 **Intent:** Convert interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.
 
 **Use When:**
+
 - Want to use existing class with incompatible interface
 - Create reusable class cooperating with unrelated classes
 - Need to use several existing subclasses but impractical to adapt by subclassing
 
 **Implementation:**
+
 ```typescript
 // Target interface (what client expects)
 interface MediaPlayer {
@@ -1160,7 +1164,7 @@ class StripeAPI {
     return {
       id: `stripe_${Date.now()}`,
       status: 'succeeded',
-      amount: amountInCents
+      amount: amountInCents,
     };
   }
 
@@ -1177,10 +1181,7 @@ class StripeAdapter implements PaymentGateway {
     this.stripe = new StripeAPI();
   }
 
-  async processPayment(
-    amount: number,
-    currency: string
-  ): Promise<PaymentResult> {
+  async processPayment(amount: number, currency: string): Promise<PaymentResult> {
     // Convert dollars to cents for Stripe
     const amountInCents = Math.round(amount * 100);
 
@@ -1190,7 +1191,7 @@ class StripeAdapter implements PaymentGateway {
     return {
       success: result.status === 'succeeded',
       transactionId: result.id,
-      amount: result.amount / 100
+      amount: result.amount / 100,
     };
   }
 
@@ -1205,7 +1206,7 @@ class PayPalAPI {
     return {
       transaction_id: `paypal_${Date.now()}`,
       state: 'approved',
-      total: data.amount
+      total: data.amount,
     };
   }
 
@@ -1222,19 +1223,16 @@ class PayPalAdapter implements PaymentGateway {
     this.paypal = new PayPalAPI();
   }
 
-  async processPayment(
-    amount: number,
-    currency: string
-  ): Promise<PaymentResult> {
+  async processPayment(amount: number, currency: string): Promise<PaymentResult> {
     const result = await this.paypal.makePayment({
       amount,
-      currency
+      currency,
     });
 
     return {
       success: result.state === 'approved',
       transactionId: result.transaction_id,
-      amount: result.total
+      amount: result.total,
     };
   }
 
@@ -1244,10 +1242,7 @@ class PayPalAdapter implements PaymentGateway {
 }
 
 // Usage - client code doesn't know about specific implementations
-async function checkout(
-  gateway: PaymentGateway,
-  amount: number
-): Promise<void> {
+async function checkout(gateway: PaymentGateway, amount: number): Promise<void> {
   try {
     const result = await gateway.processPayment(amount, 'USD');
 
@@ -1273,11 +1268,13 @@ await checkout(paypalGateway, 50);
 **Intent:** Attach additional responsibilities to object dynamically. Decorators provide flexible alternative to subclassing for extending functionality.
 
 **Use When:**
+
 - Add responsibilities to individual objects dynamically
 - Responsibilities can be withdrawn
 - Extension by subclassing is impractical
 
 **Implementation:**
+
 ```typescript
 // Component interface
 interface Coffee {
@@ -1477,11 +1474,13 @@ const data = dataSource.readData();
 **Intent:** Define one-to-many dependency between objects so when one object changes state, all dependents are notified automatically.
 
 **Use When:**
+
 - Abstraction has two aspects, one dependent on other
 - Change to one object requires changing others
 - Object should notify other objects without assumptions about those objects
 
 **Implementation:**
+
 ```typescript
 // Subject interface
 interface Subject {
@@ -1680,12 +1679,14 @@ order.deliver();
 **Intent:** Define family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets algorithm vary independently from clients that use it.
 
 **Use When:**
+
 - Many related classes differ only in behavior
 - Need different variants of algorithm
 - Algorithm uses data clients shouldn't know about
 - Class defines many behaviors as multiple conditional statements
 
 **Implementation:**
+
 ```typescript
 // Strategy interface
 interface PaymentStrategy {
@@ -1771,9 +1772,7 @@ cart.addItem('Mouse', 25);
 cart.addItem('Keyboard', 75);
 
 // Pay with credit card
-cart.setPaymentStrategy(
-  new CreditCardStrategy('1234567890123456', '123', '12/25')
-);
+cart.setPaymentStrategy(new CreditCardStrategy('1234567890123456', '123', '12/25'));
 cart.checkout();
 
 // Change payment method to PayPal
@@ -1837,6 +1836,7 @@ processor.processData([5, 2, 8, 1, 9]);
 **Intent:** Encapsulate request as object, allowing parameterization of clients with different requests, queue or log requests, and support undoable operations.
 
 **Use When:**
+
 - Parameterize objects by action to perform
 - Specify, queue, and execute requests at different times
 - Support undo
@@ -1844,6 +1844,7 @@ processor.processData([5, 2, 8, 1, 9]);
 - Structure system around high-level operations built on primitive operations
 
 **Implementation:**
+
 ```typescript
 // Command interface
 interface Command {
@@ -2001,10 +2002,14 @@ console.log(manager.getHistory());
 ### SOLID Principles
 
 **Single Responsibility Principle (SRP):**
+
 ```typescript
 // BAD: Multiple responsibilities
 class User {
-  constructor(public name: string, public email: string) {}
+  constructor(
+    public name: string,
+    public email: string
+  ) {}
 
   save(): void {
     // Database logic
@@ -2022,7 +2027,10 @@ class User {
 
 // GOOD: Single responsibility
 class User {
-  constructor(public name: string, public email: string) {}
+  constructor(
+    public name: string,
+    public email: string
+  ) {}
 }
 
 class UserRepository {
@@ -2050,6 +2058,7 @@ class UserReportGenerator {
 ```
 
 **Open/Closed Principle (OCP):**
+
 ```typescript
 // BAD: Need to modify for new shape
 class AreaCalculator {
@@ -2112,6 +2121,7 @@ class AreaCalculator {
 ```
 
 **Liskov Substitution Principle (LSP):**
+
 ```typescript
 // BAD: Violates LSP
 class Bird {
@@ -2153,6 +2163,7 @@ class Penguin extends Bird {
 ```
 
 **Interface Segregation Principle (ISP):**
+
 ```typescript
 // BAD: Fat interface
 interface Worker {
@@ -2162,15 +2173,27 @@ interface Worker {
 }
 
 class Human implements Worker {
-  work(): void { console.log('Working'); }
-  eat(): void { console.log('Eating'); }
-  sleep(): void { console.log('Sleeping'); }
+  work(): void {
+    console.log('Working');
+  }
+  eat(): void {
+    console.log('Eating');
+  }
+  sleep(): void {
+    console.log('Sleeping');
+  }
 }
 
 class Robot implements Worker {
-  work(): void { console.log('Working'); }
-  eat(): void { throw new Error('Robots do not eat'); }
-  sleep(): void { throw new Error('Robots do not sleep'); }
+  work(): void {
+    console.log('Working');
+  }
+  eat(): void {
+    throw new Error('Robots do not eat');
+  }
+  sleep(): void {
+    throw new Error('Robots do not sleep');
+  }
 }
 
 // GOOD: Segregated interfaces
@@ -2187,17 +2210,26 @@ interface Sleepable {
 }
 
 class Human implements Workable, Eatable, Sleepable {
-  work(): void { console.log('Working'); }
-  eat(): void { console.log('Eating'); }
-  sleep(): void { console.log('Sleeping'); }
+  work(): void {
+    console.log('Working');
+  }
+  eat(): void {
+    console.log('Eating');
+  }
+  sleep(): void {
+    console.log('Sleeping');
+  }
 }
 
 class Robot implements Workable {
-  work(): void { console.log('Working'); }
+  work(): void {
+    console.log('Working');
+  }
 }
 ```
 
 **Dependency Inversion Principle (DIP):**
+
 ```typescript
 // BAD: High-level depends on low-level
 class MySQLDatabase {

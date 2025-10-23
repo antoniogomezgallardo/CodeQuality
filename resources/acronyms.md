@@ -158,8 +158,9 @@
 
 ---
 
-*This list includes commonly used acronyms in software development, quality assurance, AI/ML, and related fields. Keep this reference handy for quick lookup during documentation review and team discussions.*
+_This list includes commonly used acronyms in software development, quality assurance, AI/ML, and related fields. Keep this reference handy for quick lookup during documentation review and team discussions._
 
 **Recent Additions:**
+
 - AI & Machine Learning acronyms (added October 2024)
 - LLM and RAG-related terminology

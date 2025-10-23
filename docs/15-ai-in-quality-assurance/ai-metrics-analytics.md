@@ -1,12 +1,15 @@
 # AI-Enhanced Metrics & Analytics
 
 ## Purpose
+
 Demonstrate how Artificial Intelligence and Machine Learning can transform quality metrics from reactive measurements into predictive insights, enabling teams to prevent issues before they occur and make data-driven decisions with confidence.
 
 ## Context
+
 Traditional metrics tell you what happened. AI-enhanced metrics predict what will happen, detect anomalies automatically, and provide actionable insights. This transformation changes QA from firefighting to fire prevention.
 
 ## Prerequisites
+
 - Understanding of [Metrics & Monitoring](../09-metrics-monitoring/README.md)
 - Familiarity with [AI Fundamentals](ai-fundamentals.md)
 - Basic Python or similar programming knowledge
@@ -263,7 +266,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Full history for analysis
+          fetch-depth: 0 # Full history for analysis
 
       - name: Analyze Code Changes
         id: analysis
@@ -1191,6 +1194,7 @@ else:
 ## Implementation Checklist
 
 ### Phase 1: Foundation (Week 1-2)
+
 - [ ] Collect historical metrics data (minimum 30 days)
 - [ ] Clean and prepare data for ML models
 - [ ] Identify key metrics to enhance with AI
@@ -1198,6 +1202,7 @@ else:
 - [ ] Define success criteria
 
 ### Phase 2: Defect Prediction (Week 3-4)
+
 - [ ] Extract code change features
 - [ ] Label historical commits (had defect or not)
 - [ ] Train defect prediction model
@@ -1206,6 +1211,7 @@ else:
 - [ ] Monitor predictions vs actual outcomes
 
 ### Phase 3: Anomaly Detection (Week 5-6)
+
 - [ ] Implement baseline anomaly detector
 - [ ] Train on normal metrics patterns
 - [ ] Set up real-time detection pipeline
@@ -1214,6 +1220,7 @@ else:
 - [ ] Create anomaly dashboard
 
 ### Phase 4: Forecasting (Week 7-8)
+
 - [ ] Implement DORA metrics forecasting
 - [ ] Generate 30-day predictions
 - [ ] Validate forecast accuracy
@@ -1222,6 +1229,7 @@ else:
 - [ ] Share forecasts with leadership
 
 ### Phase 5: Optimization (Week 9-10)
+
 - [ ] Fine-tune all models
 - [ ] Optimize for latency and cost
 - [ ] Implement model monitoring
@@ -1232,34 +1240,36 @@ else:
 ## Success Metrics
 
 ### Model Performance
+
 ```yaml
 defect_prediction:
-  accuracy: "> 75%"
-  precision: "> 70%"
-  recall: "> 65%"
-  auc_roc: "> 0.80"
+  accuracy: '> 75%'
+  precision: '> 70%'
+  recall: '> 65%'
+  auc_roc: '> 0.80'
 
 anomaly_detection:
-  false_positive_rate: "< 20%"
-  detection_rate: "> 90%"
-  time_to_detection: "< 5 minutes"
+  false_positive_rate: '< 20%'
+  detection_rate: '> 90%'
+  time_to_detection: '< 5 minutes'
 
 forecasting:
-  mape: "< 15%"  # Mean Absolute Percentage Error
-  trend_accuracy: "> 80%"
+  mape: '< 15%' # Mean Absolute Percentage Error
+  trend_accuracy: '> 80%'
 ```
 
 ### Business Impact
+
 ```yaml
 efficiency:
-  time_saved_per_week: "> 10 hours"
-  alert_volume_reduction: "> 60%"
-  mttr_reduction: "> 30%"
+  time_saved_per_week: '> 10 hours'
+  alert_volume_reduction: '> 60%'
+  mttr_reduction: '> 30%'
 
 quality:
-  defects_prevented: "> 5 per month"
-  production_incidents: "- 40%"
-  deployment_success_rate: "> 95%"
+  defects_prevented: '> 5 per month'
+  production_incidents: '- 40%'
+  deployment_success_rate: '> 95%'
 ```
 
 ## Related Topics
@@ -1271,4 +1281,4 @@ quality:
 
 ---
 
-*Next: [Building AI QA Assistant](building-ai-qa-assistant.md) - Complete guide to building your own LLM + RAG system*
+_Next: [Building AI QA Assistant](building-ai-qa-assistant.md) - Complete guide to building your own LLM + RAG system_

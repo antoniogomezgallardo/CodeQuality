@@ -1,10 +1,13 @@
 # System Testing
 
 ## Purpose
+
 Comprehensive guide to system testing—validating the complete, integrated system against specified requirements to ensure it meets business and technical objectives.
 
 ## Overview
+
 System testing:
+
 - Tests the entire application
 - Validates end-to-end workflows
 - Verifies system behavior
@@ -14,6 +17,7 @@ System testing:
 ## What is System Testing?
 
 ### Definition
+
 System testing validates the complete and fully integrated software system to verify that it meets specified requirements and works as expected in a production-like environment.
 
 ### Characteristics
@@ -45,6 +49,7 @@ Environment
 ### 1. Functional System Testing
 
 **Example Test Scenario:**
+
 ```gherkin
 Feature: Order Processing System
 
@@ -82,8 +87,8 @@ export const options = {
 export default function () {
   const res = http.get('https://api.example.com/products');
   check(res, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 500ms': (r) => r.timings.duration < 500,
+    'status is 200': r => r.status === 200,
+    'response time < 500ms': r => r.timings.duration < 500,
   });
   sleep(1);
 }
@@ -119,11 +124,13 @@ Test Across:
 ## Checklist
 
 **Preparation:**
+
 - [ ] Test environment configured
 - [ ] Test data prepared
 - [ ] Test cases documented
 
 **Execution:**
+
 - [ ] Functional testing complete
 - [ ] Performance tested
 - [ ] Security validated
@@ -143,4 +150,4 @@ Test Across:
 
 ---
 
-*Part of: [Test Levels](README.md)*
+_Part of: [Test Levels](README.md)_

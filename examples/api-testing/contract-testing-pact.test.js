@@ -47,8 +47,8 @@ class UserServiceClient {
     const response = await axios.get(`${this.baseURL}/api/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
     return response.data;
   }
@@ -64,8 +64,8 @@ class UserServiceClient {
       params,
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
     return response.data;
   }
@@ -80,8 +80,8 @@ class UserServiceClient {
     const response = await axios.post(`${this.baseURL}/api/users`, userData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
     return response.data;
   }
@@ -97,8 +97,8 @@ class UserServiceClient {
     const response = await axios.patch(`${this.baseURL}/api/users/${userId}`, updates, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
     return response.data;
   }
@@ -113,8 +113,8 @@ class UserServiceClient {
     await axios.delete(`${this.baseURL}/api/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
   }
 
@@ -125,14 +125,18 @@ class UserServiceClient {
    * @returns {Promise<Object>} Authentication response
    */
   async login(email, password) {
-    const response = await axios.post(`${this.baseURL}/api/auth/login`, {
-      email,
-      password
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
+    const response = await axios.post(
+      `${this.baseURL}/api/auth/login`,
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }
-    });
+    );
     return response.data;
   }
 }
@@ -149,7 +153,7 @@ describe('Pact Consumer Contract Tests', () => {
     port: 1234,
     log: path.resolve(process.cwd(), 'logs', 'pact.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
-    logLevel: 'warn'
+    logLevel: 'warn',
   });
 
   const client = new UserServiceClient('http://localhost:1234');
@@ -183,28 +187,28 @@ describe('Pact Consumer Contract Tests', () => {
             method: 'POST',
             path: '/api/auth/login',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
               email: 'admin@example.com',
-              password: 'admin123'
-            }
+              password: 'admin123',
+            },
           },
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               token: like('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'),
               user: {
                 id: like(1),
                 email: 'admin@example.com',
-                role: 'admin'
+                role: 'admin',
               },
-              expiresIn: like(3600)
-            }
-          }
+              expiresIn: like(3600),
+            },
+          },
         });
 
         // Execute the request
@@ -226,23 +230,23 @@ describe('Pact Consumer Contract Tests', () => {
             method: 'POST',
             path: '/api/auth/login',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
               email: 'admin@example.com',
-              password: 'wrongpassword'
-            }
+              password: 'wrongpassword',
+            },
           },
           willRespondWith: {
             status: 401,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Authentication failed',
-              message: like('Invalid email or password')
-            }
-          }
+              message: like('Invalid email or password'),
+            },
+          },
         });
 
         // Execute and expect error
@@ -272,28 +276,28 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/1',
             headers: {
               Authorization: 'Bearer valid-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               id: like(1),
               name: like('Alice Johnson'),
               email: term({
                 generate: 'alice@example.com',
-                matcher: '^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'
+                matcher: '^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
               }),
               role: term({
                 generate: 'admin',
-                matcher: '^(admin|user)$'
+                matcher: '^(admin|user)$',
               }),
-              createdAt: iso8601DateTime('2025-01-01T00:00:00Z')
-            }
-          }
+              createdAt: iso8601DateTime('2025-01-01T00:00:00Z'),
+            },
+          },
         });
 
         const user = await client.getUser('1', 'valid-token');
@@ -316,19 +320,19 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/9999',
             headers: {
               Authorization: 'Bearer valid-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 404,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Not found',
-              message: like('User with ID 9999 not found')
-            }
-          }
+              message: like('User with ID 9999 not found'),
+            },
+          },
         });
 
         try {
@@ -348,27 +352,27 @@ describe('Pact Consumer Contract Tests', () => {
             method: 'GET',
             path: '/api/users/1',
             headers: {
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 401,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Unauthorized',
-              message: like('Missing or invalid authorization header')
-            }
-          }
+              message: like('Missing or invalid authorization header'),
+            },
+          },
         });
 
         try {
           // Create a modified client call without token
           await axios.get('http://localhost:1234/api/users/1', {
             headers: {
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           });
           fail('Expected error to be thrown');
         } catch (error) {
@@ -394,36 +398,39 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users',
             query: {
               page: '1',
-              limit: '10'
+              limit: '10',
             },
             headers: {
               Authorization: 'Bearer valid-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
-              users: eachLike({
-                id: like(1),
-                name: like('Alice Johnson'),
-                email: like('alice@example.com'),
-                role: like('admin'),
-                createdAt: iso8601DateTime('2025-01-01T00:00:00Z')
-              }, { min: 1 }),
+              users: eachLike(
+                {
+                  id: like(1),
+                  name: like('Alice Johnson'),
+                  email: like('alice@example.com'),
+                  role: like('admin'),
+                  createdAt: iso8601DateTime('2025-01-01T00:00:00Z'),
+                },
+                { min: 1 }
+              ),
               pagination: {
                 page: like(1),
                 limit: like(10),
                 total: like(3),
                 totalPages: like(1),
                 hasNextPage: like(false),
-                hasPrevPage: like(false)
-              }
-            }
-          }
+                hasPrevPage: like(false),
+              },
+            },
+          },
         });
 
         const response = await client.getUsers({ page: 1, limit: 10 }, 'valid-token');
@@ -445,17 +452,17 @@ describe('Pact Consumer Contract Tests', () => {
             method: 'GET',
             path: '/api/users',
             query: {
-              role: 'admin'
+              role: 'admin',
             },
             headers: {
               Authorization: 'Bearer valid-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               users: eachLike({
@@ -463,7 +470,7 @@ describe('Pact Consumer Contract Tests', () => {
                 name: like('Alice Johnson'),
                 email: like('alice@example.com'),
                 role: 'admin', // Fixed value for this filter
-                createdAt: iso8601DateTime('2025-01-01T00:00:00Z')
+                createdAt: iso8601DateTime('2025-01-01T00:00:00Z'),
               }),
               pagination: like({
                 page: 1,
@@ -471,10 +478,10 @@ describe('Pact Consumer Contract Tests', () => {
                 total: 1,
                 totalPages: 1,
                 hasNextPage: false,
-                hasPrevPage: false
-              })
-            }
-          }
+                hasPrevPage: false,
+              }),
+            },
+          },
         });
 
         const response = await client.getUsers({ role: 'admin' }, 'valid-token');
@@ -499,35 +506,38 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users',
             headers: {
               Authorization: 'Bearer admin-token',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
               name: 'New User',
               email: 'newuser@example.com',
-              role: 'user'
-            }
+              role: 'user',
+            },
           },
           willRespondWith: {
             status: 201,
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
-              Location: like('/api/users/4')
+              Location: like('/api/users/4'),
             },
             body: {
               id: like(4),
               name: 'New User',
               email: 'newuser@example.com',
               role: 'user',
-              createdAt: iso8601DateTime('2025-01-01T00:00:00Z')
-            }
-          }
+              createdAt: iso8601DateTime('2025-01-01T00:00:00Z'),
+            },
+          },
         });
 
-        const newUser = await client.createUser({
-          name: 'New User',
-          email: 'newuser@example.com',
-          role: 'user'
-        }, 'admin-token');
+        const newUser = await client.createUser(
+          {
+            name: 'New User',
+            email: 'newuser@example.com',
+            role: 'user',
+          },
+          'admin-token'
+        );
 
         expect(newUser).toHaveProperty('id');
         expect(newUser.name).toBe('New User');
@@ -545,33 +555,36 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users',
             headers: {
               Authorization: 'Bearer admin-token',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
               name: 'Test User',
-              email: 'invalid-email'
-            }
+              email: 'invalid-email',
+            },
           },
           willRespondWith: {
             status: 400,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Validation error',
               message: like('One or more fields are invalid'),
               fields: {
-                email: like('Invalid email format')
-              }
-            }
-          }
+                email: like('Invalid email format'),
+              },
+            },
+          },
         });
 
         try {
-          await client.createUser({
-            name: 'Test User',
-            email: 'invalid-email'
-          }, 'admin-token');
+          await client.createUser(
+            {
+              name: 'Test User',
+              email: 'invalid-email',
+            },
+            'admin-token'
+          );
           fail('Expected error to be thrown');
         } catch (error) {
           expect(error.response.status).toBe(400);
@@ -589,30 +602,33 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users',
             headers: {
               Authorization: 'Bearer user-token',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
               name: 'New User',
-              email: 'newuser@example.com'
-            }
+              email: 'newuser@example.com',
+            },
           },
           willRespondWith: {
             status: 403,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Forbidden',
-              message: like('Access denied. Required role: admin')
-            }
-          }
+              message: like('Access denied. Required role: admin'),
+            },
+          },
         });
 
         try {
-          await client.createUser({
-            name: 'New User',
-            email: 'newuser@example.com'
-          }, 'user-token');
+          await client.createUser(
+            {
+              name: 'New User',
+              email: 'newuser@example.com',
+            },
+            'user-token'
+          );
           fail('Expected error to be thrown');
         } catch (error) {
           expect(error.response.status).toBe(403);
@@ -637,16 +653,16 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/2',
             headers: {
               Authorization: 'Bearer valid-token',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
-              name: 'Updated Name'
-            }
+              name: 'Updated Name',
+            },
           },
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               id: 2,
@@ -654,14 +670,18 @@ describe('Pact Consumer Contract Tests', () => {
               email: like('bob@example.com'),
               role: like('user'),
               createdAt: iso8601DateTime('2025-01-02T00:00:00Z'),
-              updatedAt: iso8601DateTime('2025-01-08T00:00:00Z')
-            }
-          }
+              updatedAt: iso8601DateTime('2025-01-08T00:00:00Z'),
+            },
+          },
         });
 
-        const updatedUser = await client.updateUser('2', {
-          name: 'Updated Name'
-        }, 'valid-token');
+        const updatedUser = await client.updateUser(
+          '2',
+          {
+            name: 'Updated Name',
+          },
+          'valid-token'
+        );
 
         expect(updatedUser.id).toBe(2);
         expect(updatedUser.name).toBe('Updated Name');
@@ -677,22 +697,22 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/9999',
             headers: {
               Authorization: 'Bearer valid-token',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
-              name: 'Test'
-            }
+              name: 'Test',
+            },
           },
           willRespondWith: {
             status: 404,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Not found',
-              message: like('User with ID 9999 not found')
-            }
-          }
+              message: like('User with ID 9999 not found'),
+            },
+          },
         });
 
         try {
@@ -720,12 +740,12 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/2',
             headers: {
               Authorization: 'Bearer admin-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
-            status: 204
-          }
+            status: 204,
+          },
         });
 
         await client.deleteUser('2', 'admin-token');
@@ -741,19 +761,19 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/9999',
             headers: {
               Authorization: 'Bearer admin-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 404,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Not found',
-              message: like('User with ID 9999 not found')
-            }
-          }
+              message: like('User with ID 9999 not found'),
+            },
+          },
         });
 
         try {
@@ -773,19 +793,19 @@ describe('Pact Consumer Contract Tests', () => {
             path: '/api/users/2',
             headers: {
               Authorization: 'Bearer user-token',
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           },
           willRespondWith: {
             status: 403,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: {
               error: 'Forbidden',
-              message: like('Access denied. Required role: admin')
-            }
-          }
+              message: like('Access denied. Required role: admin'),
+            },
+          },
         });
 
         try {

@@ -75,6 +75,7 @@ npm run test:coverage
 ```
 
 **Expected Output:**
+
 ```
 PASS  ./sum.test.js
   sum function
@@ -89,6 +90,7 @@ Tests:       3 passed, 3 total
 ## 5. Next Steps
 
 ### Add More Matchers
+
 ```javascript
 test('object assignment', () => {
   const data = { one: 1 };
@@ -109,6 +111,7 @@ test('throws error', () => {
 ```
 
 ### Setup and Teardown
+
 ```javascript
 beforeEach(() => {
   // Runs before each test
@@ -130,6 +133,7 @@ afterAll(() => {
 ```
 
 ### Mock Functions
+
 ```javascript
 test('mock callback', () => {
   const mockCallback = jest.fn(x => x * 2);
@@ -142,6 +146,7 @@ test('mock callback', () => {
 ```
 
 ### Test Async Code
+
 ```javascript
 test('async data fetch', async () => {
   const data = await fetchData();
@@ -154,6 +159,7 @@ test('promise resolves', () => {
 ```
 
 ### Create Jest Config
+
 ```bash
 npx jest --init
 ```
@@ -164,28 +170,23 @@ This creates `jest.config.js`:
 module.exports = {
   testEnvironment: 'node',
   coverageDirectory: 'coverage',
-  collectCoverageFrom: [
-    'src/**/*.js',
-    '!src/**/*.test.js'
-  ],
-  testMatch: [
-    '**/__tests__/**/*.js',
-    '**/?(*.)+(spec|test).js'
-  ],
+  collectCoverageFrom: ['src/**/*.js', '!src/**/*.test.js'],
+  testMatch: ['**/__tests__/**/*.js', '**/?(*.)+(spec|test).js'],
   coverageThreshold: {
     global: {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
-    }
-  }
+      statements: 80,
+    },
+  },
 };
 ```
 
 ## 6. Troubleshooting
 
 ### Issue: "Cannot find module"
+
 ```bash
 # Make sure you're using the correct import/export syntax
 # CommonJS (Node.js default)
@@ -198,6 +199,7 @@ import sum from './sum';
 ```
 
 ### Issue: Tests not found
+
 ```bash
 # Jest looks for files matching these patterns:
 # - **/__tests__/**/*.js
@@ -209,6 +211,7 @@ mv mytest.js mytest.test.js
 ```
 
 ### Issue: "ReferenceError: expect is not defined"
+
 ```javascript
 // Jest automatically provides expect, describe, test
 // No need to import them
@@ -218,18 +221,16 @@ mv mytest.js mytest.test.js
 ```
 
 ### Issue: Coverage not showing all files
+
 ```javascript
 // Update jest.config.js
 module.exports = {
-  collectCoverageFrom: [
-    'src/**/*.{js,jsx}',
-    '!src/**/*.test.{js,jsx}',
-    '!src/index.js'
-  ]
+  collectCoverageFrom: ['src/**/*.{js,jsx}', '!src/**/*.test.{js,jsx}', '!src/index.js'],
 };
 ```
 
 ### Issue: Slow test execution
+
 ```javascript
 // Run tests in parallel (default)
 npm test -- --maxWorkers=4
@@ -245,9 +246,9 @@ npm test -- --onlyChanged
 
 ```javascript
 // Equality
-expect(value).toBe(expected);           // === comparison
-expect(value).toEqual(expected);        // Deep equality
-expect(value).not.toBe(expected);       // Negation
+expect(value).toBe(expected); // === comparison
+expect(value).toEqual(expected); // Deep equality
+expect(value).not.toBe(expected); // Negation
 
 // Truthiness
 expect(value).toBeTruthy();
@@ -260,7 +261,7 @@ expect(value).toBeDefined();
 expect(value).toBeGreaterThan(3);
 expect(value).toBeGreaterThanOrEqual(3.5);
 expect(value).toBeLessThan(5);
-expect(value).toBeCloseTo(0.3);  // Floating point
+expect(value).toBeCloseTo(0.3); // Floating point
 
 // Strings
 expect(str).toMatch(/pattern/);

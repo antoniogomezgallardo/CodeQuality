@@ -1,6 +1,7 @@
 # Deployment Strategies
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Strategy Selection Guide](#strategy-selection-guide)
 - [Blue-Green Deployment](#blue-green-deployment)
@@ -51,55 +52,62 @@ Modern strategies decouple these concepts using feature flags and traffic manage
 
 ### Decision Matrix
 
-| Strategy | Downtime | Cost | Complexity | Rollback Speed | Best For |
-|----------|----------|------|------------|----------------|----------|
-| Blue-Green | None | High | Medium | Instant | Critical systems, databases |
-| Canary | None | Medium | High | Fast | High-traffic applications |
-| Rolling | None | Low | Low | Medium | Standard web applications |
-| Feature Flags | None | Low | Medium | Instant | Continuous deployment |
-| Recreate | Yes | Low | Low | Slow | Dev/test environments |
-| Shadow | None | High | High | N/A | High-risk changes |
-| A/B Testing | None | Medium | High | Fast | User experience optimization |
+| Strategy      | Downtime | Cost   | Complexity | Rollback Speed | Best For                     |
+| ------------- | -------- | ------ | ---------- | -------------- | ---------------------------- |
+| Blue-Green    | None     | High   | Medium     | Instant        | Critical systems, databases  |
+| Canary        | None     | Medium | High       | Fast           | High-traffic applications    |
+| Rolling       | None     | Low    | Low        | Medium         | Standard web applications    |
+| Feature Flags | None     | Low    | Medium     | Instant        | Continuous deployment        |
+| Recreate      | Yes      | Low    | Low        | Slow           | Dev/test environments        |
+| Shadow        | None     | High   | High       | N/A            | High-risk changes            |
+| A/B Testing   | None     | Medium | High       | Fast           | User experience optimization |
 
 ### Selection Criteria
 
 **Choose Blue-Green when:**
+
 - Zero downtime is critical
 - Instant rollback is required
 - Database migrations need validation
 - Budget allows for duplicate infrastructure
 
 **Choose Canary when:**
+
 - Gradual risk mitigation needed
 - Production traffic testing required
 - Advanced monitoring in place
 - Want to minimize blast radius
 
 **Choose Rolling when:**
+
 - Standard web application
 - Cost-conscious deployment
 - Can tolerate brief inconsistency
 - Kubernetes or container orchestration available
 
 **Choose Feature Flags when:**
+
 - Multiple deploys per day
 - Want to decouple deploy from release
 - Need targeted user rollouts
 - A/B testing or experimentation needed
 
 **Choose Recreate when:**
+
 - Development/test environments
 - Downtime is acceptable
 - Simplicity is priority
 - Legacy applications
 
 **Choose Shadow when:**
+
 - Testing performance under load
 - Validating new algorithms
 - Risk of data corruption
 - Comparing old vs new behavior
 
 **Choose A/B Testing when:**
+
 - Optimizing user experience
 - Data-driven decisions needed
 - Multiple variants to test
@@ -151,47 +159,47 @@ spec:
         app: myapp
         version: blue
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
-        prometheus.io/path: "/metrics"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/metrics'
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v1.0.0
-        ports:
-        - containerPort: 8080
-          name: http
-        env:
-        - name: VERSION
-          value: "blue"
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: connection-string
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 15"]
+        - name: myapp
+          image: myregistry.io/myapp:v1.0.0
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: VERSION
+              value: 'blue'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: connection-string
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ['/bin/sh', '-c', 'sleep 15']
 ---
 # green-deployment.yaml
 apiVersion: apps/v1
@@ -215,47 +223,47 @@ spec:
         app: myapp
         version: green
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
-        prometheus.io/path: "/metrics"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/metrics'
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v2.0.0
-        ports:
-        - containerPort: 8080
-          name: http
-        env:
-        - name: VERSION
-          value: "green"
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: connection-string
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 15"]
+        - name: myapp
+          image: myregistry.io/myapp:v2.0.0
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: VERSION
+              value: 'green'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: connection-string
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ['/bin/sh', '-c', 'sleep 15']
 ---
 # active-service.yaml
 apiVersion: v1
@@ -269,12 +277,12 @@ spec:
   type: LoadBalancer
   selector:
     app: myapp
-    version: blue  # Switch to 'green' to activate new version
+    version: blue # Switch to 'green' to activate new version
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
-    name: http
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      name: http
   sessionAffinity: ClientIP
   sessionAffinityConfig:
     clientIP:
@@ -383,38 +391,38 @@ spec:
     spec:
       restartPolicy: OnFailure
       initContainers:
-      # Backup database before migration
-      - name: backup
-        image: postgres:15
-        command:
-        - /bin/sh
-        - -c
-        - |
-          pg_dump $DATABASE_URL > /backup/pre-migration-$(date +%Y%m%d-%H%M%S).sql
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: connection-string
-        volumeMounts:
+        # Backup database before migration
         - name: backup
-          mountPath: /backup
+          image: postgres:15
+          command:
+            - /bin/sh
+            - -c
+            - |
+              pg_dump $DATABASE_URL > /backup/pre-migration-$(date +%Y%m%d-%H%M%S).sql
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: connection-string
+          volumeMounts:
+            - name: backup
+              mountPath: /backup
       containers:
-      # Run forward-compatible migration
-      - name: migrate
-        image: myregistry.io/myapp:v2.0.0
-        command: ["npm", "run", "migrate:up"]
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: connection-string
+        # Run forward-compatible migration
+        - name: migrate
+          image: myregistry.io/myapp:v2.0.0
+          command: ['npm', 'run', 'migrate:up']
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: connection-string
       volumes:
-      - name: backup
-        persistentVolumeClaim:
-          claimName: db-backup-pvc
+        - name: backup
+          persistentVolumeClaim:
+            claimName: db-backup-pvc
 ```
 
 ### Rollback Procedure
@@ -586,45 +594,45 @@ metadata:
   namespace: production
 spec:
   groups:
-  - name: deployment
-    interval: 30s
-    rules:
-    - alert: HighErrorRateAfterSwitch
-      expr: |
-        sum(rate(http_requests_total{status=~"5..", app="myapp"}[5m]))
-        /
-        sum(rate(http_requests_total{app="myapp"}[5m])) > 0.05
-      for: 2m
-      labels:
-        severity: critical
-      annotations:
-        summary: "High error rate detected after blue-green switch"
-        description: "Error rate is {{ $value | humanizePercentage }} for {{ $labels.version }}"
+    - name: deployment
+      interval: 30s
+      rules:
+        - alert: HighErrorRateAfterSwitch
+          expr: |
+            sum(rate(http_requests_total{status=~"5..", app="myapp"}[5m]))
+            /
+            sum(rate(http_requests_total{app="myapp"}[5m])) > 0.05
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'High error rate detected after blue-green switch'
+            description: 'Error rate is {{ $value | humanizePercentage }} for {{ $labels.version }}'
 
-    - alert: LatencyIncreaseAfterSwitch
-      expr: |
-        histogram_quantile(0.95,
-          sum(rate(http_request_duration_seconds_bucket{app="myapp"}[5m])) by (le, version)
-        ) > 2
-      for: 3m
-      labels:
-        severity: warning
-      annotations:
-        summary: "P95 latency increased after deployment"
-        description: "P95 latency is {{ $value }}s for {{ $labels.version }}"
+        - alert: LatencyIncreaseAfterSwitch
+          expr: |
+            histogram_quantile(0.95,
+              sum(rate(http_request_duration_seconds_bucket{app="myapp"}[5m])) by (le, version)
+            ) > 2
+          for: 3m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'P95 latency increased after deployment'
+            description: 'P95 latency is {{ $value }}s for {{ $labels.version }}'
 
-    - alert: TrafficImbalance
-      expr: |
-        abs(
-          sum(rate(http_requests_total{app="myapp", version="blue"}[5m])) -
-          sum(rate(http_requests_total{app="myapp", version="green"}[5m]))
-        ) > 100
-      for: 1m
-      labels:
-        severity: info
-      annotations:
-        summary: "Traffic not balanced between blue and green"
-        description: "Check if traffic switch is in progress"
+        - alert: TrafficImbalance
+          expr: |
+            abs(
+              sum(rate(http_requests_total{app="myapp", version="blue"}[5m])) -
+              sum(rate(http_requests_total{app="myapp", version="green"}[5m]))
+            ) > 100
+          for: 1m
+          labels:
+            severity: info
+          annotations:
+            summary: 'Traffic not balanced between blue and green'
+            description: 'Check if traffic switch is in progress'
 ```
 
 ### Advantages
@@ -685,12 +693,12 @@ metadata:
 spec:
   host: myapp-service
   subsets:
-  - name: stable
-    labels:
-      version: stable
-  - name: canary
-    labels:
-      version: canary
+    - name: stable
+      labels:
+        version: stable
+    - name: canary
+      labels:
+        version: canary
   trafficPolicy:
     connectionPool:
       tcp:
@@ -712,32 +720,32 @@ metadata:
   namespace: production
 spec:
   hosts:
-  - myapp-service
-  - myapp.example.com
+    - myapp-service
+    - myapp.example.com
   http:
-  - match:
-    - headers:
-        user-agent:
-          regex: ".*Internal.*"
-    route:
-    - destination:
-        host: myapp-service
-        subset: canary
-      weight: 100
-  - route:
-    - destination:
-        host: myapp-service
-        subset: stable
-      weight: 90
-    - destination:
-        host: myapp-service
-        subset: canary
-      weight: 10
-    retries:
-      attempts: 3
-      perTryTimeout: 2s
-      retryOn: "5xx,reset,connect-failure,refused-stream"
-    timeout: 10s
+    - match:
+        - headers:
+            user-agent:
+              regex: '.*Internal.*'
+      route:
+        - destination:
+            host: myapp-service
+            subset: canary
+          weight: 100
+    - route:
+        - destination:
+            host: myapp-service
+            subset: stable
+          weight: 90
+        - destination:
+            host: myapp-service
+            subset: canary
+          weight: 10
+      retries:
+        attempts: 3
+        perTryTimeout: 2s
+        retryOn: '5xx,reset,connect-failure,refused-stream'
+      timeout: 10s
 ```
 
 ### Stable Deployment
@@ -761,38 +769,38 @@ spec:
         app: myapp
         version: stable
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v1.5.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: VERSION
-          value: "stable"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
+        - name: myapp
+          image: myregistry.io/myapp:v1.5.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VERSION
+              value: 'stable'
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
 ```
 
 ### Canary Deployment
@@ -816,38 +824,38 @@ spec:
         app: myapp
         version: canary
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v2.0.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: VERSION
-          value: "canary"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
+        - name: myapp
+          image: myregistry.io/myapp:v2.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VERSION
+              value: 'canary'
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
 ```
 
 ### Progressive Delivery Script
@@ -978,50 +986,50 @@ spec:
     port: 80
     targetPort: 8080
     gateways:
-    - public-gateway
+      - public-gateway
     hosts:
-    - myapp.example.com
+      - myapp.example.com
   analysis:
     interval: 1m
     threshold: 5
     maxWeight: 50
     stepWeight: 10
     metrics:
-    - name: request-success-rate
-      thresholdRange:
-        min: 99
-      interval: 1m
-    - name: request-duration
-      thresholdRange:
-        max: 500
-      interval: 1m
-    - name: error-rate
-      templateRef:
-        name: error-rate
-        namespace: istio-system
-      thresholdRange:
-        max: 1
-      interval: 1m
+      - name: request-success-rate
+        thresholdRange:
+          min: 99
+        interval: 1m
+      - name: request-duration
+        thresholdRange:
+          max: 500
+        interval: 1m
+      - name: error-rate
+        templateRef:
+          name: error-rate
+          namespace: istio-system
+        thresholdRange:
+          max: 1
+        interval: 1m
     webhooks:
-    - name: load-test
-      url: http://flagger-loadtester.test/
-      timeout: 5s
-      metadata:
-        type: cmd
-        cmd: "hey -z 1m -q 10 -c 2 http://myapp-canary:80"
-    - name: acceptance-test
-      type: pre-rollout
-      url: http://flagger-loadtester.test/
-      timeout: 10s
-      metadata:
-        type: bash
-        cmd: "curl -sd 'test' http://myapp-canary:80/api/smoke | grep OK"
-    - name: notify-slack
-      type: event
-      url: http://event-webhook/
-      metadata:
-        eventType: "canary"
-        channel: "deployments"
+      - name: load-test
+        url: http://flagger-loadtester.test/
+        timeout: 5s
+        metadata:
+          type: cmd
+          cmd: 'hey -z 1m -q 10 -c 2 http://myapp-canary:80'
+      - name: acceptance-test
+        type: pre-rollout
+        url: http://flagger-loadtester.test/
+        timeout: 10s
+        metadata:
+          type: bash
+          cmd: "curl -sd 'test' http://myapp-canary:80/api/smoke | grep OK"
+      - name: notify-slack
+        type: event
+        url: http://event-webhook/
+        metadata:
+          eventType: 'canary'
+          channel: 'deployments'
 ```
 
 ### Prometheus Metrics for Canary Analysis
@@ -1177,8 +1185,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 2        # Maximum number of pods above desired count
-      maxUnavailable: 1   # Maximum number of pods unavailable during update
+      maxSurge: 2 # Maximum number of pods above desired count
+      maxUnavailable: 1 # Maximum number of pods unavailable during update
   selector:
     matchLabels:
       app: myapp
@@ -1187,48 +1195,48 @@ spec:
       labels:
         app: myapp
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
-        prometheus.io/path: "/metrics"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/metrics'
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v2.0.0
-        ports:
-        - containerPort: 8080
-          name: http
-        env:
-        - name: VERSION
-          value: "v2.0.0"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 3
-          successThreshold: 1
-          failureThreshold: 3
-        lifecycle:
-          preStop:
-            exec:
-              # Allow time for load balancer to deregister pod
-              command: ["/bin/sh", "-c", "sleep 20"]
+        - name: myapp
+          image: myregistry.io/myapp:v2.0.0
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: VERSION
+              value: 'v2.0.0'
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                # Allow time for load balancer to deregister pod
+                command: ['/bin/sh', '-c', 'sleep 20']
       terminationGracePeriodSeconds: 30
 ---
 # service.yaml
@@ -1242,9 +1250,9 @@ spec:
   selector:
     app: myapp
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
   sessionAffinity: None
 ```
 
@@ -1347,7 +1355,7 @@ metadata:
   name: myapp-pdb
   namespace: production
 spec:
-  minAvailable: 80%  # Keep at least 80% of pods available
+  minAvailable: 80% # Keep at least 80% of pods available
   # Or use maxUnavailable: 2
   selector:
     matchLabels:
@@ -1368,10 +1376,10 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 25%       # Allow up to 5 extra pods (25% of 20)
-      maxUnavailable: 10%  # Allow max 2 pods unavailable (10% of 20)
-  minReadySeconds: 30    # Wait 30s after pod ready before continuing
-  progressDeadlineSeconds: 600  # Fail if not progressing after 10min
+      maxSurge: 25% # Allow up to 5 extra pods (25% of 20)
+      maxUnavailable: 10% # Allow max 2 pods unavailable (10% of 20)
+  minReadySeconds: 30 # Wait 30s after pod ready before continuing
+  progressDeadlineSeconds: 600 # Fail if not progressing after 10min
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -1382,16 +1390,16 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v2.0.0
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          successThreshold: 2  # Must succeed 2 times before ready
-          failureThreshold: 3
+        - name: myapp
+          image: myregistry.io/myapp:v2.0.0
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 2 # Must succeed 2 times before ready
+            failureThreshold: 3
 ```
 
 ### GitLab CI/CD Rolling Deployment
@@ -1556,15 +1564,11 @@ app.get('/api/checkout', async (req, res) => {
     email: req.user.email,
     custom: {
       accountType: req.user.accountType,
-      region: req.user.region
-    }
+      region: req.user.region,
+    },
   };
 
-  const useNewCheckout = await featureFlags.isFeatureEnabled(
-    'new-checkout-flow',
-    user,
-    false
-  );
+  const useNewCheckout = await featureFlags.isFeatureEnabled('new-checkout-flow', user, false);
 
   if (useNewCheckout) {
     return res.json(await newCheckoutService.process(req.body));
@@ -1594,27 +1598,27 @@ spec:
         app: unleash
     spec:
       containers:
-      - name: unleash
-        image: unleashorg/unleash-server:latest
-        ports:
-        - containerPort: 4242
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: unleash-secrets
-              key: database-url
-        - name: DATABASE_SSL
-          value: "false"
-        - name: LOG_LEVEL
-          value: "info"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+        - name: unleash
+          image: unleashorg/unleash-server:latest
+          ports:
+            - containerPort: 4242
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: unleash-secrets
+                  key: database-url
+            - name: DATABASE_SSL
+              value: 'false'
+            - name: LOG_LEVEL
+              value: 'info'
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
 ---
 apiVersion: v1
 kind: Service
@@ -1625,9 +1629,9 @@ spec:
   selector:
     app: unleash
   ports:
-  - protocol: TCP
-    port: 4242
-    targetPort: 4242
+    - protocol: TCP
+      port: 4242
+      targetPort: 4242
   type: LoadBalancer
 ```
 
@@ -1642,7 +1646,7 @@ const unleash = initialize({
   appName: 'myapp',
   instanceId: process.env.HOSTNAME,
   customHeaders: {
-    Authorization: process.env.UNLEASH_API_TOKEN
+    Authorization: process.env.UNLEASH_API_TOKEN,
   },
   strategies: {
     // Custom strategy for gradual rollout
@@ -1661,15 +1665,15 @@ const unleash = initialize({
     userSegment: (parameters, context) => {
       const allowedSegments = parameters.segments || [];
       return allowedSegments.includes(context.properties.segment);
-    }
-  }
+    },
+  },
 });
 
 function hashCode(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return hash;
@@ -1701,15 +1705,15 @@ export class FeatureFlagMiddleware {
         custom: {
           environment: process.env.NODE_ENV,
           region: req.headers['cloudfront-viewer-country'],
-          userAgent: req.headers['user-agent']
-        }
+          userAgent: req.headers['user-agent'],
+        },
       };
 
       // Preload commonly used flags
       req.featureFlags = {
         newUI: await this.flagService.isFeatureEnabled('new-ui', user),
         betaFeatures: await this.flagService.isFeatureEnabled('beta-features', user),
-        experimentalAPI: await this.flagService.isFeatureEnabled('experimental-api', user)
+        experimentalAPI: await this.flagService.isFeatureEnabled('experimental-api', user),
       };
 
       next();
@@ -1723,7 +1727,7 @@ export class FeatureFlagMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const user = {
         key: req.user?.id || 'anonymous',
-        email: req.user?.email
+        email: req.user?.email,
       };
 
       const enabled = await this.flagService.isFeatureEnabled(flagKey, user, false);
@@ -1732,7 +1736,7 @@ export class FeatureFlagMiddleware {
       metrics.increment('feature_flag.check', {
         flag: flagKey,
         enabled: enabled.toString(),
-        user: user.key
+        user: user.key,
       });
 
       if (!enabled) {
@@ -1752,13 +1756,10 @@ const flagMiddleware = new FeatureFlagMiddleware(featureFlagService);
 
 app.use(flagMiddleware.injectFlags());
 
-app.get('/api/beta/new-feature',
-  flagMiddleware.requireFeature('new-feature'),
-  async (req, res) => {
-    // This handler only runs if feature flag is enabled
-    res.json({ feature: 'new-feature', status: 'active' });
-  }
-);
+app.get('/api/beta/new-feature', flagMiddleware.requireFeature('new-feature'), async (req, res) => {
+  // This handler only runs if feature flag is enabled
+  res.json({ feature: 'new-feature', status: 'active' });
+});
 ```
 
 ### Progressive Rollout Strategy
@@ -1767,11 +1768,11 @@ app.get('/api/beta/new-feature',
 // progressive-rollout.ts
 export class ProgressiveRollout {
   private stages = [
-    { percentage: 1, duration: 3600000 },    // 1% for 1 hour
-    { percentage: 5, duration: 7200000 },    // 5% for 2 hours
-    { percentage: 25, duration: 14400000 },  // 25% for 4 hours
-    { percentage: 50, duration: 14400000 },  // 50% for 4 hours
-    { percentage: 100, duration: 0 }         // 100% permanently
+    { percentage: 1, duration: 3600000 }, // 1% for 1 hour
+    { percentage: 5, duration: 7200000 }, // 5% for 2 hours
+    { percentage: 25, duration: 14400000 }, // 25% for 4 hours
+    { percentage: 50, duration: 14400000 }, // 50% for 4 hours
+    { percentage: 100, duration: 0 }, // 100% permanently
   ];
 
   async rolloutFeature(
@@ -1907,8 +1908,7 @@ describe('Feature Flags', () => {
       const user = { key: 'user-123', email: 'test@example.com' };
 
       // Mock flag to return true for this user
-      jest.spyOn(flagService, 'isFeatureEnabled')
-        .mockResolvedValue(true);
+      jest.spyOn(flagService, 'isFeatureEnabled').mockResolvedValue(true);
 
       const enabled = await flagService.isFeatureEnabled('new-feature', user);
       expect(enabled).toBe(true);
@@ -1929,11 +1929,10 @@ describe('Feature Flags', () => {
       const betaUser = {
         key: 'user-123',
         email: 'beta@example.com',
-        custom: { segment: 'beta' }
+        custom: { segment: 'beta' },
       };
 
-      jest.spyOn(flagService, 'isFeatureEnabled')
-        .mockResolvedValue(true);
+      jest.spyOn(flagService, 'isFeatureEnabled').mockResolvedValue(true);
 
       const enabled = await flagService.isFeatureEnabled('beta-feature', betaUser);
       expect(enabled).toBe(true);
@@ -1944,8 +1943,7 @@ describe('Feature Flags', () => {
     it('should return default value on error', async () => {
       const user = { key: 'user-123' };
 
-      jest.spyOn(flagService, 'isFeatureEnabled')
-        .mockRejectedValue(new Error('Network error'));
+      jest.spyOn(flagService, 'isFeatureEnabled').mockRejectedValue(new Error('Network error'));
 
       const enabled = await flagService.isFeatureEnabled('new-feature', user, false);
       expect(enabled).toBe(false);
@@ -2012,17 +2010,17 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v2.0.0
-        ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+        - name: myapp
+          image: myregistry.io/myapp:v2.0.0
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
 ```
 
 ### Deployment with Downtime Notification
@@ -2137,21 +2135,21 @@ metadata:
   namespace: production
 spec:
   hosts:
-  - myapp-service
+    - myapp-service
   http:
-  - match:
-    - uri:
-        prefix: "/api"
-    route:
-    - destination:
+    - match:
+        - uri:
+            prefix: '/api'
+      route:
+        - destination:
+            host: myapp-service
+            subset: stable
+          weight: 100
+      mirror:
         host: myapp-service
-        subset: stable
-      weight: 100
-    mirror:
-      host: myapp-service
-      subset: shadow
-    mirrorPercentage:
-      value: 100.0  # Mirror 100% of traffic
+        subset: shadow
+      mirrorPercentage:
+        value: 100.0 # Mirror 100% of traffic
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
@@ -2161,12 +2159,12 @@ metadata:
 spec:
   host: myapp-service
   subsets:
-  - name: stable
-    labels:
-      version: stable
-  - name: shadow
-    labels:
-      version: shadow
+    - name: stable
+      labels:
+        version: stable
+    - name: shadow
+      labels:
+        version: shadow
 ---
 # stable-deployment.yaml
 apiVersion: apps/v1
@@ -2187,10 +2185,10 @@ spec:
         version: stable
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v1.0.0
-        ports:
-        - containerPort: 8080
+        - name: myapp
+          image: myregistry.io/myapp:v1.0.0
+          ports:
+            - containerPort: 8080
 ---
 # shadow-deployment.yaml
 apiVersion: apps/v1
@@ -2199,7 +2197,7 @@ metadata:
   name: myapp-shadow
   namespace: production
 spec:
-  replicas: 5  # Match production capacity
+  replicas: 5 # Match production capacity
   selector:
     matchLabels:
       app: myapp
@@ -2210,18 +2208,18 @@ spec:
         app: myapp
         version: shadow
       annotations:
-        sidecar.istio.io/logLevel: "debug"
+        sidecar.istio.io/logLevel: 'debug'
     spec:
       containers:
-      - name: myapp
-        image: myregistry.io/myapp:v2.0.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: SHADOW_MODE
-          value: "true"
-        - name: LOG_LEVEL
-          value: "debug"
+        - name: myapp
+          image: myregistry.io/myapp:v2.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SHADOW_MODE
+              value: 'true'
+            - name: LOG_LEVEL
+              value: 'debug'
 ```
 
 ### Shadow Traffic Analysis Service
@@ -2255,7 +2253,7 @@ export class ShadowTrafficAnalyzer {
   constructor() {
     this.kafka = new Kafka({
       clientId: 'shadow-analyzer',
-      brokers: process.env.KAFKA_BROKERS!.split(',')
+      brokers: process.env.KAFKA_BROKERS!.split(','),
     });
   }
 
@@ -2268,7 +2266,7 @@ export class ShadowTrafficAnalyzer {
       eachMessage: async ({ topic, partition, message }) => {
         const comparison: RequestComparison = JSON.parse(message.value!.toString());
         await this.analyzeRequest(comparison);
-      }
+      },
     });
   }
 
@@ -2286,7 +2284,8 @@ export class ShadowTrafficAnalyzer {
     const responseTimeDiff = Math.abs(
       comparison.stable.responseTime - comparison.shadow.responseTime
     );
-    if (responseTimeDiff > 100) {  // More than 100ms difference
+    if (responseTimeDiff > 100) {
+      // More than 100ms difference
       diffs.push(
         `Response time diff: stable=${comparison.stable.responseTime}ms, shadow=${comparison.shadow.responseTime}ms`
       );
@@ -2304,7 +2303,7 @@ export class ShadowTrafficAnalyzer {
       logger.warn('Shadow traffic difference detected', {
         requestId: comparison.requestId,
         endpoint: comparison.endpoint,
-        differences: diffs
+        differences: diffs,
       });
     }
   }
@@ -2323,7 +2322,7 @@ export class ShadowTrafficAnalyzer {
       statusCodeMismatches,
       responseMismatches,
       errorRate: totalRequests > 0 ? (statusCodeMismatches / totalRequests) * 100 : 0,
-      examples: this.differences.slice(0, 10)
+      examples: this.differences.slice(0, 10),
     };
 
     logger.info('Shadow deployment report', report);
@@ -2367,7 +2366,7 @@ export class ShadowAwareController {
           endpoint: req.path,
           statusCode: 200,
           responseTime,
-          response: result
+          response: result,
         });
 
         // Don't send response in shadow mode
@@ -2385,7 +2384,7 @@ export class ShadowAwareController {
           endpoint: req.path,
           statusCode: 500,
           responseTime,
-          error: error.message
+          error: error.message,
         });
       } else {
         res.status(500).json({ error: error.message });
@@ -2398,14 +2397,16 @@ export class ShadowAwareController {
     await producer.connect();
     await producer.send({
       topic: 'shadow-traffic',
-      messages: [{
-        key: data.requestId,
-        value: JSON.stringify({
-          ...data,
-          version: 'shadow',
-          timestamp: new Date()
-        })
-      }]
+      messages: [
+        {
+          key: data.requestId,
+          value: JSON.stringify({
+            ...data,
+            version: 'shadow',
+            timestamp: new Date(),
+          }),
+        },
+      ],
     });
     await producer.disconnect();
   }
@@ -2422,46 +2423,51 @@ export class ShadowAwareController {
 ```yaml
 # grafana-dashboard.json
 {
-  "dashboard": {
-    "title": "Shadow Deployment Comparison",
-    "panels": [
-      {
-        "title": "Response Time Comparison",
-        "targets": [
+  'dashboard':
+    {
+      'title': 'Shadow Deployment Comparison',
+      'panels':
+        [
           {
-            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{version=\"stable\"}[5m])) by (le))",
-            "legendFormat": "Stable P95"
+            'title': 'Response Time Comparison',
+            'targets':
+              [
+                {
+                  'expr': 'histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{version="stable"}[5m])) by (le))',
+                  'legendFormat': 'Stable P95',
+                },
+                {
+                  'expr': 'histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{version="shadow"}[5m])) by (le))',
+                  'legendFormat': 'Shadow P95',
+                },
+              ],
           },
           {
-            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{version=\"shadow\"}[5m])) by (le))",
-            "legendFormat": "Shadow P95"
-          }
-        ]
-      },
-      {
-        "title": "Error Rate Comparison",
-        "targets": [
-          {
-            "expr": "sum(rate(http_requests_total{version=\"stable\",status=~\"5..\"}[5m])) / sum(rate(http_requests_total{version=\"stable\"}[5m]))",
-            "legendFormat": "Stable Error Rate"
+            'title': 'Error Rate Comparison',
+            'targets':
+              [
+                {
+                  'expr': 'sum(rate(http_requests_total{version="stable",status=~"5.."}[5m])) / sum(rate(http_requests_total{version="stable"}[5m]))',
+                  'legendFormat': 'Stable Error Rate',
+                },
+                {
+                  'expr': 'sum(rate(http_requests_total{version="shadow",status=~"5.."}[5m])) / sum(rate(http_requests_total{version="shadow"}[5m]))',
+                  'legendFormat': 'Shadow Error Rate',
+                },
+              ],
           },
           {
-            "expr": "sum(rate(http_requests_total{version=\"shadow\",status=~\"5..\"}[5m])) / sum(rate(http_requests_total{version=\"shadow\"}[5m]))",
-            "legendFormat": "Shadow Error Rate"
-          }
-        ]
-      },
-      {
-        "title": "Response Differences",
-        "targets": [
-          {
-            "expr": "sum(rate(shadow_response_differences_total[5m]))",
-            "legendFormat": "Differences per second"
-          }
-        ]
-      }
-    ]
-  }
+            'title': 'Response Differences',
+            'targets':
+              [
+                {
+                  'expr': 'sum(rate(shadow_response_differences_total[5m]))',
+                  'legendFormat': 'Differences per second',
+                },
+              ],
+          },
+        ],
+    },
 }
 ```
 
@@ -2532,43 +2538,43 @@ metadata:
   namespace: production
 spec:
   hosts:
-  - myapp.example.com
+    - myapp.example.com
   http:
-  - match:
-    # Variant A: Users with cookie ab_test=variant_a
-    - headers:
-        cookie:
-          regex: ".*ab_test=variant_a.*"
-    route:
-    - destination:
-        host: myapp-service
-        subset: variant-a
-      headers:
-        response:
-          set:
-            x-variant: "a"
-  - match:
-    # Variant B: Users with cookie ab_test=variant_b
-    - headers:
-        cookie:
-          regex: ".*ab_test=variant_b.*"
-    route:
-    - destination:
-        host: myapp-service
-        subset: variant-b
-      headers:
-        response:
-          set:
-            x-variant: "b"
-  - route:
-    # Default: Control group
-    - destination:
-        host: myapp-service
-        subset: control
-      headers:
-        response:
-          set:
-            x-variant: "control"
+    - match:
+        # Variant A: Users with cookie ab_test=variant_a
+        - headers:
+            cookie:
+              regex: '.*ab_test=variant_a.*'
+      route:
+        - destination:
+            host: myapp-service
+            subset: variant-a
+          headers:
+            response:
+              set:
+                x-variant: 'a'
+    - match:
+        # Variant B: Users with cookie ab_test=variant_b
+        - headers:
+            cookie:
+              regex: '.*ab_test=variant_b.*'
+      route:
+        - destination:
+            host: myapp-service
+            subset: variant-b
+          headers:
+            response:
+              set:
+                x-variant: 'b'
+    - route:
+        # Default: Control group
+        - destination:
+            host: myapp-service
+            subset: control
+          headers:
+            response:
+              set:
+                x-variant: 'control'
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
@@ -2578,15 +2584,15 @@ metadata:
 spec:
   host: myapp-service
   subsets:
-  - name: control
-    labels:
-      version: control
-  - name: variant-a
-    labels:
-      version: variant-a
-  - name: variant-b
-    labels:
-      version: variant-b
+    - name: control
+      labels:
+        version: control
+    - name: variant-a
+      labels:
+        version: variant-a
+    - name: variant-b
+      labels:
+        version: variant-b
 ```
 
 ### A/B Test Assignment Service
@@ -2599,7 +2605,7 @@ export interface ABTestConfig {
   name: string;
   variants: {
     id: string;
-    weight: number;  // Percentage allocation
+    weight: number; // Percentage allocation
   }[];
   startDate: Date;
   endDate: Date;
@@ -2619,11 +2625,7 @@ export class ABTestService {
     this.tests.set(config.name, config);
   }
 
-  assignVariant(
-    testName: string,
-    userId: string,
-    userSegment?: string
-  ): string | null {
+  assignVariant(testName: string, userId: string, userSegment?: string): string | null {
     const test = this.tests.get(testName);
 
     if (!test) {
@@ -2653,14 +2655,14 @@ export class ABTestService {
       }
     }
 
-    return test.variants[0].id;  // Fallback
+    return test.variants[0].id; // Fallback
   }
 
   private hashString(str: string): number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash);
@@ -2680,7 +2682,7 @@ export class ABTestService {
       user: userId,
       event: eventType,
       value,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }
@@ -2693,11 +2695,11 @@ abTest.registerTest({
   variants: [
     { id: 'control', weight: 50 },
     { id: 'variant-a', weight: 25 },
-    { id: 'variant-b', weight: 25 }
+    { id: 'variant-b', weight: 25 },
   ],
   startDate: new Date('2025-01-01'),
   endDate: new Date('2025-01-31'),
-  targetSegment: 'premium-users'
+  targetSegment: 'premium-users',
 });
 ```
 
@@ -2721,19 +2723,15 @@ export class ABTestMiddleware {
 
       if (!variant) {
         // Assign variant
-        variant = this.abTestService.assignVariant(
-          'checkout-redesign',
-          userId,
-          userSegment
-        );
+        variant = this.abTestService.assignVariant('checkout-redesign', userId, userSegment);
 
         if (variant) {
           // Set cookie for consistent experience
           res.cookie('ab_test', `variant_${variant}`, {
-            maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
             httpOnly: true,
             secure: true,
-            sameSite: 'lax'
+            sameSite: 'lax',
           });
         }
       }
@@ -2749,13 +2747,7 @@ export class ABTestMiddleware {
       const variant = req.abTestVariant;
 
       if (variant) {
-        this.abTestService.trackEvent(
-          testName,
-          variant,
-          userId,
-          eventType,
-          req.body.value
-        );
+        this.abTestService.trackEvent(testName, variant, userId, eventType, req.body.value);
       }
 
       next();
@@ -2782,7 +2774,8 @@ app.get('/checkout', (req, res) => {
   }
 });
 
-app.post('/checkout/complete',
+app.post(
+  '/checkout/complete',
   abTestMiddleware.trackConversion('checkout-redesign', 'purchase'),
   (req, res) => {
     // Handle checkout completion
@@ -2822,10 +2815,10 @@ export class ABTestAnalysis {
     const n2 = variantMetrics.users;
 
     // Pooled proportion
-    const p = ((p1 * n1) + (p2 * n2)) / (n1 + n2);
+    const p = (p1 * n1 + p2 * n2) / (n1 + n2);
 
     // Standard error
-    const se = Math.sqrt(p * (1 - p) * ((1 / n1) + (1 / n2)));
+    const se = Math.sqrt(p * (1 - p) * (1 / n1 + 1 / n2));
 
     // Z-score
     const z = (p2 - p1) / se;
@@ -2836,7 +2829,7 @@ export class ABTestAnalysis {
     return {
       pValue,
       isSignificant: pValue < 0.05,
-      confidenceLevel: (1 - pValue) * 100
+      confidenceLevel: (1 - pValue) * 100,
     };
   }
 
@@ -2845,7 +2838,7 @@ export class ABTestAnalysis {
    */
   calculateSampleSize(
     baselineConversionRate: number,
-    minimumDetectableEffect: number,  // e.g., 0.1 for 10% improvement
+    minimumDetectableEffect: number, // e.g., 0.1 for 10% improvement
     power: number = 0.8,
     alpha: number = 0.05
   ): number {
@@ -2855,8 +2848,7 @@ export class ABTestAnalysis {
     const zAlpha = this.invNormalCDF(1 - alpha / 2);
     const zBeta = this.invNormalCDF(power);
 
-    const numerator = Math.pow(zAlpha + zBeta, 2) *
-                      (p1 * (1 - p1) + p2 * (1 - p2));
+    const numerator = Math.pow(zAlpha + zBeta, 2) * (p1 * (1 - p1) + p2 * (1 - p2));
     const denominator = Math.pow(p2 - p1, 2);
 
     return Math.ceil(numerator / denominator);
@@ -2864,8 +2856,9 @@ export class ABTestAnalysis {
 
   private normalCDF(x: number): number {
     const t = 1 / (1 + 0.2316419 * Math.abs(x));
-    const d = 0.3989423 * Math.exp(-x * x / 2);
-    const prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    const d = 0.3989423 * Math.exp((-x * x) / 2);
+    const prob =
+      d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
     return x > 0 ? 1 - prob : prob;
   }
 
@@ -2876,37 +2869,21 @@ export class ABTestAnalysis {
     }
 
     const a = [
-      -3.969683028665376e+01,
-      2.209460984245205e+02,
-      -2.759285104469687e+02,
-      1.383577518672690e+02,
-      -3.066479806614716e+01,
-      2.506628277459239e+00
+      -3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.38357751867269e2,
+      -3.066479806614716e1, 2.506628277459239,
     ];
 
     const b = [
-      -5.447609879822406e+01,
-      1.615858368580409e+02,
-      -1.556989798598866e+02,
-      6.680131188771972e+01,
-      -1.328068155288572e+01
+      -5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1,
+      -1.328068155288572e1,
     ];
 
     const c = [
-      -7.784894002430293e-03,
-      -3.223964580411365e-01,
-      -2.400758277161838e+00,
-      -2.549732539343734e+00,
-      4.374664141464968e+00,
-      2.938163982698783e+00
+      -7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838, -2.549732539343734,
+      4.374664141464968, 2.938163982698783,
     ];
 
-    const d = [
-      7.784695709041462e-03,
-      3.224671290700398e-01,
-      2.445134137142996e+00,
-      3.754408661907416e+00
-    ];
+    const d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996, 3.754408661907416];
 
     const pLow = 0.02425;
     const pHigh = 1 - pLow;
@@ -2915,17 +2892,23 @@ export class ABTestAnalysis {
 
     if (p < pLow) {
       q = Math.sqrt(-2 * Math.log(p));
-      return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-             ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      return (
+        (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+        ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+      );
     } else if (p <= pHigh) {
       q = p - 0.5;
       r = q * q;
-      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
-             (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+      return (
+        ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) /
+        (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
+      );
     } else {
       q = Math.sqrt(-2 * Math.log(1 - p));
-      return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-              ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      return (
+        -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+        ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+      );
     }
   }
 }
@@ -2947,8 +2930,8 @@ export class ABTestReporter {
       .filter(m => m.variant !== 'control')
       .map(variant => {
         const significance = analysis.calculateSignificance(control, variant);
-        const lift = ((variant.conversionRate - control.conversionRate) /
-                     control.conversionRate) * 100;
+        const lift =
+          ((variant.conversionRate - control.conversionRate) / control.conversionRate) * 100;
 
         return {
           variant: variant.variant,
@@ -2959,7 +2942,7 @@ export class ABTestReporter {
           pValue: significance.pValue.toFixed(4),
           isSignificant: significance.isSignificant,
           confidence: significance.confidenceLevel.toFixed(2) + '%',
-          winner: significance.isSignificant && lift > 0
+          winner: significance.isSignificant && lift > 0,
         };
       });
 
@@ -2968,7 +2951,7 @@ export class ABTestReporter {
       control,
       variants: results,
       winner: results.find(r => r.winner)?.variant || 'No clear winner',
-      recommendation: this.generateRecommendation(results)
+      recommendation: this.generateRecommendation(results),
     };
   }
 
@@ -3098,11 +3081,7 @@ export class SmokeTests {
   }
 
   private async testCriticalEndpoints(): Promise<void> {
-    const endpoints = [
-      '/api/version',
-      '/api/status',
-      '/api/users/me'
-    ];
+    const endpoints = ['/api/version', '/api/status', '/api/users/me'];
 
     for (const endpoint of endpoints) {
       const response = await axios.get(`${this.baseUrl}${endpoint}`);
@@ -3121,12 +3100,12 @@ export class SmokeTests {
 
   private async testExternalServices(): Promise<void> {
     const response = await axios.get(`${this.baseUrl}/health/external`);
-    const failedServices = response.data.services.filter(
-      (s: any) => s.status !== 'healthy'
-    );
+    const failedServices = response.data.services.filter((s: any) => s.status !== 'healthy');
 
     if (failedServices.length > 0) {
-      throw new Error(`External services failed: ${failedServices.map((s: any) => s.name).join(', ')}`);
+      throw new Error(
+        `External services failed: ${failedServices.map((s: any) => s.name).join(', ')}`
+      );
     }
   }
 }
@@ -3138,6 +3117,7 @@ export class SmokeTests {
 # Deployment Validation Checklist
 
 ## Pre-Deployment
+
 - [ ] All tests passing in CI/CD pipeline
 - [ ] Security scan completed with no critical issues
 - [ ] Performance benchmarks meet SLAs
@@ -3149,6 +3129,7 @@ export class SmokeTests {
 - [ ] Customer communication sent (if needed)
 
 ## During Deployment
+
 - [ ] Deployment started successfully
 - [ ] Health checks passing
 - [ ] No spike in error rates
@@ -3159,6 +3140,7 @@ export class SmokeTests {
 - [ ] Smoke tests passed
 
 ## Post-Deployment
+
 - [ ] All health checks green for 15 minutes
 - [ ] Error rate < 0.1%
 - [ ] P95 latency within SLA
@@ -3171,6 +3153,7 @@ export class SmokeTests {
 - [ ] Monitoring alerts reviewed
 
 ## Rollback Criteria
+
 - [ ] Error rate > 1%
 - [ ] P95 latency > 2x baseline
 - [ ] Critical functionality broken
@@ -3352,12 +3335,13 @@ monitor_deployment
 
 ### Manual Rollback Runbook
 
-```markdown
+````markdown
 # Deployment Rollback Runbook
 
 ## When to Rollback
 
 Immediate rollback if:
+
 - Error rate > 5%
 - P95 latency > 2x baseline
 - Critical functionality broken
@@ -3365,6 +3349,7 @@ Immediate rollback if:
 - Security incident
 
 Consider rollback if:
+
 - Error rate > 1% for 5+ minutes
 - User reports spike
 - Business metrics degraded
@@ -3372,12 +3357,15 @@ Consider rollback if:
 ## Kubernetes Rollback
 
 ### Quick Rollback (Previous Version)
+
 ```bash
 kubectl rollout undo deployment/myapp -n production
 kubectl rollout status deployment/myapp -n production
 ```
+````
 
 ### Rollback to Specific Version
+
 ```bash
 # View rollout history
 kubectl rollout history deployment/myapp -n production
@@ -3390,6 +3378,7 @@ kubectl rollout status deployment/myapp -n production
 ```
 
 ### Blue-Green Rollback
+
 ```bash
 # Switch traffic back to blue
 kubectl patch service myapp-service -n production \
@@ -3400,6 +3389,7 @@ kubectl get service myapp-service -n production -o yaml | grep version
 ```
 
 ### Canary Rollback
+
 ```bash
 # Reset traffic to 100% stable
 kubectl patch virtualservice myapp -n production --type merge -p '{
@@ -3417,6 +3407,7 @@ kubectl patch virtualservice myapp -n production --type merge -p '{
 ## Database Rollback
 
 ### Rollback Migration
+
 ```bash
 # Connect to migration container
 kubectl exec -it deployment/myapp -n production -- bash
@@ -3429,6 +3420,7 @@ npm run migrate:status
 ```
 
 ### Restore from Backup
+
 ```bash
 # List available backups
 aws s3 ls s3://myapp-db-backups/
@@ -3446,7 +3438,8 @@ pg_restore -h $DB_HOST -U $DB_USER -d $DB_NAME \
 4. Update incident tracking
 5. Schedule postmortem
 6. Document lessons learned
-```
+
+````
 
 ---
 
@@ -3491,7 +3484,7 @@ spec:
           requests:
             memory: "128Mi"  # Smaller footprint for canary
             cpu: "100m"
-```
+````
 
 ### Cost Monitoring
 
@@ -3535,18 +3528,18 @@ export class DeploymentCostTracker {
     }
   ): Promise<string> {
     if (requirements.productionTesting) {
-      return 'shadow';  // Highest cost but best testing
+      return 'shadow'; // Highest cost but best testing
     }
 
     if (requirements.instantRollback) {
-      return 'blue-green';  // Higher cost but instant rollback
+      return 'blue-green'; // Higher cost but instant rollback
     }
 
     if (requirements.zeroDowntime) {
       return budget > 1000 ? 'canary' : 'rolling';
     }
 
-    return 'recreate';  // Lowest cost
+    return 'recreate'; // Lowest cost
   }
 }
 ```
@@ -3739,7 +3732,7 @@ jobs:
 
 ---
 
-*This documentation is maintained as part of the Code Quality Documentation Project and aligned with industry standards including ITIL, Google SRE practices, and DORA metrics.*
+_This documentation is maintained as part of the Code Quality Documentation Project and aligned with industry standards including ITIL, Google SRE practices, and DORA metrics._
 
 **Last Updated**: 2025-01-08
 **Version**: 1.0

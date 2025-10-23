@@ -5,9 +5,11 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 ## 📂 Examples Overview
 
 ### 1. Autonomous Test Suite Agent
+
 **Location:** `autonomous-test-suite/`
 
 **What it does:**
+
 - Monitors codebase for changes
 - Identifies test coverage gaps
 - Autonomously generates missing tests
@@ -15,6 +17,7 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 - Commits passing tests to repository
 
 **Technology Stack:**
+
 - LangGraph for orchestration
 - OpenAI GPT-4o for reasoning
 - Git integration for auto-commits
@@ -28,9 +31,11 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 ---
 
 ### 2. Multi-Agent Code Review System
+
 **Location:** `multi-agent-code-review/`
 
 **What it does:**
+
 - 5 specialized agents review PRs in parallel:
   - Security Agent (OWASP Top 10)
   - Performance Agent (N+1 queries, complexity)
@@ -42,6 +47,7 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 - Blocks or approves based on severity
 
 **Technology Stack:**
+
 - LangGraph multi-agent orchestration
 - GitHub Actions integration
 - OpenAI GPT-4o for specialized review
@@ -55,9 +61,11 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 ---
 
 ### 3. Self-Healing CI/CD Pipeline
+
 **Location:** `self-healing-pipeline/`
 
 **What it does:**
+
 - Detects pipeline failures in real-time
 - Analyzes failure logs with LLM
 - Attempts automatic remediation:
@@ -68,6 +76,7 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 - Learns from past failures
 
 **Technology Stack:**
+
 - LangGraph workflow engine
 - GitHub Actions / GitLab CI webhooks
 - OpenAI GPT-4o for log analysis
@@ -81,9 +90,11 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 ---
 
 ### 4. Bug Triage Workflow Agent
+
 **Location:** `bug-triage-workflow/`
 
 **What it does:**
+
 - Monitors new bug reports from GitHub Issues
 - Analyzes severity, impact, and root cause
 - Assigns priority (P0-P4) automatically
@@ -93,6 +104,7 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 - Tracks resolution and updates reporter
 
 **Technology Stack:**
+
 - LangGraph state machine
 - ChromaDB for issue similarity search
 - OpenAI GPT-4o for triage analysis
@@ -106,9 +118,11 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 ---
 
 ### 5. Incident Response Agent Team
+
 **Location:** `incident-response-agents/`
 
 **What it does:**
+
 - 5-agent autonomous incident response:
   - Detection Agent: Anomaly detection in metrics
   - Analysis Agent: Root cause analysis (logs, traces)
@@ -120,6 +134,7 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 - Learns from each incident
 
 **Technology Stack:**
+
 - LangGraph multi-agent system
 - Prometheus + Elasticsearch + Jaeger
 - OpenAI GPT-4o for analysis
@@ -133,9 +148,11 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 ---
 
 ### 6. Continuous Quality Improvement Agent
+
 **Location:** `continuous-improvement-agent/`
 
 **What it does:**
+
 - Analyzes DORA metrics weekly
 - Identifies quality degradation trends
 - Proposes concrete improvements:
@@ -147,6 +164,7 @@ This directory contains 6 complete, production-ready agentic workflow implementa
 - Creates executive reports
 
 **Technology Stack:**
+
 - LangGraph workflow
 - OpenAI GPT-4o for trend analysis
 - Prometheus for metrics
@@ -251,17 +269,17 @@ kubectl apply -f .
 
 ### Monthly Cost Estimate (10-person team)
 
-| Example | Usage | Monthly Cost | Time Saved | ROI |
-|---------|-------|--------------|------------|-----|
-| 1. Autonomous Test Suite | 500 runs | $75 | 1,250 hrs | 16,567% |
-| 2. Multi-Agent Code Review | 200 PRs | $42 | 300 hrs | 71,328% |
-| 3. Self-Healing Pipeline | 150 incidents | $45 | 200 hrs | 44,344% |
-| 4. Bug Triage Workflow | 400 bugs | $32 | 67 hrs | 20,838% |
-| 5. Incident Response | 50 incidents | $25 | 25 hrs | 9,900% |
-| 6. Continuous Improvement | 4 reports | $6 | 16 hrs | 26,567% |
-| **Total** | - | **$225** | **1,858 hrs** | **82,444%** |
+| Example                    | Usage         | Monthly Cost | Time Saved    | ROI         |
+| -------------------------- | ------------- | ------------ | ------------- | ----------- |
+| 1. Autonomous Test Suite   | 500 runs      | $75          | 1,250 hrs     | 16,567%     |
+| 2. Multi-Agent Code Review | 200 PRs       | $42          | 300 hrs       | 71,328%     |
+| 3. Self-Healing Pipeline   | 150 incidents | $45          | 200 hrs       | 44,344%     |
+| 4. Bug Triage Workflow     | 400 bugs      | $32          | 67 hrs        | 20,838%     |
+| 5. Incident Response       | 50 incidents  | $25          | 25 hrs        | 9,900%      |
+| 6. Continuous Improvement  | 4 reports     | $6           | 16 hrs        | 26,567%     |
+| **Total**                  | -             | **$225**     | **1,858 hrs** | **82,444%** |
 
-*Assumes $100/hr developer rate*
+_Assumes $100/hr developer rate_
 
 ---
 
@@ -340,6 +358,7 @@ pytest --cov=. --cov-report=html
 ### Agent runs slowly (> 60 seconds)
 
 **Solutions:**
+
 1. Check `OPENAI_MODEL` - use `gpt-4o-mini` for faster responses
 2. Reduce context size sent to LLM
 3. Enable parallel execution where possible
@@ -348,6 +367,7 @@ pytest --cov=. --cov-report=html
 ### Too many false positives
 
 **Solutions:**
+
 1. Tune agent prompts with examples from your codebase
 2. Implement voting (require 2+ agents to agree)
 3. Add human-in-the-loop for low confidence decisions
@@ -356,6 +376,7 @@ pytest --cov=. --cov-report=html
 ### Exceeding budget
 
 **Solutions:**
+
 1. Set `MAX_COST_PER_RUN` in `.env`
 2. Use caching for repeated queries
 3. Switch to `gpt-4o-mini` for non-critical decisions
@@ -364,6 +385,7 @@ pytest --cov=. --cov-report=html
 ### Agent making wrong decisions
 
 **Solutions:**
+
 1. Add more examples to system prompts
 2. Implement verification steps
 3. Use structured outputs (Pydantic) to constrain responses
@@ -375,6 +397,7 @@ pytest --cov=. --cov-report=html
 ## 📚 Documentation
 
 Each example includes:
+
 - `README.md` - Setup and usage instructions
 - `ARCHITECTURE.md` - System design and agent workflow
 - `API.md` - API reference and endpoints
@@ -418,4 +441,4 @@ MIT License - See LICENSE file for details
 
 ---
 
-*These production examples demonstrate the power of agentic workflows to automate complex QA tasks that previously required significant human effort. Start with one example, measure impact, then expand across your QA processes.*
+_These production examples demonstrate the power of agentic workflows to automate complex QA tasks that previously required significant human effort. Start with one example, measure impact, then expand across your QA processes._

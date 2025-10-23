@@ -187,14 +187,14 @@ class UserValidator {
     if (password.length < 8) {
       return {
         isValid: false,
-        error: 'Password must be at least 8 characters'
+        error: 'Password must be at least 8 characters',
       };
     }
 
     if (!/\d/.test(password)) {
       return {
         isValid: false,
-        error: 'Password must contain at least one number'
+        error: 'Password must contain at least one number',
       };
     }
 
@@ -206,7 +206,7 @@ class UserValidator {
     if (username.length < 3 || username.length > 20) {
       return {
         isValid: false,
-        error: 'Username must be 3-20 characters'
+        error: 'Username must be 3-20 characters',
       };
     }
 
@@ -228,7 +228,7 @@ class UserValidator {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }
@@ -400,11 +400,7 @@ class UserRegistration {
 
   async register(userData) {
     // ... validation logic ...
-    await this.emailService.sendEmail(
-      userData.email,
-      'Welcome!',
-      'Thanks for registering'
-    );
+    await this.emailService.sendEmail(userData.email, 'Welcome!', 'Thanks for registering');
     return { success: true };
   }
 }
@@ -414,14 +410,14 @@ describe('User Registration', () => {
   it('should send welcome email after registration', async () => {
     // Arrange: Create mock email service
     const mockEmailService = {
-      sendEmail: jest.fn().mockResolvedValue(true)
+      sendEmail: jest.fn().mockResolvedValue(true),
     };
     const registration = new UserRegistration(mockEmailService);
 
     // Act
     await registration.register({
       email: 'user@example.com',
-      name: 'John'
+      name: 'John',
     });
 
     // Assert: Verify email was sent
@@ -526,7 +522,7 @@ const tddMetrics = {
     statements: 95,
     branches: 90,
     functions: 100,
-    lines: 95
+    lines: 95,
   },
 
   // Tests written before code (ideal: 100%)
@@ -539,7 +535,7 @@ const tddMetrics = {
   testCodeRatio: 1.5,
 
   // Defects caught by tests vs. production (target: >90%)
-  defectCatchRate: 92
+  defectCatchRate: 92,
 };
 ```
 
@@ -547,18 +543,21 @@ const tddMetrics = {
 
 ```markdown
 **Code Quality:**
+
 - Fewer bugs (40-80% reduction)
 - Better design (SOLID principles naturally emerge)
 - Higher maintainability
 - Self-documenting code
 
 **Development Speed:**
+
 - Faster debugging (tests pinpoint issues)
 - Faster refactoring (tests provide safety net)
 - Reduced rework (catch issues early)
 - Less time in debugger
 
 **Team Collaboration:**
+
 - Clear requirements (tests as specification)
 - Easier code reviews (tests explain intent)
 - Confident refactoring (team can change code safely)
@@ -583,4 +582,4 @@ const tddMetrics = {
 
 ---
 
-*Part of: [Development Practices](README.md)*
+_Part of: [Development Practices](README.md)_

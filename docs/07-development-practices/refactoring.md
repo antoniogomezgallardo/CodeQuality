@@ -1,10 +1,13 @@
 # Refactoring
 
 ## Purpose
+
 Comprehensive guide to refactoring—the disciplined technique for restructuring existing code while preserving its external behavior, improving code quality, maintainability, and reducing technical debt.
 
 ## Overview
+
 Refactoring is:
+
 - Restructuring code without changing external behavior
 - A continuous improvement practice
 - Essential for maintaining code quality
@@ -15,9 +18,11 @@ Refactoring is:
 ## What is Refactoring?
 
 ### Definition
+
 Refactoring is the process of changing a software system in such a way that it does not alter the external behavior of the code yet improves its internal structure.
 
 **Key Characteristics:**
+
 - Behavior-preserving transformations
 - Small, incremental changes
 - Backed by automated tests
@@ -85,6 +90,7 @@ TDD with Refactoring:
 ### Refactoring Opportunities
 
 **During Development:**
+
 ```
 Before adding new feature
 ├── Refactor to make change easy
@@ -103,6 +109,7 @@ Understanding Code
 ```
 
 **Continuous Refactoring:**
+
 - Boy Scout Rule: Leave code better than you found it
 - Opportunistic Refactoring: Small improvements during feature work
 - Preparatory Refactoring: Make the change easy, then make the easy change
@@ -113,6 +120,7 @@ Understanding Code
 #### Bloaters
 
 **Long Method:**
+
 ```typescript
 // BEFORE: Long method doing too much
 function processOrder(order: Order): OrderResult {
@@ -143,10 +151,7 @@ function processOrder(order: Order): OrderResult {
   const total = subtotal + tax + shipping;
 
   // Process payment (20 lines)
-  const paymentResult = paymentService.charge(
-    order.paymentMethod,
-    total
-  );
+  const paymentResult = paymentService.charge(order.paymentMethod, total);
   if (!paymentResult.success) {
     throw new Error('Payment failed');
   }
@@ -169,7 +174,7 @@ function processOrder(order: Order): OrderResult {
     tax,
     shipping,
     status: 'CONFIRMED',
-    paymentId: paymentResult.transactionId
+    paymentId: paymentResult.transactionId,
   });
 
   // Send confirmation (5 lines)
@@ -178,7 +183,7 @@ function processOrder(order: Order): OrderResult {
   return {
     success: true,
     orderId: orderRecord.id,
-    total
+    total,
   };
 }
 
@@ -202,7 +207,7 @@ function processOrder(order: Order): OrderResult {
   return {
     success: true,
     orderId: orderRecord.id,
-    total: pricing.total
+    total: pricing.total,
   };
 }
 
@@ -239,73 +244,68 @@ function calculateOrderPricing(order: Order): OrderPricing {
     subtotal,
     tax,
     shipping,
-    total: subtotal + tax + shipping
+    total: subtotal + tax + shipping,
   };
 }
 
 function calculateSubtotal(items: OrderItem[]): number {
-  return items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
 
-function calculateTax(
-  subtotal: number,
-  address: Address
-): number {
+function calculateTax(subtotal: number, address: Address): number {
   const taxRate = getTaxRateForRegion(address.region);
   return subtotal * taxRate;
 }
 ```
 
 **Large Class:**
+
 ```typescript
 // BEFORE: God class doing everything
 class UserManager {
   // User CRUD
-  createUser(data: UserData) { }
-  updateUser(id: string, data: Partial<UserData>) { }
-  deleteUser(id: string) { }
-  getUser(id: string) { }
+  createUser(data: UserData) {}
+  updateUser(id: string, data: Partial<UserData>) {}
+  deleteUser(id: string) {}
+  getUser(id: string) {}
 
   // Authentication
-  login(email: string, password: string) { }
-  logout(userId: string) { }
-  resetPassword(email: string) { }
-  changePassword(userId: string, newPassword: string) { }
+  login(email: string, password: string) {}
+  logout(userId: string) {}
+  resetPassword(email: string) {}
+  changePassword(userId: string, newPassword: string) {}
 
   // Authorization
-  hasPermission(userId: string, resource: string) { }
-  grantPermission(userId: string, permission: string) { }
-  revokePermission(userId: string, permission: string) { }
+  hasPermission(userId: string, resource: string) {}
+  grantPermission(userId: string, permission: string) {}
+  revokePermission(userId: string, permission: string) {}
 
   // Profile management
-  updateProfile(userId: string, profile: Profile) { }
-  uploadAvatar(userId: string, image: File) { }
-  getUserPreferences(userId: string) { }
-  saveUserPreferences(userId: string, prefs: Preferences) { }
+  updateProfile(userId: string, profile: Profile) {}
+  uploadAvatar(userId: string, image: File) {}
+  getUserPreferences(userId: string) {}
+  saveUserPreferences(userId: string, prefs: Preferences) {}
 
   // Email notifications
-  sendWelcomeEmail(userId: string) { }
-  sendPasswordResetEmail(userId: string) { }
-  sendNotification(userId: string, message: string) { }
+  sendWelcomeEmail(userId: string) {}
+  sendPasswordResetEmail(userId: string) {}
+  sendNotification(userId: string, message: string) {}
 
   // Analytics
-  trackUserActivity(userId: string, activity: string) { }
-  getUserStatistics(userId: string) { }
-  generateUserReport(userId: string) { }
+  trackUserActivity(userId: string, activity: string) {}
+  getUserStatistics(userId: string) {}
+  generateUserReport(userId: string) {}
 
   // ... 50 more methods
 }
 
 // AFTER: Separated concerns
 class UserRepository {
-  create(data: UserData): User { }
-  update(id: string, data: Partial<UserData>): User { }
-  delete(id: string): void { }
-  findById(id: string): User | null { }
-  findByEmail(email: string): User | null { }
+  create(data: UserData): User {}
+  update(id: string, data: Partial<UserData>): User {}
+  delete(id: string): void {}
+  findById(id: string): User | null {}
+  findByEmail(email: string): User | null {}
 }
 
 class AuthenticationService {
@@ -322,10 +322,7 @@ class AuthenticationService {
       throw new AuthenticationError('Invalid credentials');
     }
 
-    const isValid = await this.passwordHasher.verify(
-      password,
-      user.passwordHash
-    );
+    const isValid = await this.passwordHasher.verify(password, user.passwordHash);
 
     if (!isValid) {
       throw new AuthenticationError('Invalid credentials');
@@ -356,21 +353,12 @@ class AuthenticationService {
 class AuthorizationService {
   constructor(private permissionRepo: PermissionRepository) {}
 
-  async hasPermission(
-    userId: string,
-    resource: string,
-    action: string
-  ): Promise<boolean> {
+  async hasPermission(userId: string, resource: string, action: string): Promise<boolean> {
     const permissions = await this.permissionRepo.getUserPermissions(userId);
-    return permissions.some(
-      p => p.resource === resource && p.action === action
-    );
+    return permissions.some(p => p.resource === resource && p.action === action);
   }
 
-  async grantPermission(
-    userId: string,
-    permission: Permission
-  ): Promise<void> {
+  async grantPermission(userId: string, permission: Permission): Promise<void> {
     await this.permissionRepo.grant(userId, permission);
   }
 }
@@ -392,10 +380,7 @@ class UserProfileService {
   }
 
   async uploadAvatar(userId: string, image: File): Promise<string> {
-    const imageUrl = await this.storageService.upload(
-      `avatars/${userId}`,
-      image
-    );
+    const imageUrl = await this.storageService.upload(`avatars/${userId}`, image);
 
     await this.userRepo.update(userId, { avatarUrl: imageUrl });
 
@@ -411,7 +396,7 @@ class UserNotificationService {
       to: user.email,
       subject: 'Welcome!',
       template: 'welcome',
-      data: { userName: user.firstName }
+      data: { userName: user.firstName },
     });
   }
 
@@ -420,13 +405,14 @@ class UserNotificationService {
       to: user.email,
       subject: 'Password Reset',
       template: 'password-reset',
-      data: { resetUrl: `https://app.com/reset?token=${token}` }
+      data: { resetUrl: `https://app.com/reset?token=${token}` },
     });
   }
 }
 ```
 
 **Long Parameter List:**
+
 ```typescript
 // BEFORE: Too many parameters
 function createUser(
@@ -484,7 +470,7 @@ function createUser(request: CreateUserRequest): User {
     ...request.contact,
     address: new Address(request.address),
     passwordHash: hashPassword(request.credentials.password),
-    preferences: request.preferences
+    preferences: request.preferences,
   });
 
   return userRepository.save(user);
@@ -492,6 +478,7 @@ function createUser(request: CreateUserRequest): User {
 ```
 
 **Primitive Obsession:**
+
 ```typescript
 // BEFORE: Primitive types everywhere
 function calculateShipping(
@@ -542,15 +529,11 @@ class Distance {
 enum ServiceLevel {
   STANDARD = 'standard',
   EXPRESS = 'express',
-  OVERNIGHT = 'overnight'
+  OVERNIGHT = 'overnight',
 }
 
 class ShippingCalculator {
-  calculateShipping(
-    weight: Weight,
-    distance: Distance,
-    serviceLevel: ServiceLevel
-  ): Money {
+  calculateShipping(weight: Weight, distance: Distance, serviceLevel: ServiceLevel): Money {
     const baseRate = this.getBaseRate(serviceLevel);
     const weightFactor = weight.kg * 0.5;
     const distanceFactor = distance.km * 0.1;
@@ -576,6 +559,7 @@ class ShippingCalculator {
 #### Object-Orientation Abusers
 
 **Switch Statements:**
+
 ```typescript
 // BEFORE: Switch statement that changes frequently
 function calculateEmployeePayment(employee: Employee): number {
@@ -650,6 +634,7 @@ const payment = employee.calculateMonthlyPayment();
 ```
 
 **Temporary Field:**
+
 ```typescript
 // BEFORE: Fields only used in certain circumstances
 class Order {
@@ -662,10 +647,7 @@ class Order {
   shippingCost?: number;
 
   calculateTotal(): number {
-    this.subtotal = this.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    this.subtotal = this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     this.taxAmount = this.subtotal * 0.08;
     this.shippingCost = this.calculateShipping();
@@ -685,10 +667,7 @@ class OrderPricingCalculator {
   }
 
   private calculateSubtotal(items: OrderItem[]): Money {
-    return items.reduce(
-      (sum, item) => sum.add(item.price.multiply(item.quantity)),
-      Money.zero()
-    );
+    return items.reduce((sum, item) => sum.add(item.price.multiply(item.quantity)), Money.zero());
   }
 
   private calculateTax(subtotal: Money): Money {
@@ -729,6 +708,7 @@ class Order {
 #### Change Preventers
 
 **Divergent Change:**
+
 ```typescript
 // BEFORE: Class changes for multiple reasons
 class User {
@@ -784,7 +764,7 @@ class UserRepository {
     await db.users.upsert({
       id: user.id,
       email: user.email,
-      accountType: user.accountType
+      accountType: user.accountType,
     });
   }
 
@@ -806,7 +786,7 @@ class UserNotificationService {
     await this.emailService.send({
       to: user.email,
       template: 'welcome',
-      data: { email: user.email }
+      data: { email: user.email },
     });
   }
 }
@@ -820,6 +800,7 @@ class EmailValidator {
 ```
 
 **Shotgun Surgery:**
+
 ```typescript
 // BEFORE: Adding a new payment method requires changes in many places
 
@@ -937,6 +918,7 @@ registry.register('CRYPTO', () => new CryptoPayment(walletAddress));
 #### Dispensables
 
 **Duplicate Code:**
+
 ```typescript
 // BEFORE: Duplication
 function calculateFullTimeBonus(employee: FullTimeEmployee): number {
@@ -970,26 +952,19 @@ function calculateBonus(
 
 class FullTimeEmployee {
   calculateBonus(): number {
-    return calculateBonus(
-      this.salary,
-      this.yearsOfService,
-      this.performanceRating
-    );
+    return calculateBonus(this.salary, this.yearsOfService, this.performanceRating);
   }
 }
 
 class PartTimeEmployee {
   calculateBonus(): number {
-    return calculateBonus(
-      this.annualIncome,
-      this.yearsOfService,
-      this.performanceRating
-    );
+    return calculateBonus(this.annualIncome, this.yearsOfService, this.performanceRating);
   }
 }
 ```
 
 **Dead Code:**
+
 ```typescript
 // BEFORE: Unused code cluttering codebase
 class OrderService {
@@ -1034,6 +1009,7 @@ class OrderService {
 ```
 
 **Speculative Generality:**
+
 ```typescript
 // BEFORE: Over-engineered for potential future needs
 abstract class AbstractDataProcessor<T, R> {
@@ -1097,6 +1073,7 @@ class UserService {
 #### Couplers
 
 **Feature Envy:**
+
 ```typescript
 // BEFORE: Method more interested in other class
 class Invoice {
@@ -1149,9 +1126,7 @@ class InvoiceItem {
   }
 
   calculateTotal(): number {
-    return this.calculateSubtotal()
-      + this.calculateTax()
-      - this.calculateDiscount();
+    return this.calculateSubtotal() + this.calculateTax() - this.calculateDiscount();
   }
 }
 
@@ -1160,15 +1135,13 @@ class Invoice {
   items: InvoiceItem[];
 
   calculateTotal(): number {
-    return this.items.reduce(
-      (sum, item) => sum + item.calculateTotal(),
-      0
-    );
+    return this.items.reduce((sum, item) => sum + item.calculateTotal(), 0);
   }
 }
 ```
 
 **Inappropriate Intimacy:**
+
 ```typescript
 // BEFORE: Classes too intimate with each other's internals
 class Order {
@@ -1247,10 +1220,7 @@ class Order {
   ) {}
 
   private calculateSubtotal(): number {
-    return this.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 
   calculateTotal(): number {
@@ -1318,9 +1288,11 @@ function getRating(driver: Driver): number {
 ```typescript
 // BEFORE
 function price(order: Order): number {
-  return order.quantity * order.itemPrice -
+  return (
+    order.quantity * order.itemPrice -
     Math.max(0, order.quantity - 500) * order.itemPrice * 0.05 +
-    Math.min(order.quantity * order.itemPrice * 0.1, 100);
+    Math.min(order.quantity * order.itemPrice * 0.1, 100)
+  );
 }
 
 // AFTER
@@ -1399,10 +1371,7 @@ function calculateTotal(o: Order): number {
 
 // AFTER
 function calculateTotal(order: Order): number {
-  const subtotal = order.items.reduce(
-    (sum, item) => sum + item.price,
-    0
-  );
+  const subtotal = order.items.reduce((sum, item) => sum + item.price, 0);
   return subtotal * 1.08; // Including 8% tax
 }
 ```
@@ -1413,14 +1382,8 @@ function calculateTotal(order: Order): number {
 
 ```typescript
 // BEFORE
-function readingsOutsideRange(
-  station: Station,
-  min: number,
-  max: number
-): Reading[] {
-  return station.readings.filter(
-    r => r.temp < min || r.temp > max
-  );
+function readingsOutsideRange(station: Station, min: number, max: number): Reading[] {
+  return station.readings.filter(r => r.temp < min || r.temp > max);
 }
 
 // AFTER
@@ -1435,13 +1398,8 @@ class NumberRange {
   }
 }
 
-function readingsOutsideRange(
-  station: Station,
-  range: NumberRange
-): Reading[] {
-  return station.readings.filter(
-    r => !range.contains(r.temp)
-  );
+function readingsOutsideRange(station: Station, range: NumberRange): Reading[] {
+  return station.readings.filter(r => !range.contains(r.temp));
 }
 ```
 
@@ -1452,9 +1410,7 @@ function readingsOutsideRange(
 ```typescript
 // BEFORE
 function base(reading: Reading): number {
-  return reading.customer === 'industrial'
-    ? reading.quantity * 0.05
-    : reading.quantity * 0.1;
+  return reading.customer === 'industrial' ? reading.quantity * 0.05 : reading.quantity * 0.1;
 }
 
 function taxableCharge(reading: Reading): number {
@@ -1473,9 +1429,7 @@ class Reading {
   ) {}
 
   get base(): number {
-    return this.customer === 'industrial'
-      ? this.quantity * 0.05
-      : this.quantity * 0.1;
+    return this.customer === 'industrial' ? this.quantity * 0.05 : this.quantity * 0.1;
   }
 
   get threshold(): number {
@@ -1496,12 +1450,13 @@ class Reading {
 // BEFORE
 function priceOrder(product: Product, quantity: number, shippingMethod: string): number {
   const basePrice = product.basePrice * quantity;
-  const discount = Math.max(quantity - product.discountThreshold, 0)
-    * product.basePrice * product.discountRate;
+  const discount =
+    Math.max(quantity - product.discountThreshold, 0) * product.basePrice * product.discountRate;
 
-  const shippingPerCase = (basePrice > shippingMethod.discountThreshold)
-    ? shippingMethod.discountedFee
-    : shippingMethod.feePerCase;
+  const shippingPerCase =
+    basePrice > shippingMethod.discountThreshold
+      ? shippingMethod.discountedFee
+      : shippingMethod.feePerCase;
 
   const shippingCost = quantity * shippingPerCase;
   const price = basePrice - discount + shippingCost;
@@ -1516,30 +1471,24 @@ interface PriceData {
   discount: number;
 }
 
-function priceOrder(
-  product: Product,
-  quantity: number,
-  shippingMethod: ShippingMethod
-): number {
+function priceOrder(product: Product, quantity: number, shippingMethod: ShippingMethod): number {
   const priceData = calculatePricingData(product, quantity);
   return applyShipping(priceData, shippingMethod);
 }
 
 function calculatePricingData(product: Product, quantity: number): PriceData {
   const basePrice = product.basePrice * quantity;
-  const discount = Math.max(quantity - product.discountThreshold, 0)
-    * product.basePrice * product.discountRate;
+  const discount =
+    Math.max(quantity - product.discountThreshold, 0) * product.basePrice * product.discountRate;
 
   return { basePrice, quantity, discount };
 }
 
-function applyShipping(
-  priceData: PriceData,
-  shippingMethod: ShippingMethod
-): number {
-  const shippingPerCase = (priceData.basePrice > shippingMethod.discountThreshold)
-    ? shippingMethod.discountedFee
-    : shippingMethod.feePerCase;
+function applyShipping(priceData: PriceData, shippingMethod: ShippingMethod): number {
+  const shippingPerCase =
+    priceData.basePrice > shippingMethod.discountThreshold
+      ? shippingMethod.discountedFee
+      : shippingMethod.feePerCase;
 
   const shippingCost = priceData.quantity * shippingPerCase;
 
@@ -1664,6 +1613,7 @@ Example:
 ```
 
 **Example:**
+
 ```typescript
 // Want to add: Support for discount codes
 
@@ -1780,6 +1730,7 @@ For large-scale changes:
 ```
 
 **Branch by Abstraction Example:**
+
 ```typescript
 // Goal: Replace old Payment API with new one
 
@@ -1801,7 +1752,7 @@ class OldPaymentGateway implements PaymentGateway {
     // Adapt old format to new
     return {
       success: oldResult.status === 'success',
-      transactionId: oldResult.id
+      transactionId: oldResult.id,
     };
   }
 }
@@ -1893,6 +1844,7 @@ When you don't have tests:
 ```
 
 **Characterization Test Example:**
+
 ```typescript
 // Legacy code without tests
 class OrderProcessor {
@@ -1908,7 +1860,7 @@ describe('OrderProcessor - Current Behavior', () => {
     const processor = new OrderProcessor();
     const order = {
       items: [{ id: 1, price: 10, qty: 2 }],
-      customerId: 123
+      customerId: 123,
     };
 
     const result = processor.processOrder(order);
@@ -1933,6 +1885,7 @@ describe('OrderProcessor - Current Behavior', () => {
 ### IDE Support
 
 **Automated Refactorings:**
+
 - Rename
 - Extract Method/Function
 - Extract Variable
@@ -1943,6 +1896,7 @@ describe('OrderProcessor - Current Behavior', () => {
 - Pull Up/Push Down
 
 **VS Code Extensions:**
+
 - JavaScript/TypeScript Refactoring
 - Abracadabra (VS Code Refactoring Tool)
 - C# Refactoring Tools
@@ -2033,6 +1987,7 @@ Goal: Maximize relatedness
 ### Refactoring Impact
 
 **Before/After Metrics:**
+
 ```
 Track improvements:
 - Complexity reduction
@@ -2066,6 +2021,7 @@ Goal: > 20%
 ### Anti-Patterns
 
 **Over-Refactoring:**
+
 ```
 ✗ Premature abstraction
 ✗ Over-engineering
@@ -2079,6 +2035,7 @@ Goal: > 20%
 ```
 
 **Refactoring Without Tests:**
+
 ```
 ✗ No safety net
 ✗ High risk of breaking behavior
@@ -2090,6 +2047,7 @@ Goal: > 20%
 ```
 
 **Big Bang Refactoring:**
+
 ```
 ✗ Refactor everything at once
 ✗ Long-lived branch
@@ -2102,6 +2060,7 @@ Goal: > 20%
 ```
 
 **Refactoring During Crunch Time:**
+
 ```
 ✗ Rushed refactoring
 ✗ Insufficient testing
@@ -2117,24 +2076,28 @@ Goal: > 20%
 ### Static Analysis Tools
 
 **JavaScript/TypeScript:**
+
 - ESLint
 - TSLint
 - SonarQube
 - Code Climate
 
 **Java:**
+
 - PMD
 - CheckStyle
 - SpotBugs
 - SonarQube
 
 **C#:**
+
 - ReSharper
 - NDepend
 - SonarQube
 - FxCop
 
 **Python:**
+
 - Pylint
 - Flake8
 - Radon
@@ -2143,12 +2106,14 @@ Goal: > 20%
 ### Refactoring Tools
 
 **IDEs:**
+
 - IntelliJ IDEA (excellent refactoring support)
 - Visual Studio
 - VS Code with extensions
 - Eclipse
 
 **Language-Specific:**
+
 - Rope (Python)
 - RuboCop (Ruby)
 - php-cs-fixer (PHP)
@@ -2156,12 +2121,14 @@ Goal: > 20%
 ### Learning Resources
 
 **Books:**
+
 - "Refactoring" by Martin Fowler (2nd Edition)
 - "Working Effectively with Legacy Code" by Michael Feathers
 - "Clean Code" by Robert C. Martin
 - "Refactoring to Patterns" by Joshua Kerievsky
 
 **Online:**
+
 - Refactoring.Guru
 - SourceMaking.com
 - Martin Fowler's Blog

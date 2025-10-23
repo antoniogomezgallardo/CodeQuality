@@ -152,6 +152,7 @@ pytest -s
 ```
 
 **Expected Output:**
+
 ```
 ======================== test session starts =========================
 collected 10 items
@@ -180,6 +181,7 @@ TOTAL                      12      0   100%
 ## 5. Next Steps
 
 ### Fixtures for Setup/Teardown
+
 ```python
 import pytest
 
@@ -195,6 +197,7 @@ def test_using_fixture(sample_data):
 ```
 
 ### Parametrized Tests
+
 ```python
 @pytest.mark.parametrize("a,b,expected", [
     (1, 2, 3),
@@ -207,6 +210,7 @@ def test_add_parametrized(a, b, expected):
 ```
 
 ### Test Markers
+
 ```python
 @pytest.mark.slow
 def test_slow_operation():
@@ -224,6 +228,7 @@ def test_database_connection():
 ```
 
 ### Mock External Dependencies
+
 ```python
 from unittest.mock import Mock, patch
 
@@ -236,6 +241,7 @@ def test_api_call():
 ```
 
 ### Async Tests
+
 ```python
 import pytest
 
@@ -248,6 +254,7 @@ async def test_async_function():
 ```
 
 ### Create conftest.py for Shared Fixtures
+
 ```python
 # tests/conftest.py
 import pytest
@@ -270,6 +277,7 @@ def reset_state():
 ## 6. Troubleshooting
 
 ### Issue: "ModuleNotFoundError: No module named 'src'"
+
 ```bash
 # Solution 1: Install package in editable mode
 pip install -e .
@@ -284,6 +292,7 @@ set PYTHONPATH=%PYTHONPATH%;%CD%          # Windows
 ```
 
 ### Issue: Tests not discovered
+
 ```bash
 # Ensure file/function naming follows conventions:
 # - Test files: test_*.py or *_test.py
@@ -295,6 +304,7 @@ pytest --collect-only
 ```
 
 ### Issue: "ImportError: attempted relative import with no known parent package"
+
 ```python
 # Don't use relative imports in test files
 # ❌ from ..src import calculator
@@ -305,6 +315,7 @@ pytest --collect-only
 ```
 
 ### Issue: Coverage not including all files
+
 ```ini
 # Update pytest.ini
 [pytest]
@@ -322,6 +333,7 @@ omit =
 ```
 
 ### Issue: Fixtures not found
+
 ```python
 # Make sure conftest.py is in tests directory
 # tests/conftest.py
@@ -333,6 +345,7 @@ omit =
 ```
 
 ### Issue: Slow test execution
+
 ```bash
 # Run tests in parallel
 pip install pytest-xdist

@@ -1,11 +1,13 @@
 # Code Quality Process - Complete Guide
 
 ## 🎯 Purpose
+
 A comprehensive guide to mastering the entire code quality process, from business requirements to production deployment, following industry best practices and standards.
 
 ## 📚 Learning Path
 
 ### Start Here
+
 1. [**Manifesto**](MANIFESTO.md) - Our core values and principles
 2. [**Philosophy**](PHILOSOPHY.md) - Theoretical foundation and mindsets
 3. [**Foundations**](docs/00-foundations/README.md) - Prerequisites and industry standards
@@ -28,11 +30,13 @@ graph LR
 ## 📖 Documentation Modules
 
 ### Foundation Layer
+
 - **[00 - Foundations](docs/00-foundations/README.md)** - Software quality models, industry standards
 - **[01 - Requirements Engineering](docs/01-requirements/README.md)** - From business needs to technical specs
 - **[02 - Agile Planning](docs/02-agile-planning/README.md)** - User stories, DoR, DoD, estimation
 
 ### Development Layer
+
 - **[03 - Version Control](docs/03-version-control/README.md)** - GitFlow, branching, code reviews
   - **[CI/CD Best Practices](docs/03-version-control/cicd-best-practices/README.md)** - TBD, GitHub Flow, GitLab Flow for CI/CD
 - **[04 - Testing Strategy](docs/04-testing-strategy/README.md)** - Shift-left, shift-right approaches
@@ -41,17 +45,20 @@ graph LR
 - **[07 - Development Practices](docs/07-development-practices/README.md)** - Clean code, SOLID, TDD/BDD
 
 ### Automation Layer
+
 - **[08 - CI/CD Pipeline](docs/08-cicd-pipeline/README.md)** - Build, test, deploy automation
 - **[09 - Metrics & Monitoring](docs/09-metrics-monitoring/README.md)** - DORA metrics, dashboards
 - **[10 - Deployment](docs/10-deployment/README.md)** - Blue-green, canary, rolling deployments
 
 ### Governance Layer
+
 - **[11 - Tools Ecosystem](docs/11-tools-ecosystem/README.md)** - Tool selection and integration
 - **[12 - Governance](docs/12-governance/README.md)** - Quality gates, compliance, risk management
 - **[13 - Incident Management](docs/13-incident-management/README.md)** - Incident response, runbooks, postmortems
 - **[14 - Continuous Improvement](docs/14-continuous-improvement/README.md)** - Retrospectives, Kaizen
 
 ### AI & Innovation Layer
+
 - **[15 - AI in Quality Assurance](docs/15-ai-in-quality-assurance/15-README.md)** - AI-powered testing, predictive analytics, custom LLM+RAG assistants
   - **[AI Fundamentals](docs/15-ai-in-quality-assurance/ai-fundamentals.md)** - LLMs, RAG, embeddings, prompt engineering
   - **[AI-Assisted Testing](docs/15-ai-in-quality-assurance/ai-assisted-testing.md)** - Automated test generation and enhancement
@@ -72,24 +79,27 @@ graph LR
 ## 📊 Key Metrics Overview
 
 ### DORA Metrics
-| Metric | Elite Performers | Target |
-|--------|-----------------|--------|
-| Deployment Frequency | Multiple/day | Daily |
-| Lead Time for Changes | < 1 hour | < 1 day |
-| MTTR | < 1 hour | < 4 hours |
-| Change Failure Rate | 0-15% | < 10% |
+
+| Metric                | Elite Performers | Target    |
+| --------------------- | ---------------- | --------- |
+| Deployment Frequency  | Multiple/day     | Daily     |
+| Lead Time for Changes | < 1 hour         | < 1 day   |
+| MTTR                  | < 1 hour         | < 4 hours |
+| Change Failure Rate   | 0-15%            | < 10%     |
 
 ### Quality Metrics
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Code Coverage | > 80% | Lines covered / Total lines |
-| Cyclomatic Complexity | < 10 | Per method |
-| Technical Debt Ratio | < 5% | Remediation cost / Dev cost |
-| Defect Density | < 1/KLOC | Defects / 1000 lines |
+
+| Metric                | Target   | Measurement                 |
+| --------------------- | -------- | --------------------------- |
+| Code Coverage         | > 80%    | Lines covered / Total lines |
+| Cyclomatic Complexity | < 10     | Per method                  |
+| Technical Debt Ratio  | < 5%     | Remediation cost / Dev cost |
+| Defect Density        | < 1/KLOC | Defects / 1000 lines        |
 
 ## 🛠️ Templates & Tools
 
 ### Templates (18 Production-Ready Templates)
+
 - [User Story Template](templates/user-story.md)
 - [Definition of Ready](templates/definition-of-ready.md)
 - [Definition of Done](templates/definition-of-done.md)
@@ -110,6 +120,7 @@ graph LR
 - **[Agent Evaluation Rubric](templates/agent-evaluation-rubric.md)** - Framework for evaluating agent performance
 
 ### Examples (19 Comprehensive Example Directories)
+
 - [Unit Test Examples](examples/unit-tests/) - Jest, Vitest, mutation testing
 - [Integration Tests](examples/integration-tests/) - API testing, database integration
 - [API Testing](examples/api-testing/) - Supertest, GraphQL, Pact, performance (9 files, 4,500+ lines)
@@ -131,6 +142,7 @@ graph LR
 - **[Agentic QA Workflows](examples/agentic-qa/)** - 6 production-ready autonomous agent systems (test suite, code review, CI/CD, bug triage, incident response, quality improvement)
 
 ## 📚 Resources (6 Reference Files)
+
 - [Glossary](resources/glossary.md) - Technical terms explained
 - [Acronyms](resources/acronyms.md) - Common abbreviations
 - [Recommended Books](resources/recommended-books.md) - Essential reading
@@ -141,11 +153,13 @@ graph LR
 ## 🎯 Quick Start Guide
 
 ### For Developers
+
 1. Start with [Development Practices](docs/07-development-practices/README.md)
 2. Review [Test Levels](docs/05-test-levels/README.md)
 3. Study [Version Control](docs/03-version-control/README.md)
 
 ### For QA Engineers
+
 1. Begin with [Testing Strategy](docs/04-testing-strategy/README.md)
 2. Practice with [Testing Examples](examples/) - All testing approaches
 3. Explore [Quality Attributes](docs/06-quality-attributes/README.md)
@@ -154,12 +168,14 @@ graph LR
 6. **CUTTING EDGE**: Deploy [Agentic Workflows](docs/16-agentic-workflows/16-README.md) for autonomous QA at scale
 
 ### For DevOps Engineers
+
 1. Review [Version Control CI/CD Best Practices](docs/03-version-control/cicd-best-practices/README.md)
 2. Focus on [CI/CD Pipeline](docs/08-cicd-pipeline/README.md)
 3. Implement [Tools Ecosystem](docs/10-tools-ecosystem/README.md)
 4. Configure [Metrics & Monitoring](docs/09-metrics-monitoring/README.md)
 
 ### For Team Leads
+
 1. Understand [Requirements Engineering](docs/01-requirements/README.md)
 2. Implement [Agile Planning](docs/02-agile-planning/README.md)
 3. Establish [Governance](docs/11-governance/README.md)
@@ -167,6 +183,7 @@ graph LR
 ## 🏆 Industry Standards Alignment
 
 This guide aligns with:
+
 - **ISO/IEC 25010** - Software Quality Model
 - **IEEE 829** - Test Documentation Standards
 - **ISTQB** - Testing Best Practices
@@ -178,41 +195,49 @@ This guide aligns with:
 ## 📅 Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1)
+
 - [ ] Establish requirements process
 - [ ] Define agile artifacts
 - [ ] Set up version control
 - [ ] Review testing examples and select approaches
 
 ### Phase 2: Quality Integration (Week 2)
+
 - [ ] Implement testing strategy
 - [ ] Set up unit and integration testing
 - [ ] Define quality attributes
 - [ ] Establish development practices
 
 ### Phase 3: Automation (Week 3)
+
 - [ ] Build CI/CD pipeline with testing stages
 - [ ] Implement E2E and contract testing
 - [ ] Configure metrics and monitoring
 - [ ] Select and integrate tools
 
 ### Phase 4: Optimization (Week 4)
+
 - [ ] Add exploratory and manual testing processes
 - [ ] Implement governance and quality gates
 - [ ] Establish continuous improvement
 - [ ] Review and refine all processes
 
 ## 🤝 Contributing
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on maintaining and extending this documentation.
 
 ## 📝 License
+
 This documentation is created for educational purposes and follows industry best practices.
 
 ## 🔄 Version
+
 **Version**: 3.0.0
 **Last Updated**: October 2024 (Agentic Workflows Module Added)
 **Next Review**: January 2025
 
 **What's New in 3.0:**
+
 - Complete Agentic Workflows module (10 comprehensive guides)
 - 6 production-ready autonomous agent implementations
 - Agent workflow templates and prompt library

@@ -31,6 +31,7 @@ This playbook provides step-by-step procedures for rolling back various types of
 ### When to Rollback
 
 Rollback immediately if:
+
 - ✅ Deployment caused service outage
 - ✅ Error rate significantly increased (>5%)
 - ✅ Latency significantly increased (>2x normal)
@@ -39,12 +40,14 @@ Rollback immediately if:
 - ✅ Root cause is unclear
 
 Consider rollback if:
+
 - ⚠️ Error rate moderately increased (1-5%)
 - ⚠️ Performance degradation but service functional
 - ⚠️ Affects subset of users
 - ⚠️ Fix is simple and can be done quickly
 
 Don't rollback if:
+
 - ❌ Issue unrelated to recent changes
 - ❌ Rollback would cause more problems
 - ❌ Forward fix is simpler and faster
@@ -53,6 +56,7 @@ Don't rollback if:
 ### Rollback Safety Checklist
 
 Before rolling back, verify:
+
 - [ ] Recent change is the likely cause
 - [ ] Rollback target version is known and stable
 - [ ] Rollback won't cause data loss or corruption
@@ -62,6 +66,7 @@ Before rolling back, verify:
 ### Post-Rollback Actions
 
 After every rollback:
+
 1. ✅ Verify service health restored
 2. ✅ Monitor key metrics for 15+ minutes
 3. ✅ Notify stakeholders
@@ -293,6 +298,7 @@ db.[collection].find().limit(5)
 ### Migration Rollback Best Practices
 
 1. **Always test rollback before production**
+
    ```bash
    # Test on staging
    flyway undo -environment=staging
@@ -302,6 +308,7 @@ db.[collection].find().limit(5)
    ```
 
 2. **Save data before destructive migrations**
+
    ```sql
    -- Before dropping column, save data
    CREATE TABLE users_backup AS
@@ -312,6 +319,7 @@ db.[collection].find().limit(5)
    ```
 
 3. **Use transactions where possible**
+
    ```sql
    BEGIN;
    -- All migration statements here
@@ -580,6 +588,7 @@ curl -X PUT "https://api.cloudflare.com/client/v4/zones/[zone]/dns_records/[reco
    - Wait 2x TTL for full propagation
 
 2. **Traffic Split (During TTL Propagation)**
+
    ```bash
    # Add both old and new IPs temporarily
    # Some traffic goes to old, some to new

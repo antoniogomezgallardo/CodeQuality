@@ -124,22 +124,22 @@ class DataStore {
         name: 'Alice Johnson',
         email: 'alice@example.com',
         role: 'admin',
-        createdAt: '2025-01-01T00:00:00Z'
+        createdAt: '2025-01-01T00:00:00Z',
       },
       {
         id: '2',
         name: 'Bob Smith',
         email: 'bob@example.com',
         role: 'user',
-        createdAt: '2025-01-02T00:00:00Z'
+        createdAt: '2025-01-02T00:00:00Z',
       },
       {
         id: '3',
         name: 'Charlie Brown',
         email: 'charlie@example.com',
         role: 'user',
-        createdAt: '2025-01-03T00:00:00Z'
-      }
+        createdAt: '2025-01-03T00:00:00Z',
+      },
     ];
 
     this.posts = [
@@ -150,7 +150,7 @@ class DataStore {
         published: true,
         authorId: '1',
         tags: ['graphql', 'api'],
-        createdAt: '2025-01-05T00:00:00Z'
+        createdAt: '2025-01-05T00:00:00Z',
       },
       {
         id: '2',
@@ -159,7 +159,7 @@ class DataStore {
         published: false,
         authorId: '1',
         tags: ['testing'],
-        createdAt: '2025-01-06T00:00:00Z'
+        createdAt: '2025-01-06T00:00:00Z',
       },
       {
         id: '3',
@@ -168,8 +168,8 @@ class DataStore {
         published: true,
         authorId: '2',
         tags: ['javascript', 'nodejs'],
-        createdAt: '2025-01-07T00:00:00Z'
-      }
+        createdAt: '2025-01-07T00:00:00Z',
+      },
     ];
 
     this.nextUserId = 4;
@@ -183,22 +183,22 @@ class DataStore {
         name: 'Alice Johnson',
         email: 'alice@example.com',
         role: 'admin',
-        createdAt: '2025-01-01T00:00:00Z'
+        createdAt: '2025-01-01T00:00:00Z',
       },
       {
         id: '2',
         name: 'Bob Smith',
         email: 'bob@example.com',
         role: 'user',
-        createdAt: '2025-01-02T00:00:00Z'
+        createdAt: '2025-01-02T00:00:00Z',
       },
       {
         id: '3',
         name: 'Charlie Brown',
         email: 'charlie@example.com',
         role: 'user',
-        createdAt: '2025-01-03T00:00:00Z'
-      }
+        createdAt: '2025-01-03T00:00:00Z',
+      },
     ];
 
     this.posts = [
@@ -209,7 +209,7 @@ class DataStore {
         published: true,
         authorId: '1',
         tags: ['graphql', 'api'],
-        createdAt: '2025-01-05T00:00:00Z'
+        createdAt: '2025-01-05T00:00:00Z',
       },
       {
         id: '2',
@@ -218,7 +218,7 @@ class DataStore {
         published: false,
         authorId: '1',
         tags: ['testing'],
-        createdAt: '2025-01-06T00:00:00Z'
+        createdAt: '2025-01-06T00:00:00Z',
       },
       {
         id: '3',
@@ -227,8 +227,8 @@ class DataStore {
         published: true,
         authorId: '2',
         tags: ['javascript', 'nodejs'],
-        createdAt: '2025-01-07T00:00:00Z'
-      }
+        createdAt: '2025-01-07T00:00:00Z',
+      },
     ];
 
     this.nextUserId = 4;
@@ -257,7 +257,7 @@ class DataStore {
       name: input.name,
       email: input.email,
       role: input.role || 'user',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
     this.users.push(user);
     return user;
@@ -270,7 +270,7 @@ class DataStore {
     this.users[userIndex] = {
       ...this.users[userIndex],
       ...input,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     return this.users[userIndex];
@@ -294,7 +294,7 @@ class DataStore {
       published: input.published || false,
       authorId,
       tags: input.tags || [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
     this.posts.push(post);
     return post;
@@ -307,7 +307,7 @@ class DataStore {
     this.posts[postIndex] = {
       ...this.posts[postIndex],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     return this.posts[postIndex];
@@ -366,15 +366,15 @@ const root = {
     return {
       edges: paginatedUsers.map(user => ({
         node: user,
-        cursor: user.id
+        cursor: user.id,
       })),
       pageInfo: {
         hasNextPage,
         hasPreviousPage,
         startCursor: paginatedUsers[0]?.id || null,
-        endCursor: paginatedUsers[paginatedUsers.length - 1]?.id || null
+        endCursor: paginatedUsers[paginatedUsers.length - 1]?.id || null,
       },
-      totalCount: users.length
+      totalCount: users.length,
     };
   },
 
@@ -417,7 +417,7 @@ const root = {
       const user = dataStore.findUserByEmail(email);
       return {
         token: 'mock-jwt-token-admin',
-        user
+        user,
       };
     }
 
@@ -425,7 +425,7 @@ const root = {
       const user = dataStore.findUserByEmail(email);
       return {
         token: 'mock-jwt-token-user',
-        user
+        user,
       };
     }
 
@@ -558,20 +558,20 @@ const root = {
     }
 
     return dataStore.deletePost(id);
-  }
+  },
 };
 
 // Add nested resolvers
 const User = {
-  posts: (user) => {
+  posts: user => {
     return dataStore.getUserPosts(user.id);
-  }
+  },
 };
 
 const Post = {
-  author: (post) => {
+  author: post => {
     return dataStore.findUser(post.authorId);
-  }
+  },
 };
 
 // ============================================================================
@@ -592,10 +592,10 @@ const executeQuery = async (query, variables = {}, context = {}) => {
     rootValue: {
       ...root,
       User,
-      Post
+      Post,
     },
     variableValues: variables,
-    contextValue: context
+    contextValue: context,
   });
 
   // Resolve nested fields manually for User.posts and Post.author
@@ -606,7 +606,7 @@ const executeQuery = async (query, variables = {}, context = {}) => {
       // Resolve nested Post.author
       result.data.user.posts = result.data.user.posts.map(post => ({
         ...post,
-        author: Post.author(post)
+        author: Post.author(post),
       }));
     }
 
@@ -617,9 +617,9 @@ const executeQuery = async (query, variables = {}, context = {}) => {
           ...edge.node,
           posts: User.posts(edge.node).map(post => ({
             ...post,
-            author: Post.author(post)
-          }))
-        }
+            author: Post.author(post),
+          })),
+        },
       }));
     }
 
@@ -627,7 +627,7 @@ const executeQuery = async (query, variables = {}, context = {}) => {
       result.data.me.posts = User.posts(result.data.me);
       result.data.me.posts = result.data.me.posts.map(post => ({
         ...post,
-        author: Post.author(post)
+        author: Post.author(post),
       }));
     }
 
@@ -639,7 +639,7 @@ const executeQuery = async (query, variables = {}, context = {}) => {
     if (result.data.posts) {
       result.data.posts = result.data.posts.map(post => ({
         ...post,
-        author: Post.author(post)
+        author: Post.author(post),
       }));
     }
 
@@ -665,8 +665,8 @@ const createAuthContext = (userId = '1', role = 'admin') => {
   return {
     user: {
       id: userId,
-      role: role
-    }
+      role: role,
+    },
   };
 };
 
@@ -699,11 +699,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { id: '1' },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { id: '1' }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.user).toBeDefined();
@@ -728,11 +724,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { id: '1' },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { id: '1' }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.user.posts).toBeDefined();
@@ -750,11 +742,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { id: '9999' },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { id: '9999' }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.user).toBeNull();
@@ -801,11 +789,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { first: 2 },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { first: 2 }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.users.edges).toHaveLength(2);
@@ -829,11 +813,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { role: 'user' },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { role: 'user' }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.users.edges.every(edge => edge.node.role === 'user')).toBe(true);
@@ -859,11 +839,7 @@ describe('GraphQL API Testing', () => {
         `;
 
         // First page
-        const firstPage = await executeQuery(
-          query,
-          { first: 1 },
-          createAuthContext()
-        );
+        const firstPage = await executeQuery(query, { first: 1 }, createAuthContext());
 
         expect(firstPage.data.users.edges).toHaveLength(1);
         const cursor = firstPage.data.users.pageInfo.endCursor;
@@ -895,11 +871,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          {},
-          createAuthContext('1', 'admin')
-        );
+        const result = await executeQuery(query, {}, createAuthContext('1', 'admin'));
 
         expect(result.errors).toBeUndefined();
         expect(result.data.me).toBeDefined();
@@ -961,11 +933,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { authorId: '1' },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { authorId: '1' }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.posts.every(post => post.author.id === '1')).toBe(true);
@@ -982,11 +950,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          query,
-          { published: true },
-          createAuthContext()
-        );
+        const result = await executeQuery(query, { published: true }, createAuthContext());
 
         expect(result.errors).toBeUndefined();
         expect(result.data.posts.every(post => post.published === true)).toBe(true);
@@ -1019,7 +983,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             email: 'alice@example.com',
-            password: 'password123'
+            password: 'password123',
           },
           {} // No auth context needed for login
         );
@@ -1046,7 +1010,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             email: 'alice@example.com',
-            password: 'wrongpassword'
+            password: 'wrongpassword',
           },
           {}
         );
@@ -1077,8 +1041,8 @@ describe('GraphQL API Testing', () => {
               name: 'New User',
               email: 'newuser@example.com',
               password: 'password123',
-              role: 'user'
-            }
+              role: 'user',
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1106,8 +1070,8 @@ describe('GraphQL API Testing', () => {
             input: {
               name: 'New User',
               email: 'newuser@example.com',
-              password: 'password123'
-            }
+              password: 'password123',
+            },
           },
           createAuthContext('2', 'user') // Regular user
         );
@@ -1131,8 +1095,8 @@ describe('GraphQL API Testing', () => {
             input: {
               name: 'Test User',
               email: 'invalid-email',
-              password: 'password123'
-            }
+              password: 'password123',
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1156,8 +1120,8 @@ describe('GraphQL API Testing', () => {
             input: {
               name: 'Duplicate',
               email: 'alice@example.com', // Already exists
-              password: 'password123'
-            }
+              password: 'password123',
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1181,8 +1145,8 @@ describe('GraphQL API Testing', () => {
             input: {
               name: 'Test User',
               email: 'test@example.com',
-              password: 'short'
-            }
+              password: 'short',
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1210,8 +1174,8 @@ describe('GraphQL API Testing', () => {
           {
             id: '2',
             input: {
-              name: 'Updated Name'
-            }
+              name: 'Updated Name',
+            },
           },
           createAuthContext('2', 'user') // User updating themselves
         );
@@ -1234,7 +1198,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '1',
-            input: { name: 'Hacker' }
+            input: { name: 'Hacker' },
           },
           createAuthContext('2', 'user') // User trying to update another user
         );
@@ -1257,7 +1221,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '2',
-            input: { role: 'admin' }
+            input: { role: 'admin' },
           },
           createAuthContext('1', 'admin')
         );
@@ -1279,7 +1243,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '2',
-            input: { role: 'admin' }
+            input: { role: 'admin' },
           },
           createAuthContext('2', 'user')
         );
@@ -1301,7 +1265,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '9999',
-            input: { name: 'Test' }
+            input: { name: 'Test' },
           },
           createAuthContext('1', 'admin')
         );
@@ -1319,11 +1283,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          mutation,
-          { id: '2' },
-          createAuthContext('1', 'admin')
-        );
+        const result = await executeQuery(mutation, { id: '2' }, createAuthContext('1', 'admin'));
 
         expect(result.errors).toBeUndefined();
         expect(result.data.deleteUser).toBe(true);
@@ -1339,11 +1299,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          mutation,
-          { id: '3' },
-          createAuthContext('2', 'user')
-        );
+        const result = await executeQuery(mutation, { id: '3' }, createAuthContext('2', 'user'));
 
         expect(result.errors).toBeDefined();
         expect(result.errors[0].message).toContain('Forbidden');
@@ -1356,11 +1312,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          mutation,
-          { id: '1' },
-          createAuthContext('1', 'admin')
-        );
+        const result = await executeQuery(mutation, { id: '1' }, createAuthContext('1', 'admin'));
 
         expect(result.errors).toBeDefined();
         expect(result.errors[0].message).toContain('Cannot delete your own account');
@@ -1392,8 +1344,8 @@ describe('GraphQL API Testing', () => {
               title: 'New Post',
               content: 'This is new post content',
               published: true,
-              tags: ['test', 'new']
-            }
+              tags: ['test', 'new'],
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1418,8 +1370,8 @@ describe('GraphQL API Testing', () => {
           {
             input: {
               title: 'No',
-              content: 'Valid content here'
-            }
+              content: 'Valid content here',
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1442,8 +1394,8 @@ describe('GraphQL API Testing', () => {
           {
             input: {
               title: 'Valid Title',
-              content: 'Short'
-            }
+              content: 'Short',
+            },
           },
           createAuthContext('1', 'admin')
         );
@@ -1469,7 +1421,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '1',
-            title: 'Updated Title'
+            title: 'Updated Title',
           },
           createAuthContext('1', 'admin') // Author of post 1
         );
@@ -1492,7 +1444,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '1',
-            title: 'Hacked'
+            title: 'Hacked',
           },
           createAuthContext('2', 'user') // Not the author
         );
@@ -1515,7 +1467,7 @@ describe('GraphQL API Testing', () => {
           mutation,
           {
             id: '3',
-            published: false
+            published: false,
           },
           createAuthContext('1', 'admin')
         );
@@ -1551,11 +1503,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          mutation,
-          { id: '1' },
-          createAuthContext('2', 'user')
-        );
+        const result = await executeQuery(mutation, { id: '1' }, createAuthContext('2', 'user'));
 
         expect(result.errors).toBeDefined();
         expect(result.errors[0].message).toContain('Forbidden');
@@ -1568,11 +1516,7 @@ describe('GraphQL API Testing', () => {
           }
         `;
 
-        const result = await executeQuery(
-          mutation,
-          { id: '3' },
-          createAuthContext('1', 'admin')
-        );
+        const result = await executeQuery(mutation, { id: '3' }, createAuthContext('1', 'admin'));
 
         expect(result.errors).toBeUndefined();
         expect(result.data.deletePost).toBe(true);
@@ -1665,8 +1609,8 @@ describe('GraphQL API Testing', () => {
           input: {
             name: 'T',
             email: 'invalid',
-            password: 'short'
-          }
+            password: 'short',
+          },
         },
         createAuthContext('1', 'admin')
       );
@@ -1690,8 +1634,8 @@ describe('GraphQL API Testing', () => {
           input: {
             name: 'Test',
             email: 'test@example.com',
-            password: 'password123'
-          }
+            password: 'password123',
+          },
         },
         createAuthContext('2', 'user')
       );

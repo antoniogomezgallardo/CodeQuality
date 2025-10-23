@@ -1,10 +1,13 @@
 # Contract Testing
 
 ## Purpose
+
 Comprehensive guide to contract testing—verifying that services can communicate correctly by validating API contracts between consumers and providers.
 
 ## Overview
+
 Contract testing:
+
 - Tests API contracts between services
 - Validates communication interfaces
 - Enables independent service deployment
@@ -14,6 +17,7 @@ Contract testing:
 ## What is Contract Testing?
 
 ### Definition
+
 Contract testing verifies that two separate systems (consumer and provider) agree on the interface/contract for communication, allowing them to be developed and deployed independently.
 
 ### The Problem Contract Testing Solves
@@ -57,77 +61,73 @@ Consumer Contract Test    Provider Contract Test
 import { pactWith } from 'jest-pact';
 import { UserService } from './user-service';
 
-pactWith(
-  { consumer: 'UserApp', provider: 'UserAPI' },
-  (interaction) => {
-    interaction('get user by id', ({ provider, execute }) => {
-      beforeEach(() => {
-        const expectedUser = {
-          id: 1,
-          name: 'John Doe',
-          email: 'john@example.com'
-        };
+pactWith({ consumer: 'UserApp', provider: 'UserAPI' }, interaction => {
+  interaction('get user by id', ({ provider, execute }) => {
+    beforeEach(() => {
+      const expectedUser = {
+        id: 1,
+        name: 'John Doe',
+        email: 'john@example.com',
+      };
 
-        return provider
-          .given('user 1 exists')
-          .uponReceiving('a request for user 1')
-          .withRequest({
-            method: 'GET',
-            path: '/api/users/1',
-            headers: {
-              Accept: 'application/json'
-            }
-          })
-          .willRespondWith({
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: expectedUser
-          });
-      });
-
-      execute('should return user', async (mockServer) => {
-        const userService = new UserService(mockServer.url);
-        const user = await userService.getUserById(1);
-
-        expect(user).toEqual({
-          id: 1,
-          name: 'John Doe',
-          email: 'john@example.com'
+      return provider
+        .given('user 1 exists')
+        .uponReceiving('a request for user 1')
+        .withRequest({
+          method: 'GET',
+          path: '/api/users/1',
+          headers: {
+            Accept: 'application/json',
+          },
+        })
+        .willRespondWith({
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: expectedUser,
         });
-      });
     });
 
-    interaction('get user by id - not found', ({ provider, execute }) => {
-      beforeEach(() => {
-        return provider
-          .given('user 999 does not exist')
-          .uponReceiving('a request for user 999')
-          .withRequest({
-            method: 'GET',
-            path: '/api/users/999'
-          })
-          .willRespondWith({
-            status: 404,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: {
-              error: 'User not found'
-            }
-          });
-      });
+    execute('should return user', async mockServer => {
+      const userService = new UserService(mockServer.url);
+      const user = await userService.getUserById(1);
 
-      execute('should return 404', async (mockServer) => {
-        const userService = new UserService(mockServer.url);
-
-        await expect(userService.getUserById(999))
-          .rejects.toThrow('User not found');
+      expect(user).toEqual({
+        id: 1,
+        name: 'John Doe',
+        email: 'john@example.com',
       });
     });
-  }
-);
+  });
+
+  interaction('get user by id - not found', ({ provider, execute }) => {
+    beforeEach(() => {
+      return provider
+        .given('user 999 does not exist')
+        .uponReceiving('a request for user 999')
+        .withRequest({
+          method: 'GET',
+          path: '/api/users/999',
+        })
+        .willRespondWith({
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: {
+            error: 'User not found',
+          },
+        });
+    });
+
+    execute('should return 404', async mockServer => {
+      const userService = new UserService(mockServer.url);
+
+      await expect(userService.getUserById(999)).rejects.toThrow('User not found');
+    });
+  });
+});
 ```
 
 #### Provider Side Verification
@@ -141,11 +141,11 @@ const app = require('./app');
 describe('Pact Verification', () => {
   let server;
 
-  beforeAll((done) => {
+  beforeAll(done => {
     server = app.listen(8080, done);
   });
 
-  afterAll((done) => {
+  afterAll(done => {
     server.close(done);
   });
 
@@ -168,8 +168,8 @@ describe('Pact Verification', () => {
         'user 999 does not exist': () => {
           // Setup: Ensure user 999 doesn't exist
           return deleteUser(999);
-        }
-      }
+        },
+      },
     }).verifyProvider();
   });
 });
@@ -272,9 +272,7 @@ describe('API Contract Validation', () => {
   });
 
   it('should match OpenAPI schema for GET /api/users/:id', async () => {
-    const response = await request(app)
-      .get('/api/users/1')
-      .expect(200);
+    const response = await request(app).get('/api/users/1').expect(200);
 
     // Validate response matches schema
     const userSchema = api.components.schemas.User;
@@ -282,9 +280,7 @@ describe('API Contract Validation', () => {
   });
 
   it('should return 404 with error schema', async () => {
-    const response = await request(app)
-      .get('/api/users/999')
-      .expect(404);
+    const response = await request(app).get('/api/users/999').expect(404);
 
     const errorSchema = api.components.schemas.Error;
     expect(response.body).toMatchSchema(errorSchema);
@@ -318,7 +314,7 @@ describe('GraphQL Contract', () => {
   beforeAll(() => {
     schema = makeExecutableSchema({
       typeDefs,
-      resolvers: mockResolvers
+      resolvers: mockResolvers,
     });
   });
 
@@ -336,13 +332,13 @@ describe('GraphQL Contract', () => {
     const result = await graphql({
       schema,
       source: query,
-      variableValues: { id: '1' }
+      variableValues: { id: '1' },
     });
 
     expect(result.data.user).toMatchObject({
       id: expect.any(String),
       name: expect.any(String),
-      email: expect.stringMatching(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+      email: expect.stringMatching(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
     });
   });
 });
@@ -359,12 +355,10 @@ describe('Order Created Event Contract', () => {
       data: {
         orderId: '123',
         customerId: '456',
-        items: [
-          { productId: 'p1', quantity: 2, price: 10.00 }
-        ],
-        total: 20.00,
-        timestamp: '2024-10-07T10:00:00Z'
-      }
+        items: [{ productId: 'p1', quantity: 2, price: 10.0 }],
+        total: 20.0,
+        timestamp: '2024-10-07T10:00:00Z',
+      },
     };
 
     const handler = new OrderEventHandler();
@@ -379,14 +373,13 @@ describe('Order Created Event Contract', () => {
       event: 'order.created',
       data: {
         // Missing required fields
-        orderId: '123'
-      }
+        orderId: '123',
+      },
     };
 
     const handler = new OrderEventHandler();
 
-    await expect(handler.handle(invalidMessage))
-      .rejects.toThrow('Invalid message format');
+    await expect(handler.handle(invalidMessage)).rejects.toThrow('Invalid message format');
   });
 });
 ```
@@ -456,13 +449,13 @@ expect(mockResponse).toEqual({ id: 1, name: 'John' });
 
 ```javascript
 // ✅ Define clear states
-provider.given('user 1 exists')
-provider.given('user 1 is deleted')
-provider.given('database is empty')
+provider.given('user 1 exists');
+provider.given('user 1 is deleted');
+provider.given('database is empty');
 
 // ❌ Vague states
-provider.given('normal state')
-provider.given('test data loaded')
+provider.given('normal state');
+provider.given('test data loaded');
 ```
 
 ### 4. Version Contracts
@@ -531,11 +524,13 @@ expect(response.body).toHaveProperty('name');
 ### Contract Testing Checklist
 
 **Setup:**
+
 - [ ] Pact framework installed
 - [ ] Pact broker configured
 - [ ] CI/CD integration setup
 
 **Consumer Tests:**
+
 - [ ] All API interactions covered
 - [ ] Error scenarios tested
 - [ ] Matchers used appropriately
@@ -543,12 +538,14 @@ expect(response.body).toHaveProperty('name');
 - [ ] Pacts published to broker
 
 **Provider Tests:**
+
 - [ ] Provider states implemented
 - [ ] Verification tests passing
 - [ ] Results published to broker
 - [ ] Can-I-deploy checks configured
 
 **Process:**
+
 - [ ] Contract changes reviewed
 - [ ] Breaking changes communicated
 - [ ] Version compatibility maintained
@@ -557,11 +554,13 @@ expect(response.body).toHaveProperty('name');
 ## References
 
 ### Documentation
+
 - [Pact Documentation](https://docs.pact.io/)
 - [OpenAPI Specification](https://swagger.io/specification/)
 - [Martin Fowler - Contract Testing](https://martinfowler.com/bliki/ContractTest.html)
 
 ### Tools
+
 - **Pact**: Consumer-driven contract testing
 - **Spring Cloud Contract**: JVM contract testing
 - **Postman**: API contract validation
@@ -576,4 +575,4 @@ expect(response.body).toHaveProperty('name');
 
 ---
 
-*Part of: [Test Levels](README.md)*
+_Part of: [Test Levels](README.md)_

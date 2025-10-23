@@ -69,12 +69,14 @@ pip install openai==1.3.0 \
 **What it does:** Creates a question-answering system using Retrieval-Augmented Generation to answer questions about your documentation.
 
 **Use cases:**
+
 - Answer developer questions about testing practices
 - Provide instant access to CI/CD documentation
 - Onboard new team members quickly
 - Create internal knowledge assistant
 
 **Key features:**
+
 - ✅ Document ingestion from markdown files
 - ✅ Semantic search with embeddings
 - ✅ Conversation memory
@@ -83,6 +85,7 @@ pip install openai==1.3.0 \
 - ✅ Production-ready with Docker
 
 **Quick example:**
+
 ```python
 from rag_pipeline import RAGPipeline, RAGConfig
 
@@ -106,6 +109,7 @@ print(result['answer'])
 **What it does:** Automatically generates comprehensive test suites using AI.
 
 **Use cases:**
+
 - Generate unit tests for new functions
 - Create integration tests for APIs
 - Generate E2E test scenarios from user stories
@@ -113,6 +117,7 @@ print(result['answer'])
 - Generate realistic test data
 
 **Key features:**
+
 - ✅ Multiple framework support (pytest, Jest, JUnit, Playwright)
 - ✅ Comprehensive coverage (happy path, edge cases, errors)
 - ✅ Parameterized tests
@@ -121,6 +126,7 @@ print(result['answer'])
 - ✅ Production-quality output
 
 **Quick example:**
+
 ```python
 from test_generator import AITestGenerator, TestFramework
 
@@ -149,6 +155,7 @@ tests = generator.generate_unit_tests(
 **What it does:** Automatically reviews code for bugs, security vulnerabilities, performance issues, and best practices.
 
 **Use cases:**
+
 - Automated PR reviews
 - Security vulnerability scanning
 - Performance optimization suggestions
@@ -156,6 +163,7 @@ tests = generator.generate_unit_tests(
 - Catch bugs before human review
 
 **Key features:**
+
 - ✅ GitHub Actions integration
 - ✅ Multi-category analysis (bugs, security, performance, style)
 - ✅ Severity levels (critical, high, medium, low)
@@ -164,6 +172,7 @@ tests = generator.generate_unit_tests(
 - ✅ Customizable focus areas
 
 **Quick example:**
+
 ```python
 from ai_code_reviewer import AICodeReviewer
 
@@ -185,11 +194,12 @@ print(f"Issues: {len(result.comments)}")
 
 ---
 
-### 4. Predictive Analytics *(Coming Soon)*
+### 4. Predictive Analytics _(Coming Soon)_
 
 **What it does:** Uses machine learning to predict defects and optimize testing strategies.
 
 **Planned features:**
+
 - Defect prediction from code changes
 - Test failure prediction
 - Optimal test selection
@@ -198,11 +208,12 @@ print(f"Issues: {len(result.comments)}")
 
 ---
 
-### 5. Anomaly Detection *(Coming Soon)*
+### 5. Anomaly Detection _(Coming Soon)_
 
 **What it does:** Detects unusual patterns in application metrics and test results.
 
 **Planned features:**
+
 - Anomaly detection in performance metrics
 - Unusual test failure patterns
 - Build time anomalies
@@ -213,14 +224,14 @@ print(f"Issues: {len(result.comments)}")
 
 ### Monthly Costs (50 team members, 200 PRs/month)
 
-| Tool | Use Case | Monthly Cost | Time Saved | ROI |
-|------|----------|--------------|------------|-----|
-| **RAG System** | Q&A Assistant | $48 (2,000 queries) | 100 hrs | $9,952 |
-| **Test Generation** | Auto-generate tests | $10.60 (200 suites) | 100 hrs | $9,989 |
-| **Code Review** | Automated PR review | $15 (200 PRs) | 60 hrs | $5,985 |
-| **Total** | All tools | **$73.60/month** | **260 hrs/month** | **$25,926** |
+| Tool                | Use Case            | Monthly Cost        | Time Saved        | ROI         |
+| ------------------- | ------------------- | ------------------- | ----------------- | ----------- |
+| **RAG System**      | Q&A Assistant       | $48 (2,000 queries) | 100 hrs           | $9,952      |
+| **Test Generation** | Auto-generate tests | $10.60 (200 suites) | 100 hrs           | $9,989      |
+| **Code Review**     | Automated PR review | $15 (200 PRs)       | 60 hrs            | $5,985      |
+| **Total**           | All tools           | **$73.60/month**    | **260 hrs/month** | **$25,926** |
 
-*Assumes $100/hr developer rate*
+_Assumes $100/hr developer rate_
 
 ### Cost Reduction Strategies
 
@@ -293,7 +304,6 @@ tests = generator.generate_unit_tests(code, "Python", TestFramework.PYTEST)
 - Detects 2 security issues
 - Finds 1 performance problem
 - Posts detailed review comment
-
 # Cost: $0.075
 # Time saved: 20 minutes = $33
 # Plus: Catches issues human might miss
@@ -417,6 +427,7 @@ RAG Queries:        2,000
 ### Best Practices
 
 1. **Don't send sensitive data to external APIs**
+
    ```python
    # ❌ Bad
    code_with_api_keys = "API_KEY = 'sk-secret-123'"
@@ -428,6 +439,7 @@ RAG Queries:        2,000
    ```
 
 2. **Use local models for sensitive code**
+
    ```python
    # Use Ollama for proprietary code
    local_llm = Ollama(model="codellama")

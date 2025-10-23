@@ -1,12 +1,15 @@
 # Multi-Agent Systems for Quality Assurance
 
 ## Purpose
+
 Provide comprehensive guidance on designing, building, and deploying multi-agent systems that coordinate multiple specialized AI agents to tackle complex QA workflows requiring diverse expertise, parallel execution, and collaborative decision-making.
 
 ## Context
+
 While single agents excel at focused tasks, complex QA workflows often require multiple perspectives (security, performance, accessibility), parallel execution for speed, and hierarchical coordination for adaptive planning. Multi-agent systems transform QA from sequential human-driven reviews to parallel, autonomous, collaborative workflows.
 
 ## Prerequisites
+
 - Complete understanding of [Agentic Fundamentals](agentic-fundamentals.md)
 - Experience with [Agent Frameworks](agent-frameworks.md)
 - Familiarity with [Agentic Testing Workflows](agentic-testing-workflows.md)
@@ -41,18 +44,19 @@ graph TB
 
 **Key Differences:**
 
-| Aspect | Single Agent | Multi-Agent System |
-|--------|--------------|-------------------|
-| **Execution** | Sequential tool use | Parallel agent execution |
-| **Expertise** | Generalist | Specialized agents |
-| **Perspective** | Single viewpoint | Multiple perspectives |
-| **Speed** | Limited by sequence | Scales with parallelism |
-| **Complexity** | Simple, predictable | Requires coordination |
-| **Use Case** | Focused tasks | Complex workflows |
+| Aspect          | Single Agent        | Multi-Agent System       |
+| --------------- | ------------------- | ------------------------ |
+| **Execution**   | Sequential tool use | Parallel agent execution |
+| **Expertise**   | Generalist          | Specialized agents       |
+| **Perspective** | Single viewpoint    | Multiple perspectives    |
+| **Speed**       | Limited by sequence | Scales with parallelism  |
+| **Complexity**  | Simple, predictable | Requires coordination    |
+| **Use Case**    | Focused tasks       | Complex workflows        |
 
 ### When to Use Multi-Agent Systems
 
 **Use Multi-Agent When:**
+
 - Task requires multiple specialized perspectives (security + performance + accessibility)
 - Parallel execution significantly reduces completion time
 - Subtasks are independent and can run simultaneously
@@ -60,6 +64,7 @@ graph TB
 - Need consensus from multiple evaluators
 
 **Stick with Single Agent When:**
+
 - Task is focused and well-defined
 - Sequential execution is acceptable
 - Coordination overhead outweighs benefits
@@ -278,12 +283,14 @@ if __name__ == "__main__":
 ```
 
 **Pros:**
+
 - Simple to understand and debug
 - Clear data flow
 - Deterministic execution order
 - Easy to track state between stages
 
 **Cons:**
+
 - No parallelization
 - Slow for independent tasks
 - Bottlenecked by slowest agent
@@ -638,18 +645,21 @@ if __name__ == "__main__":
 ```
 
 **Pros:**
+
 - Fast - parallelism reduces total time
 - Multiple perspectives captured
 - Agents work independently
 - Scalable - add more agents easily
 
 **Cons:**
+
 - Requires async infrastructure
 - More complex error handling
 - Synthesis logic needed
 - Higher resource usage
 
 **Performance Comparison:**
+
 ```
 Sequential execution: 5.7s (2 + 1.5 + 1 + 1.2)
 Parallel execution: 2.0s (max of [2, 1.5, 1, 1.2])
@@ -947,12 +957,14 @@ if __name__ == "__main__":
 ```
 
 **Pros:**
+
 - Adaptive - supervisor decides based on context
 - Efficient - only engages needed specialists
 - Handles complex, multi-step workflows
 - Clear coordination logic
 
 **Cons:**
+
 - Supervisor can be bottleneck
 - More LLM calls (higher cost)
 - Complex state management
@@ -1302,12 +1314,14 @@ if __name__ == "__main__":
 ```
 
 **Pros:**
+
 - Truly collaborative - agents build on each other
 - Creative synergy - combined intelligence
 - Flexible - no rigid structure
 - Iterative improvement
 
 **Cons:**
+
 - Complex coordination
 - Potential conflicts
 - State management critical
@@ -1751,6 +1765,7 @@ if __name__ == "__main__":
    - Modular design benefits
 
 **Avoid over-specialization when:**
+
 - Task is simple enough for single agent
 - Coordination overhead exceeds benefits
 - Agents would share 90%+ of logic
@@ -3334,26 +3349,31 @@ class WorkflowDebugger:
 ## Best Practices
 
 ### 1. Start Simple, Scale Up
+
 - Begin with 2-3 agents
 - Add more only when clear benefit
 - Measure impact of each addition
 
 ### 2. Design for Failure
+
 - Assume agents will fail
 - Implement graceful degradation
 - Have fallback strategies
 
 ### 3. Monitor Everything
+
 - Track agent performance
 - Log all decisions
 - Measure coordination overhead
 
 ### 4. Optimize Communication
+
 - Minimize message passing
 - Use shared state efficiently
 - Batch operations when possible
 
 ### 5. Control Costs
+
 - Cache common operations
 - Use cheaper models for simple tasks
 - Set budget limits per workflow
@@ -3363,14 +3383,17 @@ class WorkflowDebugger:
 ## Exercises
 
 ### Exercise 1: Build Parallel Review System
+
 Create a 3-agent parallel code review system with synthesis.
 
 **Requirements:**
+
 - Security, performance, quality agents
 - Parallel execution
 - Synthesized final report
 
 **Starter Code:**
+
 ```python
 # Your implementation here
 class ParallelReviewSystem:
@@ -3382,17 +3405,21 @@ class ParallelReviewSystem:
 ```
 
 ### Exercise 2: Implement Voting System
+
 Create consensus voting for test approval.
 
 **Requirements:**
+
 - 5 agents vote on test quality
 - Weighted voting by expertise
 - Consensus threshold: 70%
 
 ### Exercise 3: Build Hierarchical Workflow
+
 Create supervisor-worker pattern for incident response.
 
 **Requirements:**
+
 - Supervisor delegates to specialists
 - Dynamic worker selection
 - Synthesis of findings
@@ -3416,4 +3443,4 @@ Create supervisor-worker pattern for incident response.
 
 ---
 
-*Multi-agent systems unlock collaborative AI intelligence for complex QA workflows. Start with parallel execution patterns, master coordination, then build adaptive hierarchical systems that scale quality assurance beyond human capacity.*
+_Multi-agent systems unlock collaborative AI intelligence for complex QA workflows. Start with parallel execution patterns, master coordination, then build adaptive hierarchical systems that scale quality assurance beyond human capacity._

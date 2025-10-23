@@ -1,12 +1,15 @@
 # AI-Assisted Testing
 
 ## Purpose
+
 Demonstrate how AI can dramatically accelerate test creation, improve test coverage, and reduce the manual effort required to maintain comprehensive test suites across all testing levels.
 
 ## Context
+
 Writing tests is time-consuming. Maintaining tests as code evolves is even more challenging. AI can generate initial test scaffolds, suggest edge cases, create test data, and even write entire test suites based on code analysis or requirements.
 
 ## Prerequisites
+
 - Understanding of [Test Levels](../05-test-levels/README.md)
 - Familiarity with [AI Fundamentals](ai-fundamentals.md)
 - Basic knowledge of testing frameworks
@@ -45,6 +48,7 @@ graph TB
 **Scenario:** You have a function that needs unit tests
 
 **AI Prompt Template:**
+
 ```
 You are an expert software tester specializing in {language}.
 
@@ -201,7 +205,7 @@ describe('calculateDiscount', () => {
       ['premium', 85],
       ['basic', 90],
       ['', 90],
-      [null, 90]
+      [null, 90],
     ])('handles customer type %s correctly', (customerType, expected) => {
       const result = calculateDiscount(100, 10, customerType);
       expect(result).toBe(expected);
@@ -212,7 +216,7 @@ describe('calculateDiscount', () => {
 
 ### Automated Test Generator Tool
 
-```python
+````python
 # test_generator.py
 
 from openai import OpenAI
@@ -233,16 +237,17 @@ Task: Generate comprehensive {test_type} tests for the following code.
 Code to test:
 ```{language}
 {code}
-```
+````
 
 Requirements:
+
 - Use {framework} testing framework
 - Follow industry best practices for {language}
 - Include:
-  * Happy path scenarios
-  * Edge cases and boundary conditions
-  * Error handling tests
-  * Null/undefined handling where applicable
+  - Happy path scenarios
+  - Edge cases and boundary conditions
+  - Error handling tests
+  - Null/undefined handling where applicable
 - Use descriptive test names that explain what is being tested
 - Add comments for complex test logic
 - Ensure tests are independent and can run in any order
@@ -300,14 +305,16 @@ Output: Complete, runnable test file with all necessary imports
         return output_path
 
 # Usage
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python test_generator.py <source_file>")
-        sys.exit(1)
+
+if **name** == "**main**":
+if len(sys.argv) < 2:
+print("Usage: python test_generator.py <source_file>")
+sys.exit(1)
 
     generator = AITestGenerator(api_key=os.getenv('OPENAI_API_KEY'))
     generator.generate_tests_from_file(sys.argv[1])
-```
+
+````
 
 **Usage:**
 ```bash
@@ -315,7 +322,7 @@ if __name__ == "__main__":
 python test_generator.py src/calculator.js
 
 # Output: src/calculator.test.js
-```
+````
 
 ## Integration Test Generation
 
@@ -1081,6 +1088,7 @@ ai_test_quality_metrics:
 ## Checklist
 
 ### AI Test Generation Readiness
+
 - [ ] LLM API access configured
 - [ ] Test generator scripts set up
 - [ ] CI/CD integration planned
@@ -1088,6 +1096,7 @@ ai_test_quality_metrics:
 - [ ] Quality metrics established
 
 ### Per Test Generation
+
 - [ ] Review all generated tests
 - [ ] Verify tests are runnable
 - [ ] Check test coverage improvements
@@ -1103,4 +1112,4 @@ ai_test_quality_metrics:
 
 ---
 
-*Next: [AI Code Quality](ai-code-quality.md) - Using AI for code reviews and bug detection*
+_Next: [AI Code Quality](ai-code-quality.md) - Using AI for code reviews and bug detection_

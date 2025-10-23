@@ -1,11 +1,13 @@
 # Reference Implementation: E-Commerce Application
 
 ## Purpose
+
 A complete e-commerce application that demonstrates **every concept** from the CodeQuality documentation, from requirements engineering through deployment, including AI-assisted QA and autonomous agentic workflows.
 
 ## Why E-Commerce?
 
 E-commerce is ideal for demonstrating quality practices because it includes:
+
 - **Complex business logic**: Product catalog, shopping cart, checkout, payments
 - **Multiple user roles**: Customers, admins, warehouse staff
 - **Integration points**: Payment gateways, inventory systems, shipping APIs
@@ -19,6 +21,7 @@ E-commerce is ideal for demonstrating quality practices because it includes:
 A modern e-commerce platform for electronics and gadgets with the following features:
 
 **Core Features:**
+
 - Product browsing and search
 - Shopping cart and wishlist
 - User authentication and profiles
@@ -30,6 +33,7 @@ A modern e-commerce platform for electronics and gadgets with the following feat
 - Product reviews and ratings
 
 **Advanced Features (to demonstrate advanced QA concepts):**
+
 - Real-time inventory updates
 - Recommendation engine
 - Multi-currency support
@@ -137,34 +141,36 @@ graph TB
 
 This table shows how each module from the CodeQuality documentation is applied in ShopSmart:
 
-| Module | Application in ShopSmart |
-|--------|--------------------------|
-| **[00 - Foundations](../../docs/00-foundations/README.md)** | ISO 25010 quality model applied; IEEE 829 test docs for all features |
-| **[01 - Requirements](../../docs/01-requirements/README.md)** | Complete requirements specification with traceability matrix |
-| **[02 - Agile Planning](../../docs/02-agile-planning/README.md)** | User stories for all features, DoR/DoD templates, sprint planning |
-| **[03 - Version Control](../../docs/03-version-control/README.md)** | Trunk-Based Development with feature flags, PR templates |
-| **[04 - Testing Strategy](../../docs/04-testing-strategy/README.md)** | Shift-left and shift-right strategies, risk-based testing |
-| **[05 - Test Levels](../../docs/05-test-levels/README.md)** | Unit (Jest), Integration (Supertest), E2E (Playwright), System tests |
-| **[06 - Quality Attributes](../../docs/06-quality-attributes/README.md)** | Performance (k6), Security (OWASP), Accessibility (axe-core) |
-| **[07 - Development Practices](../../docs/07-development-practices/README.md)** | Clean Code, SOLID, TDD/BDD practices throughout |
-| **[08 - CI/CD Pipeline](../../docs/08-cicd-pipeline/README.md)** | Complete GitHub Actions pipeline with quality gates |
-| **[09 - Metrics & Monitoring](../../docs/09-metrics-monitoring/README.md)** | DORA metrics tracking, Prometheus/Grafana dashboards |
-| **[10 - Deployment](../../docs/10-deployment/README.md)** | Blue-green deployments, canary releases with Kubernetes |
-| **[11 - Tools Ecosystem](../../docs/11-tools-ecosystem/README.md)** | Integrated toolchain: ESLint, Prettier, SonarQube, Snyk |
-| **[12 - Governance](../../docs/12-governance/README.md)** | Quality gates at each stage, compliance checks (PCI DSS) |
-| **[13 - Incident Management](../../docs/13-incident-management/README.md)** | Incident runbooks, postmortem templates, SLI/SLO definitions |
-| **[14 - Continuous Improvement](../../docs/14-continuous-improvement/README.md)** | Retrospectives after each sprint, Kaizen approach |
-| **[15 - AI in QA](../../docs/15-ai-in-quality-assurance/15-README.md)** | AI test generation, code review automation, defect prediction |
-| **[16 - Agentic Workflows](../../docs/16-agentic-workflows/16-README.md)** | Autonomous agents for testing, code review, incident response |
+| Module                                                                            | Application in ShopSmart                                             |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **[00 - Foundations](../../docs/00-foundations/README.md)**                       | ISO 25010 quality model applied; IEEE 829 test docs for all features |
+| **[01 - Requirements](../../docs/01-requirements/README.md)**                     | Complete requirements specification with traceability matrix         |
+| **[02 - Agile Planning](../../docs/02-agile-planning/README.md)**                 | User stories for all features, DoR/DoD templates, sprint planning    |
+| **[03 - Version Control](../../docs/03-version-control/README.md)**               | Trunk-Based Development with feature flags, PR templates             |
+| **[04 - Testing Strategy](../../docs/04-testing-strategy/README.md)**             | Shift-left and shift-right strategies, risk-based testing            |
+| **[05 - Test Levels](../../docs/05-test-levels/README.md)**                       | Unit (Jest), Integration (Supertest), E2E (Playwright), System tests |
+| **[06 - Quality Attributes](../../docs/06-quality-attributes/README.md)**         | Performance (k6), Security (OWASP), Accessibility (axe-core)         |
+| **[07 - Development Practices](../../docs/07-development-practices/README.md)**   | Clean Code, SOLID, TDD/BDD practices throughout                      |
+| **[08 - CI/CD Pipeline](../../docs/08-cicd-pipeline/README.md)**                  | Complete GitHub Actions pipeline with quality gates                  |
+| **[09 - Metrics & Monitoring](../../docs/09-metrics-monitoring/README.md)**       | DORA metrics tracking, Prometheus/Grafana dashboards                 |
+| **[10 - Deployment](../../docs/10-deployment/README.md)**                         | Blue-green deployments, canary releases with Kubernetes              |
+| **[11 - Tools Ecosystem](../../docs/11-tools-ecosystem/README.md)**               | Integrated toolchain: ESLint, Prettier, SonarQube, Snyk              |
+| **[12 - Governance](../../docs/12-governance/README.md)**                         | Quality gates at each stage, compliance checks (PCI DSS)             |
+| **[13 - Incident Management](../../docs/13-incident-management/README.md)**       | Incident runbooks, postmortem templates, SLI/SLO definitions         |
+| **[14 - Continuous Improvement](../../docs/14-continuous-improvement/README.md)** | Retrospectives after each sprint, Kaizen approach                    |
+| **[15 - AI in QA](../../docs/15-ai-in-quality-assurance/15-README.md)**           | AI test generation, code review automation, defect prediction        |
+| **[16 - Agentic Workflows](../../docs/16-agentic-workflows/16-README.md)**        | Autonomous agents for testing, code review, incident response        |
 
 ---
 
 ## Implementation Phases
 
 ### Phase 1: Foundation (Weeks 1-2)
+
 **Demonstrates:** Modules 00, 01, 02, 03
 
 **Deliverables:**
+
 1. **Requirements Documentation**
    - Product requirements document (PRD)
    - User personas
@@ -184,6 +190,7 @@ This table shows how each module from the CodeQuality documentation is applied i
    - API contract definitions (OpenAPI 3.0)
 
 **Example User Story:**
+
 ```markdown
 # User Story: Add Product to Cart
 
@@ -192,6 +199,7 @@ This table shows how each module from the CodeQuality documentation is applied i
 **So that** I can purchase multiple items in a single checkout
 
 ## Acceptance Criteria
+
 - [ ] User can click "Add to Cart" button on product page
 - [ ] Cart icon shows updated item count immediately
 - [ ] Selected quantity is added to cart (min: 1, max: available stock)
@@ -201,6 +209,7 @@ This table shows how each module from the CodeQuality documentation is applied i
 - [ ] Works with JavaScript disabled (graceful degradation)
 
 ## Definition of Done
+
 - [ ] Unit tests written (coverage > 80%)
 - [ ] Integration tests with cart API
 - [ ] E2E test with Playwright
@@ -214,9 +223,11 @@ This table shows how each module from the CodeQuality documentation is applied i
 ---
 
 ### Phase 2: Core Development (Weeks 3-6)
+
 **Demonstrates:** Modules 04, 05, 06, 07
 
 **Deliverables:**
+
 1. **Product Service** (Week 3)
    - Product CRUD operations
    - Search and filtering
@@ -289,9 +300,9 @@ describe('CartService', () => {
       const productId = 'prod-456';
       const quantity = 1000; // Exceeds available stock
 
-      await expect(
-        cartService.addItem(userId, productId, quantity)
-      ).rejects.toThrow('Insufficient stock');
+      await expect(cartService.addItem(userId, productId, quantity)).rejects.toThrow(
+        'Insufficient stock'
+      );
     });
 
     it('should handle concurrent additions correctly', async () => {
@@ -371,7 +382,7 @@ test.describe('Checkout Flow', () => {
 
     // Run axe accessibility audit
     const accessibilityScanResults = await page.evaluate(() => {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         // @ts-ignore
         axe.run().then(results => resolve(results));
       });
@@ -385,10 +396,13 @@ test.describe('Checkout Flow', () => {
 ---
 
 ### Phase 3: Quality Automation (Weeks 7-8)
+
 **Demonstrates:** Modules 08, 09, 11
 
 **Deliverables:**
+
 1. **CI/CD Pipeline** (GitHub Actions)
+
    ```yaml
    # .github/workflows/ci.yml
    name: CI Pipeline
@@ -508,6 +522,7 @@ test.describe('Checkout Flow', () => {
    - DORA metrics tracking
 
 3. **Performance Benchmarks**
+
    ```javascript
    // tests/performance/load-test.js (k6)
    import http from 'k6/http';
@@ -518,14 +533,14 @@ test.describe('Checkout Flow', () => {
 
    export const options = {
      stages: [
-       { duration: '30s', target: 10 },   // Ramp up to 10 users
-       { duration: '1m', target: 50 },    // Stay at 50 users
-       { duration: '30s', target: 100 },  // Peak at 100 users
-       { duration: '1m', target: 0 },     // Ramp down
+       { duration: '30s', target: 10 }, // Ramp up to 10 users
+       { duration: '1m', target: 50 }, // Stay at 50 users
+       { duration: '30s', target: 100 }, // Peak at 100 users
+       { duration: '1m', target: 0 }, // Ramp down
      ],
      thresholds: {
-       http_req_duration: ['p(95)<500'],  // 95% of requests < 500ms
-       http_req_failed: ['rate<0.01'],    // Error rate < 1%
+       http_req_duration: ['p(95)<500'], // 95% of requests < 500ms
+       http_req_failed: ['rate<0.01'], // Error rate < 1%
        errors: ['rate<0.1'],
      },
    };
@@ -534,8 +549,8 @@ test.describe('Checkout Flow', () => {
      // Browse products
      let res = http.get('http://localhost:3000/api/products');
      check(res, {
-       'products loaded': (r) => r.status === 200,
-       'response time OK': (r) => r.timings.duration < 500,
+       'products loaded': r => r.status === 200,
+       'response time OK': r => r.timings.duration < 500,
      }) || errorRate.add(1);
 
      sleep(1);
@@ -546,7 +561,7 @@ test.describe('Checkout Flow', () => {
        quantity: 1,
      });
      check(res, {
-       'added to cart': (r) => r.status === 201,
+       'added to cart': r => r.status === 201,
      }) || errorRate.add(1);
 
      sleep(2);
@@ -556,9 +571,11 @@ test.describe('Checkout Flow', () => {
 ---
 
 ### Phase 4: AI-Assisted QA (Weeks 9-10)
+
 **Demonstrates:** Module 15
 
 **Deliverables:**
+
 1. **AI Test Generation**
    - Automated test generation for new features
    - Integration with CI/CD pipeline
@@ -613,9 +630,11 @@ main();
 ---
 
 ### Phase 5: Agentic Workflows (Weeks 11-12)
+
 **Demonstrates:** Module 16
 
 **Deliverables:**
+
 1. **Autonomous Test Suite Agent**
    - Monitors code changes
    - Generates missing tests automatically
@@ -733,9 +752,11 @@ agent = workflow.compile()
 ---
 
 ### Phase 6: Production Deployment (Weeks 13-14)
+
 **Demonstrates:** Modules 10, 12, 13
 
 **Deliverables:**
+
 1. **Kubernetes Deployment**
    - Production-ready manifests
    - Blue-green deployment strategy
@@ -775,37 +796,37 @@ spec:
         version: blue
     spec:
       containers:
-      - name: api
-        image: shopsmart/api:v1.2.0
-        ports:
-        - containerPort: 3000
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: url
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 3000
-          initialDelaySeconds: 10
-          periodSeconds: 5
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+        - name: api
+          image: shopsmart/api:v1.2.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: url
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
 ---
 apiVersion: v1
 kind: Service
@@ -814,20 +835,22 @@ metadata:
 spec:
   selector:
     app: shopsmart-api
-    version: blue  # Switch to 'green' to cutover
+    version: blue # Switch to 'green' to cutover
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
   type: LoadBalancer
 ```
 
 ---
 
 ### Phase 7: Continuous Improvement (Weeks 15-16)
+
 **Demonstrates:** Module 14
 
 **Deliverables:**
+
 1. **Metrics Dashboard**
    - DORA metrics visualization
    - Quality trends over time
@@ -941,6 +964,7 @@ shopsmart/
 ## Getting Started
 
 ### Prerequisites
+
 ```bash
 # Required
 node >= 20
@@ -1014,6 +1038,7 @@ npm run test:a11y
 ## Learning Path
 
 ### For Students/Beginners
+
 1. **Week 1-2:** Read requirements, understand user stories
 2. **Week 3-4:** Implement one feature (e.g., product listing) with TDD
 3. **Week 5-6:** Write comprehensive tests (unit, integration, E2E)
@@ -1024,6 +1049,7 @@ npm run test:a11y
 8. **Week 15-16:** Participate in retrospective, propose improvement
 
 ### For Experienced Developers
+
 1. **Week 1:** Review architecture, set up environment
 2. **Week 2-3:** Implement microservice with full test coverage
 3. **Week 4-5:** Set up monitoring and observability
@@ -1038,7 +1064,9 @@ npm run test:a11y
 ## Key Features Demonstrating QA Concepts
 
 ### Feature: Product Search
+
 **Demonstrates:**
+
 - Unit testing (search algorithm)
 - Integration testing (database queries)
 - Performance testing (search under load)
@@ -1046,7 +1074,9 @@ npm run test:a11y
 - E2E testing (user search journey)
 
 ### Feature: Shopping Cart
+
 **Demonstrates:**
+
 - State management testing
 - Race condition testing (concurrent cart updates)
 - Contract testing (cart API contract)
@@ -1054,7 +1084,9 @@ npm run test:a11y
 - Mobile testing
 
 ### Feature: Checkout
+
 **Demonstrates:**
+
 - Integration testing (payment gateway)
 - Security testing (PCI compliance)
 - Error handling and recovery
@@ -1062,7 +1094,9 @@ npm run test:a11y
 - Chaos engineering
 
 ### Feature: Admin Dashboard
+
 **Demonstrates:**
+
 - Role-based access testing
 - Data visualization testing
 - Real-time updates testing
@@ -1074,6 +1108,7 @@ npm run test:a11y
 ## Success Metrics
 
 ### Quality Metrics
+
 - **Code Coverage:** > 80%
 - **Test Success Rate:** > 95%
 - **Bug Escape Rate:** < 5%
@@ -1081,12 +1116,14 @@ npm run test:a11y
 - **Accessibility Score:** 100 (Lighthouse)
 
 ### DORA Metrics
+
 - **Deployment Frequency:** Multiple per day
 - **Lead Time:** < 1 hour
 - **MTTR:** < 30 minutes
 - **Change Failure Rate:** < 10%
 
 ### Agent Effectiveness
+
 - **Test Generation Accuracy:** > 85%
 - **Code Review False Positives:** < 15%
 - **Incident Auto-Resolution:** > 70%
@@ -1097,18 +1134,21 @@ npm run test:a11y
 ## Resources
 
 ### Documentation
+
 - [Full Requirements](docs/requirements/PRD.md)
 - [Architecture Guide](docs/architecture/system-design.md)
 - [API Documentation](docs/api/README.md)
 - [Deployment Guide](docs/deployment/README.md)
 
 ### Video Tutorials
+
 - Setup & Installation (10 min)
 - Building Your First Feature with TDD (30 min)
 - Setting Up CI/CD Pipeline (20 min)
 - Deploying AI Agents (45 min)
 
 ### Community
+
 - [Discussions](https://github.com/your-org/shopsmart/discussions)
 - [Issue Tracker](https://github.com/your-org/shopsmart/issues)
 - Weekly Office Hours (Fridays 2-3 PM PST)
@@ -1135,6 +1175,7 @@ MIT License - This is a reference implementation for educational purposes.
 ---
 
 **Next Steps:**
+
 1. ⭐ Star the repository
 2. 📖 Read the [Project Overview](docs/overview.md)
 3. 🚀 Follow the [Quick Start Guide](#getting-started)
@@ -1143,4 +1184,4 @@ MIT License - This is a reference implementation for educational purposes.
 
 ---
 
-*ShopSmart is a reference implementation demonstrating modern software quality practices from the [CodeQuality Documentation](https://github.com/your-org/CodeQuality). It serves as a practical, hands-on companion to the theoretical documentation.*
+_ShopSmart is a reference implementation demonstrating modern software quality practices from the [CodeQuality Documentation](https://github.com/your-org/CodeQuality). It serves as a practical, hands-on companion to the theoretical documentation._

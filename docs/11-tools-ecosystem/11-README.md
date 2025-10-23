@@ -1,12 +1,15 @@
 # Tools Ecosystem
 
 ## Purpose
+
 Provide comprehensive guidance on selecting, implementing, and integrating tools that support software quality across the development lifecycle.
 
 ## Context
+
 The right tools can amplify team productivity and quality, but tool sprawl and poor integration can hinder progress. This guide helps navigate the complex landscape of quality tools.
 
 ## Prerequisites
+
 - Understanding of [Testing Strategy](../04-testing-strategy/README.md)
 - Knowledge of [CI/CD Pipeline](../08-cicd-pipeline/README.md)
 - Familiarity with development workflows
@@ -32,9 +35,11 @@ graph TB
 ### Integrated Development Environments (IDEs)
 
 #### Visual Studio Code
+
 **Category:** Lightweight IDE
 **Best For:** Web development, polyglot programming
 **Key Features:**
+
 - Extensive extension marketplace
 - Built-in Git integration
 - IntelliSense code completion
@@ -42,6 +47,7 @@ graph TB
 - Live Share collaboration
 
 **Quality Extensions:**
+
 ```json
 {
   "recommendations": [
@@ -55,9 +61,11 @@ graph TB
 ```
 
 #### IntelliJ IDEA
+
 **Category:** Full-featured IDE
 **Best For:** Java, Kotlin, enterprise development
 **Key Features:**
+
 - Advanced code analysis
 - Refactoring tools
 - Database tools
@@ -65,15 +73,18 @@ graph TB
 - Test runner integration
 
 **Quality Features:**
+
 - Code inspections (700+ for Java)
 - Dependency analysis
 - Duplicate detection
 - Code coverage visualization
 
 #### Visual Studio
+
 **Category:** Enterprise IDE
 **Best For:** .NET development, C++, enterprise
 **Key Features:**
+
 - IntelliTrace debugging
 - Code Map
 - Live Unit Testing
@@ -83,7 +94,9 @@ graph TB
 ### Code Editors Configuration
 
 #### EditorConfig
+
 **Universal editor configuration:**
+
 ```ini
 # .editorconfig
 root = true
@@ -114,7 +127,9 @@ trim_trailing_whitespace = false
 ### Git Platforms
 
 #### GitHub
+
 **Features:**
+
 - GitHub Actions CI/CD
 - Pull request reviews
 - Issue tracking
@@ -123,6 +138,7 @@ trim_trailing_whitespace = false
 - Dependabot
 
 **Quality Integration:**
+
 ```yaml
 # .github/workflows/quality.yml
 name: Quality Checks
@@ -140,7 +156,9 @@ jobs:
 ```
 
 #### GitLab
+
 **Features:**
+
 - GitLab CI/CD
 - Merge request approvals
 - Issue boards
@@ -149,7 +167,9 @@ jobs:
 - Code quality reports
 
 #### Bitbucket
+
 **Features:**
+
 - Bitbucket Pipelines
 - Pull request workflow
 - Jira integration
@@ -159,7 +179,9 @@ jobs:
 ### Git Tools
 
 #### Git Hooks
+
 **Pre-commit hooks for quality:**
+
 ```bash
 #!/bin/sh
 # .git/hooks/pre-commit
@@ -186,6 +208,7 @@ fi
 #### JavaScript/TypeScript
 
 **Jest**
+
 ```javascript
 // jest.config.js
 module.exports = {
@@ -195,15 +218,16 @@ module.exports = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
-    }
+      statements: 80,
+    },
   },
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/test/setup.js']
+  setupFilesAfterEnv: ['<rootDir>/test/setup.js'],
 };
 ```
 
 **Mocha + Chai**
+
 ```javascript
 // mocha.opts
 --require @babel/register
@@ -216,6 +240,7 @@ module.exports = {
 #### Java
 
 **JUnit 5**
+
 ```java
 @ExtendWith(MockitoExtension.class)
 class ServiceTest {
@@ -234,6 +259,7 @@ class ServiceTest {
 ```
 
 **TestNG**
+
 ```xml
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Quality Suite" parallel="tests" thread-count="4">
@@ -248,6 +274,7 @@ class ServiceTest {
 #### Python
 
 **pytest**
+
 ```python
 # pytest.ini
 [pytest]
@@ -266,6 +293,7 @@ python_files = test_*.py
 #### REST API Testing
 
 **Postman**
+
 - Collection runner
 - Environment variables
 - Pre/post request scripts
@@ -273,6 +301,7 @@ python_files = test_*.py
 - Monitor scheduling
 
 **REST Assured (Java)**
+
 ```java
 @Test
 public void testAPIEndpoint() {
@@ -291,6 +320,7 @@ public void testAPIEndpoint() {
 #### Database Testing
 
 **DbUnit**
+
 ```xml
 <dataset>
     <user id="1" name="John" email="john@example.com"/>
@@ -301,6 +331,7 @@ public void testAPIEndpoint() {
 ### End-to-End Testing
 
 #### Selenium WebDriver
+
 ```java
 WebDriver driver = new ChromeDriver();
 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -313,6 +344,7 @@ element.click();
 ```
 
 #### Cypress
+
 ```javascript
 // cypress.config.js
 module.exports = {
@@ -321,12 +353,13 @@ module.exports = {
     viewportWidth: 1280,
     viewportHeight: 720,
     video: true,
-    screenshotOnRunFailure: true
-  }
+    screenshotOnRunFailure: true,
+  },
 };
 ```
 
 #### Playwright
+
 ```javascript
 const { test, expect } = require('@playwright/test');
 
@@ -340,6 +373,7 @@ test('homepage has title', async ({ page }) => {
 ### Performance Testing
 
 #### JMeter
+
 ```xml
 <ThreadGroup>
     <stringProp name="ThreadGroup.num_threads">100</stringProp>
@@ -349,6 +383,7 @@ test('homepage has title', async ({ page }) => {
 ```
 
 #### Gatling
+
 ```scala
 class BasicSimulation extends Simulation {
   val httpProtocol = http.baseUrl("http://example.com")
@@ -364,6 +399,7 @@ class BasicSimulation extends Simulation {
 ```
 
 #### K6
+
 ```javascript
 import http from 'k6/http';
 import { check } from 'k6';
@@ -379,9 +415,9 @@ export let options = {
   },
 };
 
-export default function() {
+export default function () {
   let res = http.get('https://example.com');
-  check(res, { 'status is 200': (r) => r.status === 200 });
+  check(res, { 'status is 200': r => r.status === 200 });
 }
 ```
 
@@ -390,7 +426,9 @@ export default function() {
 ### Code Quality
 
 #### SonarQube
+
 **Setup and Configuration:**
+
 ```yaml
 # sonar-project.properties
 sonar.projectKey=my-project
@@ -401,37 +439,36 @@ sonar.coverage.exclusions=**/*.test.js
 ```
 
 **Quality Gates:**
+
 ```json
 {
   "conditions": [
-    {"metric": "coverage", "op": "LT", "error": "80"},
-    {"metric": "bugs", "op": "GT", "error": "0"},
-    {"metric": "vulnerabilities", "op": "GT", "error": "0"},
-    {"metric": "code_smells", "op": "GT", "error": "10"},
-    {"metric": "duplicated_lines_density", "op": "GT", "error": "3"}
+    { "metric": "coverage", "op": "LT", "error": "80" },
+    { "metric": "bugs", "op": "GT", "error": "0" },
+    { "metric": "vulnerabilities", "op": "GT", "error": "0" },
+    { "metric": "code_smells", "op": "GT", "error": "10" },
+    { "metric": "duplicated_lines_density", "op": "GT", "error": "3" }
   ]
 }
 ```
 
 #### ESLint
+
 ```javascript
 // .eslintrc.js
 module.exports = {
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier'
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
   rules: {
-    'complexity': ['error', 10],
+    complexity: ['error', 10],
     'max-lines': ['error', 300],
     'max-depth': ['error', 4],
-    'max-params': ['error', 3]
-  }
+    'max-params': ['error', 3],
+  },
 };
 ```
 
 #### Checkstyle (Java)
+
 ```xml
 <!DOCTYPE module PUBLIC
   "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
@@ -453,6 +490,7 @@ module.exports = {
 #### SAST Tools
 
 **Snyk**
+
 ```bash
 # Install
 npm install -g snyk
@@ -468,6 +506,7 @@ snyk wizard
 ```
 
 **OWASP Dependency Check**
+
 ```xml
 <plugin>
     <groupId>org.owasp</groupId>
@@ -486,6 +525,7 @@ snyk wizard
 ### Build Servers
 
 #### Jenkins
+
 ```groovy
 pipeline {
     agent any
@@ -530,6 +570,7 @@ pipeline {
 ```
 
 #### GitHub Actions
+
 ```yaml
 name: CI/CD Pipeline
 on:
@@ -555,6 +596,7 @@ jobs:
 ```
 
 #### GitLab CI
+
 ```yaml
 stages:
   - build
@@ -594,21 +636,23 @@ test:
 ### Application Performance Monitoring
 
 #### New Relic
+
 ```javascript
 // newrelic.js
 exports.config = {
   app_name: ['My Application'],
   license_key: 'YOUR_LICENSE_KEY',
   distributed_tracing: {
-    enabled: true
+    enabled: true,
   },
   logging: {
-    level: 'info'
-  }
+    level: 'info',
+  },
 };
 ```
 
 #### Datadog
+
 ```yaml
 # datadog.yaml
 api_key: YOUR_API_KEY
@@ -621,6 +665,7 @@ process_agent_enabled: true
 ### Log Management
 
 #### ELK Stack
+
 ```json
 // logstash.conf
 input {
@@ -647,6 +692,7 @@ output {
 ```
 
 #### Grafana + Loki
+
 ```yaml
 # promtail-config.yaml
 clients:
@@ -667,7 +713,9 @@ scrape_configs:
 ### Project Management
 
 #### Jira
+
 **Quality-focused configuration:**
+
 - Bug tracking workflow
 - Test case management
 - Sprint burndown charts
@@ -675,7 +723,9 @@ scrape_configs:
 - Release planning
 
 #### Azure DevOps Boards
+
 **Features:**
+
 - Kanban boards
 - Sprint planning
 - Capacity planning
@@ -685,6 +735,7 @@ scrape_configs:
 ### Communication
 
 #### Slack Integration
+
 ```javascript
 // slack-notification.js
 const webhook = process.env.SLACK_WEBHOOK;
@@ -694,11 +745,13 @@ async function notifyBuildStatus(status, details) {
     method: 'POST',
     body: JSON.stringify({
       text: `Build ${status}`,
-      attachments: [{
-        color: status === 'success' ? 'good' : 'danger',
-        fields: details
-      }]
-    })
+      attachments: [
+        {
+          color: status === 'success' ? 'good' : 'danger',
+          fields: details,
+        },
+      ],
+    }),
   });
 }
 ```
@@ -707,28 +760,29 @@ async function notifyBuildStatus(status, details) {
 
 ### Testing Tools Comparison
 
-| Tool | Type | Language | Learning Curve | Cost | Best For |
-|------|------|----------|----------------|------|----------|
-| Jest | Unit | JavaScript | Low | Free | React, Node.js |
-| JUnit | Unit | Java | Low | Free | Java applications |
-| Selenium | E2E | Multi | High | Free | Cross-browser |
-| Cypress | E2E | JavaScript | Medium | Free/Paid | Modern web apps |
-| JMeter | Performance | Java | Medium | Free | Load testing |
-| Postman | API | Multi | Low | Free/Paid | REST APIs |
+| Tool     | Type        | Language   | Learning Curve | Cost      | Best For          |
+| -------- | ----------- | ---------- | -------------- | --------- | ----------------- |
+| Jest     | Unit        | JavaScript | Low            | Free      | React, Node.js    |
+| JUnit    | Unit        | Java       | Low            | Free      | Java applications |
+| Selenium | E2E         | Multi      | High           | Free      | Cross-browser     |
+| Cypress  | E2E         | JavaScript | Medium         | Free/Paid | Modern web apps   |
+| JMeter   | Performance | Java       | Medium         | Free      | Load testing      |
+| Postman  | API         | Multi      | Low            | Free/Paid | REST APIs         |
 
 ### CI/CD Tools Comparison
 
-| Tool | Hosting | Complexity | Cost | Best For |
-|------|---------|------------|------|----------|
-| Jenkins | Self | High | Free | Customization |
-| GitHub Actions | Cloud | Low | Free/Paid | GitHub repos |
-| GitLab CI | Both | Medium | Free/Paid | GitLab integration |
-| CircleCI | Cloud | Medium | Free/Paid | Docker workflows |
-| Travis CI | Cloud | Low | Free/Paid | Open source |
+| Tool           | Hosting | Complexity | Cost      | Best For           |
+| -------------- | ------- | ---------- | --------- | ------------------ |
+| Jenkins        | Self    | High       | Free      | Customization      |
+| GitHub Actions | Cloud   | Low        | Free/Paid | GitHub repos       |
+| GitLab CI      | Both    | Medium     | Free/Paid | GitLab integration |
+| CircleCI       | Cloud   | Medium     | Free/Paid | Docker workflows   |
+| Travis CI      | Cloud   | Low        | Free/Paid | Open source        |
 
 ## Tool Integration Patterns
 
 ### Quality Pipeline Integration
+
 ```mermaid
 graph LR
     A[IDE] --> B[Git]
@@ -742,6 +796,7 @@ graph LR
 ```
 
 ### Tool Chain Example
+
 ```yaml
 toolchain:
   development:
@@ -772,24 +827,28 @@ toolchain:
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Month 1)
+
 1. Set up version control (Git)
 2. Configure IDE and editor settings
 3. Implement basic linting
 4. Set up unit testing framework
 
 ### Phase 2: Automation (Month 2)
+
 1. Implement CI/CD pipeline
 2. Add automated testing
 3. Configure code coverage
 4. Set up build automation
 
 ### Phase 3: Quality (Month 3)
+
 1. Integrate static analysis
 2. Add security scanning
 3. Implement quality gates
 4. Configure monitoring
 
 ### Phase 4: Optimization (Month 4)
+
 1. Add performance testing
 2. Implement advanced monitoring
 3. Optimize tool chain
@@ -798,12 +857,14 @@ toolchain:
 ## Tool Maintenance
 
 ### Regular Updates
+
 - Weekly: Security patches
 - Monthly: Minor updates
 - Quarterly: Major updates
 - Annually: Tool evaluation
 
 ### License Management
+
 ```json
 {
   "licenses": {
@@ -824,6 +885,7 @@ toolchain:
 ## Checklist
 
 ### Tool Selection Checklist
+
 - [ ] Identified team needs and requirements
 - [ ] Evaluated tool options against criteria
 - [ ] Considered integration capabilities
@@ -834,6 +896,7 @@ toolchain:
 - [ ] Created fallback plan
 
 ### Implementation Checklist
+
 - [ ] Installed and configured tools
 - [ ] Integrated with existing systems
 - [ ] Documented configuration
@@ -846,12 +909,14 @@ toolchain:
 ## References
 
 ### Official Documentation
+
 - [Jenkins Documentation](https://www.jenkins.io/doc/)
 - [GitHub Actions Documentation](https://docs.github.com/actions)
 - [Docker Documentation](https://docs.docker.com/)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 
 ### Tool Comparisons
+
 - ThoughtWorks Technology Radar
 - Stack Overflow Developer Survey
 - State of JS Survey
@@ -866,4 +931,4 @@ toolchain:
 
 ---
 
-*Next: [Quality Governance](../11-governance/README.md) - Implementing quality gates and compliance*
+_Next: [Quality Governance](../11-governance/README.md) - Implementing quality gates and compliance_

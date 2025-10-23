@@ -56,7 +56,7 @@ function generateRequestId() {
 
 // Helper to wait for async operations
 function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 describe('Microservices Integration Tests', () => {
@@ -126,15 +126,12 @@ describe('Microservices Integration Tests', () => {
   describe('Complete Order Flow', () => {
     it('should successfully process an order from creation to completion', async () => {
       // Step 1: Check inventory availability
-      const checkInventoryResponse = await inventoryClient.post(
-        '/inventory/check',
-        {
-          items: [
-            { productId: 'product-123', quantity: 2 },
-            { productId: 'product-456', quantity: 1 },
-          ],
-        }
-      );
+      const checkInventoryResponse = await inventoryClient.post('/inventory/check', {
+        items: [
+          { productId: 'product-123', quantity: 2 },
+          { productId: 'product-456', quantity: 1 },
+        ],
+      });
 
       expect(checkInventoryResponse.status).to.equal(200);
       expect(checkInventoryResponse.data.available).to.be.true;
@@ -210,9 +207,7 @@ describe('Microservices Integration Tests', () => {
 
       // Step 7: Verify notification was sent
       await sleep(500);
-      const notificationsResponse = await notificationClient.get(
-        `/notifications/order/${orderId}`
-      );
+      const notificationsResponse = await notificationClient.get(`/notifications/order/${orderId}`);
       expect(notificationsResponse.data).to.be.an('array');
       expect(notificationsResponse.data.length).to.be.greaterThan(0);
       expect(notificationsResponse.data[0].type).to.equal('order_confirmation');
@@ -278,12 +273,8 @@ describe('Microservices Integration Tests', () => {
       expect(inventoryResponse.data.status).to.equal('released');
 
       // Step 6: Verify failure notification was sent
-      const notificationsResponse = await notificationClient.get(
-        `/notifications/order/${orderId}`
-      );
-      const failureNotification = notificationsResponse.data.find(
-        (n) => n.type === 'order_failed'
-      );
+      const notificationsResponse = await notificationClient.get(`/notifications/order/${orderId}`);
+      const failureNotification = notificationsResponse.data.find(n => n.type === 'order_failed');
       expect(failureNotification).to.exist;
     });
   });
@@ -349,15 +340,11 @@ describe('Microservices Integration Tests', () => {
       );
 
       // Verify correlation ID propagated
-      expect(paymentResponse.headers['x-correlation-id']).to.equal(
-        correlationId
-      );
+      expect(paymentResponse.headers['x-correlation-id']).to.equal(correlationId);
 
       // Check logs contain correlation ID
       await sleep(500);
-      const logsResponse = await orderClient.get(
-        `/logs?correlationId=${correlationId}`
-      );
+      const logsResponse = await orderClient.get(`/logs?correlationId=${correlationId}`);
       expect(logsResponse.data.entries.length).to.be.greaterThan(0);
     });
 
@@ -381,7 +368,7 @@ describe('Microservices Integration Tests', () => {
       });
 
       // Verify order IDs are unique
-      const orderIds = responses.map((r) => r.data.orderId);
+      const orderIds = responses.map(r => r.data.orderId);
       const uniqueIds = new Set(orderIds);
       expect(uniqueIds.size).to.equal(5);
     });
@@ -398,8 +385,8 @@ describe('Microservices Integration Tests', () => {
       // Add retry interceptor
       let attemptCount = 0;
       retryClient.interceptors.response.use(
-        (response) => response,
-        async (error) => {
+        response => response,
+        async error => {
           const config = error.config;
           if (!config || !config.retry) {
             config.retry = { count: 0, maxRetries: 3 };
@@ -466,9 +453,7 @@ describe('Microservices Integration Tests', () => {
       // Trigger failures to open circuit
       for (let i = 0; i < failureThreshold; i++) {
         try {
-          await callWithCircuitBreaker(() =>
-            inventoryClient.get('/inventory/invalid-endpoint')
-          );
+          await callWithCircuitBreaker(() => inventoryClient.get('/inventory/invalid-endpoint'));
         } catch (error) {
           // Expected failure
         }
@@ -478,9 +463,7 @@ describe('Microservices Integration Tests', () => {
 
       // Next call should fail immediately due to open circuit
       try {
-        await callWithCircuitBreaker(() =>
-          inventoryClient.get('/inventory/check')
-        );
+        await callWithCircuitBreaker(() => inventoryClient.get('/inventory/check'));
         throw new Error('Should have failed with circuit open');
       } catch (error) {
         expect(error.message).to.include('Circuit breaker is OPEN');
@@ -515,9 +498,7 @@ describe('Microservices Integration Tests', () => {
 
       while (elapsed < maxWait) {
         const orderData = await orderClient.get(`/orders/${orderId}`);
-        const inventoryData = await inventoryClient.get(
-          `/inventory/order/${orderId}`
-        );
+        const inventoryData = await inventoryClient.get(`/inventory/order/${orderId}`);
         const paymentData = await paymentClient.get(`/payments/order/${orderId}`);
 
         if (

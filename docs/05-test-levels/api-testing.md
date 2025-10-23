@@ -1,10 +1,13 @@
 # API Testing
 
 ## Purpose
+
 Comprehensive guide to API testing—verifying the functionality, reliability, performance, and security of application programming interfaces at the protocol level.
 
 ## Overview
+
 API testing is:
+
 - Testing APIs directly without a UI
 - Validating request/response patterns
 - Ensuring data integrity and security
@@ -14,6 +17,7 @@ API testing is:
 ## What is API Testing?
 
 ### Definition
+
 API testing validates that APIs meet expectations for functionality, reliability, performance, and security by testing the application logic layer directly.
 
 ### Why API Testing Matters
@@ -120,15 +124,13 @@ describe('User API', () => {
       await db.createUser({ name: 'Jane Smith', email: 'jane@example.com' });
 
       // Act
-      const response = await request(app)
-        .get('/api/users')
-        .expect(200);
+      const response = await request(app).get('/api/users').expect(200);
 
       // Assert
       expect(response.body).toHaveLength(2);
       expect(response.body[0]).toMatchObject({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
     });
 
@@ -137,7 +139,7 @@ describe('User API', () => {
       for (let i = 1; i <= 15; i++) {
         await db.createUser({
           name: `User ${i}`,
-          email: `user${i}@example.com`
+          email: `user${i}@example.com`,
         });
       }
 
@@ -151,7 +153,7 @@ describe('User API', () => {
         page: 2,
         limit: 10,
         total: 15,
-        totalPages: 2
+        totalPages: 2,
       });
     });
 
@@ -159,10 +161,7 @@ describe('User API', () => {
       await db.createUser({ name: 'Admin User', role: 'admin' });
       await db.createUser({ name: 'Regular User', role: 'user' });
 
-      const response = await request(app)
-        .get('/api/users')
-        .query({ role: 'admin' })
-        .expect(200);
+      const response = await request(app).get('/api/users').query({ role: 'admin' }).expect(200);
 
       expect(response.body).toHaveLength(1);
       expect(response.body[0].role).toBe('admin');
@@ -173,34 +172,28 @@ describe('User API', () => {
     it('should return user by id', async () => {
       const user = await db.createUser({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
 
-      const response = await request(app)
-        .get(`/api/users/${user.id}`)
-        .expect(200);
+      const response = await request(app).get(`/api/users/${user.id}`).expect(200);
 
       expect(response.body).toMatchObject({
         id: user.id,
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
     });
 
     it('should return 404 for non-existent user', async () => {
-      const response = await request(app)
-        .get('/api/users/99999')
-        .expect(404);
+      const response = await request(app).get('/api/users/99999').expect(404);
 
       expect(response.body).toMatchObject({
-        error: 'User not found'
+        error: 'User not found',
       });
     });
 
     it('should return 400 for invalid id format', async () => {
-      const response = await request(app)
-        .get('/api/users/invalid-id')
-        .expect(400);
+      const response = await request(app).get('/api/users/invalid-id').expect(400);
 
       expect(response.body.error).toContain('Invalid user ID');
     });
@@ -212,7 +205,7 @@ describe('User API', () => {
         name: 'John Doe',
         email: 'john@example.com',
         password: 'SecurePass123!',
-        role: 'user'
+        role: 'user',
       };
 
       const response = await request(app)
@@ -226,7 +219,7 @@ describe('User API', () => {
         name: 'John Doe',
         email: 'john@example.com',
         role: 'user',
-        createdAt: expect.any(String)
+        createdAt: expect.any(String),
       });
       expect(response.body.password).toBeUndefined();
 
@@ -235,16 +228,13 @@ describe('User API', () => {
     });
 
     it('should validate required fields', async () => {
-      const response = await request(app)
-        .post('/api/users')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/api/users').send({}).expect(400);
 
       expect(response.body.errors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ field: 'name', message: expect.any(String) }),
           expect.objectContaining({ field: 'email', message: expect.any(String) }),
-          expect.objectContaining({ field: 'password', message: expect.any(String) })
+          expect.objectContaining({ field: 'password', message: expect.any(String) }),
         ])
       );
     });
@@ -255,14 +245,14 @@ describe('User API', () => {
         .send({
           name: 'John Doe',
           email: 'invalid-email',
-          password: 'SecurePass123!'
+          password: 'SecurePass123!',
         })
         .expect(400);
 
       expect(response.body.errors).toContainEqual(
         expect.objectContaining({
           field: 'email',
-          message: 'Invalid email format'
+          message: 'Invalid email format',
         })
       );
     });
@@ -271,15 +261,12 @@ describe('User API', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'SecurePass123!'
+        password: 'SecurePass123!',
       };
 
       await request(app).post('/api/users').send(userData).expect(201);
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/api/users').send(userData).expect(409);
 
       expect(response.body.error).toContain('Email already exists');
     });
@@ -290,14 +277,14 @@ describe('User API', () => {
         .send({
           name: 'John Doe',
           email: 'john@example.com',
-          password: 'weak'
+          password: 'weak',
         })
         .expect(400);
 
       expect(response.body.errors).toContainEqual(
         expect.objectContaining({
           field: 'password',
-          message: expect.stringContaining('Password must be')
+          message: expect.stringContaining('Password must be'),
         })
       );
     });
@@ -307,38 +294,32 @@ describe('User API', () => {
     it('should update user with valid data', async () => {
       const user = await db.createUser({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
 
       const updateData = {
         name: 'John Smith',
-        email: 'john.smith@example.com'
+        email: 'john.smith@example.com',
       };
 
-      const response = await request(app)
-        .put(`/api/users/${user.id}`)
-        .send(updateData)
-        .expect(200);
+      const response = await request(app).put(`/api/users/${user.id}`).send(updateData).expect(200);
 
       expect(response.body).toMatchObject({
         id: user.id,
         name: 'John Smith',
         email: 'john.smith@example.com',
-        updatedAt: expect.any(String)
+        updatedAt: expect.any(String),
       });
     });
 
     it('should return 404 for non-existent user', async () => {
-      await request(app)
-        .put('/api/users/99999')
-        .send({ name: 'John Smith' })
-        .expect(404);
+      await request(app).put('/api/users/99999').send({ name: 'John Smith' }).expect(404);
     });
 
     it('should validate update data', async () => {
       const user = await db.createUser({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
 
       const response = await request(app)
@@ -355,7 +336,7 @@ describe('User API', () => {
       const user = await db.createUser({
         name: 'John Doe',
         email: 'john@example.com',
-        role: 'user'
+        role: 'user',
       });
 
       const response = await request(app)
@@ -367,7 +348,7 @@ describe('User API', () => {
         id: user.id,
         name: 'John Smith',
         email: 'john@example.com', // Unchanged
-        role: 'user' // Unchanged
+        role: 'user', // Unchanged
       });
     });
   });
@@ -376,32 +357,24 @@ describe('User API', () => {
     it('should delete existing user', async () => {
       const user = await db.createUser({
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       });
 
-      await request(app)
-        .delete(`/api/users/${user.id}`)
-        .expect(204);
+      await request(app).delete(`/api/users/${user.id}`).expect(204);
 
       // Verify user is deleted
-      const verifyResponse = await request(app)
-        .get(`/api/users/${user.id}`)
-        .expect(404);
+      const verifyResponse = await request(app).get(`/api/users/${user.id}`).expect(404);
     });
 
     it('should return 404 for non-existent user', async () => {
-      await request(app)
-        .delete('/api/users/99999')
-        .expect(404);
+      await request(app).delete('/api/users/99999').expect(404);
     });
 
     it('should handle cascade deletions', async () => {
       const user = await db.createUser({ name: 'John Doe' });
       await db.createOrder({ userId: user.id, total: 100 });
 
-      await request(app)
-        .delete(`/api/users/${user.id}`)
-        .expect(204);
+      await request(app).delete(`/api/users/${user.id}`).expect(204);
 
       // Verify related orders are also deleted
       const orders = await db.getOrdersByUserId(user.id);
@@ -421,9 +394,7 @@ const app = require('../../src/app');
 describe('Advanced Response Validation', () => {
   describe('Response Structure Validation', () => {
     it('should validate response schema', async () => {
-      const response = await request(app)
-        .get('/api/users/1')
-        .expect(200);
+      const response = await request(app).get('/api/users/1').expect(200);
 
       // Validate exact structure
       expect(response.body).toEqual(
@@ -433,7 +404,7 @@ describe('Advanced Response Validation', () => {
           email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
           role: expect.stringMatching(/^(admin|user|guest)$/),
           createdAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
-          updatedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+          updatedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
         })
       );
 
@@ -444,9 +415,7 @@ describe('Advanced Response Validation', () => {
     });
 
     it('should validate nested objects', async () => {
-      const response = await request(app)
-        .get('/api/users/1')
-        .expect(200);
+      const response = await request(app).get('/api/users/1').expect(200);
 
       expect(response.body).toMatchObject({
         id: expect.any(Number),
@@ -457,16 +426,14 @@ describe('Advanced Response Validation', () => {
           address: {
             street: expect.any(String),
             city: expect.any(String),
-            zipCode: expect.stringMatching(/^\d{5}(-\d{4})?$/)
-          }
-        }
+            zipCode: expect.stringMatching(/^\d{5}(-\d{4})?$/),
+          },
+        },
       });
     });
 
     it('should validate array responses', async () => {
-      const response = await request(app)
-        .get('/api/users')
-        .expect(200);
+      const response = await request(app).get('/api/users').expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
 
@@ -474,7 +441,7 @@ describe('Advanced Response Validation', () => {
         expect(user).toMatchObject({
           id: expect.any(Number),
           name: expect.any(String),
-          email: expect.any(String)
+          email: expect.any(String),
         });
       });
     });
@@ -482,9 +449,7 @@ describe('Advanced Response Validation', () => {
 
   describe('Header Validation', () => {
     it('should validate response headers', async () => {
-      const response = await request(app)
-        .get('/api/users')
-        .expect(200);
+      const response = await request(app).get('/api/users').expect(200);
 
       expect(response.headers['content-type']).toMatch(/application\/json/);
       expect(response.headers['cache-control']).toBeDefined();
@@ -525,10 +490,7 @@ describe('Advanced Response Validation', () => {
 
   describe('Error Response Validation', () => {
     it('should return consistent error format', async () => {
-      const response = await request(app)
-        .post('/api/users')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/api/users').send({}).expect(400);
 
       expect(response.body).toMatchObject({
         error: expect.any(String),
@@ -539,9 +501,9 @@ describe('Advanced Response Validation', () => {
         errors: expect.arrayContaining([
           expect.objectContaining({
             field: expect.any(String),
-            message: expect.any(String)
-          })
-        ])
+            message: expect.any(String),
+          }),
+        ]),
       });
     });
   });
@@ -815,7 +777,7 @@ describe('Authentication Tests', () => {
     user = await db.createUser({
       email: 'user@example.com',
       password: 'SecurePass123!',
-      role: 'user'
+      role: 'user',
     });
     authToken = generateToken(user);
   });
@@ -826,7 +788,7 @@ describe('Authentication Tests', () => {
         .post('/api/auth/login')
         .send({
           email: 'user@example.com',
-          password: 'SecurePass123!'
+          password: 'SecurePass123!',
         })
         .expect(200);
 
@@ -835,8 +797,8 @@ describe('Authentication Tests', () => {
         user: {
           id: user.id,
           email: 'user@example.com',
-          role: 'user'
-        }
+          role: 'user',
+        },
       });
 
       // Validate JWT token structure
@@ -849,12 +811,12 @@ describe('Authentication Tests', () => {
         .post('/api/auth/login')
         .send({
           email: 'user@example.com',
-          password: 'WrongPassword'
+          password: 'WrongPassword',
         })
         .expect(401);
 
       expect(response.body).toMatchObject({
-        error: 'Invalid credentials'
+        error: 'Invalid credentials',
       });
     });
 
@@ -865,7 +827,7 @@ describe('Authentication Tests', () => {
           .post('/api/auth/login')
           .send({
             email: 'user@example.com',
-            password: 'WrongPassword'
+            password: 'WrongPassword',
           })
           .expect(401);
       }
@@ -875,7 +837,7 @@ describe('Authentication Tests', () => {
         .post('/api/auth/login')
         .send({
           email: 'user@example.com',
-          password: 'SecurePass123!'
+          password: 'SecurePass123!',
         })
         .expect(423);
 
@@ -885,9 +847,7 @@ describe('Authentication Tests', () => {
 
   describe('Protected Endpoints', () => {
     it('should reject requests without token', async () => {
-      const response = await request(app)
-        .get('/api/profile')
-        .expect(401);
+      const response = await request(app).get('/api/profile').expect(401);
 
       expect(response.body.error).toContain('No token provided');
     });
@@ -920,7 +880,7 @@ describe('Authentication Tests', () => {
 
       expect(response.body).toMatchObject({
         id: user.id,
-        email: user.email
+        email: user.email,
       });
     });
   });
@@ -929,7 +889,7 @@ describe('Authentication Tests', () => {
     it('should allow admin access to admin endpoints', async () => {
       const admin = await db.createUser({
         email: 'admin@example.com',
-        role: 'admin'
+        role: 'admin',
       });
       const adminToken = generateToken(admin);
 
@@ -978,7 +938,7 @@ describe('Authentication Tests', () => {
 
       expect(response.body).toMatchObject({
         token: expect.any(String),
-        refreshToken: expect.any(String)
+        refreshToken: expect.any(String),
       });
     });
 
@@ -994,10 +954,7 @@ describe('Authentication Tests', () => {
     it('should authenticate with valid API key', async () => {
       const apiKey = await db.createApiKey(user.id);
 
-      const response = await request(app)
-        .get('/api/data')
-        .set('X-API-Key', apiKey.key)
-        .expect(200);
+      const response = await request(app).get('/api/data').set('X-API-Key', apiKey.key).expect(200);
 
       expect(response.body).toBeDefined();
     });
@@ -1016,17 +973,11 @@ describe('Authentication Tests', () => {
 
       // Make 5 successful requests
       for (let i = 0; i < 5; i++) {
-        await request(app)
-          .get('/api/data')
-          .set('X-API-Key', apiKey.key)
-          .expect(200);
+        await request(app).get('/api/data').set('X-API-Key', apiKey.key).expect(200);
       }
 
       // 6th request should be rate limited
-      const response = await request(app)
-        .get('/api/data')
-        .set('X-API-Key', apiKey.key)
-        .expect(429);
+      const response = await request(app).get('/api/data').set('X-API-Key', apiKey.key).expect(429);
 
       expect(response.body.error).toContain('Rate limit exceeded');
     });
@@ -1054,7 +1005,7 @@ describe('OAuth 2.0 Flow', () => {
           redirect_uri: 'http://localhost:3000/callback',
           response_type: 'code',
           scope: 'read write',
-          state: 'random-state-string'
+          state: 'random-state-string',
         })
         .expect(302);
 
@@ -1065,7 +1016,7 @@ describe('OAuth 2.0 Flow', () => {
       authorizationCode = await db.createAuthorizationCode({
         clientId: 'test-client',
         userId: 1,
-        scope: 'read write'
+        scope: 'read write',
       });
 
       const response = await request(app)
@@ -1075,7 +1026,7 @@ describe('OAuth 2.0 Flow', () => {
           code: authorizationCode.code,
           client_id: 'test-client',
           client_secret: 'test-secret',
-          redirect_uri: 'http://localhost:3000/callback'
+          redirect_uri: 'http://localhost:3000/callback',
         })
         .expect(200);
 
@@ -1084,7 +1035,7 @@ describe('OAuth 2.0 Flow', () => {
         token_type: 'Bearer',
         expires_in: 3600,
         refresh_token: expect.any(String),
-        scope: 'read write'
+        scope: 'read write',
       });
 
       accessToken = response.body.access_token;
@@ -1106,14 +1057,14 @@ describe('OAuth 2.0 Flow', () => {
           grant_type: 'client_credentials',
           client_id: 'test-client',
           client_secret: 'test-secret',
-          scope: 'read'
+          scope: 'read',
         })
         .expect(200);
 
       expect(response.body).toMatchObject({
         access_token: expect.any(String),
         token_type: 'Bearer',
-        expires_in: 3600
+        expires_in: 3600,
       });
     });
   });
@@ -1150,7 +1101,7 @@ describe('GraphQL API Tests', () => {
         .post('/graphql')
         .send({
           query,
-          variables: { id: '1' }
+          variables: { id: '1' },
         })
         .expect(200);
 
@@ -1161,9 +1112,9 @@ describe('GraphQL API Tests', () => {
         posts: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
-            title: expect.any(String)
-          })
-        ])
+            title: expect.any(String),
+          }),
+        ]),
       });
     });
 
@@ -1192,7 +1143,7 @@ describe('GraphQL API Tests', () => {
         .post('/graphql')
         .send({
           query,
-          variables: { limit: 10, offset: 0 }
+          variables: { limit: 10, offset: 0 },
         })
         .expect(200);
 
@@ -1201,8 +1152,8 @@ describe('GraphQL API Tests', () => {
         pageInfo: {
           hasNextPage: expect.any(Boolean),
           hasPreviousPage: expect.any(Boolean),
-          totalCount: expect.any(Number)
-        }
+          totalCount: expect.any(Number),
+        },
       });
     });
 
@@ -1223,7 +1174,7 @@ describe('GraphQL API Tests', () => {
 
       expect(response.body.errors).toBeDefined();
       expect(response.body.errors[0]).toMatchObject({
-        message: expect.stringContaining('invalidField')
+        message: expect.stringContaining('invalidField'),
       });
     });
   });
@@ -1254,9 +1205,9 @@ describe('GraphQL API Tests', () => {
             input: {
               name: 'John Doe',
               email: 'john@example.com',
-              password: 'SecurePass123!'
-            }
-          }
+              password: 'SecurePass123!',
+            },
+          },
         })
         .expect(200);
 
@@ -1264,9 +1215,9 @@ describe('GraphQL API Tests', () => {
         user: {
           id: expect.any(String),
           name: 'John Doe',
-          email: 'john@example.com'
+          email: 'john@example.com',
         },
-        errors: null
+        errors: null,
       });
     });
 
@@ -1292,16 +1243,16 @@ describe('GraphQL API Tests', () => {
           variables: {
             input: {
               name: '',
-              email: 'invalid-email'
-            }
-          }
+              email: 'invalid-email',
+            },
+          },
         })
         .expect(200);
 
       expect(response.body.data.createUser.errors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ field: 'name' }),
-          expect.objectContaining({ field: 'email' })
+          expect.objectContaining({ field: 'email' }),
         ])
       );
     });
@@ -1326,9 +1277,9 @@ describe('GraphQL API Tests', () => {
           variables: {
             id: '1',
             input: {
-              name: 'John Smith'
-            }
-          }
+              name: 'John Smith',
+            },
+          },
         })
         .expect(200);
 
@@ -1349,19 +1300,19 @@ describe('GraphQL API Tests', () => {
         .post('/graphql')
         .send({
           query: mutation,
-          variables: { id: '1' }
+          variables: { id: '1' },
         })
         .expect(200);
 
       expect(response.body.data.deleteUser).toMatchObject({
         success: true,
-        message: expect.any(String)
+        message: expect.any(String),
       });
     });
   });
 
   describe('Subscriptions', () => {
-    it('should subscribe to user updates', (done) => {
+    it('should subscribe to user updates', done => {
       const subscription = `
         subscription OnUserUpdated($userId: ID!) {
           userUpdated(userId: $userId) {
@@ -1374,24 +1325,27 @@ describe('GraphQL API Tests', () => {
 
       const client = createSubscriptionClient();
 
-      client.subscribe({
-        query: subscription,
-        variables: { userId: '1' }
-      }, (error, result) => {
-        if (error) {
-          done(error);
-          return;
+      client.subscribe(
+        {
+          query: subscription,
+          variables: { userId: '1' },
+        },
+        (error, result) => {
+          if (error) {
+            done(error);
+            return;
+          }
+
+          expect(result.data.userUpdated).toMatchObject({
+            id: '1',
+            name: expect.any(String),
+            email: expect.any(String),
+          });
+
+          client.close();
+          done();
         }
-
-        expect(result.data.userUpdated).toMatchObject({
-          id: '1',
-          name: expect.any(String),
-          email: expect.any(String)
-        });
-
-        client.close();
-        done();
-      });
+      );
 
       // Trigger update
       setTimeout(() => {
@@ -1411,10 +1365,7 @@ describe('GraphQL API Tests', () => {
         }
       `;
 
-      const response = await request(app)
-        .post('/graphql')
-        .send({ query })
-        .expect(200);
+      const response = await request(app).post('/graphql').send({ query }).expect(200);
 
       expect(response.body.errors).toBeDefined();
       expect(response.body.errors[0].message).toContain('Not authenticated');
@@ -1457,7 +1408,7 @@ describe('User Service Consumer Contract', () => {
   const provider = new PactV3({
     consumer: 'UserWebApp',
     provider: 'UserAPI',
-    dir: './pacts'
+    dir: './pacts',
   });
 
   describe('GET /api/users/:id', () => {
@@ -1470,23 +1421,23 @@ describe('User Service Consumer Contract', () => {
           path: '/api/users/1',
           headers: {
             Accept: 'application/json',
-            Authorization: like('Bearer token123')
-          }
+            Authorization: like('Bearer token123'),
+          },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             id: 1,
             name: like('John Doe'),
             email: regex('\\w+@\\w+\\.\\w+', 'john@example.com'),
             role: regex('(admin|user|guest)', 'user'),
-            createdAt: regex('\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}', '2024-01-01T00:00:00')
-          }
+            createdAt: regex('\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}', '2024-01-01T00:00:00'),
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const userService = new UserService(mockServer.url);
           const user = await userService.getUserById(1, 'token123');
 
@@ -1494,7 +1445,7 @@ describe('User Service Consumer Contract', () => {
             id: 1,
             name: expect.any(String),
             email: expect.stringMatching(/\w+@\w+\.\w+/),
-            role: expect.stringMatching(/(admin|user|guest)/)
+            role: expect.stringMatching(/(admin|user|guest)/),
           });
         });
     });
@@ -1505,24 +1456,22 @@ describe('User Service Consumer Contract', () => {
         .uponReceiving('a request for user 999')
         .withRequest({
           method: 'GET',
-          path: '/api/users/999'
+          path: '/api/users/999',
         })
         .willRespondWith({
           status: 404,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             error: like('User not found'),
-            statusCode: 404
-          }
+            statusCode: 404,
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const userService = new UserService(mockServer.url);
 
-          await expect(userService.getUserById(999))
-            .rejects
-            .toThrow('User not found');
+          await expect(userService.getUserById(999)).rejects.toThrow('User not found');
         });
     });
   });
@@ -1537,29 +1486,32 @@ describe('User Service Consumer Contract', () => {
           path: '/api/users',
           query: {
             page: '1',
-            limit: '10'
-          }
+            limit: '10',
+          },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
-            data: eachLike({
-              id: like(1),
-              name: like('John Doe'),
-              email: regex('\\w+@\\w+\\.\\w+', 'john@example.com')
-            }, { min: 1 }),
+            data: eachLike(
+              {
+                id: like(1),
+                name: like('John Doe'),
+                email: regex('\\w+@\\w+\\.\\w+', 'john@example.com'),
+              },
+              { min: 1 }
+            ),
             pagination: {
               page: 1,
               limit: 10,
               total: like(20),
-              totalPages: like(2)
-            }
-          }
+              totalPages: like(2),
+            },
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const userService = new UserService(mockServer.url);
           const result = await userService.getUsers({ page: 1, limit: 10 });
 
@@ -1578,34 +1530,34 @@ describe('User Service Consumer Contract', () => {
           method: 'POST',
           path: '/api/users',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: {
             name: 'John Doe',
             email: 'john@example.com',
-            password: 'SecurePass123!'
-          }
+            password: 'SecurePass123!',
+          },
         })
         .willRespondWith({
           status: 201,
           headers: {
             'Content-Type': 'application/json',
-            Location: regex('/api/users/\\d+', '/api/users/1')
+            Location: regex('/api/users/\\d+', '/api/users/1'),
           },
           body: {
             id: like(1),
             name: 'John Doe',
             email: 'john@example.com',
             role: 'user',
-            createdAt: regex('\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}', '2024-01-01T00:00:00')
-          }
+            createdAt: regex('\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}', '2024-01-01T00:00:00'),
+          },
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const userService = new UserService(mockServer.url);
           const user = await userService.createUser({
             name: 'John Doe',
             email: 'john@example.com',
-            password: 'SecurePass123!'
+            password: 'SecurePass123!',
           });
 
           expect(user.id).toBeDefined();
@@ -1658,7 +1610,7 @@ describe('User API Provider Verification', () => {
             id: 1,
             name: 'John Doe',
             email: 'john@example.com',
-            role: 'user'
+            role: 'user',
           });
         },
         'user 999 does not exist': async () => {
@@ -1670,13 +1622,13 @@ describe('User API Provider Verification', () => {
             await db.createUser({
               id: i,
               name: `User ${i}`,
-              email: `user${i}@example.com`
+              email: `user${i}@example.com`,
             });
           }
         },
         'no users exist with email john@example.com': async () => {
           await db.clearUsers();
-        }
+        },
       },
 
       // Request filters
@@ -1684,7 +1636,7 @@ describe('User API Provider Verification', () => {
         // Add auth header if needed
         req.headers['Authorization'] = 'Bearer test-token';
         next();
-      }
+      },
     };
 
     const verifier = new Verifier(opts);
@@ -1709,13 +1661,13 @@ const userCreationTime = new Trend('user_creation_time');
 
 export const options = {
   stages: [
-    { duration: '30s', target: 20 },  // Ramp up to 20 users
-    { duration: '1m', target: 20 },   // Stay at 20 users
-    { duration: '30s', target: 0 },   // Ramp down to 0 users
+    { duration: '30s', target: 20 }, // Ramp up to 20 users
+    { duration: '1m', target: 20 }, // Stay at 20 users
+    { duration: '30s', target: 0 }, // Ramp down to 0 users
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests must complete below 500ms
-    errors: ['rate<0.1'],              // Error rate must be below 10%
+    errors: ['rate<0.1'], // Error rate must be below 10%
   },
 };
 
@@ -1725,8 +1677,8 @@ export default function () {
   // Test GET /api/users
   let response = http.get(`${BASE_URL}/users`);
   check(response, {
-    'get users status is 200': (r) => r.status === 200,
-    'get users response time < 200ms': (r) => r.timings.duration < 200,
+    'get users status is 200': r => r.status === 200,
+    'get users response time < 200ms': r => r.timings.duration < 200,
   });
   errorRate.add(response.status !== 200);
 
@@ -1747,8 +1699,8 @@ export default function () {
 
   response = http.post(`${BASE_URL}/users`, payload, params);
   const creationSuccess = check(response, {
-    'create user status is 201': (r) => r.status === 201,
-    'user has id': (r) => r.json('id') !== undefined,
+    'create user status is 201': r => r.status === 201,
+    'user has id': r => r.json('id') !== undefined,
   });
 
   if (creationSuccess) {
@@ -1763,7 +1715,7 @@ export default function () {
     const userId = response.json('id');
     response = http.get(`${BASE_URL}/users/${userId}`);
     check(response, {
-      'get user by id status is 200': (r) => r.status === 200,
+      'get user by id status is 200': r => r.status === 200,
     });
     errorRate.add(response.status !== 200);
   }
@@ -1784,72 +1736,72 @@ export function handleSummary(data) {
 ```yaml
 # artillery-config.yml
 config:
-  target: "http://localhost:3000"
+  target: 'http://localhost:3000'
   phases:
     - duration: 60
       arrivalRate: 10
-      name: "Warm up"
+      name: 'Warm up'
     - duration: 120
       arrivalRate: 50
-      name: "Sustained load"
+      name: 'Sustained load'
     - duration: 60
       arrivalRate: 100
-      name: "Peak load"
+      name: 'Peak load'
   plugins:
     expect: {}
   variables:
-    baseUrl: "/api"
+    baseUrl: '/api'
 
 scenarios:
-  - name: "User CRUD Operations"
+  - name: 'User CRUD Operations'
     flow:
       - get:
-          url: "{{ baseUrl }}/users"
+          url: '{{ baseUrl }}/users'
           expect:
             - statusCode: 200
             - contentType: json
             - hasProperty: length
 
       - post:
-          url: "{{ baseUrl }}/users"
+          url: '{{ baseUrl }}/users'
           json:
-            name: "{{ $randomString() }}"
-            email: "{{ $randomString() }}@example.com"
-            password: "SecurePass123!"
+            name: '{{ $randomString() }}'
+            email: '{{ $randomString() }}@example.com'
+            password: 'SecurePass123!'
           capture:
-            - json: "$.id"
-              as: "userId"
+            - json: '$.id'
+              as: 'userId'
           expect:
             - statusCode: 201
             - hasProperty: id
 
       - get:
-          url: "{{ baseUrl }}/users/{{ userId }}"
+          url: '{{ baseUrl }}/users/{{ userId }}'
           expect:
             - statusCode: 200
             - hasProperty: id
 
       - put:
-          url: "{{ baseUrl }}/users/{{ userId }}"
+          url: '{{ baseUrl }}/users/{{ userId }}'
           json:
-            name: "Updated {{ $randomString() }}"
+            name: 'Updated {{ $randomString() }}'
           expect:
             - statusCode: 200
 
       - delete:
-          url: "{{ baseUrl }}/users/{{ userId }}"
+          url: '{{ baseUrl }}/users/{{ userId }}'
           expect:
             - statusCode: 204
 
-  - name: "Search and Filter"
+  - name: 'Search and Filter'
     flow:
       - get:
-          url: "{{ baseUrl }}/users?role=admin"
+          url: '{{ baseUrl }}/users?role=admin'
           expect:
             - statusCode: 200
 
       - get:
-          url: "{{ baseUrl }}/users?page=1&limit=10"
+          url: '{{ baseUrl }}/users?page=1&limit=10'
           expect:
             - statusCode: 200
             - hasProperty: pagination
@@ -1871,7 +1823,7 @@ class TestDataBuilder {
       name: 'Test User',
       email: `test${Date.now()}@example.com`,
       password: 'SecurePass123!',
-      role: 'user'
+      role: 'user',
     };
     return this;
   }
@@ -1902,10 +1854,7 @@ class TestDataBuilder {
 }
 
 // Usage
-const userData = new TestDataBuilder()
-  .withName('John Doe')
-  .asAdmin()
-  .build();
+const userData = new TestDataBuilder().withName('John Doe').asAdmin().build();
 ```
 
 ### 2. Response Assertions Helper
@@ -1947,7 +1896,7 @@ class ApiAssertions {
       page: expect.any(Number),
       limit: expect.any(Number),
       total: expect.any(Number),
-      totalPages: expect.any(Number)
+      totalPages: expect.any(Number),
     });
 
     if (expectedFields && response.body.data.length > 0) {
@@ -1999,23 +1948,23 @@ describe('POST /api/users', () => {
 module.exports = {
   api: {
     baseUrl: process.env.TEST_API_URL || 'http://localhost:3000',
-    timeout: 5000
+    timeout: 5000,
   },
   database: {
     host: process.env.TEST_DB_HOST || 'localhost',
     port: process.env.TEST_DB_PORT || 5432,
-    database: 'test_db'
+    database: 'test_db',
   },
   auth: {
     testUser: {
       email: 'test@example.com',
-      password: 'TestPass123!'
+      password: 'TestPass123!',
     },
     testAdmin: {
       email: 'admin@example.com',
-      password: 'AdminPass123!'
-    }
-  }
+      password: 'AdminPass123!',
+    },
+  },
 };
 ```
 
@@ -2026,12 +1975,10 @@ module.exports = {
 ```javascript
 // BAD: Hardcoded, can cause conflicts
 it('should create user', async () => {
-  const response = await request(app)
-    .post('/api/users')
-    .send({
-      email: 'john@example.com', // Will fail if run multiple times
-      name: 'John Doe'
-    });
+  const response = await request(app).post('/api/users').send({
+    email: 'john@example.com', // Will fail if run multiple times
+    name: 'John Doe',
+  });
 });
 
 // GOOD: Dynamic test data
@@ -2040,7 +1987,7 @@ it('should create user', async () => {
     .post('/api/users')
     .send({
       email: `test${Date.now()}@example.com`,
-      name: 'John Doe'
+      name: 'John Doe',
     });
 });
 ```
@@ -2056,9 +2003,7 @@ it('should use bcrypt for password hashing', async () => {
 
 // GOOD: Testing behavior
 it('should not return password in response', async () => {
-  const response = await request(app)
-    .post('/api/users')
-    .send(userData);
+  const response = await request(app).post('/api/users').send(userData);
 
   expect(response.body.password).toBeUndefined();
 });
@@ -2240,6 +2185,7 @@ jobs:
 ### API Testing Implementation Checklist
 
 **Functional Testing:**
+
 - [ ] Test all CRUD operations
 - [ ] Validate request/response schemas
 - [ ] Test all status codes (2xx, 4xx, 5xx)
@@ -2250,6 +2196,7 @@ jobs:
 - [ ] Verify search functionality
 
 **Authentication & Authorization:**
+
 - [ ] Test authentication flows
 - [ ] Verify token validation
 - [ ] Test token expiration
@@ -2260,6 +2207,7 @@ jobs:
 - [ ] Validate rate limiting
 
 **Contract Testing:**
+
 - [ ] Define consumer contracts
 - [ ] Implement provider verification
 - [ ] Publish contracts to broker
@@ -2267,6 +2215,7 @@ jobs:
 - [ ] Test backward compatibility
 
 **Performance Testing:**
+
 - [ ] Test response times
 - [ ] Measure throughput
 - [ ] Test concurrent users
@@ -2276,6 +2225,7 @@ jobs:
 - [ ] Monitor resource usage
 
 **Security Testing:**
+
 - [ ] Test input validation
 - [ ] Verify SQL injection prevention
 - [ ] Test XSS prevention
@@ -2286,6 +2236,7 @@ jobs:
 - [ ] Validate CORS configuration
 
 **Best Practices:**
+
 - [ ] Use test data builders
 - [ ] Implement proper cleanup
 - [ ] Use environment variables
@@ -2298,6 +2249,7 @@ jobs:
 ## References
 
 ### Standards and Guidelines
+
 - **ISO/IEC/IEEE 29119** - Software Testing Standards
 - **ISTQB API Testing** - API Testing Certification
 - **OpenAPI Specification** - API Documentation Standard
@@ -2305,6 +2257,7 @@ jobs:
 - **OAuth 2.0 RFC 6749** - Authorization Framework
 
 ### Tools and Frameworks
+
 - **Supertest** - HTTP assertion library for Node.js
 - **REST Assured** - Java DSL for REST API testing
 - **Postman/Newman** - API development and testing platform
@@ -2313,6 +2266,7 @@ jobs:
 - **Artillery** - Load testing toolkit
 
 ### Books and Resources
+
 - "Testing Web APIs" - Mark Winteringham
 - "REST API Design Rulebook" - Mark Massé
 - "GraphQL in Action" - Samer Buna
@@ -2328,4 +2282,4 @@ jobs:
 
 ---
 
-*Part of: [Test Levels](05-README.md)*
+_Part of: [Test Levels](05-README.md)_

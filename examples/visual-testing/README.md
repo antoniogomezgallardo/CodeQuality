@@ -7,6 +7,7 @@ Visual testing (also known as visual regression testing) is a quality assurance 
 ## Why Visual Testing?
 
 Visual testing helps detect:
+
 - **UI Regressions**: Unintended layout changes, CSS bugs, or styling issues
 - **Cross-browser Issues**: Rendering differences across browsers
 - **Responsive Design Problems**: Layout issues at different viewport sizes
@@ -17,9 +18,11 @@ Visual testing helps detect:
 ## Tools Covered
 
 ### 1. Percy.io
+
 Percy is a cloud-based visual testing platform that integrates with CI/CD pipelines.
 
 **Strengths:**
+
 - Automated cross-browser testing
 - Intelligent diff algorithms
 - Parallel test execution
@@ -27,14 +30,17 @@ Percy is a cloud-based visual testing platform that integrates with CI/CD pipeli
 - Team collaboration features
 
 **Use Cases:**
+
 - Full application visual testing
 - Component library testing
 - Responsive design validation
 
 ### 2. Chromatic (Storybook)
+
 Chromatic is a visual testing service specifically designed for Storybook components.
 
 **Strengths:**
+
 - Deep Storybook integration
 - Component-level testing
 - Interaction testing with play functions
@@ -42,14 +48,17 @@ Chromatic is a visual testing service specifically designed for Storybook compon
 - Component history tracking
 
 **Use Cases:**
+
 - Design system validation
 - Component library testing
 - UI component documentation
 
 ### 3. BackstopJS
+
 BackstopJS is an open-source visual regression testing framework.
 
 **Strengths:**
+
 - Self-hosted solution
 - No cloud dependencies
 - Highly configurable
@@ -57,14 +66,17 @@ BackstopJS is an open-source visual regression testing framework.
 - Docker support
 
 **Use Cases:**
+
 - Privacy-sensitive projects
 - Custom workflow requirements
 - Budget-conscious teams
 
 ### 4. Playwright Visual Comparison
+
 Playwright's built-in visual testing capabilities using screenshot comparison.
 
 **Strengths:**
+
 - No additional dependencies
 - Fast local testing
 - Integrated with existing test suite
@@ -72,6 +84,7 @@ Playwright's built-in visual testing capabilities using screenshot comparison.
 - Cross-browser support
 
 **Use Cases:**
+
 - Teams already using Playwright
 - Simple visual regression needs
 - E2E tests with visual validation
@@ -227,6 +240,7 @@ npm run test:visual -- --update-snapshots
 Dynamic content (timestamps, ads, random data) can cause false positives.
 
 **Strategies:**
+
 - Hide dynamic elements using CSS
 - Mock APIs to return consistent data
 - Use visual-helpers.js utilities
@@ -234,11 +248,7 @@ Dynamic content (timestamps, ads, random data) can cause false positives.
 
 ```javascript
 // Example: Hiding dynamic content
-await hideDynamicContent(page, [
-  '.timestamp',
-  '.advertisement',
-  '.random-banner'
-]);
+await hideDynamicContent(page, ['.timestamp', '.advertisement', '.random-banner']);
 ```
 
 ### 3. Viewport Configuration
@@ -246,6 +256,7 @@ await hideDynamicContent(page, [
 Test at multiple viewport sizes to catch responsive design issues.
 
 **Recommended Viewports:**
+
 - **Mobile**: 375x667 (iPhone SE)
 - **Tablet**: 768x1024 (iPad)
 - **Desktop**: 1920x1080 (HD Desktop)
@@ -264,6 +275,7 @@ const viewports = [
 Animations can cause flickering in visual tests.
 
 **Strategies:**
+
 - Disable animations globally in test mode
 - Wait for animations to complete
 - Use CSS to disable transitions
@@ -286,6 +298,7 @@ await page.addStyleTag({
 Different browsers render content slightly differently.
 
 **Best Practices:**
+
 - Test on all target browsers (Chrome, Firefox, Safari, Edge)
 - Use cloud services (Percy, BrowserStack) for consistent environments
 - Set appropriate pixel diff thresholds
@@ -310,6 +323,7 @@ npm run test:visual -- --workers=4
 Set appropriate pixel difference thresholds to avoid false positives.
 
 **Guidelines:**
+
 - **Strict (0-0.01%)**: Critical brand pages, legal content
 - **Moderate (0.01-0.1%)**: Standard application pages
 - **Lenient (0.1-1%)**: Dynamic content areas
@@ -317,8 +331,8 @@ Set appropriate pixel difference thresholds to avoid false positives.
 ```javascript
 // Playwright threshold example
 await expect(page).toHaveScreenshot({
-  maxDiffPixels: 100,        // Allow up to 100 pixels difference
-  maxDiffPixelRatio: 0.01,   // Allow 1% difference
+  maxDiffPixels: 100, // Allow up to 100 pixels difference
+  maxDiffPixelRatio: 0.01 // Allow 1% difference
 });
 ```
 
@@ -423,6 +437,7 @@ examples/visual-testing/
 **Symptoms**: Tests pass/fail inconsistently
 
 **Solutions:**
+
 - Wait for fonts to load before capturing
 - Disable animations
 - Wait for images to load
@@ -434,6 +449,7 @@ examples/visual-testing/
 **Symptoms**: Text appears slightly different across runs
 
 **Solutions:**
+
 - Use web-safe fonts in tests
 - Wait for custom fonts to load
 - Use font loading utilities
@@ -449,6 +465,7 @@ await waitForFontsLoaded(page);
 **Symptoms**: Slow test execution, large repository size
 
 **Solutions:**
+
 - Use cloud services (Percy, Chromatic)
 - Compress images
 - Use Git LFS for large files
@@ -459,6 +476,7 @@ await waitForFontsLoaded(page);
 **Symptoms**: Colors appear slightly different
 
 **Solutions:**
+
 - Use consistent color profiles in CI
 - Disable color profile embedding
 - Use sRGB color space
@@ -467,17 +485,20 @@ await waitForFontsLoaded(page);
 ## Resources
 
 ### Documentation
+
 - [Percy Documentation](https://docs.percy.io/)
 - [Chromatic Documentation](https://www.chromatic.com/docs/)
 - [BackstopJS GitHub](https://github.com/garris/BackstopJS)
 - [Playwright Visual Comparisons](https://playwright.dev/docs/test-snapshots)
 
 ### Related Standards
+
 - **WCAG 2.1**: Web Content Accessibility Guidelines
 - **ISO 25010**: Software Quality Characteristics
 - **IEEE 829**: Test Documentation Standard
 
 ### Additional Reading
+
 - [Visual Regression Testing Best Practices](https://percy.io/blog/visual-testing-best-practices)
 - [Storybook Visual Testing](https://storybook.js.org/docs/react/writing-tests/visual-testing)
 - [Cross-Browser Testing Strategies](https://web.dev/cross-browser-testing/)
@@ -496,6 +517,7 @@ When adding new visual test examples:
 ## Support
 
 For issues or questions:
+
 - Review this README and inline code comments
 - Check tool-specific documentation
 - Review GitHub issues for known problems

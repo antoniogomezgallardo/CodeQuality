@@ -40,6 +40,7 @@ Estimates improve as understanding increases through conversation and discovery.
 
 ```markdown
 **Steps:**
+
 1. Product Owner presents a user story
 2. Team asks clarifying questions
 3. Each team member privately selects an estimate card
@@ -50,6 +51,7 @@ Estimates improve as understanding increases through conversation and discovery.
 **Cards:** 0, 1, 2, 3, 5, 8, 13, 20, 40, 100, ?, ☕
 
 **Scale Meaning:**
+
 - 1-2: Trivial, very well understood
 - 3-5: Small, straightforward
 - 8: Moderate complexity
@@ -98,6 +100,7 @@ All: 5
 ```
 
 **Tools:**
+
 - Physical cards
 - PlanITPoker.com
 - Scrum Poker apps
@@ -113,6 +116,7 @@ All: 5
 
 ```markdown
 **Size Definitions:**
+
 - **XS:** < 1 day, trivial change
 - **S:** 1-2 days, straightforward
 - **M:** 2-4 days, moderate complexity
@@ -121,6 +125,7 @@ All: 5
 - **XXL:** Epic, must be broken down
 
 **Conversion to Story Points (Example):**
+
 - XS = 1 point
 - S = 2-3 points
 - M = 5 points
@@ -142,6 +147,7 @@ All: 5
 **Feature:** Mobile app development
 
 Epics:
+
 - User authentication: M
 - Product browsing: L
 - Shopping cart: M
@@ -151,12 +157,14 @@ Epics:
 ```
 
 **Benefits:**
+
 - Fast and lightweight
 - Non-intimidating for new teams
 - Easy to understand
 - Good for initial sizing
 
 **Limitations:**
+
 - Less precise than story points
 - Harder to track velocity
 - May need conversion later
@@ -171,12 +179,14 @@ Epics:
 
 ```markdown
 **Choose Reference Stories:**
+
 1. **Small (1-2 points):** Minor UI text change
 2. **Medium (5 points):** Add new API endpoint with tests
 3. **Large (13 points):** Integrate third-party payment gateway
 
 **Estimate New Stories:**
 Compare to reference:
+
 - "This is about twice as complex as the 5-point reference" → 8-13 points
 - "This is simpler than the 5-point reference" → 2-3 points
 - "This is similar to the 5-point reference" → 5 points
@@ -186,18 +196,21 @@ Compare to reference:
 
 ```markdown
 **Complexity:**
+
 - Algorithm complexity
 - Business logic intricacy
 - Number of edge cases
 - Uncertainty/unknowns
 
 **Effort:**
+
 - Lines of code (rough proxy)
 - Number of files/components
 - Testing effort
 - Documentation needs
 
 **Risk:**
+
 - Technical unknowns
 - Dependency on external systems
 - Performance concerns
@@ -208,12 +221,14 @@ Compare to reference:
 
 ```markdown
 **Reference Story (5 points):** "Add sorting to product list table"
+
 - Moderate backend query changes
 - Simple frontend UI update
 - Straightforward testing
 
 **New Story:** "Add filtering to product list table"
 **Comparison:**
+
 - Similar backend complexity
 - Similar frontend work
 - Additional UI for filter controls (+complexity)
@@ -232,6 +247,7 @@ Compare to reference:
 
 ```markdown
 **Steps:**
+
 1. Write each story on a card
 2. Silently arrange cards in columns by size (XS, S, M, L, XL)
 3. Anyone can move any card at any time
@@ -240,12 +256,12 @@ Compare to reference:
 
 **Example Layout:**
 
-XS (1)    | S (2)      | M (5)       | L (8)      | XL (13)
-----------|------------|-------------|------------|-------------
-UI fix    | Add button | New API     | Payment    | OAuth login
-Text      | Validation | endpoint    | integration|
-change    | error msg  | Simple CRUD | Multi-step |
-          | Unit tests | With tests  | flow       |
+| XS (1)     | S (2)      | M (5)       | L (8)       | XL (13)     |
+| ---------- | ---------- | ----------- | ----------- | ----------- |
+| UI fix     | Add button | New API     | Payment     | OAuth login |
+| Text       | Validation | endpoint    | integration |
+| change     | error msg  | Simple CRUD | Multi-step  |
+| Unit tests | With tests | flow        |
 
 **Time:** Estimate 20-30 stories in 30 minutes
 ```
@@ -276,6 +292,7 @@ change    | error msg  | Simple CRUD | Multi-step |
 **Buckets:** 0, 1, 2, 3, 5, 8, 13, 20, 40, 100
 
 **Process:**
+
 1. Place three reference stories in buckets (small, medium, large)
 2. Team takes turns placing stories into buckets
 3. Anyone can challenge a placement
@@ -284,15 +301,16 @@ change    | error msg  | Simple CRUD | Multi-step |
 
 **Example:**
 
-Bucket 1  | Bucket 2  | Bucket 5  | Bucket 8     | Bucket 13
-----------|-----------|-----------|--------------|----------
-Fix typo  | Add field | New page  | API          | Third-party
-CSS tweak | Tooltip   | with form | integration  | integration
-          | Email     | Basic     | Multi-step   | Complex
-          | template  | validation| workflow     | migration
+| Bucket 1  | Bucket 2   | Bucket 5   | Bucket 8    | Bucket 13   |
+| --------- | ---------- | ---------- | ----------- | ----------- |
+| Fix typo  | Add field  | New page   | API         | Third-party |
+| CSS tweak | Tooltip    | with form  | integration | integration |
+| Email     | Basic      | Multi-step | Complex     |
+| template  | validation | workflow   | migration   |
 ```
 
 **Benefits:**
+
 - Faster than Planning Poker for large backlogs
 - Forces relative thinking
 - Visualizes distribution
@@ -308,6 +326,7 @@ CSS tweak | Tooltip   | with form | integration  | integration
 
 ```markdown
 **Setup:**
+
 - Post stories on wall
 - Each team member gets 3 dots per story
 - Place dots on size category (S/M/L or 1/2/3/5/8)
@@ -327,6 +346,7 @@ Size 8: ••
 ```
 
 **When to Use:**
+
 - Quick validation of estimates
 - Refinement sessions
 - Multiple stories to estimate
@@ -350,26 +370,29 @@ Estimate = (Optimistic + 4×Most Likely + Pessimistic) / 6
 **Example Story:** "Implement user dashboard"
 
 **Estimates:**
+
 - Optimistic (best case): 3 days
 - Most Likely (realistic): 5 days
 - Pessimistic (worst case): 10 days
 
 **Calculation:**
 Estimate = (3 + 4×5 + 10) / 6
-         = (3 + 20 + 10) / 6
-         = 33 / 6
-         = 5.5 days
+= (3 + 20 + 10) / 6
+= 33 / 6
+= 5.5 days
 
 **Rounded:** 6 days or 8 story points
 ```
 
 **When to Use:**
+
 - High uncertainty
 - Critical path items
 - Risk assessment needed
 - Complex technical stories
 
 **Benefits:**
+
 - Accounts for uncertainty
 - Quantifies risk
 - More accurate than single-point estimates
@@ -391,11 +414,13 @@ Find previously completed stories similar to new story
 New Story: "Add real-time notifications"
 
 Similar Past Stories:
+
 - "Add email notifications" - 8 points, completed in 1.2 sprints
 - "Add SMS notifications" - 5 points, completed in 1 sprint
 - "Add push notifications" - 13 points, completed in 2 sprints
 
 **Step 2: Analyze Differences**
+
 - Real-time = WebSocket complexity (similar to push)
 - Notification UI (similar to email)
 - Backend infrastructure (new)
@@ -408,6 +433,7 @@ Based on analysis: 10-13 points
 
 ```markdown
 **Story Attributes:**
+
 - Original estimate
 - Actual completion time
 - Complexity factors
@@ -416,14 +442,15 @@ Based on analysis: 10-13 points
 
 **Example Data:**
 
-| Story | Est. | Actual | Variance | Notes |
-|-------|------|--------|----------|-------|
-| Login | 5    | 5      | 0%       | Smooth |
-| Cart  | 8    | 13     | +62%     | State mgmt complex |
-| Search| 5    | 3      | -40%     | Simpler than expected |
+| Story  | Est. | Actual | Variance | Notes                 |
+| ------ | ---- | ------ | -------- | --------------------- |
+| Login  | 5    | 5      | 0%       | Smooth                |
+| Cart   | 8    | 13     | +62%     | State mgmt complex    |
+| Search | 5    | 3      | -40%     | Simpler than expected |
 ```
 
 **Benefits:**
+
 - Evidence-based
 - Improves over time
 - Identifies patterns
@@ -445,6 +472,7 @@ Based on analysis: 10-13 points
 ✅ Risk assessment
 
 **Process:**
+
 1. Identify expert(s) in relevant area
 2. Present story/feature
 3. Expert provides estimate with reasoning
@@ -457,6 +485,7 @@ Based on analysis: 10-13 points
 **Story:** "Migrate database from MongoDB to PostgreSQL"
 
 **Expert (DBA):** "Based on our 50-table schema and data volume:
+
 - Schema migration: 2 weeks
 - Data migration scripts: 1 week
 - Testing and validation: 1 week
@@ -467,6 +496,7 @@ Based on analysis: 10-13 points
 ```
 
 **Caution:**
+
 - ⚠️ Can create single point of failure (expert dependency)
 - ⚠️ May miss team's collective wisdom
 - ⚠️ Risk of anchoring bias
@@ -481,11 +511,13 @@ Based on analysis: 10-13 points
 
 ```markdown
 **Instead of estimating:**
+
 - Break all work into 1-3 day stories
 - Track number of stories completed per sprint
 - Forecast based on throughput (velocity)
 
 **Example:**
+
 - Average throughput: 12 stories/sprint
 - Backlog: 60 stories
 - Forecast: 5 sprints (60/12)
@@ -501,6 +533,7 @@ Based on analysis: 10-13 points
 ✅ High trust environment
 
 ❌ May not work for:
+
 - Mixed-size stories
 - New teams
 - Fixed-scope contracts
@@ -511,16 +544,19 @@ Based on analysis: 10-13 points
 
 ```markdown
 **Technique 1: Right-sizing**
+
 - All stories 1-3 days
 - No estimation needed
 - Count completed stories
 
 **Technique 2: Cycle Time**
+
 - Measure time from start to done
 - Average cycle time = estimate
 - Use historical data to forecast
 
 **Technique 3: Monte Carlo Simulation**
+
 - Use throughput data
 - Run simulations
 - Probability-based forecasting
@@ -574,6 +610,7 @@ Manager: "This should take about 2 days, right?"
 Team: (anchored to 2 days, even if they think 5)
 
 ✅ **Solution:**
+
 - Silent voting (Planning Poker)
 - Avoid mentioning time before estimation
 - Multiple rounds of estimation
@@ -588,6 +625,7 @@ Team: (anchored to 2 days, even if they think 5)
 "The API integration will be straightforward" (forgetting auth, rate limits, error handling)
 
 ✅ **Solution:**
+
 - Include testing, documentation, debugging time
 - Use three-point estimation
 - Review historical accuracy
@@ -600,6 +638,7 @@ Team: (anchored to 2 days, even if they think 5)
 ❌ **Problem:** Underestimating despite past evidence of overruns
 
 ✅ **Solution:**
+
 - Track actual vs. estimated
 - Calibrate based on historical data
 - Include review of past similar work
@@ -611,6 +650,7 @@ Team: (anchored to 2 days, even if they think 5)
 ❌ **Problem:** Team converges too quickly without discussion
 
 ✅ **Solution:**
+
 - Silent voting first
 - Encourage dissenting opinions
 - Discuss outliers thoroughly
@@ -623,6 +663,7 @@ Team: (anchored to 2 days, even if they think 5)
 ❌ **Problem:** "8 points = 8 hours" defeats purpose of relative estimation
 
 ✅ **Solution:**
+
 - Keep story points dimensionless
 - Use velocity for forecasting, not conversion
 - Resist pressure to convert
@@ -637,10 +678,8 @@ Team: (anchored to 2 days, even if they think 5)
 const estimationMetrics = {
   // Compare estimated vs. actual
   accuracy: () => {
-    const variance = stories.map(s =>
-      Math.abs(s.estimated - s.actual) / s.estimated
-    );
-    return 1 - (variance.reduce((a,b) => a+b) / variance.length);
+    const variance = stories.map(s => Math.abs(s.estimated - s.actual) / s.estimated);
+    return 1 - variance.reduce((a, b) => a + b) / variance.length;
   },
 
   // Stories completed vs. committed
@@ -649,12 +688,12 @@ const estimationMetrics = {
   },
 
   // Velocity stability
-  velocityVariance: (velocities) => {
-    const avg = velocities.reduce((a,b) => a+b) / velocities.length;
+  velocityVariance: velocities => {
+    const avg = velocities.reduce((a, b) => a + b) / velocities.length;
     const variance = velocities.map(v => Math.pow(v - avg, 2));
-    const stdDev = Math.sqrt(variance.reduce((a,b) => a+b) / variance.length);
+    const stdDev = Math.sqrt(variance.reduce((a, b) => a + b) / variance.length);
     return (stdDev / avg) * 100; // Target: <20%
-  }
+  },
 };
 
 // Example usage:
@@ -680,4 +719,4 @@ console.log(estimationMetrics.velocityVariance(lastSprints)); // ~6% - very stab
 
 ---
 
-*Part of: [Agile Planning](README.md)*
+_Part of: [Agile Planning](README.md)_

@@ -59,7 +59,7 @@ class ChaosToolkit {
     // Monkey patch axios to add latency
     axios.request = async function (config) {
       if (config.baseURL && config.baseURL.includes(targetService)) {
-        await new Promise((resolve) => setTimeout(resolve, latencyMs));
+        await new Promise(resolve => setTimeout(resolve, latencyMs));
       }
       return originalRequest.call(this, config);
     };
@@ -67,9 +67,7 @@ class ChaosToolkit {
     // Restore after duration
     setTimeout(() => {
       axios.request = originalRequest;
-      console.log(
-        `[CHAOS] Network latency injection ended after ${Date.now() - startTime}ms`
-      );
+      console.log(`[CHAOS] Network latency injection ended after ${Date.now() - startTime}ms`);
     }, duration);
 
     return {
@@ -131,9 +129,7 @@ class ChaosToolkit {
    * Simulate resource exhaustion (CPU, Memory)
    */
   async simulateResourceExhaustion(type = 'cpu', intensity = 80, duration = 10000) {
-    console.log(
-      `[CHAOS] Simulating ${type} exhaustion at ${intensity}% for ${duration}ms`
-    );
+    console.log(`[CHAOS] Simulating ${type} exhaustion at ${intensity}% for ${duration}ms`);
 
     if (!this.config.enabled) {
       console.log('[CHAOS] Chaos experiments disabled - skipping');
@@ -158,14 +154,14 @@ class ChaosToolkit {
 
       setTimeout(() => {
         stopExhaustion = true;
-        workers.forEach((interval) => clearInterval(interval));
+        workers.forEach(interval => clearInterval(interval));
         console.log('[CHAOS] CPU exhaustion ended');
       }, duration);
 
       return {
         stop: () => {
           stopExhaustion = true;
-          workers.forEach((interval) => clearInterval(interval));
+          workers.forEach(interval => clearInterval(interval));
         },
       };
     } else if (type === 'memory') {
@@ -203,9 +199,7 @@ class ChaosToolkit {
    * Simulate database connection failures
    */
   async injectDatabaseFailure(dbClient, errorRate = 0.3, duration = 30000) {
-    console.log(
-      `[CHAOS] Injecting ${errorRate * 100}% database failure rate for ${duration}ms`
-    );
+    console.log(`[CHAOS] Injecting ${errorRate * 100}% database failure rate for ${duration}ms`);
 
     if (!this.config.enabled) {
       console.log('[CHAOS] Chaos experiments disabled - skipping');
@@ -297,7 +291,7 @@ class ChaosToolkit {
     }
 
     // Wait for completion
-    await new Promise((resolve) => setTimeout(resolve, duration + 1000));
+    await new Promise(resolve => setTimeout(resolve, duration + 1000));
 
     console.log('[CHAOS] Circuit breaker test results:', results);
 
@@ -320,30 +314,20 @@ class ChaosToolkit {
     const chaos = [];
 
     // Fail first service heavily
-    chaos.push(
-      await this.injectServiceFailure(
-        services[0],
-        initialFailureRate,
-        20000
-      )
-    );
+    chaos.push(await this.injectServiceFailure(services[0], initialFailureRate, 20000));
 
     // Cascade failures with increasing delay
     for (let i = 1; i < services.length; i++) {
       setTimeout(async () => {
         const errorRate = initialFailureRate * (1 - i / services.length);
-        console.log(
-          `[CHAOS] Cascading to ${services[i]} with ${errorRate * 100}% error rate`
-        );
-        chaos.push(
-          await this.injectServiceFailure(services[i], errorRate, 15000)
-        );
+        console.log(`[CHAOS] Cascading to ${services[i]} with ${errorRate * 100}% error rate`);
+        chaos.push(await this.injectServiceFailure(services[i], errorRate, 15000));
       }, i * 3000);
     }
 
     return {
       stop: () => {
-        chaos.forEach((c) => c && c.stop && c.stop());
+        chaos.forEach(c => c && c.stop && c.stop());
       },
     };
   }
@@ -370,13 +354,9 @@ class ChaosToolkit {
       // Example: Kill Docker container
       // In real scenarios, use docker API or kubectl
       const result = await new Promise((resolve, reject) => {
-        const process = spawn('docker', [
-          'kill',
-          '--signal=SIGKILL',
-          `${serviceName}`,
-        ]);
+        const process = spawn('docker', ['kill', '--signal=SIGKILL', `${serviceName}`]);
 
-        process.on('close', (code) => {
+        process.on('close', code => {
           if (code === 0) {
             resolve({ killed: true, service: serviceName });
           } else {
@@ -384,7 +364,7 @@ class ChaosToolkit {
           }
         });
 
-        process.on('error', (error) => {
+        process.on('error', error => {
           resolve({ killed: false, error: error.message });
         });
       });
@@ -496,7 +476,7 @@ class ChaosExperiment {
 
       // 3. Observe system behavior
       console.log('[CHAOS] Observing system behavior...');
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
       // 4. Verify steady state during chaos
       const steadyStateDuring = await this.steadyStateCheck();
@@ -514,7 +494,7 @@ class ChaosExperiment {
 
       // 6. Verify recovery to steady state
       console.log('[CHAOS] Verifying recovery...');
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       const steadyStateAfter = await this.steadyStateCheck();
       this.results.observations.push({
         phase: 'after',
@@ -526,9 +506,7 @@ class ChaosExperiment {
       this.results.success = steadyStateDuring && steadyStateAfter;
       this.results.endTime = new Date();
 
-      console.log(
-        `[CHAOS EXPERIMENT] ${this.name}: ${this.results.success ? 'PASSED' : 'FAILED'}`
-      );
+      console.log(`[CHAOS EXPERIMENT] ${this.name}: ${this.results.success ? 'PASSED' : 'FAILED'}`);
 
       return this.results;
     } catch (error) {
@@ -561,7 +539,7 @@ async function runNetworkLatencyExperiment() {
     }
   });
 
-  return experiment.run(async (toolkit) => {
+  return experiment.run(async toolkit => {
     return toolkit.injectNetworkLatency('localhost:3001', 500, 10000);
   });
 }
@@ -581,14 +559,14 @@ async function runServiceFailureExperiment() {
         axios.get('http://localhost:3001/orders'),
       ]);
 
-      const successCount = results.filter((r) => r.status === 'fulfilled').length;
+      const successCount = results.filter(r => r.status === 'fulfilled').length;
       return successCount >= 2; // At least 2 out of 3 should succeed
     } catch (error) {
       return false;
     }
   });
 
-  return experiment.run(async (toolkit) => {
+  return experiment.run(async toolkit => {
     return toolkit.injectServiceFailure('localhost:3001', 0.5, 10000);
   });
 }
@@ -609,7 +587,7 @@ async function runCircuitBreakerExperiment() {
     }
   });
 
-  return experiment.run(async (toolkit) => {
+  return experiment.run(async toolkit => {
     return toolkit.testCircuitBreaker('http://localhost:3001/health', 50, 5000);
   });
 }

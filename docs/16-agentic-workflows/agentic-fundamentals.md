@@ -1,12 +1,15 @@
 # Agentic Fundamentals: Building Autonomous AI Systems
 
 ## Purpose
+
 Provide a comprehensive foundation in agentic AI systems, covering core concepts, architectural patterns, and practical implementation strategies for building autonomous agents that can reason, plan, take actions, and learn from results in quality assurance workflows.
 
 ## Context
+
 While AI assistants respond to requests, **agentic systems** are goal-driven, autonomous programs that can break down complex objectives, make decisions, use tools, recover from errors, and continuously improve. This document bridges the gap from prompt engineering to building production-ready autonomous agents.
 
 ## Prerequisites
+
 - Understanding of [AI Fundamentals](../15-ai-in-quality-assurance/ai-fundamentals.md)
 - Experience with Python 3.10+
 - Familiarity with LLMs and prompt engineering
@@ -59,54 +62,55 @@ graph LR
 
 ```yaml
 autonomy:
-  decision_making: "Makes choices without human intervention"
-  goal_directed: "Pursues objectives, not just responding"
-  self_initiated: "Takes action proactively"
-  example: "Agent detects failing test, analyzes cause, attempts fix"
+  decision_making: 'Makes choices without human intervention'
+  goal_directed: 'Pursues objectives, not just responding'
+  self_initiated: 'Takes action proactively'
+  example: 'Agent detects failing test, analyzes cause, attempts fix'
 
 reasoning:
-  planning: "Breaks complex goals into steps"
-  reflection: "Evaluates own actions and results"
-  adaptation: "Changes strategy based on feedback"
-  example: "Test generation fails → agent tries different approach"
+  planning: 'Breaks complex goals into steps'
+  reflection: 'Evaluates own actions and results'
+  adaptation: 'Changes strategy based on feedback'
+  example: 'Test generation fails → agent tries different approach'
 
 tool_use:
-  selection: "Chooses appropriate tools for task"
-  execution: "Calls tools with correct parameters"
-  error_handling: "Recovers from tool failures"
-  example: "Agent uses run_tests, then analyze_failures, then fix_code"
+  selection: 'Chooses appropriate tools for task'
+  execution: 'Calls tools with correct parameters'
+  error_handling: 'Recovers from tool failures'
+  example: 'Agent uses run_tests, then analyze_failures, then fix_code'
 
 memory:
-  short_term: "Current task context and conversation"
-  long_term: "Historical patterns and learnings"
-  episodic: "Remembers past task executions"
-  example: "Agent remembers this test pattern failed before"
+  short_term: 'Current task context and conversation'
+  long_term: 'Historical patterns and learnings'
+  episodic: 'Remembers past task executions'
+  example: 'Agent remembers this test pattern failed before'
 
 learning:
-  improvement: "Gets better with experience"
-  pattern_recognition: "Identifies recurring situations"
-  knowledge_building: "Accumulates domain expertise"
-  example: "Agent learns common flaky test patterns"
+  improvement: 'Gets better with experience'
+  pattern_recognition: 'Identifies recurring situations'
+  knowledge_building: 'Accumulates domain expertise'
+  example: 'Agent learns common flaky test patterns'
 ```
 
 ### Agent vs Assistant vs Tool: Comparison
 
-| Capability | AI Tool | AI Assistant | AI Agent | Multi-Agent |
-|------------|---------|--------------|----------|-------------|
-| **Interaction Mode** | Single Q&A | Conversation | Goal-driven | Collaborative |
-| **Memory** | None | Session-based | Task + Historical | Shared + Private |
-| **Autonomy** | Zero | Low | High | Very High |
-| **Tool Use** | N/A | On request | Automatic | Coordinated |
-| **Planning** | None | None | Multi-step | Distributed |
-| **Error Recovery** | None | Manual | Automatic | Self-healing |
-| **Example Task** | Generate test | Suggest improvements | Achieve 90% coverage | Complete QA pipeline |
-| **Human Role** | Every step | Guidance | Goals + Oversight | Strategic direction |
+| Capability           | AI Tool       | AI Assistant         | AI Agent             | Multi-Agent          |
+| -------------------- | ------------- | -------------------- | -------------------- | -------------------- |
+| **Interaction Mode** | Single Q&A    | Conversation         | Goal-driven          | Collaborative        |
+| **Memory**           | None          | Session-based        | Task + Historical    | Shared + Private     |
+| **Autonomy**         | Zero          | Low                  | High                 | Very High            |
+| **Tool Use**         | N/A           | On request           | Automatic            | Coordinated          |
+| **Planning**         | None          | None                 | Multi-step           | Distributed          |
+| **Error Recovery**   | None          | Manual               | Automatic            | Self-healing         |
+| **Example Task**     | Generate test | Suggest improvements | Achieve 90% coverage | Complete QA pipeline |
+| **Human Role**       | Every step    | Guidance             | Goals + Oversight    | Strategic direction  |
 
 ### What Makes Software "Agentic"? Key Indicators
 
 **A system is agentic if it demonstrates:**
 
 1. **Autonomy** - Operates independently toward goals
+
    ```python
    # NOT agentic (human-driven)
    response = llm.generate("Write a test")
@@ -117,6 +121,7 @@ learning:
    ```
 
 2. **Planning** - Decomposes complex objectives
+
    ```python
    Goal: "Fix failing E2E tests"
 
@@ -130,6 +135,7 @@ learning:
    ```
 
 3. **Perception** - Observes environment and adapts
+
    ```python
    # Agent monitors CI pipeline
    agent.observe(ci_state)
@@ -143,6 +149,7 @@ learning:
    ```
 
 4. **Action** - Makes changes to environment
+
    ```python
    # Agent has real-world effects
    agent.actions = [
@@ -154,6 +161,7 @@ learning:
    ```
 
 5. **Learning** - Improves from experience
+
    ```python
    # Agent builds knowledge over time
    agent.memory.store({
@@ -188,6 +196,7 @@ stateDiagram-v2
 ```
 
 **Each iteration:**
+
 1. **Observe** - What is the current state?
 2. **Think** - What should I do next? Why?
 3. **Decide** - Which tool/action to use?
@@ -513,6 +522,7 @@ if __name__ == "__main__":
 ### ReAct Best Practices
 
 **1. Clear Tool Descriptions**
+
 ```python
 # BAD: Vague description
 def update_file(path, content):
@@ -538,6 +548,7 @@ def update_file(path: str, content: str) -> str:
 ```
 
 **2. Structured Observations**
+
 ```python
 # BAD: Unstructured output
 def run_tests(suite):
@@ -560,6 +571,7 @@ def run_tests(suite: str) -> Dict[str, Any]:
 ```
 
 **3. Error Recovery**
+
 ```python
 class RobustReActAgent(ReActAgent):
     """ReAct agent with error recovery"""
@@ -587,6 +599,7 @@ class RobustReActAgent(ReActAgent):
 ```
 
 **4. Iteration Limits**
+
 ```python
 # Prevent infinite loops
 agent = ReActAgent(
@@ -608,6 +621,7 @@ if result.get('iterations', 0) > 8:
 **Tools** are functions that agents can call to interact with the external world.
 
 **Examples:**
+
 - Read/write files
 - Run tests
 - Query databases
@@ -860,6 +874,7 @@ def commit_changes(file_paths: List[str], message: str) -> str:
 ### Tool Selection Strategies
 
 **1. Sequential Selection** (ReAct default)
+
 ```python
 # Agent chooses one tool per iteration
 iteration_1: run_tests() → 3 failures
@@ -869,6 +884,7 @@ iteration_4: run_tests() → all pass
 ```
 
 **2. Parallel Execution**
+
 ```python
 # Agent calls multiple independent tools simultaneously
 async def parallel_tools(agent, tools_to_run):
@@ -884,6 +900,7 @@ async def parallel_tools(agent, tools_to_run):
 ```
 
 **3. Conditional Chaining**
+
 ```python
 # Agent builds execution graph
 def conditional_chain(agent):
@@ -1524,19 +1541,20 @@ characteristics:
   complexity: Low
   best_for: Simple tasks, dynamic environments
 
-execution:
-  1. Observe current state
+execution: 1. Observe current state
   2. Decide next single action
   3. Execute action
   4. Repeat until done
 ```
 
 **Pros:**
+
 - Simple to implement
 - Highly adaptive
 - Good for uncertain environments
 
 **Cons:**
+
 - No long-term strategy
 - Can get stuck in loops
 - Inefficient for complex tasks
@@ -1552,8 +1570,7 @@ characteristics:
   complexity: Medium
   best_for: Well-defined tasks, stable environments
 
-execution:
-  1. Analyze goal and constraints
+execution: 1. Analyze goal and constraints
   2. Generate complete action sequence
   3. Execute plan step-by-step
   4. Replan if unexpected failure
@@ -1729,11 +1746,13 @@ Reformulated goal:"""
 ```
 
 **Pros:**
+
 - Efficient (fewer LLM calls)
 - Clear structure
 - Can optimize plan
 
 **Cons:**
+
 - Brittle in dynamic environments
 - Expensive to replan
 - Assumes stable conditions
@@ -1970,11 +1989,13 @@ Answer:"""
 ```
 
 **Pros:**
+
 - Maximum parallelism
 - Fewer LLM calls than ReAct
 - Good for independent subtasks
 
 **Cons:**
+
 - Can't adapt mid-execution
 - Wastes work if early step fails
 - Requires careful dependency tracking
@@ -2149,11 +2170,13 @@ if result['success']:
 ```
 
 **Pros:**
+
 - High output quality
 - Self-improving
 - Catches mistakes
 
 **Cons:**
+
 - Expensive (multiple LLM calls)
 - Slower
 - Can over-engineer
@@ -2163,35 +2186,35 @@ if result['success']:
 ```yaml
 simple_tasks:
   strategy: ReAct
-  reason: "Adaptive, no need for complex planning"
+  reason: 'Adaptive, no need for complex planning'
   examples:
-    - "Check test status"
-    - "Run specific test"
-    - "Get coverage report"
+    - 'Check test status'
+    - 'Run specific test'
+    - 'Get coverage report'
 
 well_defined_tasks:
   strategy: Plan-and-Execute
-  reason: "Clear steps, stable environment"
+  reason: 'Clear steps, stable environment'
   examples:
-    - "Set up new test suite"
-    - "Migrate tests to new framework"
-    - "Generate tests for module"
+    - 'Set up new test suite'
+    - 'Migrate tests to new framework'
+    - 'Generate tests for module'
 
 parallel_subtasks:
   strategy: ReWOO
-  reason: "Independent actions, maximize speed"
+  reason: 'Independent actions, maximize speed'
   examples:
-    - "Run all test suites"
-    - "Analyze multiple files"
-    - "Multi-perspective code review"
+    - 'Run all test suites'
+    - 'Analyze multiple files'
+    - 'Multi-perspective code review'
 
 quality_critical:
   strategy: Reflection
-  reason: "Output quality more important than speed"
+  reason: 'Output quality more important than speed'
   examples:
-    - "Generate security-critical tests"
-    - "Create production deployment plan"
-    - "Design test strategy"
+    - 'Generate security-critical tests'
+    - 'Create production deployment plan'
+    - 'Design test strategy'
 ```
 
 ## Hands-On Tutorial: Build a Test Generation Agent
@@ -2199,6 +2222,7 @@ quality_critical:
 ### Project Overview
 
 We'll build a complete test generation agent that:
+
 - Analyzes source code
 - Identifies untested functions
 - Generates comprehensive tests

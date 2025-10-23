@@ -288,14 +288,14 @@ class CustomFeatureFlags {
       return true;
     }
 
-    return flag.dependencies.every(depKey => this.isEnabled(depKey, user));
+    return flag.dependencies.every((depKey) => this.isEnabled(depKey, user));
   }
 
   /**
    * Check if user is in specified segments
    */
   isUserInSegments(user, allowedSegments) {
-    return allowedSegments.some(segment => {
+    return allowedSegments.some((segment) => {
       const segmentRule = this.userSegments.get(segment);
       return segmentRule ? segmentRule(user) : false;
     });
@@ -319,7 +319,7 @@ class CustomFeatureFlags {
 
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
 
@@ -465,19 +465,25 @@ class GradualRolloutController {
 
     // Check error rate
     if (thresholds.maxErrorRate && metrics.errorRate > thresholds.maxErrorRate) {
-      console.error(`Error rate ${metrics.errorRate}% exceeds threshold ${thresholds.maxErrorRate}%`);
+      console.error(
+        `Error rate ${metrics.errorRate}% exceeds threshold ${thresholds.maxErrorRate}%`
+      );
       return false;
     }
 
     // Check latency
     if (thresholds.maxLatencyP95 && metrics.latencyP95 > thresholds.maxLatencyP95) {
-      console.error(`Latency p95 ${metrics.latencyP95}ms exceeds threshold ${thresholds.maxLatencyP95}ms`);
+      console.error(
+        `Latency p95 ${metrics.latencyP95}ms exceeds threshold ${thresholds.maxLatencyP95}ms`
+      );
       return false;
     }
 
     // Check custom business metrics
     if (thresholds.minConversionRate && metrics.conversionRate < thresholds.minConversionRate) {
-      console.error(`Conversion rate ${metrics.conversionRate}% below threshold ${thresholds.minConversionRate}%`);
+      console.error(
+        `Conversion rate ${metrics.conversionRate}% below threshold ${thresholds.minConversionRate}%`
+      );
       return false;
     }
 
@@ -590,7 +596,7 @@ class ABTestingController {
 
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
 
@@ -818,9 +824,15 @@ function createApp(featureFlags) {
 }
 
 // Mock functions
-async function getProducts() { return { items: [] }; }
-async function getPersonalizedRecommendations(user) { return []; }
-function getLandingPageContent(variant) { return {}; }
+async function getProducts() {
+  return { items: [] };
+}
+async function getPersonalizedRecommendations(user) {
+  return [];
+}
+function getLandingPageContent(variant) {
+  return {};
+}
 
 // ============================================================================
 // EXPORTS

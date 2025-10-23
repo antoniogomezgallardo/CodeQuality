@@ -1,12 +1,15 @@
 # Requirements Engineering
 
 ## Purpose
+
 Transform business needs into clear, testable, and implementable technical requirements that serve as the foundation for quality software development.
 
 ## Context
+
 Requirements engineering is where quality begins. Poor requirements lead to rework, missed deadlines, and unsatisfied users. This module covers the complete requirements lifecycle.
 
 ## Prerequisites
+
 - Understanding of [Software Quality Foundations](../00-foundations/README.md)
 - Basic knowledge of software development lifecycle
 - Familiarity with stakeholder communication
@@ -27,8 +30,10 @@ graph LR
 ### Elicitation Techniques
 
 #### Interviews
+
 **When to Use:** Direct stakeholder access, complex domain
 **Process:**
+
 1. Prepare questions (open and closed)
 2. Schedule with stakeholders
 3. Conduct interview (record if possible)
@@ -36,6 +41,7 @@ graph LR
 5. Follow up for clarification
 
 **Interview Template:**
+
 ```markdown
 ## Stakeholder Interview
 
@@ -44,39 +50,47 @@ graph LR
 **Interviewer:** [Name]
 
 ### Business Context
+
 - What problem are we solving?
 - Who are the users?
 - What's the business value?
 
 ### Functional Needs
+
 - What must the system do?
 - What are the key workflows?
 - What are the critical features?
 
 ### Quality Attributes
+
 - Performance expectations?
 - Security requirements?
 - Usability needs?
 
 ### Constraints
+
 - Technical limitations?
 - Budget/timeline?
 - Regulatory requirements?
 
 ### Success Criteria
+
 - How do we measure success?
 - What are the acceptance criteria?
 ```
 
 #### Workshops
+
 **When to Use:** Multiple stakeholders, need consensus
 **Techniques:**
+
 - Joint Application Development (JAD)
 - Requirements workshops
 - Story mapping sessions
 - Design thinking workshops
 
 **Workshop Agenda Example:**
+
 ```
 9:00 - 9:30   | Introduction & Goals
 9:30 - 10:30  | Current State Analysis
@@ -89,24 +103,30 @@ graph LR
 ```
 
 #### Observation
+
 **When to Use:** Complex workflows, existing system analysis
 **Approach:**
+
 - Shadow users in their environment
 - Document actual vs. stated processes
 - Identify pain points and inefficiencies
 - Note workarounds and shortcuts
 
 #### Questionnaires
+
 **When to Use:** Large user base, quantitative data needed
 **Best Practices:**
+
 - Keep short (10-15 questions)
 - Mix question types
 - Pilot test first
 - Provide clear instructions
 
 #### Prototyping
+
 **When to Use:** UI/UX requirements, validation needed
 **Types:**
+
 - Paper prototypes
 - Wireframes
 - Interactive mockups
@@ -115,35 +135,39 @@ graph LR
 ### Stakeholder Analysis
 
 #### Stakeholder Matrix
-| Stakeholder | Interest | Influence | Strategy |
-|------------|----------|-----------|----------|
-| End Users | High | Low | Keep Informed |
-| Product Owner | High | High | Manage Closely |
-| Development Team | Medium | High | Keep Satisfied |
-| Legal/Compliance | Low | High | Monitor |
-| Customer Support | High | Medium | Consult |
+
+| Stakeholder      | Interest | Influence | Strategy       |
+| ---------------- | -------- | --------- | -------------- |
+| End Users        | High     | Low       | Keep Informed  |
+| Product Owner    | High     | High      | Manage Closely |
+| Development Team | Medium   | High      | Keep Satisfied |
+| Legal/Compliance | Low      | High      | Monitor        |
+| Customer Support | High     | Medium    | Consult        |
 
 #### RACI Matrix
-| Activity | Product Owner | Dev Team | QA | Users |
-|----------|--------------|----------|-----|-------|
-| Define Requirements | A | C | C | I |
-| Approve Requirements | R | I | I | C |
-| Implement | I | R | C | I |
-| Test | I | C | R | C |
-| Accept | R | I | I | C |
 
-*R=Responsible, A=Accountable, C=Consulted, I=Informed*
+| Activity             | Product Owner | Dev Team | QA  | Users |
+| -------------------- | ------------- | -------- | --- | ----- |
+| Define Requirements  | A             | C        | C   | I     |
+| Approve Requirements | R             | I        | I   | C     |
+| Implement            | I             | R        | C   | I     |
+| Test                 | I             | C        | R   | C     |
+| Accept               | R             | I        | I   | C     |
+
+_R=Responsible, A=Accountable, C=Consulted, I=Informed_
 
 ## 2. Requirements Analysis
 
 ### Requirement Types
 
 #### Functional Requirements
-*What the system should do*
+
+_What the system should do_
 
 **Format:** "The system shall..."
 
 **Examples:**
+
 ```
 - The system shall allow users to log in using email and password
 - The system shall send email notifications for order status changes
@@ -151,9 +175,11 @@ graph LR
 ```
 
 #### Non-Functional Requirements (NFRs)
-*How the system should behave*
+
+_How the system should behave_
 
 **Categories:**
+
 - **Performance**: Response time, throughput, capacity
 - **Security**: Authentication, authorization, encryption
 - **Usability**: Learnability, efficiency, accessibility
@@ -163,6 +189,7 @@ graph LR
 - **Maintainability**: Modularity, testability, documentation
 
 **NFR Template:**
+
 ```
 Category: Performance
 Requirement: Page load time
@@ -173,9 +200,11 @@ Rationale: User experience and SEO
 ```
 
 #### Business Rules
-*Policies and conditions that govern business*
+
+_Policies and conditions that govern business_
 
 **Examples:**
+
 ```
 BR-001: Orders over $100 qualify for free shipping
 BR-002: Passwords must contain 8+ characters with mixed case and numbers
@@ -183,9 +212,11 @@ BR-003: Returns accepted within 30 days with receipt
 ```
 
 #### Constraints
-*Limitations on design or implementation*
+
+_Limitations on design or implementation_
 
 **Types:**
+
 - Technical: Must use existing database
 - Business: Budget of $100,000
 - Regulatory: GDPR compliance required
@@ -196,6 +227,7 @@ BR-003: Returns accepted within 30 days with receipt
 #### Use Case Analysis
 
 **Use Case Template:**
+
 ```markdown
 ## Use Case: [Name]
 
@@ -206,25 +238,24 @@ BR-003: Returns accepted within 30 days with receipt
 **Postconditions:** [What is true after]
 
 ### Main Success Scenario
+
 1. Actor performs action
 2. System responds
 3. ...
 
 ### Alternative Flows
-2a. If condition:
-    1. Alternative action
-    2. Return to step 3
+
+2a. If condition: 1. Alternative action 2. Return to step 3
 
 ### Exception Flows
-*. At any time, if error:
-    1. System shows error
-    2. System logs incident
-    3. Use case ends
+
+\*. At any time, if error: 1. System shows error 2. System logs incident 3. Use case ends
 ```
 
 #### User Story Analysis
 
 **User Story Format:**
+
 ```
 As a [type of user]
 I want [goal/desire]
@@ -232,6 +263,7 @@ So that [benefit/value]
 ```
 
 **INVEST Criteria:**
+
 - **I**ndependent: Self-contained
 - **N**egotiable: Flexible implementation
 - **V**aluable: Delivers user value
@@ -240,6 +272,7 @@ So that [benefit/value]
 - **T**estable: Clear acceptance criteria
 
 **Story Splitting Patterns:**
+
 1. **Workflow Steps**: Break by process stages
 2. **Business Rules**: Separate rule variations
 3. **Happy/Unhappy**: Simple case first
@@ -275,6 +308,7 @@ So that [benefit/value]
 ✅ "99.9% uptime target (8.77 hours downtime/year)"
 
 **Traceable**
+
 - Forward: Requirements → Design → Code → Tests
 - Backward: Tests → Code → Design → Requirements
 
@@ -283,6 +317,7 @@ So that [benefit/value]
 #### Software Requirements Specification (SRS)
 
 **IEEE 830 Structure:**
+
 ```
 1. Introduction
    1.1 Purpose
@@ -310,6 +345,7 @@ So that [benefit/value]
 #### Modern Documentation Approaches
 
 **Living Documentation:**
+
 - Requirements as code
 - Executable specifications
 - BDD scenarios
@@ -317,6 +353,7 @@ So that [benefit/value]
 - Generated from tests
 
 **Agile Documentation:**
+
 - User story maps
 - Acceptance criteria
 - Definition of Done
@@ -330,6 +367,7 @@ So that [benefit/value]
 #### Reviews and Inspections
 
 **Requirement Review Checklist:**
+
 - [ ] Clear and unambiguous
 - [ ] Complete information
 - [ ] Consistent with others
@@ -343,6 +381,7 @@ So that [benefit/value]
 #### Prototyping for Validation
 
 **Validation Questions:**
+
 1. Does this match your expectation?
 2. What's missing?
 3. What's unnecessary?
@@ -352,6 +391,7 @@ So that [benefit/value]
 #### Model Validation
 
 **Models to Create:**
+
 - Data flow diagrams
 - Entity relationship diagrams
 - State transition diagrams
@@ -363,6 +403,7 @@ So that [benefit/value]
 #### Format Options
 
 **Given-When-Then (BDD):**
+
 ```gherkin
 Given I am a registered user
 When I enter valid credentials
@@ -371,8 +412,10 @@ And I should see my dashboard
 ```
 
 **Checklist Format:**
+
 ```markdown
 Acceptance Criteria for User Login:
+
 - [ ] Valid credentials allow access
 - [ ] Invalid credentials show error
 - [ ] Password masked during entry
@@ -383,6 +426,7 @@ Acceptance Criteria for User Login:
 ```
 
 **Rule-Based Format:**
+
 ```
 Rules for Password Reset:
 1. Link valid for 24 hours only
@@ -397,6 +441,7 @@ Rules for Password Reset:
 ### Change Management
 
 #### Change Request Process
+
 ```mermaid
 graph TD
     A[Change Request] --> B{Impact Analysis}
@@ -410,6 +455,7 @@ graph TD
 ```
 
 #### Change Request Template
+
 ```markdown
 ## Change Request CR-[Number]
 
@@ -418,21 +464,26 @@ graph TD
 **Priority:** [High/Medium/Low]
 
 ### Current Requirement
+
 [Existing requirement text]
 
 ### Proposed Change
+
 [New requirement text]
 
 ### Rationale
+
 [Why is this change needed?]
 
 ### Impact Analysis
+
 - Schedule Impact: [Days/Weeks]
 - Cost Impact: [$Amount]
 - Risk Impact: [Description]
 - Other Requirements Affected: [List]
 
 ### Decision
+
 - [ ] Approved
 - [ ] Rejected
 - [ ] Deferred
@@ -444,13 +495,14 @@ graph TD
 
 #### Traceability Matrix
 
-| Req ID | Source | Design | Code | Test | Status |
-|--------|--------|--------|------|------|--------|
-| FR-001 | UC-01 | DD-2.1 | UserAuth.java | TC-001 | Implemented |
-| FR-002 | US-015 | DD-3.2 | OrderMgmt.java | TC-002, TC-003 | In Progress |
-| NFR-001 | Stakeholder | AD-1.1 | Config.yaml | PT-001 | Planned |
+| Req ID  | Source      | Design | Code           | Test           | Status      |
+| ------- | ----------- | ------ | -------------- | -------------- | ----------- |
+| FR-001  | UC-01       | DD-2.1 | UserAuth.java  | TC-001         | Implemented |
+| FR-002  | US-015      | DD-3.2 | OrderMgmt.java | TC-002, TC-003 | In Progress |
+| NFR-001 | Stakeholder | AD-1.1 | Config.yaml    | PT-001         | Planned     |
 
 #### Traceability Benefits
+
 - Impact analysis for changes
 - Coverage verification
 - Compliance demonstration
@@ -460,6 +512,7 @@ graph TD
 ### Version Control for Requirements
 
 **Versioning Strategy:**
+
 ```
 Major.Minor.Patch
 
@@ -478,15 +531,16 @@ Example:
 
 ### Requirements Management Tools
 
-| Tool | Strengths | Best For |
-|------|-----------|----------|
-| Jira | Agile integration | Scrum teams |
-| Azure DevOps | Full ALM | Microsoft shops |
-| IBM DOORS | Traceability | Regulated industries |
-| Confluence | Collaboration | Documentation |
-| ReqIF | Interchange | Multi-tool environments |
+| Tool         | Strengths         | Best For                |
+| ------------ | ----------------- | ----------------------- |
+| Jira         | Agile integration | Scrum teams             |
+| Azure DevOps | Full ALM          | Microsoft shops         |
+| IBM DOORS    | Traceability      | Regulated industries    |
+| Confluence   | Collaboration     | Documentation           |
+| ReqIF        | Interchange       | Multi-tool environments |
 
 ### Modeling Tools
+
 - Draw.io / Diagrams.net
 - Enterprise Architect
 - Visual Paradigm
@@ -498,21 +552,25 @@ Example:
 ### Anti-Pattern Examples
 
 **Gold Plating**
+
 - Adding unrequested features
 - Over-engineering solutions
 - Perfection over delivery
 
 **Analysis Paralysis**
+
 - Endless refinement
 - Seeking 100% completeness
 - Delaying implementation
 
 **Ambiguous Language**
+
 - "Should", "might", "possibly"
 - "User-friendly", "fast", "secure"
 - "And/or" constructions
 
 **Kitchen Sink**
+
 - Including every possible feature
 - No prioritization
 - Scope creep
@@ -521,43 +579,48 @@ Example:
 
 ### Key Metrics
 
-| Metric | Formula | Target |
-|--------|---------|--------|
-| Requirements Stability | (1 - Changed/Total) × 100 | > 85% |
-| Requirements Completeness | Detailed/Total × 100 | > 95% |
-| Requirements Volatility | Changes/Month | < 5% |
-| Defect Density | Defects/Requirement | < 0.1 |
-| Coverage | Tested Requirements/Total × 100 | 100% |
+| Metric                    | Formula                         | Target |
+| ------------------------- | ------------------------------- | ------ |
+| Requirements Stability    | (1 - Changed/Total) × 100       | > 85%  |
+| Requirements Completeness | Detailed/Total × 100            | > 95%  |
+| Requirements Volatility   | Changes/Month                   | < 5%   |
+| Defect Density            | Defects/Requirement             | < 0.1  |
+| Coverage                  | Tested Requirements/Total × 100 | 100%   |
 
 ## Checklist
 
 ### Requirements Engineering Checklist
 
 **Elicitation:**
+
 - [ ] All stakeholders identified
 - [ ] Multiple elicitation techniques used
 - [ ] Domain knowledge acquired
 - [ ] Constraints documented
 
 **Analysis:**
+
 - [ ] Requirements categorized
 - [ ] Dependencies identified
 - [ ] Conflicts resolved
 - [ ] Priorities assigned
 
 **Specification:**
+
 - [ ] Requirements documented clearly
 - [ ] Acceptance criteria defined
 - [ ] Traceability established
 - [ ] Reviews conducted
 
 **Validation:**
+
 - [ ] Stakeholder approval obtained
 - [ ] Testability verified
 - [ ] Feasibility confirmed
 - [ ] Completeness checked
 
 **Management:**
+
 - [ ] Change process defined
 - [ ] Version control in place
 - [ ] Traceability maintained
@@ -566,16 +629,19 @@ Example:
 ## References
 
 ### Standards
+
 - IEEE 830-1998: Software Requirements Specifications
 - IEEE 29148-2011: Requirements Engineering
 - ISO/IEC 25010: Quality Requirements
 
 ### Books
+
 - "Software Requirements" - Karl Wiegers
 - "Mastering the Requirements Process" - Robertson & Robertson
 - "User Stories Applied" - Mike Cohn
 
 ### Resources
+
 - IREB (International Requirements Engineering Board)
 - BABOK (Business Analysis Body of Knowledge)
 - Requirements Engineering Magazine
@@ -590,4 +656,4 @@ Example:
 
 ---
 
-*Next: [User Story Mapping](user-story-mapping.md) - Visual technique for requirements*
+_Next: [User Story Mapping](user-story-mapping.md) - Visual technique for requirements_

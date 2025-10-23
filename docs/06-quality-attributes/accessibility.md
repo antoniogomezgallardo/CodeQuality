@@ -55,9 +55,7 @@ User interface components must be operable.
 </main>
 
 <!-- ✅ GOOD: Sufficient time to read -->
-<div role="alert" aria-live="polite">
-  Session will expire in 5 minutes
-</div>
+<div role="alert" aria-live="polite">Session will expire in 5 minutes</div>
 ```
 
 ### 3. Understandable
@@ -70,27 +68,12 @@ Information and operation must be understandable.
   Email Address *
   <span class="hint">We'll never share your email</span>
 </label>
-<input
-  type="email"
-  id="email"
-  required
-  aria-describedby="email-hint"
-  aria-invalid="false"
-/>
-<span id="email-hint" class="sr-only">
-  Format: user@example.com
-</span>
+<input type="email" id="email" required aria-describedby="email-hint" aria-invalid="false" />
+<span id="email-hint" class="sr-only"> Format: user@example.com </span>
 
 <!-- ✅ GOOD: Error identification -->
-<input
-  type="email"
-  id="email"
-  aria-invalid="true"
-  aria-describedby="email-error"
-/>
-<span id="email-error" role="alert">
-  Please enter a valid email address
-</span>
+<input type="email" id="email" aria-invalid="true" aria-describedby="email-error" />
+<span id="email-error" role="alert"> Please enter a valid email address </span>
 
 <!-- ✅ GOOD: Consistent navigation -->
 <nav aria-label="Main navigation">
@@ -123,26 +106,9 @@ Content must be robust enough to work with assistive technologies.
 <footer>...</footer>
 
 <!-- ✅ GOOD: ARIA when HTML isn't enough -->
-<div
-  role="tablist"
-  aria-label="Product tabs"
->
-  <button
-    role="tab"
-    aria-selected="true"
-    aria-controls="panel-1"
-    id="tab-1"
-  >
-    Description
-  </button>
-  <button
-    role="tab"
-    aria-selected="false"
-    aria-controls="panel-2"
-    id="tab-2"
-  >
-    Reviews
-  </button>
+<div role="tablist" aria-label="Product tabs">
+  <button role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">Description</button>
+  <button role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">Reviews</button>
 </div>
 ```
 
@@ -150,16 +116,19 @@ Content must be robust enough to work with assistive technologies.
 
 ```markdown
 **Level A (Minimum):**
+
 - Basic web accessibility
 - Required for legal compliance
 - Examples: Alt text, keyboard access, labels
 
 **Level AA (Mid-range):**
+
 - Most common target for compliance
 - Required by most regulations (ADA, Section 508)
 - Examples: 4.5:1 color contrast, resize text 200%, consistent navigation
 
 **Level AAA (Highest):**
+
 - Enhanced accessibility
 - Not required for general compliance
 - Examples: 7:1 color contrast, sign language, extended audio descriptions
@@ -226,6 +195,7 @@ test('check color contrast', async ({ page }) => {
 
 ```markdown
 **Keyboard Navigation:**
+
 - [ ] Tab through all interactive elements
 - [ ] Shift+Tab navigates backwards
 - [ ] Enter/Space activates buttons and links
@@ -234,6 +204,7 @@ test('check color contrast', async ({ page }) => {
 - [ ] Focus visible at all times
 
 **Screen Reader Testing:**
+
 - [ ] Test with NVDA (Windows, free)
 - [ ] Test with JAWS (Windows, paid)
 - [ ] Test with VoiceOver (macOS/iOS, built-in)
@@ -244,6 +215,7 @@ test('check color contrast', async ({ page }) => {
 - [ ] Dynamic updates announced
 
 **Visual Testing:**
+
 - [ ] Zoom to 200% - content readable
 - [ ] Test with Windows High Contrast mode
 - [ ] Test with browser dark mode
@@ -255,6 +227,7 @@ test('check color contrast', async ({ page }) => {
 
 ```markdown
 **Content:**
+
 - [ ] All images have alt text (or alt="" if decorative)
 - [ ] Videos have captions and transcripts
 - [ ] Audio has transcripts
@@ -262,6 +235,7 @@ test('check color contrast', async ({ page }) => {
 - [ ] Headings in logical order (h1 → h2 → h3)
 
 **Keyboard:**
+
 - [ ] All functionality accessible via keyboard
 - [ ] Focus order is logical
 - [ ] Focus indicators visible
@@ -269,6 +243,7 @@ test('check color contrast', async ({ page }) => {
 - [ ] Skip links provided
 
 **Forms:**
+
 - [ ] All inputs have labels
 - [ ] Required fields indicated
 - [ ] Error messages clear and helpful
@@ -276,18 +251,21 @@ test('check color contrast', async ({ page }) => {
 - [ ] Form instructions before form
 
 **Color:**
+
 - [ ] Text contrast ≥ 4.5:1 (normal text)
 - [ ] Text contrast ≥ 3:1 (large text, 18pt+)
 - [ ] Color not sole indicator of information
 - [ ] UI components contrast ≥ 3:1
 
 **Dynamic Content:**
+
 - [ ] Loading states announced
 - [ ] Updates announced (aria-live)
 - [ ] Errors announced to screen readers
 - [ ] Success messages announced
 
 **ARIA:**
+
 - [ ] Semantic HTML used first
 - [ ] ARIA roles appropriate
 - [ ] aria-label used when needed
@@ -324,10 +302,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
         className="modal-overlay"
         onClick={onClose}
       >
-        <div
-          className="modal-content"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="modal-content" onClick={e => e.stopPropagation()}>
           <div className="modal-header">
             <h2 id="modal-title">{title}</h2>
             <button
@@ -339,9 +314,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
               ×
             </button>
           </div>
-          <div className="modal-body">
-            {children}
-          </div>
+          <div className="modal-body">{children}</div>
         </div>
       </div>
     </FocusTrap>
@@ -356,7 +329,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
 function AccessibleForm() {
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     // Validation logic
   };
@@ -365,8 +338,7 @@ function AccessibleForm() {
     <form onSubmit={handleSubmit} noValidate>
       <div className="form-group">
         <label htmlFor="email">
-          Email Address *
-          <span className="hint">We'll never share your email</span>
+          Email Address *<span className="hint">We'll never share your email</span>
         </label>
         <input
           type="email"
@@ -384,9 +356,7 @@ function AccessibleForm() {
         )}
       </div>
 
-      <button type="submit">
-        Submit
-      </button>
+      <button type="submit">Submit</button>
     </form>
   );
 }
@@ -409,22 +379,16 @@ function AccessibleTable({ data }) {
         </tr>
       </thead>
       <tbody>
-        {data.map((user) => (
+        {data.map(user => (
           <tr key={user.id}>
             <th scope="row">{user.name}</th>
             <td>{user.email}</td>
             <td>{user.role}</td>
             <td>
-              <button
-                aria-label={`Edit ${user.name}`}
-                onClick={() => handleEdit(user.id)}
-              >
+              <button aria-label={`Edit ${user.name}`} onClick={() => handleEdit(user.id)}>
                 Edit
               </button>
-              <button
-                aria-label={`Delete ${user.name}`}
-                onClick={() => handleDelete(user.id)}
-              >
+              <button aria-label={`Delete ${user.name}`} onClick={() => handleDelete(user.id)}>
                 Delete
               </button>
             </td>
@@ -481,6 +445,7 @@ jobs:
 
 ```markdown
 **Automated Testing:**
+
 - axe-core: Browser extension and testing library
 - Pa11y: Command-line accessibility testing
 - Lighthouse: Chrome DevTools audit
@@ -488,6 +453,7 @@ jobs:
 - AccessLint: GitHub PR comments
 
 **Manual Testing:**
+
 - NVDA: Free Windows screen reader
 - JAWS: Commercial Windows screen reader
 - VoiceOver: Built-in macOS/iOS screen reader
@@ -495,6 +461,7 @@ jobs:
 - ChromeVox: Chrome extension screen reader
 
 **Development:**
+
 - eslint-plugin-jsx-a11y: React accessibility linting
 - axe DevTools: Browser extension for debugging
 - Stark: Figma plugin for design accessibility
@@ -516,4 +483,4 @@ jobs:
 
 ---
 
-*Part of: [Quality Attributes](README.md)*
+_Part of: [Quality Attributes](README.md)_

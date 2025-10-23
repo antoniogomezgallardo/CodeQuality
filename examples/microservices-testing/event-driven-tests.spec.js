@@ -88,30 +88,21 @@ class RabbitMQTestHelper {
 
     const messageBuffer = Buffer.from(JSON.stringify(message));
 
-    return this.channel.publish(
-      this.config.exchange,
-      routingKey,
-      messageBuffer,
-      {
-        persistent: true,
-        contentType: 'application/json',
-        messageId: message.id,
-        timestamp: Date.now(),
-        ...options,
-      }
-    );
+    return this.channel.publish(this.config.exchange, routingKey, messageBuffer, {
+      persistent: true,
+      contentType: 'application/json',
+      messageId: message.id,
+      timestamp: Date.now(),
+      ...options,
+    });
   }
 
   async consumeEvents(queueName, onMessage, options = {}) {
-    await this.channel.bindQueue(
-      queueName,
-      this.config.exchange,
-      options.routingKey || '#'
-    );
+    await this.channel.bindQueue(queueName, this.config.exchange, options.routingKey || '#');
 
     return this.channel.consume(
       queueName,
-      async (msg) => {
+      async msg => {
         if (msg) {
           try {
             const event = JSON.parse(msg.content.toString());
@@ -140,7 +131,7 @@ class RabbitMQTestHelper {
           `Timeout waiting for messages. Expected ${count}, received ${this.receivedMessages.length}`
         );
       }
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
     return this.receivedMessages.slice(0, count);
   }
@@ -248,7 +239,7 @@ class KafkaTestHelper {
           `Timeout waiting for Kafka messages. Expected ${count}, received ${this.receivedMessages.length}`
         );
       }
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
     return this.receivedMessages.slice(0, count);
   }
@@ -301,16 +292,14 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
         orderId: 'order-123',
         customerId: 'customer-456',
         totalAmount: 99.99,
-        items: [
-          { productId: 'product-789', quantity: 2, price: 49.99 },
-        ],
+        items: [{ productId: 'product-789', quantity: 2, price: 49.99 }],
       };
 
       // Setup consumer
       const consumedEvents = [];
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.orders,
-        async (event) => {
+        async event => {
           consumedEvents.push(event);
         },
         { routingKey: 'order.created' }
@@ -339,7 +328,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       // Setup consumer
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.orders,
-        async (event) => {
+        async event => {
           // Event processing
         },
         { routingKey: 'order.#' }
@@ -369,7 +358,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       // Setup consumers with different routing keys
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.orders,
-        async (event) => {
+        async event => {
           orderConsumer.push(event);
         },
         { routingKey: 'order.#' }
@@ -377,7 +366,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
 
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.payments,
-        async (event) => {
+        async event => {
           paymentConsumer.push(event);
         },
         { routingKey: 'payment.#' }
@@ -389,7 +378,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       await rabbitMQ.publishEvent('order.confirmed', { orderId: 'order-2' });
 
       // Wait for events
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Verify routing
       expect(orderConsumer).to.have.length(2);
@@ -405,7 +394,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       // Setup idempotent consumer
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.orders,
-        async (event) => {
+        async event => {
           if (processedEvents.has(event.id)) {
             console.log(`Duplicate event detected: ${event.id}`);
             return true; // Acknowledge but don't process
@@ -415,7 +404,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
           processingCount++;
 
           // Simulate processing
-          await new Promise((resolve) => setTimeout(resolve, 10));
+          await new Promise(resolve => setTimeout(resolve, 10));
         },
         { routingKey: 'order.#' }
       );
@@ -432,7 +421,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       });
 
       // Wait for processing
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Verify only processed once
       // Note: In real implementation, the event ID should be preserved
@@ -460,7 +449,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       const dlqMessages = [];
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.dlq,
-        async (event) => {
+        async event => {
           dlqMessages.push(event);
         },
         { routingKey: 'dlq' }
@@ -472,7 +461,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       });
 
       // Wait for DLQ processing
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Verify message ended up in DLQ
       // Note: This is simplified - real DLQ handling would track retry count
@@ -508,7 +497,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       // Setup consumer with validation
       await rabbitMQ.consumeEvents(
         config.rabbitmq.queues.orders,
-        async (event) => {
+        async event => {
           if (validateEvent(event.data, orderCreatedSchema)) {
             validEvents.push(event);
           } else {
@@ -532,7 +521,7 @@ describe('Event-Driven Microservices Tests - RabbitMQ', () => {
       });
 
       // Wait for processing
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Verify validation
       expect(validEvents).to.have.length(1);
@@ -575,12 +564,12 @@ describe('Event-Driven Microservices Tests - Kafka', () => {
 
       // Subscribe to topic
       const consumedEvents = [];
-      await kafka.subscribeToTopics([config.kafka.topics.orders], async (event) => {
+      await kafka.subscribeToTopics([config.kafka.topics.orders], async event => {
         consumedEvents.push(event);
       });
 
       // Wait a bit for subscription to be ready
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Publish event
       await kafka.publishEvent(config.kafka.topics.orders, orderEvent);
@@ -604,14 +593,11 @@ describe('Event-Driven Microservices Tests - Kafka', () => {
 
       // Subscribe to topic
       const receivedSequence = [];
-      await kafka.subscribeToTopics(
-        [config.kafka.topics.orders],
-        async (event) => {
-          receivedSequence.push(event.data.sequence);
-        }
-      );
+      await kafka.subscribeToTopics([config.kafka.topics.orders], async event => {
+        receivedSequence.push(event.data.sequence);
+      });
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Publish events with same key (ensures same partition)
       for (const event of events) {
@@ -658,15 +644,15 @@ describe('Event-Driven Microservices Tests - Kafka', () => {
       await kafka2.consumer.connect();
 
       // Subscribe both consumers
-      await kafka1.subscribeToTopics([config.kafka.topics.orders], async (event) => {
+      await kafka1.subscribeToTopics([config.kafka.topics.orders], async event => {
         consumer1Events.push(event);
       });
 
-      await kafka2.subscribeToTopics([config.kafka.topics.orders], async (event) => {
+      await kafka2.subscribeToTopics([config.kafka.topics.orders], async event => {
         consumer2Events.push(event);
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Publish multiple events
       for (let i = 0; i < 10; i++) {
@@ -677,7 +663,7 @@ describe('Event-Driven Microservices Tests - Kafka', () => {
       }
 
       // Wait for processing
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       // Verify load balancing (both consumers should receive some events)
       console.log(`Consumer 1 received: ${consumer1Events.length} events`);

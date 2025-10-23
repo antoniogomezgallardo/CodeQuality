@@ -22,7 +22,10 @@ async function getFocusedElementSelector(page) {
     // Generate a unique selector
     if (element.id) return `#${element.id}`;
     if (element.className) {
-      const classes = element.className.split(' ').filter(c => c).join('.');
+      const classes = element.className
+        .split(' ')
+        .filter(c => c)
+        .join('.');
       if (classes) {
         const selector = `${element.tagName.toLowerCase()}.${classes}`;
         // Verify uniqueness
@@ -37,7 +40,7 @@ async function getFocusedElementSelector(page) {
  * Helper function to get focus indicator styles
  */
 async function getFocusStyles(page, selector) {
-  return await page.evaluate((sel) => {
+  return await page.evaluate(sel => {
     const element = document.querySelector(sel);
     if (!element) return null;
 
@@ -177,9 +180,7 @@ test.describe('Tab Order and Focus Management', () => {
     });
 
     // Verify no positive tabindex values (anti-pattern)
-    const positiveTabindex = tabindexElements.filter(
-      el => parseInt(el.tabindex) > 0
-    );
+    const positiveTabindex = tabindexElements.filter(el => parseInt(el.tabindex) > 0);
 
     expect(positiveTabindex.length).toBe(0);
   });
@@ -206,8 +207,7 @@ test.describe('Focus Indicators', () => {
         const pseudoStyles = window.getComputedStyle(el, ':focus');
 
         // Check for outline, box-shadow, or border changes
-        const hasOutline = pseudoStyles.outline !== 'none' &&
-          pseudoStyles.outlineWidth !== '0px';
+        const hasOutline = pseudoStyles.outline !== 'none' && pseudoStyles.outlineWidth !== '0px';
         const hasBoxShadow = pseudoStyles.boxShadow !== 'none';
         const hasBorder = pseudoStyles.borderWidth !== '0px';
 
@@ -292,9 +292,11 @@ test.describe('Skip Links', () => {
     await page.goto('https://example.com');
 
     // Check for skip link
-    const skipLink = await page.locator('a[href="#main-content"], a[href="#main"], a[href="#content"]').first();
+    const skipLink = await page
+      .locator('a[href="#main-content"], a[href="#main"], a[href="#content"]')
+      .first();
 
-    if (await skipLink.count() > 0) {
+    if ((await skipLink.count()) > 0) {
       await expect(skipLink).toBeAttached();
 
       // Skip link should be first focusable element
@@ -315,7 +317,7 @@ test.describe('Skip Links', () => {
 
     const skipLink = await page.locator('a[href^="#main"], a[href^="#content"]').first();
 
-    if (await skipLink.count() > 0) {
+    if ((await skipLink.count()) > 0) {
       await skipLink.focus();
       await page.keyboard.press('Enter');
       await page.waitForTimeout(200);
@@ -364,9 +366,12 @@ test.describe('Focus Trap in Modals and Dialogs', () => {
       await page.waitForTimeout(50);
 
       const focusedElement = await page.locator(':focus');
-      const isInModal = await focusedElement.evaluate((el, modalEl) => {
-        return modalEl.contains(el);
-      }, await modal.elementHandle());
+      const isInModal = await focusedElement.evaluate(
+        (el, modalEl) => {
+          return modalEl.contains(el);
+        },
+        await modal.elementHandle()
+      );
 
       // Focus should always be within modal
       expect(isInModal).toBeTruthy();
@@ -432,9 +437,13 @@ test.describe('Keyboard Shortcuts', () => {
     // Test Escape key (if applicable)
     const escapeHandled = await page.evaluate(() => {
       let handled = false;
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') handled = true;
-      }, { once: true });
+      document.addEventListener(
+        'keydown',
+        e => {
+          if (e.key === 'Escape') handled = true;
+        },
+        { once: true }
+      );
       return handled;
     });
 
@@ -506,7 +515,7 @@ test.describe('Form Keyboard Navigation', () => {
     // Find radio button group
     const radioGroup = await page.locator('[role="radiogroup"]').first();
 
-    if (await radioGroup.count() > 0) {
+    if ((await radioGroup.count()) > 0) {
       const radios = await radioGroup.locator('input[type="radio"]').all();
 
       if (radios.length > 0) {
@@ -532,7 +541,7 @@ test.describe('Form Keyboard Navigation', () => {
 
     const select = await page.locator('select').first();
 
-    if (await select.count() > 0) {
+    if ((await select.count()) > 0) {
       await select.focus();
 
       // Open dropdown with Space or Enter

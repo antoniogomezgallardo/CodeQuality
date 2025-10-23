@@ -2,14 +2,14 @@
 
 ## Document Information
 
-| Field | Details |
-|-------|---------|
-| **Service Name** | [Service Name] |
-| **Version** | 1.0 |
-| **Last Updated** | YYYY-MM-DD |
-| **Document Owner** | [Team/Person] |
-| **Review Schedule** | Quarterly |
-| **Classification** | Internal / Confidential |
+| Field               | Details                 |
+| ------------------- | ----------------------- |
+| **Service Name**    | [Service Name]          |
+| **Version**         | 1.0                     |
+| **Last Updated**    | YYYY-MM-DD              |
+| **Document Owner**  | [Team/Person]           |
+| **Review Schedule** | Quarterly               |
+| **Classification**  | Internal / Confidential |
 
 ---
 
@@ -31,12 +31,14 @@
 ## Service Overview
 
 ### Purpose
+
 [Brief description of what this service does and its business value]
 
 **Example:**
 The Payment Processing Service handles all payment transactions for the e-commerce platform. It integrates with multiple payment gateways, processes transactions, manages payment methods, and handles refunds. This service is critical for revenue generation and processes approximately 50,000 transactions daily.
 
 ### Key Features
+
 - Credit/debit card processing
 - Multiple payment gateway integration (Stripe, PayPal, Square)
 - Recurring billing support
@@ -45,28 +47,30 @@ The Payment Processing Service handles all payment transactions for the e-commer
 - Real-time fraud detection
 
 ### Service Characteristics
-| Characteristic | Value |
-|----------------|-------|
-| **Service Type** | REST API / Microservice / Background Worker |
-| **Language/Framework** | Node.js 18 / Express.js |
-| **Database** | PostgreSQL 14 |
-| **Cache** | Redis 7.0 |
-| **Message Queue** | RabbitMQ 3.12 |
-| **Deployment Model** | Kubernetes (EKS) |
-| **Availability Target** | 99.99% (4 nines) |
-| **RTO** | 30 minutes |
-| **RPO** | 5 minutes |
+
+| Characteristic          | Value                                       |
+| ----------------------- | ------------------------------------------- |
+| **Service Type**        | REST API / Microservice / Background Worker |
+| **Language/Framework**  | Node.js 18 / Express.js                     |
+| **Database**            | PostgreSQL 14                               |
+| **Cache**               | Redis 7.0                                   |
+| **Message Queue**       | RabbitMQ 3.12                               |
+| **Deployment Model**    | Kubernetes (EKS)                            |
+| **Availability Target** | 99.99% (4 nines)                            |
+| **RTO**                 | 30 minutes                                  |
+| **RPO**                 | 5 minutes                                   |
 
 ### Service Metrics (Normal Operation)
-| Metric | Normal Range | Alert Threshold |
-|--------|--------------|-----------------|
-| Request Rate | 800-1200 req/min | < 100 or > 2000 |
-| Error Rate | < 0.1% | > 1% |
-| Latency (p95) | < 500ms | > 1000ms |
-| Latency (p99) | < 1000ms | > 2000ms |
-| CPU Usage | 30-50% | > 80% |
-| Memory Usage | 2-4 GB | > 6 GB |
-| Database Connections | 20-40 | > 80 |
+
+| Metric               | Normal Range     | Alert Threshold |
+| -------------------- | ---------------- | --------------- |
+| Request Rate         | 800-1200 req/min | < 100 or > 2000 |
+| Error Rate           | < 0.1%           | > 1%            |
+| Latency (p95)        | < 500ms          | > 1000ms        |
+| Latency (p99)        | < 1000ms         | > 2000ms        |
+| CPU Usage            | 30-50%           | > 80%           |
+| Memory Usage         | 2-4 GB           | > 6 GB          |
+| Database Connections | 20-40            | > 80            |
 
 ---
 
@@ -97,6 +101,7 @@ The Payment Processing Service handles all payment transactions for the e-commer
 ### Components
 
 #### 1. API Server
+
 - **Technology:** Node.js + Express.js
 - **Replicas:** 3 (auto-scales 3-10)
 - **Port:** 3000
@@ -104,6 +109,7 @@ The Payment Processing Service handles all payment transactions for the e-commer
 - **Location:** Kubernetes namespace `payment-service-prod`
 
 #### 2. Database
+
 - **Type:** PostgreSQL 14.5
 - **Instance:** AWS RDS db.r5.xlarge
 - **Storage:** 500 GB (auto-scaling enabled)
@@ -112,6 +118,7 @@ The Payment Processing Service handles all payment transactions for the e-commer
 - **Connection String:** Stored in AWS Secrets Manager
 
 #### 3. Cache Layer
+
 - **Type:** Redis 7.0
 - **Instance:** AWS ElastiCache cache.r6g.large
 - **Configuration:** Cluster mode enabled, 3 shards
@@ -119,6 +126,7 @@ The Payment Processing Service handles all payment transactions for the e-commer
 - **Use Cases:** Session data, payment method tokens, rate limiting
 
 #### 4. Message Queue
+
 - **Type:** RabbitMQ 3.12
 - **Queues:**
   - `payment.processing` - Payment transaction processing
@@ -127,14 +135,16 @@ The Payment Processing Service handles all payment transactions for the e-commer
   - `payment.refunds` - Refund processing
 
 ### Network Configuration
-| Component | Internal DNS | External Endpoint |
-|-----------|--------------|-------------------|
-| API | payment-service.internal | api.example.com/payments |
-| Database | payment-db.internal | - |
-| Redis | payment-cache.internal | - |
-| RabbitMQ | payment-queue.internal | - |
+
+| Component | Internal DNS             | External Endpoint        |
+| --------- | ------------------------ | ------------------------ |
+| API       | payment-service.internal | api.example.com/payments |
+| Database  | payment-db.internal      | -                        |
+| Redis     | payment-cache.internal   | -                        |
+| RabbitMQ  | payment-queue.internal   | -                        |
 
 ### Security
+
 - **Authentication:** JWT tokens (issued by Auth Service)
 - **Authorization:** Role-based access control (RBAC)
 - **Encryption:**
@@ -151,6 +161,7 @@ The Payment Processing Service handles all payment transactions for the e-commer
 ### Starting the Service
 
 #### Development Environment
+
 ```bash
 # Clone repository
 git clone https://github.com/company/payment-service.git
@@ -177,6 +188,7 @@ curl http://localhost:3000/health
 ```
 
 #### Production Environment
+
 ```bash
 # Connect to Kubernetes cluster
 aws eks update-kubeconfig --name production-cluster --region us-east-1
@@ -197,6 +209,7 @@ kubectl get events -n payment-service-prod --sort-by='.lastTimestamp'
 ### Stopping the Service
 
 #### Graceful Shutdown (Maintenance)
+
 ```bash
 # Scale down to zero replicas (drains existing connections)
 kubectl scale deployment payment-service --replicas=0 -n payment-service-prod
@@ -209,6 +222,7 @@ kubectl get pods -n payment-service-prod -l app=payment-service
 ```
 
 #### Emergency Shutdown
+
 ```bash
 # Immediate shutdown (use only in emergencies)
 kubectl delete deployment payment-service -n payment-service-prod
@@ -220,6 +234,7 @@ aws elbv2 deregister-targets --target-group-arn <arn> --targets Id=<instance-id>
 ### Restarting the Service
 
 #### Rolling Restart (Zero Downtime)
+
 ```bash
 # Trigger rolling restart of all pods
 kubectl rollout restart deployment payment-service -n payment-service-prod
@@ -235,6 +250,7 @@ kubectl logs -n payment-service-prod -l app=payment-service --tail=50
 ```
 
 #### Force Restart (If Rolling Restart Fails)
+
 ```bash
 # Delete all pods (deployment will recreate them)
 kubectl delete pods -n payment-service-prod -l app=payment-service
@@ -246,6 +262,7 @@ watch kubectl get pods -n payment-service-prod
 ### Deployment
 
 #### Standard Deployment
+
 ```bash
 # 1. Verify you're on correct cluster
 kubectl config current-context
@@ -276,6 +293,7 @@ curl https://api.example.com/payments/health
 ```
 
 #### Canary Deployment
+
 ```bash
 # 1. Create canary deployment (10% traffic)
 kubectl apply -f k8s/canary-deployment.yaml
@@ -298,6 +316,7 @@ kubectl delete -f k8s/canary-deployment.yaml
 ### Scaling
 
 #### Manual Scaling
+
 ```bash
 # Scale up to handle increased load
 kubectl scale deployment payment-service --replicas=8 -n payment-service-prod
@@ -310,6 +329,7 @@ kubectl top pods -n payment-service-prod
 ```
 
 #### Auto-Scaling Configuration
+
 ```yaml
 # HPA (Horizontal Pod Autoscaler) configuration
 apiVersion: autoscaling/v2
@@ -324,18 +344,18 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
 ```
 
 ---
@@ -345,9 +365,11 @@ spec:
 ### Monitoring Dashboards
 
 #### Primary Dashboard
+
 **URL:** https://grafana.example.com/d/payment-service-overview
 
 **Key Panels:**
+
 - Request rate (last 1 hour)
 - Error rate percentage
 - Latency (p50, p95, p99)
@@ -357,9 +379,11 @@ spec:
 - Payment gateway response times
 
 #### Infrastructure Dashboard
+
 **URL:** https://grafana.example.com/d/payment-service-infrastructure
 
 **Key Panels:**
+
 - CPU usage per pod
 - Memory usage per pod
 - Network I/O
@@ -370,6 +394,7 @@ spec:
 ### Key Metrics to Monitor
 
 #### Application Metrics
+
 ```
 # Request metrics
 payment_requests_total (counter)
@@ -390,6 +415,7 @@ cache_hit_rate (gauge)
 ```
 
 #### Infrastructure Metrics
+
 ```
 # Pod metrics
 container_cpu_usage_seconds_total
@@ -409,6 +435,7 @@ pg_database_size_bytes
 #### Critical Alerts (Page Immediately)
 
 **High Error Rate**
+
 ```yaml
 alert: HighErrorRate
 expr: (sum(rate(payment_errors_total[5m])) / sum(rate(payment_requests_total[5m]))) > 0.05
@@ -416,11 +443,12 @@ for: 5m
 labels:
   severity: critical
 annotations:
-  summary: "Payment service error rate above 5%"
-  description: "Error rate is {{ $value | humanizePercentage }}"
+  summary: 'Payment service error rate above 5%'
+  description: 'Error rate is {{ $value | humanizePercentage }}'
 ```
 
 **Service Down**
+
 ```yaml
 alert: ServiceDown
 expr: up{job="payment-service"} == 0
@@ -428,11 +456,12 @@ for: 2m
 labels:
   severity: critical
 annotations:
-  summary: "Payment service is down"
-  description: "Service has been down for more than 2 minutes"
+  summary: 'Payment service is down'
+  description: 'Service has been down for more than 2 minutes'
 ```
 
 **High Latency**
+
 ```yaml
 alert: HighLatency
 expr: histogram_quantile(0.95, payment_request_duration_seconds) > 2.0
@@ -440,13 +469,14 @@ for: 10m
 labels:
   severity: critical
 annotations:
-  summary: "Payment service p95 latency above 2s"
-  description: "P95 latency is {{ $value }}s"
+  summary: 'Payment service p95 latency above 2s'
+  description: 'P95 latency is {{ $value }}s'
 ```
 
 #### Warning Alerts (Notify, No Page)
 
 **Elevated Error Rate**
+
 ```yaml
 alert: ElevatedErrorRate
 expr: (sum(rate(payment_errors_total[5m])) / sum(rate(payment_requests_total[5m]))) > 0.01
@@ -454,11 +484,12 @@ for: 15m
 labels:
   severity: warning
 annotations:
-  summary: "Payment service error rate above 1%"
-  description: "Error rate is {{ $value | humanizePercentage }}"
+  summary: 'Payment service error rate above 1%'
+  description: 'Error rate is {{ $value | humanizePercentage }}'
 ```
 
 **High Memory Usage**
+
 ```yaml
 alert: HighMemoryUsage
 expr: container_memory_usage_bytes{pod=~"payment-service-.*"} / container_spec_memory_limit_bytes > 0.85
@@ -466,13 +497,14 @@ for: 15m
 labels:
   severity: warning
 annotations:
-  summary: "Payment service memory usage above 85%"
-  description: "Memory usage is {{ $value | humanizePercentage }}"
+  summary: 'Payment service memory usage above 85%'
+  description: 'Memory usage is {{ $value | humanizePercentage }}'
 ```
 
 ### Log Locations
 
 #### Application Logs
+
 ```bash
 # View real-time logs
 kubectl logs -f -n payment-service-prod -l app=payment-service
@@ -490,6 +522,7 @@ kubectl logs -n payment-service-prod payment-service-abc123-xyz
 ```
 
 #### Audit Logs
+
 - **Location:** S3 bucket `s3://company-audit-logs/payment-service/`
 - **Retention:** 7 years
 - **Format:** JSON
@@ -504,11 +537,13 @@ kubectl logs -n payment-service-prod payment-service-abc123-xyz
 #### Issue 1: High Response Time
 
 **Symptoms:**
+
 - API response time > 2 seconds
 - Users reporting slow checkout experience
 - Grafana dashboard showing elevated p95 latency
 
 **Diagnostic Steps:**
+
 ```bash
 # 1. Check current response times
 curl -w "@curl-format.txt" -o /dev/null -s https://api.example.com/payments/health
@@ -529,15 +564,16 @@ kubectl logs -n payment-service-prod -l app=payment-service | grep "gateway_resp
 
 **Common Causes & Solutions:**
 
-| Cause | Solution | ETA |
-|-------|----------|-----|
-| Database query slow | Analyze and optimize query, add index | 30 min |
-| Cache miss high | Warm up cache, increase TTL | 15 min |
-| Payment gateway slow | Switch to backup gateway, contact vendor | 5 min |
-| High traffic | Scale up pods | 5 min |
-| Memory leak | Restart pods, investigate code | 10 min |
+| Cause                | Solution                                 | ETA    |
+| -------------------- | ---------------------------------------- | ------ |
+| Database query slow  | Analyze and optimize query, add index    | 30 min |
+| Cache miss high      | Warm up cache, increase TTL              | 15 min |
+| Payment gateway slow | Switch to backup gateway, contact vendor | 5 min  |
+| High traffic         | Scale up pods                            | 5 min  |
+| Memory leak          | Restart pods, investigate code           | 10 min |
 
 **Resolution Steps:**
+
 ```bash
 # If database is slow - analyze specific query
 EXPLAIN ANALYZE SELECT * FROM payments WHERE user_id = 12345;
@@ -554,11 +590,13 @@ kubectl scale deployment payment-service --replicas=10 -n payment-service-prod
 #### Issue 2: Service Not Starting
 
 **Symptoms:**
+
 - Pods in CrashLoopBackOff state
 - Health check endpoint not responding
 - Deployment rollout stuck
 
 **Diagnostic Steps:**
+
 ```bash
 # 1. Check pod status
 kubectl get pods -n payment-service-prod -l app=payment-service
@@ -578,16 +616,17 @@ kubectl get events -n payment-service-prod --sort-by='.lastTimestamp' | tail -20
 
 **Common Causes & Solutions:**
 
-| Cause | Solution | ETA |
-|-------|----------|-----|
-| Database connection failed | Check DB credentials, security group | 10 min |
-| Missing environment variables | Update ConfigMap/Secret | 5 min |
-| Image pull error | Check ECR permissions | 10 min |
-| Insufficient resources | Increase resource limits | 5 min |
-| Port already in use | Check port conflicts | 5 min |
-| Migration failed | Rollback migration, fix and retry | 20 min |
+| Cause                         | Solution                             | ETA    |
+| ----------------------------- | ------------------------------------ | ------ |
+| Database connection failed    | Check DB credentials, security group | 10 min |
+| Missing environment variables | Update ConfigMap/Secret              | 5 min  |
+| Image pull error              | Check ECR permissions                | 10 min |
+| Insufficient resources        | Increase resource limits             | 5 min  |
+| Port already in use           | Check port conflicts                 | 5 min  |
+| Migration failed              | Rollback migration, fix and retry    | 20 min |
 
 **Resolution Steps:**
+
 ```bash
 # If database connection issue
 kubectl get secret payment-db-credentials -n payment-service-prod -o jsonpath='{.data.password}' | base64 --decode
@@ -607,11 +646,13 @@ kubectl rollout undo deployment payment-service -n payment-service-prod
 #### Issue 3: Database Connection Pool Exhausted
 
 **Symptoms:**
+
 - Errors: "Unable to acquire connection from pool"
 - Response time increasing
 - Database connection count at maximum
 
 **Diagnostic Steps:**
+
 ```bash
 # 1. Check active database connections
 kubectl exec -it payment-db-0 -n payment-service-prod -- psql -U postgres -c "
@@ -632,6 +673,7 @@ kubectl get configmap payment-service-config -n payment-service-prod -o yaml | g
 ```
 
 **Resolution Steps:**
+
 ```bash
 # 1. Kill long-running queries (if found)
 kubectl exec -it payment-db-0 -n payment-service-prod -- psql -U postgres -c "
@@ -654,11 +696,13 @@ kubectl logs -n payment-service-prod -l app=payment-service | grep "connection" 
 #### Issue 4: Payment Gateway Errors
 
 **Symptoms:**
+
 - Payment transactions failing
 - Gateway-specific error codes
 - Increased error rate for specific gateway
 
 **Diagnostic Steps:**
+
 ```bash
 # 1. Check gateway-specific error rates
 kubectl logs -n payment-service-prod -l app=payment-service | grep "gateway_error" | grep "stripe" | tail -50
@@ -671,6 +715,7 @@ kubectl logs -n payment-service-prod -l app=payment-service | grep "stripe_api_c
 ```
 
 **Resolution Steps:**
+
 ```bash
 # 1. Switch to backup gateway (if configured)
 kubectl set env deployment/payment-service PRIMARY_GATEWAY=paypal -n payment-service-prod
@@ -690,6 +735,7 @@ kubectl set env deployment/payment-service PRIMARY_GATEWAY=paypal -n payment-ser
 ### Debugging Commands
 
 #### Check Service Health
+
 ```bash
 # Internal health check
 kubectl exec -it payment-service-xxx-yyy -n payment-service-prod -- curl localhost:3000/health
@@ -702,6 +748,7 @@ curl https://api.example.com/payments/health/detailed
 ```
 
 #### Inspect Configuration
+
 ```bash
 # View ConfigMap
 kubectl get configmap payment-service-config -n payment-service-prod -o yaml
@@ -714,6 +761,7 @@ kubectl exec -it payment-service-xxx-yyy -n payment-service-prod -- env | sort
 ```
 
 #### Database Debugging
+
 ```bash
 # Connect to database
 kubectl exec -it payment-db-0 -n payment-service-prod -- psql -U postgres payment_service
@@ -730,6 +778,7 @@ SELECT * FROM pg_locks WHERE granted = false;
 ```
 
 #### Cache Debugging
+
 ```bash
 # Connect to Redis
 kubectl exec -it payment-cache-0 -n payment-service-prod -- redis-cli
@@ -753,16 +802,17 @@ MONITOR
 
 ### Incident Severity Levels
 
-| Level | Definition | Response Time | Examples |
-|-------|------------|---------------|----------|
-| **SEV-1** | Complete service outage | < 5 minutes | Service down, database inaccessible |
-| **SEV-2** | Partial outage or degraded performance | < 15 minutes | High error rate, slow response times |
-| **SEV-3** | Minor issue, limited user impact | < 1 hour | Single payment gateway failing |
-| **SEV-4** | Cosmetic or low-impact issue | < 4 hours | Logging issues, minor UI problems |
+| Level     | Definition                             | Response Time | Examples                             |
+| --------- | -------------------------------------- | ------------- | ------------------------------------ |
+| **SEV-1** | Complete service outage                | < 5 minutes   | Service down, database inaccessible  |
+| **SEV-2** | Partial outage or degraded performance | < 15 minutes  | High error rate, slow response times |
+| **SEV-3** | Minor issue, limited user impact       | < 1 hour      | Single payment gateway failing       |
+| **SEV-4** | Cosmetic or low-impact issue           | < 4 hours     | Logging issues, minor UI problems    |
 
 ### Incident Response Procedure
 
 #### 1. Detection & Assessment (0-5 minutes)
+
 ```bash
 # Acknowledge alert in PagerDuty
 # Create incident Slack channel: #incident-YYYY-MM-DD-payment
@@ -780,6 +830,7 @@ kubectl get events -n payment-service-prod --sort-by='.lastTimestamp' | tail -20
 ```
 
 #### 2. Communication (5-10 minutes)
+
 ```bash
 # Update status page
 # Navigate to: https://status.example.com/admin
@@ -797,6 +848,7 @@ kubectl get events -n payment-service-prod --sort-by='.lastTimestamp' | tail -20
 ```
 
 #### 3. Investigation & Mitigation (10-30 minutes)
+
 ```bash
 # Check recent deployments
 kubectl rollout history deployment payment-service -n payment-service-prod
@@ -820,6 +872,7 @@ curl https://api.example.com/payments/dependencies/health
 ```
 
 #### 4. Resolution & Recovery (30-60 minutes)
+
 ```bash
 # Implement fix
 # (Based on root cause identified)
@@ -836,6 +889,7 @@ curl https://api.example.com/payments/health
 ```
 
 #### 5. Post-Incident (After resolution)
+
 ```bash
 # Update status page
 # Post: "Service restored. Monitoring closely."
@@ -857,6 +911,7 @@ curl https://api.example.com/payments/health
 ### Quick Rollback
 
 #### Rollback Deployment
+
 ```bash
 # 1. View rollout history
 kubectl rollout history deployment payment-service -n payment-service-prod
@@ -879,6 +934,7 @@ curl https://api.example.com/payments/health
 ```
 
 #### Rollback to Specific Version
+
 ```bash
 # Rollback to specific revision
 kubectl rollout undo deployment payment-service --to-revision=2 -n payment-service-prod
@@ -890,6 +946,7 @@ kubectl describe deployment payment-service -n payment-service-prod | grep Image
 ### Database Rollback
 
 #### Rollback Migration
+
 ```bash
 # 1. Connect to pod
 kubectl exec -it payment-service-xxx-yyy -n payment-service-prod -- /bin/sh
@@ -905,6 +962,7 @@ npm run migrate:status
 ```
 
 #### Restore from Backup
+
 ```bash
 # 1. Find latest backup
 aws rds describe-db-snapshots \
@@ -930,6 +988,7 @@ kubectl scale deployment payment-service --replicas=3 -n payment-service-prod
 ### Configuration Rollback
 
 #### Rollback ConfigMap
+
 ```bash
 # ConfigMaps don't have built-in rollback, so maintain versions
 
@@ -944,6 +1003,7 @@ kubectl rollout restart deployment payment-service -n payment-service-prod
 ### DNS/Traffic Rollback
 
 #### Route Traffic to Previous Version
+
 ```bash
 # If both versions are running, update service selector
 
@@ -1035,12 +1095,12 @@ aws ce get-cost-and-usage \
 
 ### Team Contacts
 
-| Role | Name | Email | Phone | Slack |
-|------|------|-------|-------|-------|
-| **Product Owner** | Jane Doe | jane@example.com | +1-555-0101 | @jane |
-| **Engineering Lead** | John Smith | john@example.com | +1-555-0102 | @john |
-| **SRE Lead** | Alice Johnson | alice@example.com | +1-555-0103 | @alice |
-| **On-Call Engineer** | PagerDuty Rotation | - | +1-555-0199 | #on-call |
+| Role                 | Name               | Email             | Phone       | Slack    |
+| -------------------- | ------------------ | ----------------- | ----------- | -------- |
+| **Product Owner**    | Jane Doe           | jane@example.com  | +1-555-0101 | @jane    |
+| **Engineering Lead** | John Smith         | john@example.com  | +1-555-0102 | @john    |
+| **SRE Lead**         | Alice Johnson      | alice@example.com | +1-555-0103 | @alice   |
+| **On-Call Engineer** | PagerDuty Rotation | -                 | +1-555-0199 | #on-call |
 
 ### Escalation Path
 
@@ -1056,21 +1116,21 @@ Level 4: VP Engineering + CTO
 
 ### External Contacts
 
-| Vendor | Purpose | Contact | Support Portal |
-|--------|---------|---------|----------------|
-| **AWS** | Infrastructure | +1-800-AWS-HELP | console.aws.amazon.com/support |
-| **Stripe** | Payment Gateway | support@stripe.com | dashboard.stripe.com/support |
-| **PayPal** | Payment Gateway | merchant-support@paypal.com | paypal.com/merchant-support |
-| **Datadog** | Monitoring | support@datadoghq.com | app.datadoghq.com/help |
+| Vendor      | Purpose         | Contact                     | Support Portal                 |
+| ----------- | --------------- | --------------------------- | ------------------------------ |
+| **AWS**     | Infrastructure  | +1-800-AWS-HELP             | console.aws.amazon.com/support |
+| **Stripe**  | Payment Gateway | support@stripe.com          | dashboard.stripe.com/support   |
+| **PayPal**  | Payment Gateway | merchant-support@paypal.com | paypal.com/merchant-support    |
+| **Datadog** | Monitoring      | support@datadoghq.com       | app.datadoghq.com/help         |
 
 ### Communication Channels
 
-| Channel | Purpose | Link |
-|---------|---------|------|
-| **#payment-service** | General discussion | slack://channel?team=T123&id=C456 |
-| **#incidents** | Active incidents | slack://channel?team=T123&id=C789 |
-| **#on-call** | On-call coordination | slack://channel?team=T123&id=C012 |
-| **Status Page** | Customer communication | https://status.example.com |
+| Channel              | Purpose                | Link                              |
+| -------------------- | ---------------------- | --------------------------------- |
+| **#payment-service** | General discussion     | slack://channel?team=T123&id=C456 |
+| **#incidents**       | Active incidents       | slack://channel?team=T123&id=C789 |
+| **#on-call**         | On-call coordination   | slack://channel?team=T123&id=C012 |
+| **Status Page**      | Customer communication | https://status.example.com        |
 
 ---
 
@@ -1078,42 +1138,42 @@ Level 4: VP Engineering + CTO
 
 ### Upstream Dependencies (Services this service depends on)
 
-| Service | Purpose | Contact | SLA | Criticality | Health Check |
-|---------|---------|---------|-----|-------------|--------------|
-| **Auth Service** | User authentication | @auth-team | 99.9% | Critical | https://auth.internal/health |
-| **User Service** | User profile data | @user-team | 99.5% | High | https://user.internal/health |
-| **Notification Service** | Email/SMS notifications | @notify-team | 99% | Medium | https://notify.internal/health |
-| **PostgreSQL** | Primary database | @dba-team | 99.99% | Critical | Internal monitoring |
-| **Redis** | Caching | @platform-team | 99.9% | High | Internal monitoring |
-| **Stripe API** | Payment processing | Stripe Support | 99.99% | Critical | https://status.stripe.com |
-| **PayPal API** | Payment processing | PayPal Support | 99.99% | Critical | https://status.paypal.com |
+| Service                  | Purpose                 | Contact        | SLA    | Criticality | Health Check                   |
+| ------------------------ | ----------------------- | -------------- | ------ | ----------- | ------------------------------ |
+| **Auth Service**         | User authentication     | @auth-team     | 99.9%  | Critical    | https://auth.internal/health   |
+| **User Service**         | User profile data       | @user-team     | 99.5%  | High        | https://user.internal/health   |
+| **Notification Service** | Email/SMS notifications | @notify-team   | 99%    | Medium      | https://notify.internal/health |
+| **PostgreSQL**           | Primary database        | @dba-team      | 99.99% | Critical    | Internal monitoring            |
+| **Redis**                | Caching                 | @platform-team | 99.9%  | High        | Internal monitoring            |
+| **Stripe API**           | Payment processing      | Stripe Support | 99.99% | Critical    | https://status.stripe.com      |
+| **PayPal API**           | Payment processing      | PayPal Support | 99.99% | Critical    | https://status.paypal.com      |
 
 ### Downstream Dependencies (Services that depend on this service)
 
-| Service | Purpose | Contact | Impact of Outage |
-|---------|---------|---------|-------------------|
-| **Order Service** | Order processing | @order-team | Cannot complete orders |
-| **Subscription Service** | Recurring billing | @subscription-team | Cannot process subscriptions |
-| **Reporting Service** | Financial reports | @analytics-team | Reports show stale data |
-| **Admin Portal** | Transaction management | @admin-team | Cannot view/manage payments |
+| Service                  | Purpose                | Contact            | Impact of Outage             |
+| ------------------------ | ---------------------- | ------------------ | ---------------------------- |
+| **Order Service**        | Order processing       | @order-team        | Cannot complete orders       |
+| **Subscription Service** | Recurring billing      | @subscription-team | Cannot process subscriptions |
+| **Reporting Service**    | Financial reports      | @analytics-team    | Reports show stale data      |
+| **Admin Portal**         | Transaction management | @admin-team        | Cannot view/manage payments  |
 
 ### External APIs
 
-| API | Purpose | Rate Limit | Timeout | Retry Policy |
-|-----|---------|------------|---------|--------------|
-| **Stripe** | Payment processing | 100 req/sec | 30s | 3 retries with exponential backoff |
-| **PayPal** | Payment processing | 50 req/sec | 30s | 3 retries with exponential backoff |
-| **Fraud Detection** | Fraud check | 200 req/sec | 5s | No retry (fail open) |
-| **Tax Calculator** | Tax calculation | 100 req/sec | 10s | 2 retries |
+| API                 | Purpose            | Rate Limit  | Timeout | Retry Policy                       |
+| ------------------- | ------------------ | ----------- | ------- | ---------------------------------- |
+| **Stripe**          | Payment processing | 100 req/sec | 30s     | 3 retries with exponential backoff |
+| **PayPal**          | Payment processing | 50 req/sec  | 30s     | 3 retries with exponential backoff |
+| **Fraud Detection** | Fraud check        | 200 req/sec | 5s      | No retry (fail open)               |
+| **Tax Calculator**  | Tax calculation    | 100 req/sec | 10s     | 2 retries                          |
 
 ### Database Schema
 
-| Table | Purpose | Size | Growth Rate |
-|-------|---------|------|-------------|
-| **payments** | Payment records | 500 GB | 5 GB/month |
-| **transactions** | Transaction log | 200 GB | 2 GB/month |
-| **payment_methods** | Stored payment methods | 50 GB | 500 MB/month |
-| **refunds** | Refund records | 100 GB | 1 GB/month |
+| Table               | Purpose                | Size   | Growth Rate  |
+| ------------------- | ---------------------- | ------ | ------------ |
+| **payments**        | Payment records        | 500 GB | 5 GB/month   |
+| **transactions**    | Transaction log        | 200 GB | 2 GB/month   |
+| **payment_methods** | Stored payment methods | 50 GB  | 500 MB/month |
+| **refunds**         | Refund records         | 100 GB | 1 GB/month   |
 
 ---
 
@@ -1161,11 +1221,11 @@ alias ps-db-conn='kubectl exec -it payment-db-0 -n payment-service-prod -- psql 
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2024-01-15 | John Smith | Initial version |
-| 1.1 | 2024-02-20 | Alice Johnson | Added troubleshooting section |
-| 1.2 | 2024-03-10 | John Smith | Updated monitoring section |
+| Version | Date       | Author        | Changes                       |
+| ------- | ---------- | ------------- | ----------------------------- |
+| 1.0     | 2024-01-15 | John Smith    | Initial version               |
+| 1.1     | 2024-02-20 | Alice Johnson | Added troubleshooting section |
+| 1.2     | 2024-03-10 | John Smith    | Updated monitoring section    |
 
 ---
 

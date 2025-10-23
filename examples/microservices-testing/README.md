@@ -73,12 +73,14 @@ npm run test:chaos
 Contract testing ensures that the contract between service consumers and providers is maintained. Using Pact, we define expected interactions and verify them independently.
 
 **Key Benefits**:
+
 - Catch breaking API changes early
 - Enable independent service deployment
 - Reduce need for end-to-end tests
 - Provide living documentation of API contracts
 
 **When to Use**:
+
 - Testing HTTP API interactions between services
 - Verifying message format in async communication
 - Before deploying services independently
@@ -90,12 +92,14 @@ Contract testing ensures that the contract between service consumers and provide
 Tests individual microservices with all external dependencies mocked or stubbed. This ensures services work correctly in isolation.
 
 **Key Benefits**:
+
 - Fast test execution
 - No external dependencies
 - Easy to reproduce failures
 - High test reliability
 
 **When to Use**:
+
 - Unit testing service logic
 - Testing error handling
 - Verifying business rules
@@ -108,12 +112,14 @@ Tests individual microservices with all external dependencies mocked or stubbed.
 Tests the actual communication between services, including HTTP calls, database interactions, and third-party integrations.
 
 **Key Benefits**:
+
 - Verify real service interactions
 - Catch integration issues early
 - Test network failures and timeouts
 - Validate data serialization
 
 **When to Use**:
+
 - After contract tests pass
 - Testing complex workflows
 - Verifying cross-service transactions
@@ -126,12 +132,14 @@ Tests the actual communication between services, including HTTP calls, database 
 Tests message queue systems (RabbitMQ, Kafka) including event publishing, consumption, dead letter queues, and message ordering.
 
 **Key Benefits**:
+
 - Verify async communication
 - Test message idempotency
 - Validate event ordering
 - Check error handling in event processing
 
 **When to Use**:
+
 - Testing event-driven architectures
 - Verifying saga patterns
 - Testing event sourcing systems
@@ -144,12 +152,14 @@ Tests message queue systems (RabbitMQ, Kafka) including event publishing, consum
 Introduces controlled failures to test system resilience: network delays, service failures, resource exhaustion, and cascading failures.
 
 **Key Benefits**:
+
 - Identify system weaknesses
 - Verify circuit breakers
 - Test fallback mechanisms
 - Validate retry logic
 
 **When to Use**:
+
 - Production-like environments
 - Load testing scenarios
 - Disaster recovery planning

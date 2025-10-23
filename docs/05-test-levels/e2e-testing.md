@@ -1,10 +1,13 @@
 # End-to-End (E2E) Testing
 
 ## Purpose
+
 Comprehensive guide to end-to-end testing—validating complete user workflows from start to finish in a production-like environment to ensure the entire system works correctly.
 
 ## Overview
+
 E2E testing:
+
 - Tests complete user journeys
 - Validates real-world scenarios
 - Uses production-like environment
@@ -14,6 +17,7 @@ E2E testing:
 ## What is E2E Testing?
 
 ### Definition
+
 E2E testing validates that the complete application flow works as expected from the user's perspective, testing all integrated components including UI, APIs, databases, and external services.
 
 ### Characteristics
@@ -127,8 +131,7 @@ test.describe('E-Commerce Checkout Flow', () => {
     await page.click('text=Place Order');
 
     // Verify error message
-    await expect(page.locator('.error-message'))
-      .toContainText('Your card was declined');
+    await expect(page.locator('.error-message')).toContainText('Your card was declined');
 
     // Verify order was not created
     await page.goto('https://shop.example.com/orders');
@@ -218,7 +221,7 @@ describe('E-Commerce Checkout Flow', () => {
 const { Builder, By, until } = require('selenium-webdriver');
 const assert = require('assert');
 
-describe('E-Commerce Checkout', function() {
+describe('E-Commerce Checkout', function () {
   this.timeout(30000);
   let driver;
 
@@ -386,7 +389,7 @@ test('checkout with page objects', async ({ page }) => {
     address: '123 Main St',
     city: 'New York',
     state: 'NY',
-    zipCode: '10001'
+    zipCode: '10001',
   });
 
   await checkoutPage.continueToPayment();
@@ -395,7 +398,7 @@ test('checkout with page objects', async ({ page }) => {
     cardNumber: '4242424242424242',
     expiry: '12/25',
     cvc: '123',
-    name: 'John Doe'
+    name: 'John Doe',
   });
 
   await checkoutPage.placeOrder();
@@ -416,14 +419,14 @@ export const TestData = {
       email: 'test@example.com',
       password: 'TestPass123!',
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
     },
     admin: {
       email: 'admin@example.com',
       password: 'AdminPass123!',
       firstName: 'Admin',
-      lastName: 'User'
-    }
+      lastName: 'User',
+    },
   },
 
   addresses: {
@@ -431,14 +434,14 @@ export const TestData = {
       address: '123 Main St',
       city: 'New York',
       state: 'NY',
-      zipCode: '10001'
+      zipCode: '10001',
     },
     billing: {
       address: '456 Oak Ave',
       city: 'Los Angeles',
       state: 'CA',
-      zipCode: '90001'
-    }
+      zipCode: '90001',
+    },
   },
 
   payments: {
@@ -446,15 +449,15 @@ export const TestData = {
       cardNumber: '4242424242424242',
       expiry: '12/25',
       cvc: '123',
-      name: 'John Doe'
+      name: 'John Doe',
     },
     declinedCard: {
       cardNumber: '4000000000000002',
       expiry: '12/25',
       cvc: '123',
-      name: 'John Doe'
-    }
-  }
+      name: 'John Doe',
+    },
+  },
 };
 ```
 
@@ -477,14 +480,15 @@ export class DatabaseHelper {
     const products = [
       { name: 'Logitech MX Master 3', price: 99.99, stock: 50 },
       { name: 'Apple Magic Mouse', price: 79.99, stock: 30 },
-      { name: 'Microsoft Surface Mouse', price: 49.99, stock: 100 }
+      { name: 'Microsoft Surface Mouse', price: 49.99, stock: 100 },
     ];
 
     for (const product of products) {
-      await db.query(
-        'INSERT INTO products (name, price, stock) VALUES ($1, $2, $3)',
-        [product.name, product.price, product.stock]
-      );
+      await db.query('INSERT INTO products (name, price, stock) VALUES ($1, $2, $3)', [
+        product.name,
+        product.price,
+        product.stock,
+      ]);
     }
   }
 
@@ -595,10 +599,7 @@ await page.waitForSelector('.product-list');
 await page.click('.add-to-cart');
 
 // ✅ Wait for navigation
-await Promise.all([
-  page.waitForNavigation(),
-  page.click('.checkout-button')
-]);
+await Promise.all([page.waitForNavigation(), page.click('.checkout-button')]);
 
 // ❌ Arbitrary sleeps
 await page.click('.add-to-cart');
@@ -667,6 +668,7 @@ test.afterEach(async () => {
 ### E2E Test Quality Checklist
 
 **Test Design:**
+
 - [ ] Tests real user workflows
 - [ ] Independent tests
 - [ ] Proper waits (no arbitrary sleeps)
@@ -674,6 +676,7 @@ test.afterEach(async () => {
 - [ ] Page Object Model used
 
 **Coverage:**
+
 - [ ] Happy paths tested
 - [ ] Error scenarios covered
 - [ ] Edge cases included
@@ -681,6 +684,7 @@ test.afterEach(async () => {
 - [ ] Mobile tested
 
 **Maintenance:**
+
 - [ ] Tests are reliable
 - [ ] Minimal flakiness
 - [ ] Easy to debug
@@ -688,6 +692,7 @@ test.afterEach(async () => {
 - [ ] Regular cleanup
 
 **Performance:**
+
 - [ ] Run in parallel
 - [ ] Reasonable execution time
 - [ ] Proper CI/CD integration
@@ -695,12 +700,14 @@ test.afterEach(async () => {
 ## References
 
 ### Documentation
+
 - [Playwright](https://playwright.dev/)
 - [Cypress](https://www.cypress.io/)
 - [Selenium WebDriver](https://www.selenium.dev/)
 - [WebdriverIO](https://webdriver.io/)
 
 ### Tools
+
 - **Playwright**: Modern, fast, reliable
 - **Cypress**: Developer-friendly, great DX
 - **Selenium**: Industry standard, multi-language
@@ -715,4 +722,4 @@ test.afterEach(async () => {
 
 ---
 
-*Part of: [Test Levels](README.md)*
+_Part of: [Test Levels](README.md)_

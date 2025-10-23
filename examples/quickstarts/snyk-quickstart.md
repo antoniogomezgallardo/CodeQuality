@@ -50,6 +50,7 @@ snyk iac test terraform/
 ```
 
 **Example Output:**
+
 ```
 Testing /path/to/project...
 
@@ -86,6 +87,7 @@ snyk wizard
 ### Integrate with CI/CD
 
 **GitHub Actions:**
+
 ```yaml
 name: Security Scan
 
@@ -106,6 +108,7 @@ jobs:
 ```
 
 **GitLab CI:**
+
 ```yaml
 snyk-scan:
   image: node:20
@@ -205,6 +208,7 @@ snyk fix --dry-run
 ## 6. Troubleshooting
 
 ### Issue: "Snyk token not found"
+
 ```bash
 # Authenticate again
 snyk auth
@@ -217,6 +221,7 @@ snyk test
 ```
 
 ### Issue: Too many vulnerabilities
+
 ```bash
 # Filter by severity
 snyk test --severity-threshold=high
@@ -229,6 +234,7 @@ snyk test --prod
 ```
 
 ### Issue: "No supported package files found"
+
 ```bash
 # Snyk looks for:
 # - package.json (Node.js)
@@ -244,6 +250,7 @@ snyk test
 ```
 
 ### Issue: Rate limiting
+
 ```bash
 # Use --all-projects cautiously
 # It can trigger rate limits on free tier
@@ -253,6 +260,7 @@ snyk test
 ```
 
 ### Issue: False positives
+
 ```yaml
 # Use .snyk policy file to ignore
 # Create .snyk file in project root

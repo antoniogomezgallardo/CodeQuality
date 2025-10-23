@@ -32,9 +32,9 @@ name: CI
 # When to run
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 # Jobs to run
 jobs:
@@ -77,6 +77,7 @@ git push origin main
 ```
 
 **Expected Behavior:**
+
 - Workflow triggers on push
 - Tests run automatically
 - Results appear in GitHub Actions tab
@@ -210,6 +211,7 @@ Add secrets at: `Settings → Secrets and variables → Actions`
 ## 6. Troubleshooting
 
 ### Issue: Workflow not triggering
+
 ```yaml
 # Check trigger configuration
 on:
@@ -223,6 +225,7 @@ on:
 ```
 
 ### Issue: "npm: command not found"
+
 ```yaml
 # Make sure to setup Node.js
 - uses: actions/setup-node@v4
@@ -231,6 +234,7 @@ on:
 ```
 
 ### Issue: Tests fail in CI but pass locally
+
 ```yaml
 # Use same Node version locally
 node -v
@@ -242,6 +246,7 @@ env:
 ```
 
 ### Issue: Slow workflow
+
 ```yaml
 # Use npm ci instead of npm install
 - run: npm ci  # Faster, cleaner installs
@@ -256,6 +261,7 @@ jobs:
 ```
 
 ### Issue: Secrets not working
+
 ```bash
 # Secrets are NEVER available in pull requests from forks
 # For security reasons

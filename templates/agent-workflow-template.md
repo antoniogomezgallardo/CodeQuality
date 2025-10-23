@@ -5,29 +5,35 @@ Use this template when designing new agentic workflows for QA tasks.
 ---
 
 ## Workflow Name
+
 **[Name of your agent workflow]**
 
 ## Purpose
+
 **One-sentence description of what this workflow accomplishes**
 
-Example: *Autonomous test generation agent that analyzes code changes and creates comprehensive test suites without human intervention.*
+Example: _Autonomous test generation agent that analyzes code changes and creates comprehensive test suites without human intervention._
 
 ---
 
 ## Workflow Overview
 
 ### Problem Statement
+
 **What manual process does this workflow automate?**
 
 Example:
+
 - **Current State:** QA engineers spend 2-3 hours writing tests for each new feature
 - **Pain Points:** Time-consuming, coverage gaps, inconsistent quality
 - **Manual Effort:** 120 hours/month across team
 
 ### Solution
+
 **How does the agentic workflow solve this?**
 
 Example:
+
 - **Agent Workflow:** Autonomous agent analyzes code, identifies test scenarios, generates comprehensive tests
 - **Benefits:** 80% time reduction, consistent coverage, 24/7 availability
 - **Automation Level:** Level 4 (High Autonomy - Human oversight on failures)
@@ -37,7 +43,9 @@ Example:
 ## Agent Architecture
 
 ### Agent Type
+
 Select one:
+
 - [ ] Single Agent (one agent, multiple tools)
 - [ ] Sequential Agents (agents run one after another)
 - [ ] Parallel Agents (agents run simultaneously)
@@ -53,18 +61,22 @@ For each agent, document:
 **Role:** [What this agent is responsible for]
 
 **Inputs:**
+
 - Input 1: [Description and format]
 - Input 2: [Description and format]
 
 **Outputs:**
+
 - Output 1: [Description and format]
 - Output 2: [Description and format]
 
 **Tools Available:**
+
 - Tool 1: [Tool name and what it does]
 - Tool 2: [Tool name and what it does]
 
 **Reasoning Pattern:**
+
 - [ ] ReAct (Reason + Act)
 - [ ] Plan-and-Execute
 - [ ] ReWOO (Reasoning Without Observation)
@@ -319,22 +331,24 @@ SAFETY_CONSTRAINTS = {
 
 ### Cost Breakdown
 
-| Component | Cost per Run | Frequency | Monthly Cost |
-|-----------|-------------|-----------|--------------|
-| LLM API Calls (GPT-4o) | $[X.XX] | [N] times/month | $[XX.XX] |
-| Vector DB Operations | $[X.XX] | [N] times/month | $[XX.XX] |
-| Infrastructure (Docker) | - | - | $[XX.XX] |
-| **Total** | **$[X.XX]** | - | **$[XXX.XX]** |
+| Component               | Cost per Run | Frequency       | Monthly Cost  |
+| ----------------------- | ------------ | --------------- | ------------- |
+| LLM API Calls (GPT-4o)  | $[X.XX]      | [N] times/month | $[XX.XX]      |
+| Vector DB Operations    | $[X.XX]      | [N] times/month | $[XX.XX]      |
+| Infrastructure (Docker) | -            | -               | $[XX.XX]      |
+| **Total**               | **$[X.XX]**  | -               | **$[XXX.XX]** |
 
 ### ROI Calculation
 
 **Manual Process:**
+
 - Time per instance: [X] hours
 - Frequency: [N] times per month
 - Developer cost: $100/hour
 - **Monthly cost:** [X hours] × [N times] × $100 = $[X,XXX]
 
 **Automated Process:**
+
 - Time per instance: [X] minutes
 - Monthly API cost: $[XXX]
 - **Monthly cost:** $[XXX]
@@ -351,28 +365,28 @@ SAFETY_CONSTRAINTS = {
 ```yaml
 execution_metrics:
   avg_duration_seconds:
-    target: "< 120"
+    target: '< 120'
     current: null
 
   success_rate:
-    target: "> 85%"
+    target: '> 85%'
     current: null
 
   cost_per_run:
-    target: "< $2.00"
+    target: '< $2.00'
     current: null
 
 quality_metrics:
   accuracy:
-    target: "> 90%"
+    target: '> 90%'
     current: null
 
   false_positive_rate:
-    target: "< 10%"
+    target: '< 10%'
     current: null
 
   human_intervention_rate:
-    target: "< 15%"
+    target: '< 15%'
     current: null
 ```
 
@@ -381,15 +395,15 @@ quality_metrics:
 ```yaml
 business_metrics:
   time_saved_hours_per_month:
-    target: "> 100"
+    target: '> 100'
     current: null
 
   error_reduction:
-    target: "> 50%"
+    target: '> 50%'
     current: null
 
   team_satisfaction:
-    target: "> 4.0/5"
+    target: '> 4.0/5'
     current: null
 ```
 
@@ -571,21 +585,21 @@ spec:
         app: agent-workflow
     spec:
       containers:
-      - name: agent
-        image: your-registry/agent-workflow:latest
-        env:
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: openai-secret
-              key: api-key
-        resources:
-          limits:
-            cpu: "1"
-            memory: "2Gi"
-          requests:
-            cpu: "500m"
-            memory: "1Gi"
+        - name: agent
+          image: your-registry/agent-workflow:latest
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: api-key
+          resources:
+            limits:
+              cpu: '1'
+              memory: '2Gi'
+            requests:
+              cpu: '500m'
+              memory: '1Gi'
 ```
 
 ---
@@ -597,15 +611,18 @@ spec:
 #### Issue: [Describe common issue]
 
 **Symptoms:**
+
 - [Symptom 1]
 - [Symptom 2]
 
 **Diagnosis:**
+
 ```bash
 # Commands to diagnose
 ```
 
 **Solution:**
+
 ```python
 # Code fix or configuration change
 ```
@@ -628,15 +645,19 @@ spec:
 Document prompt iterations:
 
 **Version 1.0 (Initial):**
+
 ```
 [Original prompt]
 ```
+
 **Issues:** High false positive rate (25%)
 
 **Version 1.1 (Improved):**
+
 ```
 [Updated prompt with more specific instructions]
 ```
+
 **Results:** False positive rate reduced to 12%
 
 ---
@@ -644,11 +665,13 @@ Document prompt iterations:
 ## Changelog
 
 ### Version 1.0.0 - [Date]
+
 - Initial implementation
 - Basic agent workflow with [X] agents
 - [Key features]
 
 ### Version 1.1.0 - [Date]
+
 - Added human-in-the-loop approval
 - Improved error handling
 - Cost optimization
@@ -671,4 +694,4 @@ Document prompt iterations:
 
 ---
 
-*This template provides a complete blueprint for designing, implementing, deploying, and maintaining agentic workflows. Adapt sections as needed for your specific use case.*
+_This template provides a complete blueprint for designing, implementing, deploying, and maintaining agentic workflows. Adapt sections as needed for your specific use case._

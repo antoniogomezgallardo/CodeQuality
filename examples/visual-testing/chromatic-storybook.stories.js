@@ -64,9 +64,15 @@ const Card = ({ title, description, imageSrc, variant = 'default' }) => {
   };
 
   return (
-    <div style={{ ...cardStyles[variant], borderRadius: '8px', overflow: 'hidden', maxWidth: '400px' }}>
+    <div
+      style={{ ...cardStyles[variant], borderRadius: '8px', overflow: 'hidden', maxWidth: '400px' }}
+    >
       {imageSrc && (
-        <img src={imageSrc} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+        <img
+          src={imageSrc}
+          alt={title}
+          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+        />
       )}
       <div style={{ padding: '16px' }}>
         <h3 style={{ margin: '0 0 8px 0', fontSize: '20px', color: '#333' }}>{title}</h3>
@@ -96,7 +102,7 @@ const Input = ({ label, type = 'text', error, success, disabled = false, placeho
       <input
         type={type}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={e => setValue(e.target.value)}
         disabled={disabled}
         placeholder={placeholder}
         style={{
@@ -109,8 +115,16 @@ const Input = ({ label, type = 'text', error, success, disabled = false, placeho
           opacity: disabled ? 0.6 : 1
         }}
       />
-      {error && <span style={{ color: '#dc3545', fontSize: '14px', marginTop: '4px', display: 'block' }}>{error}</span>}
-      {success && <span style={{ color: '#28a745', fontSize: '14px', marginTop: '4px', display: 'block' }}>{success}</span>}
+      {error && (
+        <span style={{ color: '#dc3545', fontSize: '14px', marginTop: '4px', display: 'block' }}>
+          {error}
+        </span>
+      )}
+      {success && (
+        <span style={{ color: '#28a745', fontSize: '14px', marginTop: '4px', display: 'block' }}>
+          {success}
+        </span>
+      )}
     </div>
   );
 };
@@ -245,7 +259,9 @@ export const InteractionStates = {
 export const DarkMode = {
   render: () => (
     <div style={{ backgroundColor: '#1a1a1a', padding: '32px', borderRadius: '8px' }}>
-      <Button variant="primary" style={{ backgroundColor: '#0d6efd' }}>Dark Mode Button</Button>
+      <Button variant="primary" style={{ backgroundColor: '#0d6efd' }}>
+        Dark Mode Button
+      </Button>
     </div>
   ),
   parameters: {
@@ -287,7 +303,14 @@ export const DefaultCard = {
  */
 export const AllCardVariants = {
   render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', maxWidth: '1200px' }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '24px',
+        maxWidth: '1200px'
+      }}
+    >
       <Card
         variant="default"
         title="Default Card"
@@ -403,20 +426,22 @@ export const LoginForm = {
   render: () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
       e.preventDefault();
       setIsSubmitting(true);
       setTimeout(() => setIsSubmitting(false), 2000);
     };
 
     return (
-      <div style={{
-        width: '400px',
-        padding: '32px',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        backgroundColor: '#fff'
-      }}>
+      <div
+        style={{
+          width: '400px',
+          padding: '32px',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+          backgroundColor: '#fff'
+        }}
+      >
         <h2 style={{ marginTop: 0 }}>Login</h2>
         <form onSubmit={handleSubmit}>
           <Input label="Email" type="email" placeholder="you@example.com" />
@@ -445,13 +470,15 @@ export const LoginForm = {
 export const LoginFormWithErrors = {
   title: 'Components/Forms/LoginForm',
   render: () => (
-    <div style={{
-      width: '400px',
-      padding: '32px',
-      border: '1px solid #ddd',
-      borderRadius: '8px',
-      backgroundColor: '#fff'
-    }}>
+    <div
+      style={{
+        width: '400px',
+        padding: '32px',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        backgroundColor: '#fff'
+      }}
+    >
       <h2 style={{ marginTop: 0 }}>Login</h2>
       <form>
         <Input
@@ -482,36 +509,28 @@ export const ResponsiveLayout = {
   title: 'Layouts/Dashboard',
   render: () => (
     <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <header style={{
-        backgroundColor: '#fff',
-        padding: '16px',
-        marginBottom: '24px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
+      <header
+        style={{
+          backgroundColor: '#fff',
+          padding: '16px',
+          marginBottom: '24px',
+          borderRadius: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
         <h1 style={{ margin: 0 }}>Dashboard</h1>
       </header>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '24px'
-      }}>
-        <Card
-          variant="elevated"
-          title="Total Users"
-          description="1,234 active users this month"
-        />
-        <Card
-          variant="elevated"
-          title="Revenue"
-          description="$45,678 in sales this month"
-        />
-        <Card
-          variant="elevated"
-          title="Conversions"
-          description="23% conversion rate this month"
-        />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '24px'
+        }}
+      >
+        <Card variant="elevated" title="Total Users" description="1,234 active users this month" />
+        <Card variant="elevated" title="Revenue" description="$45,678 in sales this month" />
+        <Card variant="elevated" title="Conversions" description="23% conversion rate this month" />
       </div>
     </div>
   ),
@@ -536,7 +555,9 @@ export const ThemeVariations = {
       <div style={{ flex: 1, backgroundColor: '#ffffff', padding: '24px' }}>
         <h3>Light Theme</h3>
         <Button variant="primary">Primary</Button>
-        <Button variant="secondary" style={{ marginLeft: '8px' }}>Secondary</Button>
+        <Button variant="secondary" style={{ marginLeft: '8px' }}>
+          Secondary
+        </Button>
         <div style={{ marginTop: '16px' }}>
           <Card
             variant="elevated"
@@ -549,8 +570,12 @@ export const ThemeVariations = {
       {/* Dark Theme */}
       <div style={{ flex: 1, backgroundColor: '#1a1a1a', padding: '24px' }}>
         <h3 style={{ color: '#fff' }}>Dark Theme</h3>
-        <Button variant="primary" style={{ backgroundColor: '#0d6efd' }}>Primary</Button>
-        <Button variant="secondary" style={{ marginLeft: '8px', backgroundColor: '#6c757d' }}>Secondary</Button>
+        <Button variant="primary" style={{ backgroundColor: '#0d6efd' }}>
+          Primary
+        </Button>
+        <Button variant="secondary" style={{ marginLeft: '8px', backgroundColor: '#6c757d' }}>
+          Secondary
+        </Button>
         <div style={{ marginTop: '16px' }}>
           <Card
             variant="elevated"
@@ -577,9 +602,15 @@ export const PseudoStates = {
   title: 'Components/Button/PseudoStates',
   render: () => (
     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-      <Button variant="primary" data-testid="hover-button">Hover</Button>
-      <Button variant="secondary" data-testid="focus-button">Focus</Button>
-      <Button variant="success" data-testid="active-button">Active</Button>
+      <Button variant="primary" data-testid="hover-button">
+        Hover
+      </Button>
+      <Button variant="secondary" data-testid="focus-button">
+        Focus
+      </Button>
+      <Button variant="success" data-testid="active-button">
+        Active
+      </Button>
     </div>
   ),
   play: async ({ canvasElement }) => {

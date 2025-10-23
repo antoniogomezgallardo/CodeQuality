@@ -33,6 +33,7 @@ DORA metrics are four key indicators identified by the DevOps Research and Asses
 ### Why DORA Metrics?
 
 **Benefits:**
+
 - **Objective measurement** of DevOps performance
 - **Evidence-based** improvement decisions
 - **Industry benchmarking** capabilities
@@ -41,6 +42,7 @@ DORA metrics are four key indicators identified by the DevOps Research and Asses
 - **Actionable** insights for improvement
 
 **Research Findings:**
+
 - Elite performers are 973x faster at deploying code
 - Elite performers have 6,570x faster recovery times
 - Elite performers have 3x lower change failure rates
@@ -70,6 +72,7 @@ DORA metrics are four key indicators identified by the DevOps Research and Asses
 **Why it matters:** Indicates the ability to deliver value to customers quickly.
 
 **Formula:**
+
 ```
 Deployment Frequency = Number of Deployments / Time Period
 ```
@@ -81,6 +84,7 @@ Deployment Frequency = Number of Deployments / Time Period
 **Why it matters:** Measures the efficiency of the delivery process.
 
 **Formula:**
+
 ```
 Lead Time = Production Deployment Time - Commit Time
 ```
@@ -92,6 +96,7 @@ Lead Time = Production Deployment Time - Commit Time
 **Why it matters:** Balances speed with stability and quality.
 
 **Formula:**
+
 ```
 Change Failure Rate = (Failed Deployments / Total Deployments) × 100%
 ```
@@ -103,6 +108,7 @@ Change Failure Rate = (Failed Deployments / Total Deployments) × 100%
 **Why it matters:** Measures resilience and ability to respond to incidents.
 
 **Formula:**
+
 ```
 MTTR = Total Downtime / Number of Incidents
 ```
@@ -114,11 +120,13 @@ MTTR = Total Downtime / Number of Incidents
 ### Measurement
 
 **What to count:**
+
 - Successful deployments to production
 - Include automated and manual deployments
 - Count all production environments
 
 **What NOT to count:**
+
 - Deployments to staging/test environments
 - Failed deployment attempts
 - Rollbacks (unless they're new deployments)
@@ -133,11 +141,12 @@ class DeploymentFrequencyCalculator {
   }
 
   calculate(startDate, endDate) {
-    const successfulDeployments = this.deployments.filter(d =>
-      d.status === 'success' &&
-      d.environment === 'production' &&
-      d.timestamp >= startDate &&
-      d.timestamp <= endDate
+    const successfulDeployments = this.deployments.filter(
+      d =>
+        d.status === 'success' &&
+        d.environment === 'production' &&
+        d.timestamp >= startDate &&
+        d.timestamp <= endDate
     );
 
     const days = (endDate - startDate) / (1000 * 60 * 60 * 24);
@@ -148,14 +157,14 @@ class DeploymentFrequencyCalculator {
       perDay: deploymentsPerDay,
       perWeek: deploymentsPerDay * 7,
       perMonth: deploymentsPerDay * 30,
-      level: this.getPerformanceLevel(deploymentsPerDay)
+      level: this.getPerformanceLevel(deploymentsPerDay),
     };
   }
 
   getPerformanceLevel(deploymentsPerDay) {
     if (deploymentsPerDay >= 1) return 'Elite';
-    if (deploymentsPerDay >= 1/7) return 'High';
-    if (deploymentsPerDay >= 1/30) return 'Medium';
+    if (deploymentsPerDay >= 1 / 7) return 'High';
+    if (deploymentsPerDay >= 1 / 30) return 'Medium';
     return 'Low';
   }
 }
@@ -169,10 +178,7 @@ const deployments = [
 ];
 
 const calculator = new DeploymentFrequencyCalculator(deployments);
-const result = calculator.calculate(
-  new Date('2024-01-01'),
-  new Date('2024-01-31')
-);
+const result = calculator.calculate(new Date('2024-01-01'), new Date('2024-01-31'));
 
 console.log(`Deployments per day: ${result.perDay.toFixed(2)}`);
 console.log(`Performance level: ${result.level}`);
@@ -181,6 +187,7 @@ console.log(`Performance level: ${result.level}`);
 ### Data Collection
 
 **GitHub Actions Example:**
+
 ```yaml
 name: Track Deployment
 
@@ -206,6 +213,7 @@ jobs:
 ```
 
 **GitLab CI Example:**
+
 ```yaml
 deploy:production:
   stage: deploy
@@ -253,15 +261,15 @@ class LeadTimeCalculator {
       hours: leadTimeHours,
       days: leadTimeDays,
       formatted: this.formatDuration(leadTimeMs),
-      level: this.getPerformanceLevel(leadTimeHours)
+      level: this.getPerformanceLevel(leadTimeHours),
     };
   }
 
   getPerformanceLevel(hours) {
-    if (hours < 1) return 'Elite';           // < 1 hour
-    if (hours < 24) return 'High';           // < 1 day
-    if (hours < 168) return 'Medium';        // < 1 week
-    return 'Low';                             // > 1 week
+    if (hours < 1) return 'Elite'; // < 1 hour
+    if (hours < 24) return 'High'; // < 1 day
+    if (hours < 168) return 'Medium'; // < 1 week
+    return 'Low'; // > 1 week
   }
 
   formatDuration(ms) {
@@ -276,17 +284,17 @@ class LeadTimeCalculator {
   }
 
   calculateAverageLeadTime(commits, deployments) {
-    const leadTimes = commits.map(commit => {
-      const deployment = deployments.find(d =>
-        d.commit === commit.sha &&
-        d.environment === 'production' &&
-        d.status === 'success'
-      );
+    const leadTimes = commits
+      .map(commit => {
+        const deployment = deployments.find(
+          d => d.commit === commit.sha && d.environment === 'production' && d.status === 'success'
+        );
 
-      if (!deployment) return null;
+        if (!deployment) return null;
 
-      return this.calculateLeadTime(commit, deployment);
-    }).filter(lt => lt !== null);
+        return this.calculateLeadTime(commit, deployment);
+      })
+      .filter(lt => lt !== null);
 
     if (leadTimes.length === 0) return null;
 
@@ -295,18 +303,19 @@ class LeadTimeCalculator {
     return {
       average: avgHours,
       median: this.calculateMedian(leadTimes.map(lt => lt.hours)),
-      p95: this.calculatePercentile(leadTimes.map(lt => lt.hours), 95),
+      p95: this.calculatePercentile(
+        leadTimes.map(lt => lt.hours),
+        95
+      ),
       count: leadTimes.length,
-      level: this.getPerformanceLevel(avgHours)
+      level: this.getPerformanceLevel(avgHours),
     };
   }
 
   calculateMedian(values) {
     const sorted = values.slice().sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0
-      ? (sorted[mid - 1] + sorted[mid]) / 2
-      : sorted[mid];
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
   }
 
   calculatePercentile(values, percentile) {
@@ -319,12 +328,22 @@ class LeadTimeCalculator {
 // Usage
 const commits = [
   { sha: 'abc123', timestamp: '2024-01-15T10:00:00Z' },
-  { sha: 'def456', timestamp: '2024-01-15T14:30:00Z' }
+  { sha: 'def456', timestamp: '2024-01-15T14:30:00Z' },
 ];
 
 const deployments = [
-  { commit: 'abc123', environment: 'production', status: 'success', timestamp: '2024-01-15T11:45:00Z' },
-  { commit: 'def456', environment: 'production', status: 'success', timestamp: '2024-01-15T16:15:00Z' }
+  {
+    commit: 'abc123',
+    environment: 'production',
+    status: 'success',
+    timestamp: '2024-01-15T11:45:00Z',
+  },
+  {
+    commit: 'def456',
+    environment: 'production',
+    status: 'success',
+    timestamp: '2024-01-15T16:15:00Z',
+  },
 ];
 
 const calculator = new LeadTimeCalculator();
@@ -363,12 +382,14 @@ curl -X POST https://metrics-api.example.com/commits \
 ### Measurement
 
 **What counts as a failure:**
+
 - Deployment causes production incident
 - Immediate rollback required
 - Hotfix deployed shortly after
 - Service degradation requiring intervention
 
 **What does NOT count:**
+
 - Failed deployment attempts (before production)
 - Planned maintenance
 - Issues discovered in staging
@@ -384,10 +405,8 @@ class ChangeFailureRateCalculator {
   }
 
   calculate(startDate, endDate) {
-    const productionDeployments = this.deployments.filter(d =>
-      d.environment === 'production' &&
-      d.timestamp >= startDate &&
-      d.timestamp <= endDate
+    const productionDeployments = this.deployments.filter(
+      d => d.environment === 'production' && d.timestamp >= startDate && d.timestamp <= endDate
     );
 
     const failedDeployments = productionDeployments.filter(deployment => {
@@ -395,10 +414,11 @@ class ChangeFailureRateCalculator {
       const deployTime = new Date(deployment.timestamp);
       const oneDayLater = new Date(deployTime.getTime() + 24 * 60 * 60 * 1000);
 
-      return this.incidents.some(incident =>
-        incident.causedByDeployment === deployment.id &&
-        incident.timestamp >= deployTime &&
-        incident.timestamp <= oneDayLater
+      return this.incidents.some(
+        incident =>
+          incident.causedByDeployment === deployment.id &&
+          incident.timestamp >= deployTime &&
+          incident.timestamp <= oneDayLater
       );
     });
 
@@ -408,15 +428,15 @@ class ChangeFailureRateCalculator {
       totalDeployments: productionDeployments.length,
       failedDeployments: failedDeployments.length,
       changeFailureRate: cfr,
-      level: this.getPerformanceLevel(cfr)
+      level: this.getPerformanceLevel(cfr),
     };
   }
 
   getPerformanceLevel(cfr) {
-    if (cfr <= 5) return 'Elite';      // 0-5%
-    if (cfr <= 15) return 'High';      // 6-15%
-    if (cfr <= 30) return 'Medium';    // 16-30%
-    return 'Low';                       // > 30%
+    if (cfr <= 5) return 'Elite'; // 0-5%
+    if (cfr <= 15) return 'High'; // 6-15%
+    if (cfr <= 30) return 'Medium'; // 16-30%
+    return 'Low'; // > 30%
   }
 
   identifyFailurePatterns(deployments, incidents) {
@@ -424,7 +444,7 @@ class ChangeFailureRateCalculator {
       byDay: {},
       byHour: {},
       byAuthor: {},
-      byService: {}
+      byService: {},
     };
 
     deployments.forEach(deployment => {
@@ -449,18 +469,15 @@ class ChangeFailureRateCalculator {
 const deployments = [
   { id: '1', timestamp: '2024-01-15T10:00:00Z', environment: 'production', author: 'alice' },
   { id: '2', timestamp: '2024-01-15T14:00:00Z', environment: 'production', author: 'bob' },
-  { id: '3', timestamp: '2024-01-16T09:00:00Z', environment: 'production', author: 'alice' }
+  { id: '3', timestamp: '2024-01-16T09:00:00Z', environment: 'production', author: 'alice' },
 ];
 
 const incidents = [
-  { id: 'inc-1', causedByDeployment: '2', timestamp: '2024-01-15T14:30:00Z', severity: 'high' }
+  { id: 'inc-1', causedByDeployment: '2', timestamp: '2024-01-15T14:30:00Z', severity: 'high' },
 ];
 
 const calculator = new ChangeFailureRateCalculator(deployments, incidents);
-const result = calculator.calculate(
-  new Date('2024-01-01'),
-  new Date('2024-01-31')
-);
+const result = calculator.calculate(new Date('2024-01-01'), new Date('2024-01-31'));
 
 console.log(`Change Failure Rate: ${result.changeFailureRate.toFixed(2)}%`);
 console.log(`Performance level: ${result.level}`);
@@ -479,7 +496,7 @@ class FailureDetector {
       this.checkErrorRate(deployment),
       this.checkResponseTime(deployment),
       this.checkHealthEndpoint(deployment),
-      this.checkRollback(deployment)
+      this.checkRollback(deployment),
     ];
 
     const results = await Promise.all(checks);
@@ -513,8 +530,8 @@ class FailureDetector {
       details: {
         before: preDeploymentErrors,
         after: postDeploymentErrors,
-        increase: increase.toFixed(2) + '%'
-      }
+        increase: increase.toFixed(2) + '%',
+      },
     };
   }
 
@@ -538,8 +555,8 @@ class FailureDetector {
       details: {
         before: preDeploymentP95 + 'ms',
         after: postDeploymentP95 + 'ms',
-        increase: increase.toFixed(2) + '%'
-      }
+        increase: increase.toFixed(2) + '%',
+      },
     };
   }
 
@@ -550,21 +567,18 @@ class FailureDetector {
     return {
       name: 'Health Check',
       failed: !healthy,
-      details: { status: response.status }
+      details: { status: response.status },
     };
   }
 
   async checkRollback(deployment) {
     // Check if there was a rollback within 1 hour
-    const rollback = await this.findRollback(
-      deployment.id,
-      deployment.timestamp + 3600000
-    );
+    const rollback = await this.findRollback(deployment.id, deployment.timestamp + 3600000);
 
     return {
       name: 'Rollback',
       failed: rollback !== null,
-      details: rollback ? { rollbackId: rollback.id } : {}
+      details: rollback ? { rollbackId: rollback.id } : {},
     };
   }
 
@@ -575,8 +589,8 @@ class FailureDetector {
       body: JSON.stringify({
         deploymentId: deployment.id,
         timestamp: new Date().toISOString(),
-        checks: checks.filter(c => c.failed)
-      })
+        checks: checks.filter(c => c.failed),
+      }),
     });
   }
 }
@@ -623,16 +637,16 @@ class MTTRCalculator {
       formatted: {
         mean: this.formatDuration(mean),
         median: this.formatDuration(median),
-        p95: this.formatDuration(p95)
-      }
+        p95: this.formatDuration(p95),
+      },
     };
   }
 
   getPerformanceLevel(minutes) {
-    if (minutes < 60) return 'Elite';           // < 1 hour
-    if (minutes < 1440) return 'High';          // < 1 day
-    if (minutes < 10080) return 'Medium';       // < 1 week
-    return 'Low';                                // > 1 week
+    if (minutes < 60) return 'Elite'; // < 1 hour
+    if (minutes < 1440) return 'High'; // < 1 day
+    if (minutes < 10080) return 'Medium'; // < 1 week
+    return 'Low'; // > 1 week
   }
 
   formatDuration(minutes) {
@@ -653,7 +667,7 @@ class MTTRCalculator {
     const stages = {
       detection: incident.acknowledgedAt - incident.detectedAt,
       diagnosis: incident.diagnosedAt - incident.acknowledgedAt,
-      resolution: incident.resolvedAt - incident.diagnosedAt
+      resolution: incident.resolvedAt - incident.diagnosedAt,
     };
 
     const total = incident.resolvedAt - incident.detectedAt;
@@ -662,27 +676,25 @@ class MTTRCalculator {
       stages: {
         detection: {
           duration: stages.detection / (1000 * 60),
-          percentage: (stages.detection / total) * 100
+          percentage: (stages.detection / total) * 100,
         },
         diagnosis: {
           duration: stages.diagnosis / (1000 * 60),
-          percentage: (stages.diagnosis / total) * 100
+          percentage: (stages.diagnosis / total) * 100,
         },
         resolution: {
           duration: stages.resolution / (1000 * 60),
-          percentage: (stages.resolution / total) * 100
-        }
+          percentage: (stages.resolution / total) * 100,
+        },
       },
-      total: total / (1000 * 60)
+      total: total / (1000 * 60),
     };
   }
 
   calculateMedian(values) {
     const sorted = values.slice().sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0
-      ? (sorted[mid - 1] + sorted[mid]) / 2
-      : sorted[mid];
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
   }
 
   calculatePercentile(values, percentile) {
@@ -700,7 +712,7 @@ const incidents = [
     acknowledgedAt: new Date('2024-01-15T10:05:00Z'),
     diagnosedAt: new Date('2024-01-15T10:20:00Z'),
     resolvedAt: new Date('2024-01-15T11:15:00Z'),
-    status: 'resolved'
+    status: 'resolved',
   },
   {
     id: 'inc-2',
@@ -708,8 +720,8 @@ const incidents = [
     acknowledgedAt: new Date('2024-01-16T14:03:00Z'),
     diagnosedAt: new Date('2024-01-16T14:45:00Z'),
     resolvedAt: new Date('2024-01-16T15:30:00Z'),
-    status: 'resolved'
-  }
+    status: 'resolved',
+  },
 ];
 
 const calculator = new MTTRCalculator();
@@ -767,12 +779,12 @@ jobs:
 
 ### 2023 DORA Benchmarks
 
-| Metric | Elite | High | Medium | Low |
-|--------|-------|------|--------|-----|
-| **Deployment Frequency** | On-demand (multiple deploys per day) | Between once per week and once per month | Between once per month and once every 6 months | Fewer than once per six months |
-| **Lead Time for Changes** | Less than one hour | Between one day and one week | Between one month and six months | More than six months |
-| **Change Failure Rate** | 0-5% | 6-15% | 16-30% | > 30% |
-| **Time to Restore Service** | Less than one hour | Less than one day | Between one day and one week | More than six months |
+| Metric                      | Elite                                | High                                     | Medium                                         | Low                            |
+| --------------------------- | ------------------------------------ | ---------------------------------------- | ---------------------------------------------- | ------------------------------ |
+| **Deployment Frequency**    | On-demand (multiple deploys per day) | Between once per week and once per month | Between once per month and once every 6 months | Fewer than once per six months |
+| **Lead Time for Changes**   | Less than one hour                   | Between one day and one week             | Between one month and six months               | More than six months           |
+| **Change Failure Rate**     | 0-5%                                 | 6-15%                                    | 16-30%                                         | > 30%                          |
+| **Time to Restore Service** | Less than one hour                   | Less than one day                        | Between one day and one week                   | More than six months           |
 
 ### Simplified Numeric Thresholds
 
@@ -782,29 +794,29 @@ const PERFORMANCE_LEVELS = {
     elite: { perDay: 1, label: 'Multiple times per day' },
     high: { perWeek: 1, label: 'Between once per week and once per month' },
     medium: { perMonth: 1, label: 'Between once per month and once every 6 months' },
-    low: { perMonth: 0.167, label: 'Fewer than once per six months' }
+    low: { perMonth: 0.167, label: 'Fewer than once per six months' },
   },
 
   leadTime: {
     elite: { hours: 1, label: 'Less than one hour' },
     high: { hours: 168, label: 'Between one day and one week' },
     medium: { hours: 4380, label: 'Between one month and six months' },
-    low: { hours: 4380, label: 'More than six months' }
+    low: { hours: 4380, label: 'More than six months' },
   },
 
   changeFailureRate: {
     elite: { percentage: 5, label: '0-5%' },
     high: { percentage: 15, label: '6-15%' },
     medium: { percentage: 30, label: '16-30%' },
-    low: { percentage: 100, label: 'More than 30%' }
+    low: { percentage: 100, label: 'More than 30%' },
   },
 
   timeToRestore: {
     elite: { hours: 1, label: 'Less than one hour' },
     high: { hours: 24, label: 'Less than one day' },
     medium: { hours: 168, label: 'Between one day and one week' },
-    low: { hours: 168, label: 'More than one week' }
-  }
+    low: { hours: 168, label: 'More than one week' },
+  },
 };
 ```
 
@@ -815,24 +827,28 @@ const PERFORMANCE_LEVELS = {
 ### Data Sources
 
 **Version Control (Git):**
+
 - Commit timestamps
 - Commit authors
 - Branch information
 - Pull request data
 
 **CI/CD Pipeline:**
+
 - Build start/end times
 - Test results
 - Deployment events
 - Environment information
 
 **Incident Management:**
+
 - Incident creation time
 - Incident resolution time
 - Incident severity
 - Related deployments
 
 **Monitoring/Observability:**
+
 - Error rates
 - Response times
 - Availability metrics
@@ -854,14 +870,14 @@ class DORAMetricsCollector {
     const [commits, deployments, incidents] = await Promise.all([
       this.fetchCommits(startDate, endDate),
       this.fetchDeployments(startDate, endDate),
-      this.fetchIncidents(startDate, endDate)
+      this.fetchIncidents(startDate, endDate),
     ]);
 
     const metrics = {
       deploymentFrequency: this.calculateDeploymentFrequency(deployments, startDate, endDate),
       leadTime: this.calculateLeadTime(commits, deployments),
       changeFailureRate: this.calculateChangeFailureRate(deployments, incidents),
-      timeToRestore: this.calculateMTTR(incidents)
+      timeToRestore: this.calculateMTTR(incidents),
     };
 
     await this.metricsStore.save(metrics);
@@ -873,7 +889,7 @@ class DORAMetricsCollector {
     return await this.githubClient.getCommits({
       since: startDate.toISOString(),
       until: endDate.toISOString(),
-      branch: 'main'
+      branch: 'main',
     });
   }
 
@@ -882,7 +898,7 @@ class DORAMetricsCollector {
       startDate,
       endDate,
       environment: 'production',
-      status: 'success'
+      status: 'success',
     });
   }
 
@@ -890,7 +906,7 @@ class DORAMetricsCollector {
     return await this.incidentClient.getIncidents({
       startDate,
       endDate,
-      severities: ['critical', 'high']
+      severities: ['critical', 'high'],
     });
   }
 
@@ -902,26 +918,28 @@ class DORAMetricsCollector {
       total: deployments.length,
       perDay: deploymentsPerDay,
       perWeek: deploymentsPerDay * 7,
-      perMonth: deploymentsPerDay * 30
+      perMonth: deploymentsPerDay * 30,
     };
   }
 
   calculateLeadTime(commits, deployments) {
-    const leadTimes = commits.map(commit => {
-      const deployment = deployments.find(d => d.commit === commit.sha);
-      if (!deployment) return null;
+    const leadTimes = commits
+      .map(commit => {
+        const deployment = deployments.find(d => d.commit === commit.sha);
+        if (!deployment) return null;
 
-      const commitTime = new Date(commit.timestamp);
-      const deployTime = new Date(deployment.timestamp);
-      return (deployTime - commitTime) / (1000 * 60 * 60); // hours
-    }).filter(lt => lt !== null);
+        const commitTime = new Date(commit.timestamp);
+        const deployTime = new Date(deployment.timestamp);
+        return (deployTime - commitTime) / (1000 * 60 * 60); // hours
+      })
+      .filter(lt => lt !== null);
 
     if (leadTimes.length === 0) return null;
 
     return {
       mean: leadTimes.reduce((a, b) => a + b, 0) / leadTimes.length,
       median: this.median(leadTimes),
-      p95: this.percentile(leadTimes, 95)
+      p95: this.percentile(leadTimes, 95),
     };
   }
 
@@ -933,14 +951,14 @@ class DORAMetricsCollector {
     return {
       total: deployments.length,
       failed: failedDeployments.length,
-      rate: (failedDeployments.length / deployments.length) * 100
+      rate: (failedDeployments.length / deployments.length) * 100,
     };
   }
 
   calculateMTTR(incidents) {
     const resolved = incidents.filter(i => i.status === 'resolved');
-    const resolutionTimes = resolved.map(i =>
-      (new Date(i.resolvedAt) - new Date(i.detectedAt)) / (1000 * 60)
+    const resolutionTimes = resolved.map(
+      i => (new Date(i.resolvedAt) - new Date(i.detectedAt)) / (1000 * 60)
     );
 
     if (resolutionTimes.length === 0) return null;
@@ -948,16 +966,14 @@ class DORAMetricsCollector {
     return {
       mean: resolutionTimes.reduce((a, b) => a + b, 0) / resolutionTimes.length,
       median: this.median(resolutionTimes),
-      p95: this.percentile(resolutionTimes, 95)
+      p95: this.percentile(resolutionTimes, 95),
     };
   }
 
   median(values) {
     const sorted = values.slice().sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0
-      ? (sorted[mid - 1] + sorted[mid]) / 2
-      : sorted[mid];
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
   }
 
   percentile(values, p) {
@@ -1028,27 +1044,27 @@ const register = new client.Registry();
 const deploymentFrequency = new client.Gauge({
   name: 'dora_deployment_frequency_per_day',
   help: 'Number of deployments per day',
-  registers: [register]
+  registers: [register],
 });
 
 const leadTime = new client.Histogram({
   name: 'dora_lead_time_hours',
   help: 'Lead time for changes in hours',
   buckets: [0.5, 1, 2, 4, 8, 24, 48, 168],
-  registers: [register]
+  registers: [register],
 });
 
 const changeFailureRate = new client.Gauge({
   name: 'dora_change_failure_rate_percentage',
   help: 'Percentage of deployments causing failures',
-  registers: [register]
+  registers: [register],
 });
 
 const mttr = new client.Histogram({
   name: 'dora_mttr_minutes',
   help: 'Mean time to restore service in minutes',
   buckets: [15, 30, 60, 120, 240, 480, 1440],
-  registers: [register]
+  registers: [register],
 });
 
 // Update metrics periodically
@@ -1247,6 +1263,7 @@ function generateDORAReport(metrics) {
 ### Improving Deployment Frequency
 
 **Strategies:**
+
 1. **Automate deployments** - Remove manual steps
 2. **Implement CI/CD** - Deploy on every merge to main
 3. **Use feature flags** - Decouple deployment from release
@@ -1254,6 +1271,7 @@ function generateDORAReport(metrics) {
 5. **Trunk-based development** - Eliminate long-lived branches
 
 **Example: Automated Deployment Pipeline**
+
 ```yaml
 on:
   push:
@@ -1273,6 +1291,7 @@ jobs:
 ### Improving Lead Time
 
 **Strategies:**
+
 1. **Reduce code review time** - Set SLAs, use automation
 2. **Optimize CI/CD pipeline** - Parallel tests, caching
 3. **Smaller pull requests** - Easier to review and deploy
@@ -1280,6 +1299,7 @@ jobs:
 5. **Remove handoffs** - Cross-functional teams
 
 **Example: Fast CI Pipeline**
+
 ```yaml
 jobs:
   test:
@@ -1300,6 +1320,7 @@ jobs:
 ### Improving Change Failure Rate
 
 **Strategies:**
+
 1. **Improve test coverage** - Catch bugs before production
 2. **Implement canary deployments** - Detect issues early
 3. **Add automated rollback** - Quick recovery
@@ -1307,6 +1328,7 @@ jobs:
 5. **Post-incident reviews** - Learn from failures
 
 **Example: Canary Deployment**
+
 ```yaml
 - name: Deploy to canary
   run: ./deploy.sh production --canary --percentage=10
@@ -1327,6 +1349,7 @@ jobs:
 ### Improving MTTR
 
 **Strategies:**
+
 1. **Improve monitoring** - Faster detection
 2. **Better alerting** - Right people, right information
 3. **Automated rollback** - Quick recovery
@@ -1334,6 +1357,7 @@ jobs:
 5. **Practice incident response** - Build muscle memory
 
 **Example: Automated Rollback**
+
 ```javascript
 async function autoRollback(deployment) {
   const health = await checkDeploymentHealth(deployment);
@@ -1343,7 +1367,7 @@ async function autoRollback(deployment) {
     await rollback(deployment);
     await notify({
       channel: '#incidents',
-      message: `Deployment ${deployment.id} automatically rolled back due to: ${health.reason}`
+      message: `Deployment ${deployment.id} automatically rolled back due to: ${health.reason}`,
     });
   }
 }
@@ -1447,6 +1471,7 @@ async function autoRollback(deployment) {
 ## Checklist
 
 ### Getting Started
+
 - [ ] Define measurement criteria for each metric
 - [ ] Identify data sources (Git, CI/CD, incidents)
 - [ ] Set up automated data collection
@@ -1454,6 +1479,7 @@ async function autoRollback(deployment) {
 - [ ] Document measurement process
 
 ### Measurement
+
 - [ ] Collect deployment frequency data
 - [ ] Track lead time from commit to production
 - [ ] Identify and categorize deployment failures
@@ -1461,6 +1487,7 @@ async function autoRollback(deployment) {
 - [ ] Calculate all four DORA metrics weekly
 
 ### Visualization
+
 - [ ] Create dashboards for real-time metrics
 - [ ] Generate periodic reports (weekly/monthly)
 - [ ] Share metrics with stakeholders
@@ -1468,6 +1495,7 @@ async function autoRollback(deployment) {
 - [ ] Identify performance level for each metric
 
 ### Improvement
+
 - [ ] Identify biggest bottlenecks
 - [ ] Set improvement goals
 - [ ] Implement targeted interventions
@@ -1475,6 +1503,7 @@ async function autoRollback(deployment) {
 - [ ] Iterate based on results
 
 ### Culture
+
 - [ ] Share metrics transparently
 - [ ] Use metrics for learning, not blame
 - [ ] Celebrate improvements
@@ -1494,12 +1523,14 @@ async function autoRollback(deployment) {
 ### Tools
 
 **Metrics Collection:**
+
 - [Sleuth](https://www.sleuth.io/) - DORA metrics tracking
 - [Haystack](https://usehaystack.io/) - Engineering metrics
 - [LinearB](https://linearb.io/) - Software delivery intelligence
 - [Jellyfish](https://jellyfish.co/) - Engineering management platform
 
 **Open Source:**
+
 - [Four Keys](https://github.com/GoogleCloudPlatform/fourkeys) - Google's DORA metrics implementation
 - [DORA Metrics GitHub Action](https://github.com/marketplace/actions/dora-metrics)
 

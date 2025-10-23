@@ -9,6 +9,7 @@ Exploratory testing is an approach to software testing that is concisely describ
 ## 📋 Examples Included
 
 ### Session-Based Test Management
+
 - Test charter templates
 - Session notes and documentation
 - Time-boxed testing sessions
@@ -16,6 +17,7 @@ Exploratory testing is an approach to software testing that is concisely describ
 - Debrief and reporting templates
 
 ### Testing Heuristics
+
 - CRUD operations heuristics
 - Boundary value exploration
 - Error condition discovery
@@ -23,6 +25,7 @@ Exploratory testing is an approach to software testing that is concisely describ
 - Performance observation techniques
 
 ### Documentation Templates
+
 - Exploratory testing session reports
 - Bug advocacy documentation
 - Risk assessment frameworks
@@ -78,4 +81,4 @@ Notes: [Additional observations]
 
 ---
 
-*Exploratory testing complements structured testing by leveraging human creativity, intuition, and experience to discover issues that scripted tests might miss.*
+_Exploratory testing complements structured testing by leveraging human creativity, intuition, and experience to discover issues that scripted tests might miss._

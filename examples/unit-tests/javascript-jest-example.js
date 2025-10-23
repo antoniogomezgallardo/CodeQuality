@@ -159,7 +159,7 @@ class UserService {
       const user = await this.apiClient.fetchUser(id);
       return {
         ...user,
-        displayName: `${user.firstName} ${user.lastName}`
+        displayName: `${user.firstName} ${user.lastName}`,
       };
     } catch (error) {
       throw new Error(`Failed to fetch user: ${error.message}`);
@@ -182,7 +182,7 @@ describe('UserService', () => {
     // Create mock API client
     mockApiClient = {
       fetchUser: jest.fn(),
-      createUser: jest.fn()
+      createUser: jest.fn(),
     };
     userService = new UserService(mockApiClient);
   });
@@ -194,7 +194,7 @@ describe('UserService', () => {
         id: 1,
         firstName: 'John',
         lastName: 'Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       };
       mockApiClient.fetchUser.mockResolvedValue(mockUser);
 
@@ -205,7 +205,7 @@ describe('UserService', () => {
       expect(mockApiClient.fetchUser).toHaveBeenCalledWith(1);
       expect(result).toEqual({
         ...mockUser,
-        displayName: 'John Doe'
+        displayName: 'John Doe',
       });
     });
 
@@ -224,7 +224,7 @@ describe('UserService', () => {
       const userData = {
         firstName: 'Jane',
         lastName: 'Smith',
-        email: 'jane@example.com'
+        email: 'jane@example.com',
       };
       const createdUser = { id: 2, ...userData };
       mockApiClient.createUser.mockResolvedValue(createdUser);
@@ -242,7 +242,7 @@ describe('UserService', () => {
       const userData = {
         firstName: 'Jane',
         lastName: 'Smith',
-        email: 'invalid-email'
+        email: 'invalid-email',
       };
 
       // Act & Assert
@@ -264,7 +264,7 @@ function fetchData(callback) {
 }
 
 function fetchPromise() {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve('promise resolved');
     }, 100);
@@ -273,8 +273,8 @@ function fetchPromise() {
 
 describe('Async Testing', () => {
   // Testing callbacks (done parameter)
-  test('should handle callback', (done) => {
-    fetchData((data) => {
+  test('should handle callback', done => {
+    fetchData(data => {
       expect(data).toBe('data loaded');
       done();
     });
@@ -311,21 +311,21 @@ describe('Parameterized Tests', () => {
     [1, 2, 3],
     [2, 2, 4],
     [-1, 1, 0],
-    [0, 0, 0]
+    [0, 0, 0],
   ])('add(%i, %i) should return %i', (a, b, expected) => {
     expect(a + b).toBe(expected);
   });
 
   // Named parameters for better readability
   test.each`
-    input    | expected
-    ${''}    | ${true}
-    ${' '}   | ${true}
-    ${'abc'} | ${false}
-    ${null}  | ${true}
+    input        | expected
+    ${''}        | ${true}
+    ${' '}       | ${true}
+    ${'abc'}     | ${false}
+    ${null}      | ${true}
     ${undefined} | ${true}
   `('isEmpty($input) should return $expected', ({ input, expected }) => {
-    const isEmpty = (value) => !value || value.trim().length === 0;
+    const isEmpty = value => !value || value.trim().length === 0;
     expect(isEmpty(input)).toBe(expected);
   });
 });
@@ -339,7 +339,7 @@ function generateUserCard(user) {
     id: user.id,
     display: `${user.name} (${user.role})`,
     permissions: user.role === 'admin' ? ['read', 'write', 'delete'] : ['read'],
-    createdAt: user.createdAt
+    createdAt: user.createdAt,
   };
 }
 
@@ -349,7 +349,7 @@ describe('Snapshot Testing', () => {
       id: 1,
       name: 'John Doe',
       role: 'admin',
-      createdAt: '2024-01-01'
+      createdAt: '2024-01-01',
     };
 
     const userCard = generateUserCard(user);
@@ -363,7 +363,7 @@ describe('Snapshot Testing', () => {
     const config = {
       env: 'test',
       debug: true,
-      version: '1.0.0'
+      version: '1.0.0',
     };
 
     expect(config).toMatchInlineSnapshot(`
@@ -421,14 +421,12 @@ expect.extend({
     const pass = received >= floor && received <= ceiling;
     if (pass) {
       return {
-        message: () =>
-          `expected ${received} not to be within range ${floor} - ${ceiling}`,
+        message: () => `expected ${received} not to be within range ${floor} - ${ceiling}`,
         pass: true,
       };
     } else {
       return {
-        message: () =>
-          `expected ${received} to be within range ${floor} - ${ceiling}`,
+        message: () => `expected ${received} to be within range ${floor} - ${ceiling}`,
         pass: false,
       };
     }
@@ -447,5 +445,5 @@ module.exports = {
   calculateDiscount,
   ShoppingCart,
   UserService,
-  generateUserCard
+  generateUserCard,
 };

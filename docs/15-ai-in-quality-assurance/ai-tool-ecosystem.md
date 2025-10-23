@@ -1,12 +1,15 @@
 # AI Tool Ecosystem for Quality Assurance
 
 ## Purpose
+
 Provide comprehensive guidance on available AI tools for QA, helping teams select the right tools for their needs, understand costs, and integrate effectively into existing workflows.
 
 ## Context
+
 The AI tool landscape is rapidly evolving. This guide helps you navigate commercial and open-source options, understand trade-offs, and make informed decisions about which tools to adopt.
 
 ## Prerequisites
+
 - Understanding of [AI Fundamentals](ai-fundamentals.md)
 - Familiarity with your team's QA workflow
 - Budget approval for AI tools (if using commercial)
@@ -44,17 +47,20 @@ graph TB
 **Category:** Code Assistance / Test Generation
 
 **What it does:**
+
 - AI-powered code completion
 - Test generation from function signatures
 - Documentation generation
 - Code explanation and refactoring suggestions
 
 **Best for:**
+
 - Developers writing tests alongside code
 - Quick test scaffolding
 - Learning new testing frameworks
 
 **Pricing:**
+
 ```yaml
 pricing:
   individual: $10/month
@@ -65,6 +71,7 @@ trial: 30 days free
 ```
 
 **Strengths:**
+
 - ✅ Seamless IDE integration (VS Code, JetBrains, Neovim)
 - ✅ Real-time suggestions
 - ✅ Trained on billions of lines of code
@@ -72,12 +79,14 @@ trial: 30 days free
 - ✅ Multi-language support
 
 **Limitations:**
+
 - ❌ Generic suggestions (not team-specific)
 - ❌ Requires internet connection
 - ❌ Can suggest outdated patterns
 - ❌ Limited customization
 
 **Use Cases for QA:**
+
 ```javascript
 // Type a comment describing the test
 // Copilot generates the implementation
@@ -95,6 +104,7 @@ test('should reject invalid credentials', async () => {
 ```
 
 **Integration Example:**
+
 ```bash
 # Install in VS Code
 code --install-extension GitHub.copilot
@@ -111,6 +121,7 @@ code --install-extension GitHub.copilot
 ```
 
 **ROI Estimate:**
+
 ```yaml
 team_size: 10 developers
 cost: $190/month (business plan)
@@ -131,12 +142,14 @@ roi: 1,874%
 **Category:** AI Code Review
 
 **What it does:**
+
 - Automated PR review with AI
 - Identifies bugs, security issues, performance problems
 - Suggests improvements and refactoring
 - Line-by-line code analysis
 
 **Pricing:**
+
 ```yaml
 pricing:
   free: Open source projects
@@ -147,6 +160,7 @@ trial: 14 days free
 ```
 
 **Strengths:**
+
 - ✅ Deep code understanding
 - ✅ Context-aware suggestions
 - ✅ Learns from accepted/rejected feedback
@@ -154,6 +168,7 @@ trial: 14 days free
 - ✅ Configurable review rules
 
 **Example Review:**
+
 ```yaml
 # CodeRabbit PR Comment Example:
 
@@ -184,6 +199,7 @@ Estimated Review Time: 2 minutes (vs 45 minutes manual)
 ```
 
 **Configuration:**
+
 ```yaml
 # .coderabbit.yaml
 reviews:
@@ -194,14 +210,14 @@ reviews:
     - complexity_over_15
 
   ignore_patterns:
-    - "**/*.test.js"
-    - "**/generated/**"
+    - '**/*.test.js'
+    - '**/generated/**'
 
   custom_rules:
-    - name: "Require tests for new functions"
-      pattern: "^(async )?function"
+    - name: 'Require tests for new functions'
+      pattern: '^(async )?function'
       severity: HIGH
-      message: "New functions should have corresponding tests"
+      message: 'New functions should have corresponding tests'
 ```
 
 ---
@@ -211,12 +227,14 @@ reviews:
 **Category:** AI-Powered Test Automation
 
 **What it does:**
+
 - AI-stabilized E2E test automation
 - Self-healing tests (adapts to UI changes)
 - Smart locators that don't break
 - Visual testing with AI
 
 **Pricing:**
+
 ```yaml
 pricing:
   essentials: $450/month (5 users)
@@ -227,12 +245,14 @@ trial: 14 days free
 ```
 
 **Strengths:**
+
 - ✅ Self-healing tests reduce maintenance
 - ✅ AI identifies stable locators
 - ✅ Low-code test creation
 - ✅ Cross-browser execution
 
 **Example:**
+
 ```javascript
 // Traditional test - breaks when UI changes
 await page.click('#submit-btn-123');
@@ -240,7 +260,7 @@ await page.click('#submit-btn-123');
 // Testim AI - adapts to changes
 await testim.click('Submit button', {
   ai: true,
-  fallbacks: ['text', 'aria-label', 'data-testid']
+  fallbacks: ['text', 'aria-label', 'data-testid'],
 });
 // ✅ Still works even if ID changes
 ```
@@ -252,12 +272,14 @@ await testim.click('Submit button', {
 **Category:** Intelligent Test Automation
 
 **What it does:**
+
 - Low-code test creation
 - Auto-healing tests
 - Intelligent insights and analytics
 - Visual testing with AI comparison
 
 **Pricing:**
+
 ```yaml
 pricing:
   starter: $299/month
@@ -268,6 +290,7 @@ trial: 14 days free
 ```
 
 **Use Case:**
+
 ```yaml
 mabl_capabilities:
   test_creation:
@@ -293,12 +316,14 @@ mabl_capabilities:
 **Category:** Visual AI Testing
 
 **What it does:**
+
 - AI-powered visual regression testing
 - Detects visual bugs humans miss
 - Cross-browser visual validation
 - Responsive design testing
 
 **Pricing:**
+
 ```yaml
 pricing:
   free: 100 checkpoints/month
@@ -310,6 +335,7 @@ trial: Free tier available
 ```
 
 **Example:**
+
 ```javascript
 // Visual AI test with Applitools
 const { Eyes, Target } = require('@applitools/eyes-playwright');
@@ -323,8 +349,7 @@ test('Visual regression test', async ({ page }) => {
   await eyes.check('Homepage', Target.window().fully());
 
   // AI ignores dynamic content automatically
-  await eyes.check('With Dynamic Content',
-    Target.window().ignoreRegions('#timestamp'));
+  await eyes.check('With Dynamic Content', Target.window().ignoreRegions('#timestamp'));
 
   await eyes.close();
 });
@@ -341,12 +366,14 @@ test('Visual regression test', async ({ page }) => {
 **Category:** AI-Powered Security Testing
 
 **What it does:**
+
 - Scans code and dependencies for vulnerabilities
 - AI-powered fix suggestions
 - Real-time security insights
 - License compliance checking
 
 **Pricing:**
+
 ```yaml
 pricing:
   free: Limited scans
@@ -358,25 +385,26 @@ trial: Free tier available
 ```
 
 **Example:**
+
 ```yaml
 # Snyk finds vulnerability
-vulnerability: "Prototype Pollution in lodash"
+vulnerability: 'Prototype Pollution in lodash'
 severity: HIGH
 cvss_score: 7.4
-affected_versions: "< 4.17.21"
+affected_versions: '< 4.17.21'
 
 ai_fix_suggestion:
   automatic: true
   pr_generated: true
   changes:
-    - package.json: "lodash: ^4.17.21"
+    - package.json: 'lodash: ^4.17.21'
     - package-lock.json: Updated
 
   testing:
-    status: "All tests pass"
-    security_scan: "No new vulnerabilities"
+    status: 'All tests pass'
+    security_scan: 'No new vulnerabilities'
 
-recommendation: "Safe to merge"
+recommendation: 'Safe to merge'
 ```
 
 ---
@@ -386,12 +414,14 @@ recommendation: "Safe to merge"
 ### 1. OpenAI API (Custom Integration)
 
 **What you build:**
+
 - Custom test generators
 - Code review automation
 - Documentation Q&A bots
 - Test data generation
 
 **Pricing:**
+
 ```yaml
 gpt4_turbo:
   input: $0.01 per 1K tokens
@@ -407,6 +437,7 @@ embeddings:
 ```
 
 **Example Monthly Cost:**
+
 ```yaml
 usage_scenario:
   test_generation: 1000 tests/month
@@ -423,6 +454,7 @@ total: $120/month
 ```
 
 **Best For:**
+
 - Teams with specific requirements
 - Integration with existing tools
 - Full customization needed
@@ -433,11 +465,13 @@ total: $120/month
 ### 2. Local LLMs (Llama 3, Mistral)
 
 **What you run:**
+
 - Open-source models on your infrastructure
 - No data leaves your network
 - Complete control and customization
 
 **Requirements:**
+
 ```yaml
 llama_3_70b:
   gpu: NVIDIA A100 (80GB) or equivalent
@@ -459,6 +493,7 @@ mistral_7b:
 ```
 
 **Example Setup:**
+
 ```bash
 # Using Ollama for local LLM
 curl https://ollama.ai/install.sh | sh
@@ -477,12 +512,14 @@ response = client.generate(
 ```
 
 **Pros:**
+
 - ✅ Complete data privacy
 - ✅ No per-request costs
 - ✅ Can fine-tune for your codebase
 - ✅ No vendor lock-in
 
 **Cons:**
+
 - ❌ Significant infrastructure cost
 - ❌ Requires ML expertise
 - ❌ Maintenance overhead
@@ -781,16 +818,16 @@ evaluation_criteria:
 
 success_criteria:
   minimum_acceptable:
-    time_savings: "> 30%"
-    team_adoption: "> 60%"
-    quality_maintained: "No regression"
-    cost_justified: "ROI > 100%"
+    time_savings: '> 30%'
+    team_adoption: '> 60%'
+    quality_maintained: 'No regression'
+    cost_justified: 'ROI > 100%'
 
   ideal_results:
-    time_savings: "> 60%"
-    team_adoption: "> 80%"
-    quality_improved: "+15%"
-    cost_justified: "ROI > 300%"
+    time_savings: '> 60%'
+    team_adoption: '> 80%'
+    quality_improved: '+15%'
+    cost_justified: 'ROI > 300%'
 ```
 
 ## Recommended Tool Stacks
@@ -860,24 +897,24 @@ best_for:
 
 ```yaml
 pitfall_1_tool_sprawl:
-  problem: "Too many AI tools, none used effectively"
-  solution: "Start with 2-3 tools, master them first"
+  problem: 'Too many AI tools, none used effectively'
+  solution: 'Start with 2-3 tools, master them first'
 
 pitfall_2_no_adoption:
   problem: "Bought tools but team doesn't use them"
-  solution: "Involve team in selection, provide training"
+  solution: 'Involve team in selection, provide training'
 
 pitfall_3_cost_overrun:
-  problem: "API costs exceed budget"
-  solution: "Set usage limits, monitor daily, optimize"
+  problem: 'API costs exceed budget'
+  solution: 'Set usage limits, monitor daily, optimize'
 
 pitfall_4_security_gap:
-  problem: "Sending sensitive code to public APIs"
-  solution: "Use local models or approved vendors only"
+  problem: 'Sending sensitive code to public APIs'
+  solution: 'Use local models or approved vendors only'
 
 pitfall_5_over_reliance:
-  problem: "Blindly trusting AI outputs"
-  solution: "Always review, validate, test AI suggestions"
+  problem: 'Blindly trusting AI outputs'
+  solution: 'Always review, validate, test AI suggestions'
 ```
 
 ## Next Steps
@@ -897,4 +934,4 @@ pitfall_5_over_reliance:
 
 ---
 
-*Choose tools that fit your team, budget, and workflow. Start small, measure impact, and scale what works.*
+_Choose tools that fit your team, budget, and workflow. Start small, measure impact, and scale what works._

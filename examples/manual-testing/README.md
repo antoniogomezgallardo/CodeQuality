@@ -9,6 +9,7 @@ Manual testing is the process of manually executing test cases by human testers 
 ## 📋 Examples Included
 
 ### Test Case Templates
+
 - Functional test case templates
 - Usability test case formats
 - Acceptance test scenarios
@@ -16,6 +17,7 @@ Manual testing is the process of manually executing test cases by human testers 
 - Test execution reports
 
 ### Testing Checklists
+
 - UI/UX testing checklist
 - Cross-browser testing checklist
 - Mobile testing checklist
@@ -23,6 +25,7 @@ Manual testing is the process of manually executing test cases by human testers 
 - Security testing checklist
 
 ### Test Plan Documents
+
 - Master test plan template
 - Feature-specific test plans
 - Regression test plans
@@ -79,4 +82,4 @@ Manual testing is the process of manually executing test cases by human testers 
 
 ---
 
-*Manual testing remains essential for validating user experience, exploring edge cases, and ensuring software quality from a human perspective.*
+_Manual testing remains essential for validating user experience, exploring edge cases, and ensuring software quality from a human perspective._

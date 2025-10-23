@@ -9,27 +9,35 @@ We are committed to building software that not only works but excels. This manif
 Through our experience building and maintaining software systems, we have come to value:
 
 ### 1. **Quality is Everyone's Responsibility** over QA as Gatekeeper
+
 While QA expertise is valuable, we believe every team member owns quality.
 
 ### 2. **Prevention** over Detection
+
 While finding bugs is important, preventing them is transformative.
 
 ### 3. **Automation** over Manual Repetition
+
 While manual testing has its place, automation liberates us to focus on innovation.
 
 ### 4. **Continuous Improvement** over Perfection
+
 While we strive for excellence, we value progress over paralysis.
 
 ### 5. **Collaboration** over Silos
+
 While specialization is necessary, cross-functional teamwork delivers better results.
 
 ### 6. **Data-Driven Decisions** over Opinion-Based Choices
+
 While experience matters, metrics guide our path.
 
 ### 7. **User Value** over Technical Excellence
+
 While we pursue technical mastery, user satisfaction is our true measure.
 
 ### 8. **Fast Feedback** over Comprehensive Documentation
+
 While documentation is essential, rapid feedback cycles accelerate learning.
 
 That is, while there is value in the items on the right, we value the items on the left more.
@@ -37,44 +45,57 @@ That is, while there is value in the items on the right, we value the items on t
 ## The 12 Principles of Code Quality
 
 ### 1. Quality Starts with Clear Requirements
-*We cannot build quality software without understanding what we're building and why.*
+
+_We cannot build quality software without understanding what we're building and why._
 
 ### 2. Testing is Continuous, Not a Phase
-*Quality assurance happens at every stage, from conception to production.*
+
+_Quality assurance happens at every stage, from conception to production._
 
 ### 3. Every Commit Should Be Production-Ready
-*We maintain a always-deployable codebase through continuous integration.*
+
+_We maintain a always-deployable codebase through continuous integration._
 
 ### 4. Broken Builds are Team Emergencies
-*A failing build blocks everyone; fixing it is our highest priority.*
+
+_A failing build blocks everyone; fixing it is our highest priority._
 
 ### 5. Technical Debt is Tracked and Managed
-*We make debt visible, measure its impact, and allocate time to pay it down.*
+
+_We make debt visible, measure its impact, and allocate time to pay it down._
 
 ### 6. Code Reviews are Learning Opportunities
-*Reviews spread knowledge, maintain standards, and build team cohesion.*
+
+_Reviews spread knowledge, maintain standards, and build team cohesion._
 
 ### 7. Documentation is Code
-*We treat documentation with the same rigor as code: versioned, reviewed, and tested.*
+
+_We treat documentation with the same rigor as code: versioned, reviewed, and tested._
 
 ### 8. Monitoring is Testing in Production
-*We verify quality through observability, not assumptions.*
+
+_We verify quality through observability, not assumptions._
 
 ### 9. Failures are Learning Opportunities
-*We conduct blameless postmortems and share lessons learned.*
+
+_We conduct blameless postmortems and share lessons learned._
 
 ### 10. Simplicity is the Ultimate Sophistication
-*We actively reduce complexity and favor clarity over cleverness.*
+
+_We actively reduce complexity and favor clarity over cleverness._
 
 ### 11. Standards Enable Creativity
-*Consistent conventions free us to focus on solving problems, not formatting debates.*
+
+_Consistent conventions free us to focus on solving problems, not formatting debates._
 
 ### 12. The Customer Defines Quality
-*Technical excellence means nothing if it doesn't serve user needs.*
+
+_Technical excellence means nothing if it doesn't serve user needs._
 
 ## Our Commitments
 
 ### We Commit to Our Team:
+
 - Share knowledge openly and generously
 - Review code constructively and promptly
 - Maintain high standards without being dogmatic
@@ -82,6 +103,7 @@ That is, while there is value in the items on the right, we value the items on t
 - Celebrate successes and learn from failures together
 
 ### We Commit to Our Code:
+
 - Write tests before or alongside production code
 - Refactor mercilessly to maintain clarity
 - Document intentions, not just implementations
@@ -89,6 +111,7 @@ That is, while there is value in the items on the right, we value the items on t
 - Optimize for readability and maintainability
 
 ### We Commit to Our Process:
+
 - Automate everything that can be automated
 - Measure what matters and act on the data
 - Integrate continuously and deploy frequently
@@ -96,6 +119,7 @@ That is, while there is value in the items on the right, we value the items on t
 - Improve incrementally and consistently
 
 ### We Commit to Our Users:
+
 - Prioritize user value in every decision
 - Test with real-world scenarios and data
 - Monitor production proactively
@@ -105,6 +129,7 @@ That is, while there is value in the items on the right, we value the items on t
 ## Quality Practices We Embrace
 
 ### Shift-Left Principles
+
 - **Requirements Review**: Quality starts with clear, testable requirements
 - **Design Review**: Catch issues before code is written
 - **Test-Driven Development**: Tests guide design and implementation
@@ -112,6 +137,7 @@ That is, while there is value in the items on the right, we value the items on t
 - **Peer Review**: Fresh eyes catch what authors miss
 
 ### Shift-Right Principles
+
 - **Feature Flags**: Control rollout and minimize blast radius
 - **Canary Deployments**: Test with real users safely
 - **A/B Testing**: Let data drive decisions
@@ -121,6 +147,7 @@ That is, while there is value in the items on the right, we value the items on t
 ## Metrics That Matter
 
 We measure our success through:
+
 - **Deployment Frequency**: How often we deliver value
 - **Lead Time**: How quickly ideas become reality
 - **MTTR**: How fast we recover from failures
@@ -158,7 +185,7 @@ Quality is not a destination but a journey of continuous improvement. We invite 
 
 ## Signatories
 
-*We, the undersigned, commit to these principles and pledge to uphold them in our professional practice.*
+_We, the undersigned, commit to these principles and pledge to uphold them in our professional practice._
 
 ---
 

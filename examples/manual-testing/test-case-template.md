@@ -26,48 +26,51 @@ Verify that users can successfully log into the application using valid credenti
 
 ## Test Data
 
-| Field | Value | Notes |
-|-------|-------|-------|
-| Username | testuser@example.com | Valid registered user |
-| Password | Test123! | Valid password |
-| Invalid Username | invalid@example.com | Non-existent user |
-| Invalid Password | wrongpassword | Incorrect password |
+| Field            | Value                | Notes                 |
+| ---------------- | -------------------- | --------------------- |
+| Username         | testuser@example.com | Valid registered user |
+| Password         | Test123!             | Valid password        |
+| Invalid Username | invalid@example.com  | Non-existent user     |
+| Invalid Password | wrongpassword        | Incorrect password    |
 
 ## Test Steps
 
-| Step | Action | Expected Result |
-|------|--------|-----------------|
-| 1 | Navigate to application URL | Login page displays correctly |
-| 2 | Verify login form elements are present | Username field, password field, login button visible |
-| 3 | Enter valid username in username field | Username is entered correctly |
-| 4 | Enter valid password in password field | Password is masked with asterisks |
-| 5 | Click "Login" button | User is redirected to dashboard |
-| 6 | Verify successful login indicators | Welcome message, user name displayed, logout option available |
+| Step | Action                                 | Expected Result                                               |
+| ---- | -------------------------------------- | ------------------------------------------------------------- |
+| 1    | Navigate to application URL            | Login page displays correctly                                 |
+| 2    | Verify login form elements are present | Username field, password field, login button visible          |
+| 3    | Enter valid username in username field | Username is entered correctly                                 |
+| 4    | Enter valid password in password field | Password is masked with asterisks                             |
+| 5    | Click "Login" button                   | User is redirected to dashboard                               |
+| 6    | Verify successful login indicators     | Welcome message, user name displayed, logout option available |
 
 ## Negative Test Scenarios
 
 ### Scenario 1: Invalid Username
-| Step | Action | Expected Result |
-|------|--------|-----------------|
-| 1 | Enter invalid username | Field accepts input |
-| 2 | Enter valid password | Field accepts input |
-| 3 | Click "Login" button | Error message: "Invalid username or password" |
-| 4 | Verify user remains on login page | Login form is still visible |
+
+| Step | Action                            | Expected Result                               |
+| ---- | --------------------------------- | --------------------------------------------- |
+| 1    | Enter invalid username            | Field accepts input                           |
+| 2    | Enter valid password              | Field accepts input                           |
+| 3    | Click "Login" button              | Error message: "Invalid username or password" |
+| 4    | Verify user remains on login page | Login form is still visible                   |
 
 ### Scenario 2: Invalid Password
-| Step | Action | Expected Result |
-|------|--------|-----------------|
-| 1 | Enter valid username | Field accepts input |
-| 2 | Enter invalid password | Field accepts input |
-| 3 | Click "Login" button | Error message: "Invalid username or password" |
-| 4 | Verify user remains on login page | Login form is still visible |
+
+| Step | Action                            | Expected Result                               |
+| ---- | --------------------------------- | --------------------------------------------- |
+| 1    | Enter valid username              | Field accepts input                           |
+| 2    | Enter invalid password            | Field accepts input                           |
+| 3    | Click "Login" button              | Error message: "Invalid username or password" |
+| 4    | Verify user remains on login page | Login form is still visible                   |
 
 ### Scenario 3: Empty Fields
-| Step | Action | Expected Result |
-|------|--------|-----------------|
-| 1 | Leave username field empty | Field remains empty |
-| 2 | Leave password field empty | Field remains empty |
-| 3 | Click "Login" button | Validation errors: "Username is required", "Password is required" |
+
+| Step | Action                     | Expected Result                                                   |
+| ---- | -------------------------- | ----------------------------------------------------------------- |
+| 1    | Leave username field empty | Field remains empty                                               |
+| 2    | Leave password field empty | Field remains empty                                               |
+| 3    | Click "Login" button       | Validation errors: "Username is required", "Password is required" |
 
 ## Post-conditions
 
@@ -86,12 +89,14 @@ Verify that users can successfully log into the application using valid credenti
 ## Pass/Fail Criteria
 
 **Pass Criteria:**
+
 - All test steps execute successfully
 - Expected results match actual results
 - No critical or high-severity defects found
 - User can complete login workflow without issues
 
 **Fail Criteria:**
+
 - Any test step fails
 - Actual results don't match expected results
 - Critical or high-severity defects found
@@ -107,14 +112,14 @@ Verify that users can successfully log into the application using valid credenti
 
 ## Actual Results
 
-| Step | Actual Result | Status | Comments |
-|------|---------------|--------|----------|
-| 1 | Login page loaded in 2 seconds | Pass | Page loads correctly |
-| 2 | All form elements visible | Pass | UI elements present |
-| 3 | Username entered successfully | Pass | No issues |
-| 4 | Password masked correctly | Pass | Security working |
-| 5 | Redirected to dashboard | Pass | Login successful |
-| 6 | Welcome message displayed | Pass | All indicators present |
+| Step | Actual Result                  | Status | Comments               |
+| ---- | ------------------------------ | ------ | ---------------------- |
+| 1    | Login page loaded in 2 seconds | Pass   | Page loads correctly   |
+| 2    | All form elements visible      | Pass   | UI elements present    |
+| 3    | Username entered successfully  | Pass   | No issues              |
+| 4    | Password masked correctly      | Pass   | Security working       |
+| 5    | Redirected to dashboard        | Pass   | Login successful       |
+| 6    | Welcome message displayed      | Pass   | All indicators present |
 
 ## Defects Found
 
@@ -154,6 +159,7 @@ Verify that users can successfully log into the application using valid credenti
 ### Mobile Testing Variation
 
 **Additional Considerations for Mobile:**
+
 - Touch interactions instead of mouse clicks
 - Screen orientation changes (portrait/landscape)
 - Keyboard behavior on mobile devices
@@ -163,6 +169,7 @@ Verify that users can successfully log into the application using valid credenti
 ### Accessibility Testing Variation
 
 **Additional Steps for Accessibility:**
+
 1. Navigate using keyboard only (Tab, Enter, Escape)
 2. Test with screen reader (NVDA, JAWS, VoiceOver)
 3. Verify color contrast meets WCAG guidelines
@@ -172,6 +179,7 @@ Verify that users can successfully log into the application using valid credenti
 ### Performance Testing Variation
 
 **Additional Measurements:**
+
 - Page load time under 3 seconds
 - Login response time under 1 second
 - Memory usage within acceptable limits
@@ -181,6 +189,7 @@ Verify that users can successfully log into the application using valid credenti
 ### Security Testing Variation
 
 **Additional Security Checks:**
+
 1. Verify password is not visible in network requests
 2. Check for SQL injection vulnerabilities
 3. Verify session handling and timeout

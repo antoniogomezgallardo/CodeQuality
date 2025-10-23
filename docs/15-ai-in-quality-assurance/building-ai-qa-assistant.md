@@ -1,12 +1,15 @@
 # Building an AI QA Assistant with LLM + RAG
 
 ## Purpose
+
 Provide a complete, step-by-step guide to building a production-ready AI assistant that understands your team's quality assurance processes, standards, and codebase using Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG).
 
 ## Context
+
 Off-the-shelf AI tools don't know your team's specific testing standards, coding conventions, or historical decisions. By building a custom RAG system, you create an AI assistant that combines the power of LLMs with your organization's unique QA knowledge.
 
 ## Prerequisites
+
 - Understanding of [AI Fundamentals](ai-fundamentals.md)
 - Python 3.9+ installed
 - OpenAI or Anthropic API key
@@ -16,6 +19,7 @@ Off-the-shelf AI tools don't know your team's specific testing standards, coding
 ## What You'll Build
 
 A complete AI QA Assistant that can:
+
 - ✅ Answer questions about your testing standards
 - ✅ Generate tests based on your conventions
 - ✅ Review code against your guidelines
@@ -74,6 +78,7 @@ architecture:
 ### Technology Stack
 
 **Recommended Stack:**
+
 ```yaml
 llm_provider: OpenAI GPT-4 Turbo
 embeddings: text-embedding-3-small
@@ -84,6 +89,7 @@ deployment: Docker + Docker Compose
 ```
 
 **Alternative Stack (Privacy-Focused):**
+
 ```yaml
 llm_provider: Local Llama 3 (70B)
 embeddings: Sentence-BERT (local)
@@ -111,6 +117,7 @@ pip install openai langchain chromadb fastapi uvicorn python-dotenv pydantic
 ```
 
 **Project Structure:**
+
 ```
 qa-assistant/
 ├── app/
@@ -807,7 +814,7 @@ services:
   qa-assistant:
     build: .
     ports:
-      - "8000:8000"
+      - '8000:8000'
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LLM_MODEL=gpt-4-turbo-preview
@@ -831,6 +838,7 @@ curl -X POST "http://localhost:8000/query" \
 ```
 
 **Response:**
+
 ```json
 {
   "question": "What are our code coverage requirements?",
@@ -946,54 +954,51 @@ import axios from 'axios';
 const QA_ASSISTANT_URL = 'http://localhost:8000/query';
 
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand(
-        'qa-assistant.ask',
-        async () => {
-            const question = await vscode.window.showInputBox({
-                prompt: 'Ask the QA Assistant',
-                placeHolder: 'e.g., How should I test this function?'
-            });
+  let disposable = vscode.commands.registerCommand('qa-assistant.ask', async () => {
+    const question = await vscode.window.showInputBox({
+      prompt: 'Ask the QA Assistant',
+      placeHolder: 'e.g., How should I test this function?',
+    });
 
-            if (!question) return;
+    if (!question) return;
 
-            // Show progress
-            vscode.window.withProgress({
-                location: vscode.ProgressLocation.Notification,
-                title: 'Asking QA Assistant...',
-                cancellable: false
-            }, async () => {
-                try {
-                    const response = await axios.post(QA_ASSISTANT_URL, {
-                        question,
-                        session_id: vscode.env.sessionId
-                    });
+    // Show progress
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: 'Asking QA Assistant...',
+        cancellable: false,
+      },
+      async () => {
+        try {
+          const response = await axios.post(QA_ASSISTANT_URL, {
+            question,
+            session_id: vscode.env.sessionId,
+          });
 
-                    const result = response.data;
+          const result = response.data;
 
-                    // Show answer
-                    const panel = vscode.window.createWebviewPanel(
-                        'qaAssistant',
-                        'QA Assistant',
-                        vscode.ViewColumn.Beside,
-                        {}
-                    );
+          // Show answer
+          const panel = vscode.window.createWebviewPanel(
+            'qaAssistant',
+            'QA Assistant',
+            vscode.ViewColumn.Beside,
+            {}
+          );
 
-                    panel.webview.html = getWebviewContent(result);
-
-                } catch (error) {
-                    vscode.window.showErrorMessage(
-                        `Error: ${error.message}`
-                    );
-                }
-            });
+          panel.webview.html = getWebviewContent(result);
+        } catch (error) {
+          vscode.window.showErrorMessage(`Error: ${error.message}`);
         }
+      }
     );
+  });
 
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 }
 
 function getWebviewContent(result: any): string {
-    return `
+  return `
         <!DOCTYPE html>
         <html>
         <head>
@@ -1009,11 +1014,15 @@ function getWebviewContent(result: any): string {
             <div class="answer">${result.answer}</div>
             <div class="sources">
                 <h3>Sources:</h3>
-                ${result.sources.map(s => `
+                ${result.sources
+                  .map(
+                    s => `
                     <div class="source">
                         📄 ${s.filename} (${(s.relevance_score * 100).toFixed(0)}% relevant)
                     </div>
-                `).join('')}
+                `
+                  )
+                  .join('')}
             </div>
             <p><small>Confidence: ${(result.confidence * 100).toFixed(0)}%</small></p>
         </body>
@@ -1064,7 +1073,9 @@ Question: {question}
 
 Code Context:
 ```
+
 {code_context}
+
 ```
 
 Please answer the question considering the provided code.
@@ -1210,6 +1221,7 @@ roi:
 ### Common Issues
 
 **Issue: Low relevance scores**
+
 ```python
 # Solution: Adjust chunk size or add more context
 settings.chunk_size = 1500
@@ -1217,12 +1229,14 @@ settings.chunk_overlap = 300
 ```
 
 **Issue: Slow responses**
+
 ```python
 # Solution: Reduce top_k or implement caching
 settings.top_k_results = 3
 ```
 
 **Issue: Hallucinations**
+
 ```python
 # Solution: Lower temperature, emphasize context
 settings.llm_temperature = 0.0
@@ -1245,4 +1259,4 @@ settings.llm_temperature = 0.0
 
 ---
 
-*You now have a complete AI QA Assistant that knows your team's standards, processes, and best practices. Start with your documentation, iterate based on feedback, and watch your team's efficiency soar!*
+_You now have a complete AI QA Assistant that knows your team's standards, processes, and best practices. Start with your documentation, iterate based on feedback, and watch your team's efficiency soar!_

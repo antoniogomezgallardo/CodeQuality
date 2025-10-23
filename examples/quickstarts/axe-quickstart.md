@@ -25,6 +25,7 @@ npm install --save-dev axe-core
 ### For Browser Extension
 
 Install from:
+
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/axe-devtools-web-accessibility/lhdoppojpmngadmnindnejefpokejbdd)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/axe-devtools/)
 
@@ -78,7 +79,7 @@ describe('Accessibility', () => {
 
   it('should detect missing alt text', async () => {
     const { container } = render(
-      <img src="pic.jpg" />  // Missing alt!
+      <img src="pic.jpg" /> // Missing alt!
     );
 
     const results = await axe(container);
@@ -107,7 +108,7 @@ describe('Accessibility Tests', () => {
 
   it('should exclude certain elements', () => {
     cy.checkA11y(null, {
-      exclude: [['.third-party-widget']]
+      exclude: [['.third-party-widget']],
     });
   });
 
@@ -115,8 +116,8 @@ describe('Accessibility Tests', () => {
     cy.checkA11y(null, {
       rules: {
         'color-contrast': { enabled: false },
-        'valid-lang': { enabled: true }
-      }
+        'valid-lang': { enabled: true },
+      },
     });
   });
 });
@@ -175,6 +176,7 @@ npx playwright test
 ```
 
 **Example Output:**
+
 ```
  FAIL  src/App.test.js
   Accessibility
@@ -202,11 +204,11 @@ npx playwright test
 
 ```javascript
 // Cypress
-cy.checkA11y(null, null, (violations) => {
+cy.checkA11y(null, null, violations => {
   violations.forEach(violation => {
     cy.task('log', {
       message: `${violation.id}: ${violation.description}`,
-      nodes: violation.nodes.length
+      nodes: violation.nodes.length,
     });
   });
 });
@@ -221,9 +223,7 @@ const accessibilityScanResults = await new AxeBuilder({ page })
   .analyze();
 
 // Check specific rules
-const results = await new AxeBuilder({ page })
-  .include(['button', 'a', 'input'])
-  .analyze();
+const results = await new AxeBuilder({ page }).include(['button', 'a', 'input']).analyze();
 ```
 
 ### Generate Reports
@@ -238,10 +238,7 @@ test('accessibility', async () => {
 
   // Save report
   const fs = require('fs');
-  fs.writeFileSync(
-    'accessibility-report.json',
-    JSON.stringify(results, null, 2)
-  );
+  fs.writeFileSync('accessibility-report.json', JSON.stringify(results, null, 2));
 
   expect(results).toHaveNoViolations();
 });
@@ -251,24 +248,16 @@ test('accessibility', async () => {
 
 ```javascript
 // Test only WCAG 2.0 Level A
-await new AxeBuilder({ page })
-  .withTags(['wcag2a'])
-  .analyze();
+await new AxeBuilder({ page }).withTags(['wcag2a']).analyze();
 
 // Test WCAG 2.0 Level AA
-await new AxeBuilder({ page })
-  .withTags(['wcag2aa'])
-  .analyze();
+await new AxeBuilder({ page }).withTags(['wcag2aa']).analyze();
 
 // Test WCAG 2.1 Level AAA
-await new AxeBuilder({ page })
-  .withTags(['wcag21aaa'])
-  .analyze();
+await new AxeBuilder({ page }).withTags(['wcag21aaa']).analyze();
 
 // Test best practices
-await new AxeBuilder({ page })
-  .withTags(['best-practice'])
-  .analyze();
+await new AxeBuilder({ page }).withTags(['best-practice']).analyze();
 ```
 
 ### Disable Specific Rules
@@ -276,21 +265,21 @@ await new AxeBuilder({ page })
 ```javascript
 // Playwright
 await new AxeBuilder({ page })
-  .disableRules(['color-contrast'])  // Disable color contrast check
+  .disableRules(['color-contrast']) // Disable color contrast check
   .analyze();
 
 // Cypress
 cy.checkA11y(null, {
   rules: {
-    'color-contrast': { enabled: false }
-  }
+    'color-contrast': { enabled: false },
+  },
 });
 
 // Jest
 const results = await axe(container, {
   rules: {
-    'color-contrast': { enabled: false }
-  }
+    'color-contrast': { enabled: false },
+  },
 });
 ```
 
@@ -315,6 +304,7 @@ test('mobile accessibility', async ({ page }) => {
 ## 6. Troubleshooting
 
 ### Issue: "axe is not defined"
+
 ```javascript
 // Make sure to import/inject
 // Jest
@@ -328,33 +318,29 @@ const AxeBuilder = require('@axe-core/playwright').default;
 ```
 
 ### Issue: Too many violations
+
 ```javascript
 // Start with critical issues only
-await new AxeBuilder({ page })
-  .options({ runOnly: ['error'] })
-  .analyze();
+await new AxeBuilder({ page }).options({ runOnly: ['error'] }).analyze();
 
 // Then add serious
-await new AxeBuilder({ page })
-  .options({ runOnly: ['error', 'serious'] })
-  .analyze();
+await new AxeBuilder({ page }).options({ runOnly: ['error', 'serious'] }).analyze();
 ```
 
 ### Issue: Third-party widgets failing
+
 ```javascript
 // Exclude them from scan
 cy.checkA11y(null, {
-  exclude: [['.recaptcha'], ['.twitter-widget']]
+  exclude: [['.recaptcha'], ['.twitter-widget']],
 });
 
 // Or
-await new AxeBuilder({ page })
-  .exclude('.recaptcha')
-  .exclude('.twitter-widget')
-  .analyze();
+await new AxeBuilder({ page }).exclude('.recaptcha').exclude('.twitter-widget').analyze();
 ```
 
 ### Issue: Color contrast false positives
+
 ```javascript
 // Disable if using gradients or images
 rules: {
@@ -365,26 +351,23 @@ rules: {
 ```
 
 ### Issue: Tests too slow
+
 ```javascript
 // Scan only changed components
-cy.get('.updated-component').then(($el) => {
+cy.get('.updated-component').then($el => {
   cy.checkA11y($el[0]);
 });
 
 // Or scan in stages
 test('header accessibility', async ({ page }) => {
   await page.goto('/');
-  const results = await new AxeBuilder({ page })
-    .include('header')
-    .analyze();
+  const results = await new AxeBuilder({ page }).include('header').analyze();
   expect(results.violations).toEqual([]);
 });
 
 test('main accessibility', async ({ page }) => {
   await page.goto('/');
-  const results = await new AxeBuilder({ page })
-    .include('main')
-    .analyze();
+  const results = await new AxeBuilder({ page }).include('main').analyze();
   expect(results.violations).toEqual([]);
 });
 ```
@@ -393,26 +376,26 @@ test('main accessibility', async ({ page }) => {
 
 ```javascript
 // WCAG 2.0 Level A
-'area-alt'              // Area elements must have alt text
-'button-name'           // Buttons must have text
-'image-alt'             // Images must have alt text
-'input-button-name'     // Input buttons have text
-'label'                 // Form inputs have labels
-'link-name'             // Links have text
-'document-title'        // Pages have titles
+'area-alt'; // Area elements must have alt text
+'button-name'; // Buttons must have text
+'image-alt'; // Images must have alt text
+'input-button-name'; // Input buttons have text
+'label'; // Form inputs have labels
+'link-name'; // Links have text
+'document-title'; // Pages have titles
 
 // WCAG 2.0 Level AA
-'color-contrast'        // Text has sufficient contrast
-'meta-viewport'         // Zoom is not disabled
+'color-contrast'; // Text has sufficient contrast
+'meta-viewport'; // Zoom is not disabled
 
 // WCAG 2.1 Level AA
-'autocomplete-valid'    // Autocomplete attributes valid
-'target-size'           // Touch targets large enough
+'autocomplete-valid'; // Autocomplete attributes valid
+'target-size'; // Touch targets large enough
 
 // Best Practices
-'landmark-one-main'     // Page has main landmark
-'region'                // All content in landmarks
-'aria-roles'            // Valid ARIA roles
+'landmark-one-main'; // Page has main landmark
+'region'; // All content in landmarks
+'aria-roles'; // Valid ARIA roles
 ```
 
 ## 📚 Resources

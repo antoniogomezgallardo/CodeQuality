@@ -1,12 +1,15 @@
 # Version Control & Trunk-Based Development
 
 ## Purpose
+
 Master version control best practices and Trunk-Based Development (TBD) methodology to enable continuous integration, continuous delivery, and maintain code quality through streamlined collaboration.
 
 ## Context
+
 Version control is the foundation of modern software development. Trunk-Based Development represents the industry's shift toward faster feedback loops, continuous deployment, and reduced integration complexity—key practices for high-performing teams.
 
 ## Prerequisites
+
 - Basic Git knowledge
 - Understanding of [Requirements Engineering](../01-requirements/README.md)
 - Familiarity with collaborative development
@@ -27,24 +30,28 @@ branches     branches     branches      branches
 ### TBD Benefits
 
 **Faster Delivery:**
+
 - Deploy multiple times per day
 - Immediate user feedback
 - Rapid iteration
 - Reduced time-to-market
 
 **Lower Risk:**
+
 - Small, incremental changes
 - Early integration
 - Continuous testing
 - Easy rollback
 
 **Better Collaboration:**
+
 - Always current codebase
 - No long-lived merge conflicts
 - Shared ownership
 - Team alignment
 
 **Higher Quality:**
+
 - Continuous integration
 - Automated testing
 - Feature flags enable safe deployment
@@ -95,6 +102,7 @@ Single Source of Truth
 #### Main/Trunk Branch
 
 **Characteristics:**
+
 ```
 main (or master or trunk)
 ├── Single source of truth
@@ -105,6 +113,7 @@ main (or master or trunk)
 ```
 
 **Workflow:**
+
 ```mermaid
 graph LR
     A[Developer] -->|Commit| B[Main Branch]
@@ -115,6 +124,7 @@ graph LR
 ```
 
 **Protection Rules:**
+
 ```yaml
 main:
   protection:
@@ -134,6 +144,7 @@ main:
 #### Short-Lived Feature Branches (Optional)
 
 **When to Use:**
+
 - Developer prefers local branching
 - Code review before merge
 - CI verification before trunk
@@ -141,6 +152,7 @@ main:
 **Lifespan:** < 1-2 days (maximum)
 
 **Process:**
+
 ```bash
 # Day 1: Morning
 git checkout main
@@ -161,6 +173,7 @@ git push origin feature/user-auth
 ```
 
 **Alternative: Direct to Trunk**
+
 ```bash
 # For very small changes
 git checkout main
@@ -189,6 +202,7 @@ Day 3: [Commit] → [Commit] → [Commit]
 ```
 
 **Best Practice:**
+
 - Commit multiple times per day
 - Each commit is small and complete
 - Each commit passes all tests
@@ -199,6 +213,7 @@ Day 3: [Commit] → [Commit] → [Commit]
 ### Why Feature Flags?
 
 Feature flags (toggles) enable:
+
 - Deploy incomplete features safely
 - Test in production
 - Gradual rollout
@@ -237,7 +252,7 @@ class FeatureFlags {
 
   hashUserId(userId, flag) {
     // Consistent hash for gradual rollout
-    return (hash(userId + flag) % 100);
+    return hash(userId + flag) % 100;
   }
 }
 
@@ -289,8 +304,8 @@ function CheckoutPage({ user }) {
 flags:
   new-checkout:
     enabled: true
-    rollout: 25  # 25% of users
-    description: "New checkout flow"
+    rollout: 25 # 25% of users
+    description: 'New checkout flow'
     created: 2024-10-01
     owner: checkout-team
 
@@ -298,13 +313,13 @@ flags:
     enabled: true
     rollout: 100
     users:
-      - user123  # Specific users
+      - user123 # Specific users
       - user456
 
   experimental-search:
     enabled: false
     rollout: 0
-    description: "ML-powered search (not ready)"
+    description: 'ML-powered search (not ready)'
 ```
 
 ## Commit Conventions
@@ -312,6 +327,7 @@ flags:
 ### Conventional Commits
 
 **Format:**
+
 ```
 <type>(<scope>): <subject>
 
@@ -322,18 +338,18 @@ flags:
 
 #### Commit Types
 
-| Type | Description | Example |
-|------|-------------|---------|
-| feat | New feature | `feat(auth): add OAuth2 login` |
-| fix | Bug fix | `fix(cart): resolve total calculation` |
-| docs | Documentation | `docs(api): update endpoint descriptions` |
-| style | Formatting | `style: fix indentation` |
+| Type     | Description        | Example                                    |
+| -------- | ------------------ | ------------------------------------------ |
+| feat     | New feature        | `feat(auth): add OAuth2 login`             |
+| fix      | Bug fix            | `fix(cart): resolve total calculation`     |
+| docs     | Documentation      | `docs(api): update endpoint descriptions`  |
+| style    | Formatting         | `style: fix indentation`                   |
 | refactor | Code restructuring | `refactor(user): extract validation logic` |
-| perf | Performance | `perf(db): add index to users table` |
-| test | Testing | `test(auth): add login unit tests` |
-| build | Build system | `build: update webpack config` |
-| ci | CI/CD | `ci: add GitHub Actions workflow` |
-| chore | Maintenance | `chore: update dependencies` |
+| perf     | Performance        | `perf(db): add index to users table`       |
+| test     | Testing            | `test(auth): add login unit tests`         |
+| build    | Build system       | `build: update webpack config`             |
+| ci       | CI/CD              | `ci: add GitHub Actions workflow`          |
+| chore    | Maintenance        | `chore: update dependencies`               |
 
 ### Atomic Commits
 
@@ -371,6 +387,7 @@ git push origin main
 ### Continuous Integration Requirements
 
 **Every Commit Must:**
+
 ```
 □ Pass all unit tests
 □ Pass integration tests
@@ -464,11 +481,13 @@ echo "✅ Pre-commit checks passed"
 ### Pull Request Guidelines
 
 **Size:** Keep PRs small
+
 - < 400 lines of code
 - Reviewable in 30-60 minutes
 - Single logical change
 
 **Turnaround:** Fast reviews
+
 - Review within 2 hours
 - Feedback within 4 hours
 - Merge within same day
@@ -477,28 +496,34 @@ echo "✅ Pre-commit checks passed"
 
 ```markdown
 ## Description
+
 [Brief description of changes]
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature (behind feature flag)
 - [ ] Performance improvement
 - [ ] Refactoring
 
 ## Testing
+
 - [ ] Unit tests pass
 - [ ] Integration tests pass
 - [ ] Manual testing completed
 
 ## Feature Flag
+
 - [ ] N/A - No feature flag needed
 - [ ] Feature flag: `feature-name` (rollout: 0%)
 - [ ] Documentation updated
 
 ## Deployment Notes
+
 [Any special deployment considerations]
 
 ## Checklist
+
 - [ ] Code follows style guidelines
 - [ ] Self-review completed
 - [ ] Tests added/updated
@@ -509,6 +534,7 @@ echo "✅ Pre-commit checks passed"
 ### Review Checklist
 
 **Quick Review (< 30 min):**
+
 - [ ] Code does what it claims
 - [ ] Tests are adequate
 - [ ] No obvious bugs
@@ -516,6 +542,7 @@ echo "✅ Pre-commit checks passed"
 - [ ] Documentation updated
 
 **Focus Areas:**
+
 - Correctness
 - Test coverage
 - Performance implications
@@ -595,6 +622,7 @@ git push origin v2.3.1
 ### Canary Deployment
 
 **Gradual Rollout:**
+
 ```
 Deploy to 5% of servers
     ↓
@@ -665,11 +693,13 @@ While we primarily use Trunk-Based Development, here are alternative workflows f
 ### GitFlow (Scheduled Releases)
 
 **Use when:**
+
 - Multiple versions in production
 - Scheduled release cycles
 - Enterprise software with long support
 
 **Structure:**
+
 ```
 main (production)
     ↓
@@ -685,12 +715,14 @@ hotfix/* (urgent fixes)
 ### GitHub Flow (Simpler Alternative)
 
 **Use when:**
+
 - Small team
 - Web applications
 - Continuous deployment
 - Less complex than TBD
 
 **Structure:**
+
 ```
 main (always deployable)
     ↓
@@ -698,6 +730,7 @@ feature/* (short-lived, 1-3 days)
 ```
 
 **Difference from TBD:**
+
 - Slightly longer feature branches (1-3 days vs hours)
 - Less emphasis on feature flags
 - Deploy from main after merge
@@ -705,27 +738,29 @@ feature/* (short-lived, 1-3 days)
 ### GitLab Flow (Environment-Based)
 
 **Use when:**
+
 - Multiple environments (staging, pre-prod, prod)
 - Environment-specific configurations
 - Compliance requirements
 
 **Structure:**
+
 ```
 main → staging → pre-production → production
 ```
 
 ## Workflow Comparison
 
-| Aspect | TBD (Recommended) | GitFlow | GitHub Flow | GitLab Flow |
-|--------|-------------------|---------|-------------|-------------|
-| Complexity | Low | High | Low | Medium |
-| Branch Lifespan | Hours | Days/Weeks | 1-3 Days | Environment-based |
-| Deployment Frequency | Multiple/day | Scheduled | Daily | Environment-based |
-| Feature Flags | Essential | Rare | Optional | Optional |
-| Best For | Modern teams, CD | Legacy, Multiple versions | Small teams, SaaS | Enterprise, Compliance |
-| DORA Score | Elite | Low/Medium | High | High |
-| Learning Curve | Moderate | Steep | Gentle | Moderate |
-| Merge Conflicts | Minimal | Frequent | Occasional | Occasional |
+| Aspect               | TBD (Recommended) | GitFlow                   | GitHub Flow       | GitLab Flow            |
+| -------------------- | ----------------- | ------------------------- | ----------------- | ---------------------- |
+| Complexity           | Low               | High                      | Low               | Medium                 |
+| Branch Lifespan      | Hours             | Days/Weeks                | 1-3 Days          | Environment-based      |
+| Deployment Frequency | Multiple/day      | Scheduled                 | Daily             | Environment-based      |
+| Feature Flags        | Essential         | Rare                      | Optional          | Optional               |
+| Best For             | Modern teams, CD  | Legacy, Multiple versions | Small teams, SaaS | Enterprise, Compliance |
+| DORA Score           | Elite             | Low/Medium                | High              | High                   |
+| Learning Curve       | Moderate          | Steep                     | Gentle            | Moderate               |
+| Merge Conflicts      | Minimal           | Frequent                  | Occasional        | Occasional             |
 
 ## Advanced Git Techniques
 
@@ -819,6 +854,7 @@ Average time: First commit → Merged
 ### Common Issues
 
 **"Feature branches getting too long"**
+
 ```
 Solution:
 - Split into smaller pieces
@@ -828,6 +864,7 @@ Solution:
 ```
 
 **"How to handle database migrations?"**
+
 ```
 Solution:
 - Forward-compatible migrations only
@@ -838,6 +875,7 @@ Solution:
 ```
 
 **"Breaking changes needed"**
+
 ```
 Solution:
 - Use API versioning (v1, v2)
@@ -852,6 +890,7 @@ Solution:
 ### TBD Implementation Checklist
 
 **Setup:**
+
 - [ ] Main branch protected
 - [ ] CI/CD pipeline configured
 - [ ] Automated tests comprehensive
@@ -859,6 +898,7 @@ Solution:
 - [ ] Monitoring and alerting active
 
 **Daily Practice:**
+
 - [ ] Commit to main multiple times/day
 - [ ] All commits pass CI
 - [ ] Feature flags for incomplete work
@@ -866,6 +906,7 @@ Solution:
 - [ ] Branches deleted after merge
 
 **Quality Gates:**
+
 - [ ] All tests passing
 - [ ] Code coverage maintained
 - [ ] Security scans passing
@@ -875,17 +916,20 @@ Solution:
 ## References
 
 ### Standards and Research
+
 - [DORA State of DevOps Report](https://dora.dev)
 - [Trunk Based Development](https://trunkbaseddevelopment.com/)
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Semantic Versioning](https://semver.org/)
 
 ### Tools
+
 - [Feature Flag Systems](https://launchdarkly.com/) - LaunchDarkly
 - [Git Client](https://www.gitkraken.com/) - GitKraken
 - [Commit Helper](https://github.com/commitizen/cz-cli) - Commitizen
 
 ### Books
+
 - "Accelerate" - Nicole Forsgren, Jez Humble, Gene Kim
 - "Continuous Delivery" - Jez Humble, David Farley
 - "Pro Git" - Scott Chacon, Ben Straub
@@ -900,4 +944,4 @@ Solution:
 
 ---
 
-*Part of: [Code Quality Documentation](../../README.md)*
+_Part of: [Code Quality Documentation](../../README.md)_

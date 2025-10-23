@@ -1,9 +1,11 @@
 # Agentic Testing Workflows
 
 ## Purpose
+
 Provide comprehensive guidance and production-ready implementations for building autonomous AI agent workflows that plan, generate, maintain, and optimize test suites with minimal human intervention, transforming testing from a manual process to a self-improving, intelligent system.
 
 ## Prerequisites
+
 - Understanding of [Agentic Fundamentals](agentic-fundamentals.md) - ReAct pattern, tool use, agent memory
 - Experience with [Agent Frameworks](agent-frameworks.md) - LangGraph, AutoGen, or CrewAI
 - Familiarity with [AI-Assisted Testing](../15-ai-in-quality-assurance/ai-assisted-testing.md)
@@ -28,13 +30,13 @@ graph LR
 
 **Key Differences:**
 
-| Capability | AI-Assisted | Agentic Workflow |
-|------------|-------------|------------------|
-| **Test Generation** | Human requests, AI generates | **Agent autonomously identifies gaps, plans, and generates** |
-| **Test Maintenance** | AI suggests fixes on request | **Agent detects failures, diagnoses, auto-fixes** |
-| **Test Selection** | Static selection based on rules | **Agent dynamically selects based on risk analysis** |
-| **Learning** | No learning, same output each time | **Agent learns from results, improves over time** |
-| **Initiative** | Waits for human instruction | **Agent proactively monitors and takes action** |
+| Capability           | AI-Assisted                        | Agentic Workflow                                             |
+| -------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| **Test Generation**  | Human requests, AI generates       | **Agent autonomously identifies gaps, plans, and generates** |
+| **Test Maintenance** | AI suggests fixes on request       | **Agent detects failures, diagnoses, auto-fixes**            |
+| **Test Selection**   | Static selection based on rules    | **Agent dynamically selects based on risk analysis**         |
+| **Learning**         | No learning, same output each time | **Agent learns from results, improves over time**            |
+| **Initiative**       | Waits for human instruction        | **Agent proactively monitors and takes action**              |
 
 ### Core Agent Capabilities for Testing
 
@@ -78,6 +80,7 @@ autonomous_test_agent:
 ## 1. Autonomous Test Suite Management
 
 ### Overview
+
 An agent that continuously monitors your codebase, identifies testing gaps, plans comprehensive test coverage, generates tests, and maintains them as code evolves.
 
 ### Agent Architecture
@@ -102,7 +105,7 @@ stateDiagram-v2
 
 ### Complete Implementation
 
-```python
+````python
 """
 Autonomous Test Suite Management Agent
 Monitors code, identifies gaps, generates and maintains tests autonomously.
@@ -398,13 +401,14 @@ def generate_test_code(
 
 ```python
 {function_code}
-```
+````
 
 Generate tests covering these scenarios:
 {chr(10).join(f'- {scenario}' for scenario in test_scenarios)}
 
 Requirements:
-1. Use descriptive test names (test_<scenario>_<expected_outcome>)
+
+1. Use descriptive test names (test*<scenario>*<expected_outcome>)
 2. Include docstrings explaining what each test validates
 3. Cover edge cases (null, empty, boundary values)
 4. Use proper assertions
@@ -418,11 +422,11 @@ Return ONLY the test code, no explanations."""
 
 @tool
 def execute_test_suite(repo_path: str, test_file_path: str) -> Dict:
-    """
-    Execute test suite and return results.
-    """
-    import subprocess
-    import json
+"""
+Execute test suite and return results.
+"""
+import subprocess
+import json
 
     try:
         result = subprocess.run(
@@ -455,10 +459,10 @@ def execute_test_suite(repo_path: str, test_file_path: str) -> Dict:
 
 @tool
 def commit_test_file(repo_path: str, test_file_path: str, commit_message: str) -> Dict:
-    """
-    Commit generated test file to repository.
-    """
-    import git
+"""
+Commit generated test file to repository.
+"""
+import git
 
     try:
         repo = git.Repo(repo_path)
@@ -480,17 +484,19 @@ def commit_test_file(repo_path: str, test_file_path: str, commit_message: str) -
         return {'error': str(e)}
 
 # ============================================================================
+
 # Agent Nodes
+
 # ============================================================================
 
 async def monitor_and_analyze_node(
-    state: TestAgentState,
-    config: RunnableConfig
+state: TestAgentState,
+config: RunnableConfig
 ) -> TestAgentState:
-    """
-    Monitor codebase for changes and analyze what needs testing.
-    """
-    print("\n🔍 Monitoring codebase for changes...")
+"""
+Monitor codebase for changes and analyze what needs testing.
+"""
+print("\n🔍 Monitoring codebase for changes...")
 
     repo_path = state['repository_path']
 
@@ -523,13 +529,13 @@ async def monitor_and_analyze_node(
     return state
 
 async def identify_gaps_node(
-    state: TestAgentState,
-    config: RunnableConfig
+state: TestAgentState,
+config: RunnableConfig
 ) -> TestAgentState:
-    """
-    Identify test coverage gaps for changed code.
-    """
-    print("\n📊 Analyzing test coverage gaps...")
+"""
+Identify test coverage gaps for changed code.
+"""
+print("\n📊 Analyzing test coverage gaps...")
 
     gaps = []
 
@@ -581,13 +587,13 @@ async def identify_gaps_node(
     return state
 
 async def plan_tests_node(
-    state: TestAgentState,
-    config: RunnableConfig
+state: TestAgentState,
+config: RunnableConfig
 ) -> TestAgentState:
-    """
-    Create comprehensive test plan for identified gaps.
-    """
-    print("\n📋 Creating test generation plan...")
+"""
+Create comprehensive test plan for identified gaps.
+"""
+print("\n📋 Creating test generation plan...")
 
     gaps = state['test_gaps']
 
@@ -617,13 +623,13 @@ async def plan_tests_node(
     return state
 
 async def generate_tests_node(
-    state: TestAgentState,
-    config: RunnableConfig
+state: TestAgentState,
+config: RunnableConfig
 ) -> TestAgentState:
-    """
-    Generate test code for each gap in the plan.
-    """
-    print("\n⚡ Generating tests...")
+"""
+Generate test code for each gap in the plan.
+"""
+print("\n⚡ Generating tests...")
 
     plan = state['test_plan']
     if not plan:
@@ -681,13 +687,13 @@ async def generate_tests_node(
     return state
 
 async def execute_and_validate_node(
-    state: TestAgentState,
-    config: RunnableConfig
+state: TestAgentState,
+config: RunnableConfig
 ) -> TestAgentState:
-    """
-    Execute generated tests to validate they work.
-    """
-    print("\n🧪 Executing generated tests...")
+"""
+Execute generated tests to validate they work.
+"""
+print("\n🧪 Executing generated tests...")
 
     results = {}
     all_passed = True
@@ -720,13 +726,13 @@ async def execute_and_validate_node(
     return state
 
 async def commit_and_finalize_node(
-    state: TestAgentState,
-    config: RunnableConfig
+state: TestAgentState,
+config: RunnableConfig
 ) -> TestAgentState:
-    """
-    Commit generated tests and update knowledge base.
-    """
-    print("\n💾 Committing tests to repository...")
+"""
+Commit generated tests and update knowledge base.
+"""
+print("\n💾 Committing tests to repository...")
 
     committed_tests = []
 
@@ -756,8 +762,8 @@ async def commit_and_finalize_node(
     return state
 
 def should_continue_testing(state: TestAgentState) -> str:
-    """Router to determine next step."""
-    status = state.get('agent_status', '')
+"""Router to determine next step."""
+status = state.get('agent_status', '')
 
     if status == 'error':
         return END
@@ -770,14 +776,16 @@ def should_continue_testing(state: TestAgentState) -> str:
         return 'continue'
 
 # ============================================================================
+
 # Build Agent Graph
+
 # ============================================================================
 
 def create_autonomous_test_agent():
-    """
-    Create the autonomous test management agent.
-    """
-    workflow = StateGraph(TestAgentState)
+"""
+Create the autonomous test management agent.
+"""
+workflow = StateGraph(TestAgentState)
 
     # Add nodes
     workflow.add_node("monitor_analyze", monitor_and_analyze_node)
@@ -799,12 +807,14 @@ def create_autonomous_test_agent():
     return workflow.compile()
 
 # ============================================================================
+
 # Usage Example
+
 # ============================================================================
 
 async def run_autonomous_test_agent(repository_path: str, target_coverage: float = 80.0):
-    """
-    Run the autonomous test management agent.
+"""
+Run the autonomous test management agent.
 
     Args:
         repository_path: Path to git repository
@@ -834,11 +844,12 @@ async def run_autonomous_test_agent(repository_path: str, target_coverage: float
     return result
 
 # Run the agent
-if __name__ == "__main__":
-    result = asyncio.run(run_autonomous_test_agent(
-        repository_path="/path/to/your/repo",
-        target_coverage=80.0
-    ))
+
+if **name** == "**main**":
+result = asyncio.run(run_autonomous_test_agent(
+repository_path="/path/to/your/repo",
+target_coverage=80.0
+))
 
     print("\n" + "="*60)
     print("AUTONOMOUS TEST AGENT - FINAL REPORT")
@@ -847,7 +858,8 @@ if __name__ == "__main__":
     print(f"Tests Committed: {len(result['tests_committed'])}")
     print(f"Coverage Improvement: {result['coverage_improvement']:.1f}%")
     print(f"Files Updated: {', '.join(result['tests_committed'])}")
-```
+
+````
 
 ### Key Features
 
@@ -891,24 +903,27 @@ spec:
       - name: repo
         persistentVolumeClaim:
           claimName: repo-pvc
-```
+````
 
 ---
 
 ## 2. Self-Healing Test Maintenance
 
 ### Overview
+
 An agent that monitors test execution, detects failures, analyzes root causes, and automatically fixes broken tests or flags them for human review.
 
 ### Problem Statement
 
 **Traditional Test Maintenance Issues:**
+
 - 20-30% of E2E tests become flaky over time
 - UI changes break selectors
 - Timing issues cause intermittent failures
 - 40+ hours/week spent on test maintenance (10-person team)
 
 **Agent Solution:**
+
 - Detects failures in real-time
 - Analyzes whether failure is legitimate bug or test issue
 - Auto-fixes common problems (selectors, timing, assertions)
@@ -916,7 +931,7 @@ An agent that monitors test execution, detects failures, analyzes root causes, a
 
 ### Implementation
 
-```python
+````python
 """
 Self-Healing Test Maintenance Agent
 Automatically detects and fixes broken tests.
@@ -1062,9 +1077,10 @@ Stack Trace:
 Test Code:
 ```python
 {test_code}
-```
+````
 
 Classify the failure type:
+
 1. SELECTOR_CHANGED - UI element selector is outdated
 2. TIMING_ISSUE - Race condition or timeout
 3. ASSERTION_OUTDATED - Expected value changed
@@ -1093,11 +1109,11 @@ Respond in JSON format:
 
 @tool
 def generate_selector_fix(test_code: str, old_selector: str, page_html: str) -> str:
-    """
-    Generate updated selector for broken E2E test.
-    Analyzes current page structure to find best alternative.
-    """
-    llm = ChatOpenAI(model="gpt-4", temperature=0)
+"""
+Generate updated selector for broken E2E test.
+Analyzes current page structure to find best alternative.
+"""
+llm = ChatOpenAI(model="gpt-4", temperature=0)
 
     prompt = f"""The selector `{old_selector}` no longer works. Analyze the page HTML and suggest a better selector:
 
@@ -1105,11 +1121,13 @@ Page HTML (excerpt):
 {page_html[:2000]}
 
 Test Code:
+
 ```python
 {test_code}
 ```
 
 Requirements for new selector:
+
 1. Must be specific enough to target correct element
 2. Should be resilient to minor UI changes
 3. Prefer data-testid > aria-label > text content > CSS classes
@@ -1122,14 +1140,15 @@ Return ONLY the updated test code with new selector, no explanations."""
 
 @tool
 def generate_timing_fix(test_code: str, failure_point: str) -> str:
-    """
-    Fix timing-related test failures by adding appropriate waits.
-    """
-    llm = ChatOpenAI(model="gpt-4", temperature=0)
+"""
+Fix timing-related test failures by adding appropriate waits.
+"""
+llm = ChatOpenAI(model="gpt-4", temperature=0)
 
     prompt = f"""Fix timing issue in this test:
 
 Test Code:
+
 ```python
 {test_code}
 ```
@@ -1137,6 +1156,7 @@ Test Code:
 Failure occurs at: {failure_point}
 
 Add appropriate waits using best practices:
+
 1. Use explicit waits (wait_for_selector) not sleep()
 2. Wait for specific conditions (visible, enabled, text content)
 3. Use reasonable timeouts (5-10 seconds)
@@ -1149,17 +1169,17 @@ Return ONLY the updated test code, no explanations."""
 
 @tool
 def validate_fix(
-    repo_path: str,
-    test_file: str,
-    fixed_code: str,
-    original_code: str
+repo_path: str,
+test_file: str,
+fixed_code: str,
+original_code: str
 ) -> Dict:
-    """
-    Validate that fix works by running the test.
-    """
-    import subprocess
-    import tempfile
-    import shutil
+"""
+Validate that fix works by running the test.
+"""
+import subprocess
+import tempfile
+import shutil
 
     # Create temporary copy with fix applied
     test_path = os.path.join(repo_path, test_file)
@@ -1207,14 +1227,14 @@ def validate_fix(
 
 @tool
 def create_escalation_issue(
-    test_name: str,
-    failure_analysis: Dict,
-    repository: str
+test_name: str,
+failure_analysis: Dict,
+repository: str
 ) -> Dict:
-    """
-    Create GitHub issue for failures that can't be auto-fixed.
-    """
-    import requests
+"""
+Create GitHub issue for failures that can't be auto-fixed.
+"""
+import requests
 
     try:
         issue_body = f"""## Test Failure: {test_name}
@@ -1223,19 +1243,24 @@ def create_escalation_issue(
 **Confidence:** {failure_analysis['confidence']:.0%}
 
 ### Root Cause
+
 {failure_analysis['root_cause']}
 
 ### Why Auto-Fix Failed
+
 {failure_analysis.get('auto_fix_reason', 'Cannot auto-fix this type of failure')}
 
 ### Recommended Action
+
 {failure_analysis['fix_strategy']}
 
 ### Failure Details
+
 - Success Rate: {failure_analysis.get('historical_success_rate', 'Unknown')}
 - Recent Failures: {failure_analysis.get('failure_count', 'Unknown')}
 
 ---
+
 🤖 Auto-escalated by Self-Healing Test Agent
 """
 
@@ -1259,12 +1284,14 @@ def create_escalation_issue(
         return {'error': str(e)}
 
 # ============================================================================
+
 # Agent Nodes
+
 # ============================================================================
 
 async def detect_failures_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
-    """Detect failed tests from CI system."""
-    print("\n🔍 Detecting test failures...")
+"""Detect failed tests from CI system."""
+print("\n🔍 Detecting test failures...")
 
     # In production, would fetch from actual CI system
     failures_data = fetch_test_failures.invoke({
@@ -1296,8 +1323,8 @@ async def detect_failures_node(state: SelfHealingAgentState) -> SelfHealingAgent
     return state
 
 async def analyze_failures_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
-    """Analyze each failure to determine root cause and fix strategy."""
-    print("\n🔬 Analyzing failure root causes...")
+"""Analyze each failure to determine root cause and fix strategy."""
+print("\n🔬 Analyzing failure root causes...")
 
     analyses = []
 
@@ -1338,8 +1365,8 @@ async def analyze_failures_node(state: SelfHealingAgentState) -> SelfHealingAgen
     return state
 
 async def generate_fixes_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
-    """Generate fixes for failures that can be auto-fixed."""
-    print("\n⚡ Generating fixes...")
+"""Generate fixes for failures that can be auto-fixed."""
+print("\n⚡ Generating fixes...")
 
     fixes = []
 
@@ -1386,8 +1413,8 @@ async def generate_fixes_node(state: SelfHealingAgentState) -> SelfHealingAgentS
     return state
 
 async def validate_fixes_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
-    """Validate that fixes actually work."""
-    print("\n🧪 Validating fixes...")
+"""Validate that fixes actually work."""
+print("\n🧪 Validating fixes...")
 
     validated = []
 
@@ -1411,8 +1438,8 @@ async def validate_fixes_node(state: SelfHealingAgentState) -> SelfHealingAgentS
     return state
 
 async def apply_fixes_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
-    """Apply validated fixes and commit changes."""
-    print("\n💾 Applying fixes...")
+"""Apply validated fixes and commit changes."""
+print("\n💾 Applying fixes...")
 
     applied = []
 
@@ -1433,7 +1460,7 @@ Confidence: {fix.confidence:.0%}
 Validation: {fix.validation_result['success_rate']:.0%} success rate
 
 🤖 Auto-fixed by Self-Healing Test Agent"""
-        })
+})
 
         if commit_result.get('success'):
             applied.append(fix.test_file)
@@ -1443,8 +1470,8 @@ Validation: {fix.validation_result['success_rate']:.0%} success rate
     return state
 
 async def escalate_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
-    """Escalate failures that couldn't be auto-fixed."""
-    print("\n⚠️  Escalating complex failures...")
+"""Escalate failures that couldn't be auto-fixed."""
+print("\n⚠️ Escalating complex failures...")
 
     escalated = []
 
@@ -1471,12 +1498,14 @@ async def escalate_node(state: SelfHealingAgentState) -> SelfHealingAgentState:
     return state
 
 # ============================================================================
+
 # Build Agent Graph
+
 # ============================================================================
 
 def create_self_healing_agent():
-    """Create the self-healing test agent."""
-    workflow = StateGraph(SelfHealingAgentState)
+"""Create the self-healing test agent."""
+workflow = StateGraph(SelfHealingAgentState)
 
     # Add nodes
     workflow.add_node("detect", detect_failures_node)
@@ -1498,12 +1527,14 @@ def create_self_healing_agent():
     return workflow.compile()
 
 # ============================================================================
+
 # Usage
+
 # ============================================================================
 
 async def run_self_healing_agent(ci_system_url: str, repository_path: str):
-    """Run the self-healing test maintenance agent."""
-    agent = create_self_healing_agent()
+"""Run the self-healing test maintenance agent."""
+agent = create_self_healing_agent()
 
     initial_state = SelfHealingAgentState(
         ci_system_url=ci_system_url,
@@ -1532,12 +1563,14 @@ async def run_self_healing_agent(ci_system_url: str, repository_path: str):
     return result
 
 # Example: Run on CI failure webhook
-if __name__ == "__main__":
-    result = asyncio.run(run_self_healing_agent(
-        ci_system_url="https://api.github.com",
-        repository_path="/path/to/repo"
-    ))
-```
+
+if **name** == "**main**":
+result = asyncio.run(run_self_healing_agent(
+ci_system_url="https://api.github.com",
+repository_path="/path/to/repo"
+))
+
+````
 
 ### Deployment as CI/CD Webhook
 
@@ -1570,36 +1603,39 @@ async def handle_test_failure(request: Request):
         'fixes_applied': len(result['fixes_applied']),
         'escalated': len(result['issues_escalated'])
     }
-```
+````
 
 ### Success Metrics
 
 After deploying self-healing agent, teams report:
 
-| Metric | Before Agent | After Agent | Improvement |
-|--------|-------------|-------------|-------------|
-| **Test Maintenance Time** | 40 hrs/week | 8 hrs/week | **80% reduction** |
-| **Auto-Fix Success Rate** | 0% | 70-85% | **N/A** |
-| **Time to Fix** | 2-4 hours | < 5 minutes | **96% faster** |
-| **Flaky Test Rate** | 20-25% | 3-5% | **80-85% reduction** |
-| **Developer Interruptions** | 15/week | 2/week | **87% reduction** |
+| Metric                      | Before Agent | After Agent | Improvement          |
+| --------------------------- | ------------ | ----------- | -------------------- |
+| **Test Maintenance Time**   | 40 hrs/week  | 8 hrs/week  | **80% reduction**    |
+| **Auto-Fix Success Rate**   | 0%           | 70-85%      | **N/A**              |
+| **Time to Fix**             | 2-4 hours    | < 5 minutes | **96% faster**       |
+| **Flaky Test Rate**         | 20-25%       | 3-5%        | **80-85% reduction** |
+| **Developer Interruptions** | 15/week      | 2/week      | **87% reduction**    |
 
 ---
 
 ## 3. Intelligent Test Selection
 
 ### Overview
+
 An agent that analyzes code changes, assesses risk, and intelligently selects which tests to run, reducing CI time by 60-80% while maintaining coverage.
 
 ### Problem Statement
 
 **Traditional Test Selection:**
+
 - Runs entire test suite on every commit (30-60 minutes)
 - Wastes resources on tests unrelated to changes
 - Slows down feedback loop
 - Increases costs ($500-1000/month in CI minutes)
 
 **Agent Solution:**
+
 - Analyzes code changes and dependencies
 - Calculates risk scores for each test
 - Selects minimum set of tests for adequate coverage
@@ -1872,7 +1908,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Full history for analysis
+          fetch-depth: 0 # Full history for analysis
 
       - name: Run Test Selection Agent
         run: |
@@ -1889,24 +1925,25 @@ jobs:
 
       - name: Full Suite on Main
         if: github.ref == 'refs/heads/main'
-        run: pytest  # Always run full suite on main branch
+        run: pytest # Always run full suite on main branch
 ```
 
 ### Success Metrics
 
-| Metric | Before Agent | After Agent | Improvement |
-|--------|-------------|-------------|-------------|
-| **Average CI Time** | 45 minutes | 12 minutes | **73% faster** |
-| **Tests Run per PR** | 2,500 | 350 | **86% reduction** |
-| **CI Costs** | $800/month | $200/month | **75% savings** |
-| **False Negatives** | N/A | < 2% | **Acceptable** |
-| **Developer Feedback** | 45 min | 12 min | **73% faster** |
+| Metric                 | Before Agent | After Agent | Improvement       |
+| ---------------------- | ------------ | ----------- | ----------------- |
+| **Average CI Time**    | 45 minutes   | 12 minutes  | **73% faster**    |
+| **Tests Run per PR**   | 2,500        | 350         | **86% reduction** |
+| **CI Costs**           | $800/month   | $200/month  | **75% savings**   |
+| **False Negatives**    | N/A          | < 2%        | **Acceptable**    |
+| **Developer Feedback** | 45 min       | 12 min      | **73% faster**    |
 
 ---
 
 ## 4. Agent-Driven E2E Testing
 
 ### Overview
+
 An autonomous agent that explores web applications like a human tester, discovers new user flows, generates test scenarios, and creates automated test suites.
 
 ### Key Capabilities
@@ -2106,6 +2143,7 @@ if __name__ == "__main__":
 ## 5. Test Data Generation Agents
 
 ### Overview
+
 Agents that generate realistic, diverse test data including edge cases, compliance with constraints, and privacy-safe alternatives to production data.
 
 ### Implementation
@@ -2582,16 +2620,16 @@ stages:
   - deployment-decision
 
 variables:
-  AGENT_IMAGE: "qa-agents:latest"
+  AGENT_IMAGE: 'qa-agents:latest'
 
 agentic-qa-workflow:
   stage: test-analysis
   image: $AGENT_IMAGE
   script:
     - python qa_workflow_agent.py
-        --repo-path $CI_PROJECT_DIR
-        --mr-iid $CI_MERGE_REQUEST_IID
-        --output-report qa_report.json
+      --repo-path $CI_PROJECT_DIR
+      --mr-iid $CI_MERGE_REQUEST_IID
+      --output-report qa_report.json
   artifacts:
     reports:
       junit: test-results.xml
@@ -2873,16 +2911,16 @@ print(json.dumps(dashboard, indent=2))
 
 ### Monthly Cost Breakdown (10-person team)
 
-| Agent | Executions/Month | Avg Cost/Execution | Monthly Cost | Time Saved | Value | ROI |
-|-------|-----------------|-------------------|--------------|------------|-------|-----|
-| **Autonomous Test Management** | 100 | $1.20 | $120 | 50 hours | $5,000 | **42x** |
-| **Self-Healing Maintenance** | 150 | $0.80 | $120 | 38 hours | $3,800 | **32x** |
-| **Intelligent Test Selection** | 400 | $0.30 | $120 | 25 hours | $2,500 | **21x** |
-| **E2E Exploration** | 20 | $3.00 | $60 | 20 hours | $2,000 | **33x** |
-| **Test Data Generation** | 50 | $0.50 | $25 | 10 hours | $1,000 | **40x** |
-| **TOTAL** | **720** | **$0.62** | **$445** | **143 hrs** | **$14,300** | **32x** |
+| Agent                          | Executions/Month | Avg Cost/Execution | Monthly Cost | Time Saved  | Value       | ROI     |
+| ------------------------------ | ---------------- | ------------------ | ------------ | ----------- | ----------- | ------- |
+| **Autonomous Test Management** | 100              | $1.20              | $120         | 50 hours    | $5,000      | **42x** |
+| **Self-Healing Maintenance**   | 150              | $0.80              | $120         | 38 hours    | $3,800      | **32x** |
+| **Intelligent Test Selection** | 400              | $0.30              | $120         | 25 hours    | $2,500      | **21x** |
+| **E2E Exploration**            | 20               | $3.00              | $60          | 20 hours    | $2,000      | **33x** |
+| **Test Data Generation**       | 50               | $0.50              | $25          | 10 hours    | $1,000      | **40x** |
+| **TOTAL**                      | **720**          | **$0.62**          | **$445**     | **143 hrs** | **$14,300** | **32x** |
 
-*Assumptions: $100/hour developer rate, GPT-4 pricing*
+_Assumptions: $100/hour developer rate, GPT-4 pricing_
 
 ### Cost Optimization Strategies
 
@@ -3026,6 +3064,7 @@ async def human_in_loop_decision(
 **Symptoms**: Agent auto-fixes tests incorrectly, generates bad test code
 
 **Solutions**:
+
 1. Increase confidence threshold for auto-actions
 2. Add validation steps before applying changes
 3. Implement human review for critical changes
@@ -3037,6 +3076,7 @@ async def human_in_loop_decision(
 **Symptoms**: Monthly costs exceed budget
 
 **Solutions**:
+
 1. Implement caching for repeated queries
 2. Use cheaper models (GPT-3.5) for simple tasks
 3. Add daily/weekly budget limits
@@ -3048,6 +3088,7 @@ async def human_in_loop_decision(
 **Symptoms**: Agent repeatedly tries same failing action
 
 **Solutions**:
+
 ```python
 class LoopDetector:
     """Detect and break agent loops."""
@@ -3074,6 +3115,7 @@ class LoopDetector:
 **Symptoms**: Generated tests don't cover important scenarios
 
 **Solutions**:
+
 1. Enhance prompts with explicit edge case requirements
 2. Add edge case checklist to validation
 3. Use historical failure data to identify common gaps
@@ -3132,15 +3174,18 @@ class LoopDetector:
 ## Resources
 
 ### Code Examples
+
 - All code in this guide is production-ready and tested
 - Complete implementations available at: [github.com/your-org/agentic-qa-workflows]
 
 ### Frameworks
+
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [AutoGen Examples](https://github.com/microsoft/autogen/tree/main/notebook)
 - [CrewAI Cookbook](https://github.com/joaomdmoura/crewAI-examples)
 
 ### Courses
+
 - [DeepLearning.AI - AI Agents in LangGraph](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/)
 - [DeepLearning.AI - Multi AI Agent Systems with CrewAI](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/)
 
@@ -3150,4 +3195,4 @@ class LoopDetector:
 **Version**: 1.0
 **Status**: Production-Ready
 
-*"The future of testing is not AI replacing testers - it's autonomous agents collaborating with humans to achieve quality at a scale previously impossible."*
+_"The future of testing is not AI replacing testers - it's autonomous agents collaborating with humans to achieve quality at a scale previously impossible."_

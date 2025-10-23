@@ -239,6 +239,7 @@ class CalculatorTest {
 ## 4. Run Tests (30 seconds)
 
 ### Maven
+
 ```bash
 # Run all tests
 mvn test
@@ -254,6 +255,7 @@ mvn test jacoco:report
 ```
 
 ### Gradle
+
 ```bash
 # Run all tests
 ./gradlew test
@@ -269,6 +271,7 @@ mvn test jacoco:report
 ```
 
 **Expected Output:**
+
 ```
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
@@ -286,6 +289,7 @@ mvn test jacoco:report
 ## 5. Next Steps
 
 ### Parametrized Tests
+
 ```java
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
@@ -325,6 +329,7 @@ class ParametrizedTests {
 ```
 
 ### Test Lifecycle Hooks
+
 ```java
 class LifecycleTests {
 
@@ -365,6 +370,7 @@ class LifecycleTests {
 ```
 
 ### Conditional Test Execution
+
 ```java
 import org.junit.jupiter.api.condition.*;
 
@@ -401,6 +407,7 @@ class ConditionalTests {
 ```
 
 ### Timeout Tests
+
 ```java
 import java.time.Duration;
 
@@ -425,6 +432,7 @@ class TimeoutTests {
 ### Add Code Coverage (JaCoCo)
 
 **Maven:**
+
 ```xml
 <plugin>
     <groupId>org.jacoco</groupId>
@@ -468,6 +476,7 @@ class TimeoutTests {
 ```
 
 **Gradle:**
+
 ```gradle
 plugins {
     id 'jacoco'
@@ -503,6 +512,7 @@ jacocoTestCoverageVerification {
 ## 6. Troubleshooting
 
 ### Issue: "No tests found"
+
 ```bash
 # Make sure:
 # 1. Test class name ends with Test, Tests, or TestCase
@@ -517,6 +527,7 @@ mvn test -X
 ```
 
 ### Issue: Tests not running with Maven
+
 ```xml
 <!-- Ensure surefire plugin is configured -->
 <plugin>
@@ -527,6 +538,7 @@ mvn test -X
 ```
 
 ### Issue: Tests not running with Gradle
+
 ```gradle
 // Make sure you have this
 test {
@@ -535,6 +547,7 @@ test {
 ```
 
 ### Issue: "NoClassDefFoundError: org/junit/jupiter/api/Test"
+
 ```bash
 # Make sure dependency scope is correct
 # Maven: <scope>test</scope>
@@ -547,6 +560,7 @@ mvn clean install
 ```
 
 ### Issue: Nested tests not running
+
 ```java
 // Make sure nested classes are annotated with @Nested
 @Nested
@@ -560,6 +574,7 @@ class NestedTests {
 ```
 
 ### Issue: Coverage report not generated
+
 ```bash
 # Maven: Generate report explicitly
 mvn test jacoco:report

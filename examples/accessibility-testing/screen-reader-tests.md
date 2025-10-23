@@ -8,13 +8,13 @@ Screen readers announce page content and allow users to navigate using keyboard 
 
 ### Supported Screen Readers
 
-| Screen Reader | Platform | Market Share | Free |
-|--------------|----------|--------------|------|
-| JAWS | Windows | ~40% | No ($95+/year) |
-| NVDA | Windows | ~30% | Yes |
-| VoiceOver | macOS/iOS | ~20% | Yes (built-in) |
-| TalkBack | Android | ~5% | Yes (built-in) |
-| Narrator | Windows | ~5% | Yes (built-in) |
+| Screen Reader | Platform  | Market Share | Free           |
+| ------------- | --------- | ------------ | -------------- |
+| JAWS          | Windows   | ~40%         | No ($95+/year) |
+| NVDA          | Windows   | ~30%         | Yes            |
+| VoiceOver     | macOS/iOS | ~20%         | Yes (built-in) |
+| TalkBack      | Android   | ~5%          | Yes (built-in) |
+| Narrator      | Windows   | ~5%          | Yes (built-in) |
 
 **Recommendation**: Test with NVDA (Windows) and VoiceOver (macOS) as they are free and cover ~50% of users.
 
@@ -28,28 +28,28 @@ Screen readers announce page content and allow users to navigate using keyboard 
 
 ### Essential NVDA Commands
 
-| Action | Command |
-|--------|---------|
-| Start/Stop NVDA | `Ctrl + Alt + N` |
-| Toggle speech | `Insert + S` |
-| Read from cursor | `Insert + Down Arrow` |
-| Read entire page | `Insert + Down Arrow` (twice) |
-| Stop speaking | `Control` |
-| Next heading | `H` |
-| Previous heading | `Shift + H` |
-| Next link | `K` |
-| Previous link | `Shift + K` |
-| Next button | `B` |
-| Previous button | `Shift + B` |
-| Next form field | `F` |
-| Previous form field | `Shift + F` |
-| Next landmark | `D` |
-| Previous landmark | `Shift + D` |
-| Elements list | `Insert + F7` |
-| Next table | `T` |
-| Previous table | `Shift + T` |
-| Browse mode | `Insert + Space` |
-| Forms mode | `Insert + Space` |
+| Action              | Command                       |
+| ------------------- | ----------------------------- |
+| Start/Stop NVDA     | `Ctrl + Alt + N`              |
+| Toggle speech       | `Insert + S`                  |
+| Read from cursor    | `Insert + Down Arrow`         |
+| Read entire page    | `Insert + Down Arrow` (twice) |
+| Stop speaking       | `Control`                     |
+| Next heading        | `H`                           |
+| Previous heading    | `Shift + H`                   |
+| Next link           | `K`                           |
+| Previous link       | `Shift + K`                   |
+| Next button         | `B`                           |
+| Previous button     | `Shift + B`                   |
+| Next form field     | `F`                           |
+| Previous form field | `Shift + F`                   |
+| Next landmark       | `D`                           |
+| Previous landmark   | `Shift + D`                   |
+| Elements list       | `Insert + F7`                 |
+| Next table          | `T`                           |
+| Previous table      | `Shift + T`                   |
+| Browse mode         | `Insert + Space`              |
+| Forms mode          | `Insert + Space`              |
 
 ### NVDA Test Scenarios
 
@@ -58,12 +58,14 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify page structure is properly announced
 
 **Steps**:
+
 1. Navigate to homepage
 2. Press `Insert + Down Arrow` twice to hear entire page
 3. Press `D` to navigate through landmarks
 4. Press `Insert + F7` to open elements list, select "Landmarks"
 
 **Expected Results**:
+
 - [ ] Page title is announced when page loads
 - [ ] Main heading (H1) is announced and meaningful
 - [ ] Landmarks are present: banner, navigation, main, contentinfo
@@ -72,6 +74,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] All content is within appropriate landmarks
 
 **Common Issues**:
+
 - Missing or duplicate H1
 - No landmarks defined
 - Content outside landmarks
@@ -84,12 +87,14 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify logical heading structure
 
 **Steps**:
+
 1. Navigate to page
 2. Press `Insert + F7`, select "Headings"
 3. Review heading list
 4. Navigate using `H` key through document
 
 **Expected Results**:
+
 - [ ] H1 exists and is unique
 - [ ] Headings follow logical order (H1 → H2 → H3, not H1 → H4)
 - [ ] Headings accurately describe following content
@@ -97,6 +102,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Section headings are present for major sections
 
 **Common Issues**:
+
 - Missing H1
 - Multiple H1s
 - Skipped heading levels (H2 → H4)
@@ -110,12 +116,14 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify links have descriptive text
 
 **Steps**:
+
 1. Navigate to page
 2. Press `Insert + F7`, select "Links"
 3. Review link list out of context
 4. Navigate using `K` key through links
 
 **Expected Results**:
+
 - [ ] All links have descriptive text
 - [ ] Link purpose is clear from link text alone
 - [ ] No "click here" or "read more" without context
@@ -123,6 +131,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Images in links have appropriate alt text
 
 **Common Issues**:
+
 - Generic link text ("click here", "more")
 - URL as link text
 - Empty links
@@ -136,12 +145,14 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify all form controls are properly labeled
 
 **Steps**:
+
 1. Navigate to form page
 2. Press `F` to navigate through form fields
 3. Fill out form using only keyboard and NVDA
 4. Submit form and verify error handling
 
 **Expected Results**:
+
 - [ ] Each input has a clear, descriptive label
 - [ ] Required fields are announced as required
 - [ ] Field type is announced (text, email, password, etc.)
@@ -152,6 +163,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Error messages are associated with fields
 
 **Common Issues**:
+
 - Placeholder text used instead of label
 - Missing labels
 - Generic labels ("input", "field")
@@ -166,12 +178,14 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify images have appropriate alt text
 
 **Steps**:
+
 1. Navigate to page with images
 2. Use arrow keys to navigate through content
 3. Listen to how images are announced
 4. Press `Insert + F7`, select "Links" (for linked images)
 
 **Expected Results**:
+
 - [ ] Content images have descriptive alt text
 - [ ] Decorative images are ignored (alt="")
 - [ ] Alt text doesn't repeat surrounding text
@@ -180,6 +194,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Linked images describe link destination
 
 **Common Issues**:
+
 - Missing alt text
 - Generic alt text ("image", "photo")
 - File names as alt text ("IMG_1234.jpg")
@@ -193,12 +208,14 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify data tables are properly structured
 
 **Steps**:
+
 1. Navigate to page with data table
 2. Press `T` to jump to table
 3. Use `Ctrl + Alt + Arrow Keys` to navigate cells
 4. Listen to header announcements
 
 **Expected Results**:
+
 - [ ] Table is announced as a table
 - [ ] Row and column headers are announced with cells
 - [ ] Table has `<caption>` or `aria-label`
@@ -207,6 +224,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Layout tables are not announced as tables
 
 **Common Issues**:
+
 - Missing table headers
 - Headers not marked with `<th>`
 - Missing `scope` attribute
@@ -221,6 +239,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify modal accessibility
 
 **Steps**:
+
 1. Open modal dialog
 2. Verify focus moves to modal
 3. Navigate modal with `Tab` key
@@ -228,6 +247,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 5. Close modal and verify focus return
 
 **Expected Results**:
+
 - [ ] Modal announces as dialog when opened
 - [ ] Focus moves to modal (heading or close button)
 - [ ] Modal has descriptive `aria-label` or `aria-labelledby`
@@ -237,6 +257,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Background content is not accessible while modal is open
 
 **Common Issues**:
+
 - Focus not moved to modal
 - Background content still accessible
 - No keyboard trap within modal
@@ -250,11 +271,13 @@ Screen readers announce page content and allow users to navigate using keyboard 
 **Objective**: Verify dynamic content is announced
 
 **Steps**:
+
 1. Trigger content updates (load more, filters, etc.)
 2. Listen for announcements
 3. Navigate to new content
 
 **Expected Results**:
+
 - [ ] Status messages announced automatically
 - [ ] Loading states announced
 - [ ] Error messages announced immediately
@@ -263,6 +286,7 @@ Screen readers announce page content and allow users to navigate using keyboard 
 - [ ] Updates don't interrupt current reading
 
 **Common Issues**:
+
 - No announcement of updates
 - Missing `aria-live` regions
 - Updates interrupt user
@@ -274,15 +298,15 @@ Screen readers announce page content and allow users to navigate using keyboard 
 
 ### Essential JAWS Commands
 
-| Action | Command |
-|--------|---------|
-| Start/Stop JAWS | `Insert + J` |
-| Say all | `Insert + Down Arrow` |
-| Next heading | `H` |
-| Forms list | `Insert + F5` |
-| Links list | `Insert + F7` |
-| Headings list | `Insert + F6` |
-| Virtual PC cursor | `NumPad Plus` |
+| Action            | Command               |
+| ----------------- | --------------------- |
+| Start/Stop JAWS   | `Insert + J`          |
+| Say all           | `Insert + Down Arrow` |
+| Next heading      | `H`                   |
+| Forms list        | `Insert + F5`         |
+| Links list        | `Insert + F7`         |
+| Headings list     | `Insert + F6`         |
+| Virtual PC cursor | `NumPad Plus`         |
 
 ### JAWS-Specific Tests
 
@@ -304,30 +328,32 @@ VoiceOver is built into macOS.
 
 ### Essential VoiceOver Commands
 
-| Action | Command |
-|--------|---------|
-| Start/Stop VoiceOver | `Cmd + F5` |
-| VoiceOver modifier | `Control + Option` (VO) |
-| Next item | `VO + Right Arrow` |
-| Previous item | `VO + Left Arrow` |
-| Interact with item | `VO + Shift + Down Arrow` |
-| Stop interacting | `VO + Shift + Up Arrow` |
-| Rotor | `VO + U` |
-| Next heading | Rotor → Headings → Down Arrow |
-| Web spots menu | `VO + U` |
-| Read all | `VO + A` |
+| Action               | Command                       |
+| -------------------- | ----------------------------- |
+| Start/Stop VoiceOver | `Cmd + F5`                    |
+| VoiceOver modifier   | `Control + Option` (VO)       |
+| Next item            | `VO + Right Arrow`            |
+| Previous item        | `VO + Left Arrow`             |
+| Interact with item   | `VO + Shift + Down Arrow`     |
+| Stop interacting     | `VO + Shift + Up Arrow`       |
+| Rotor                | `VO + U`                      |
+| Next heading         | Rotor → Headings → Down Arrow |
+| Web spots menu       | `VO + U`                      |
+| Read all             | `VO + A`                      |
 
 ### VoiceOver Test Scenarios
 
 #### Test 1: Basic Navigation
 
 **Steps**:
+
 1. Enable VoiceOver
 2. Navigate to page
 3. Use `VO + Right Arrow` to navigate through content
 4. Listen to announcements
 
 **Expected Results**:
+
 - [ ] Page elements are announced logically
 - [ ] Interactive elements are identified
 - [ ] Content structure is clear
@@ -337,12 +363,14 @@ VoiceOver is built into macOS.
 #### Test 2: Rotor Navigation
 
 **Steps**:
+
 1. Open page
 2. Press `VO + U` to open rotor
 3. Select different navigation methods (Headings, Links, Forms)
 4. Navigate using arrow keys
 
 **Expected Results**:
+
 - [ ] All headings appear in rotor
 - [ ] All links appear in rotor
 - [ ] Form controls appear in rotor
@@ -360,19 +388,20 @@ Settings → Accessibility → VoiceOver → Toggle On
 
 ### Essential iOS VoiceOver Gestures
 
-| Action | Gesture |
-|--------|---------|
-| Next item | Swipe right |
-| Previous item | Swipe left |
-| Activate | Double tap |
-| Rotor | Rotate two fingers |
-| Read from current | Swipe down with 2 fingers |
-| Read all | Swipe up with 2 fingers |
-| Scroll | Swipe up/down with 3 fingers |
+| Action            | Gesture                      |
+| ----------------- | ---------------------------- |
+| Next item         | Swipe right                  |
+| Previous item     | Swipe left                   |
+| Activate          | Double tap                   |
+| Rotor             | Rotate two fingers           |
+| Read from current | Swipe down with 2 fingers    |
+| Read all          | Swipe up with 2 fingers      |
+| Scroll            | Swipe up/down with 3 fingers |
 
 ### iOS-Specific Tests
 
 **Test Mobile Navigation**:
+
 - [ ] All interactive elements are reachable via swipe
 - [ ] Element labels are clear on mobile
 - [ ] Gestures work correctly (pinch, swipe)
@@ -435,30 +464,37 @@ Use this template for systematic testing:
 **Tester**: [Name]
 
 #### Test Steps:
+
 1. [Step]
 2. [Step]
 3. [Step]
 
 #### Expected Behavior:
+
 - [Expected result]
 - [Expected result]
 
 #### Actual Behavior:
+
 - [Actual result]
 
 #### Result:
+
 - [ ] Pass
 - [ ] Fail
 
 #### Issues Found:
+
 - [Description]
 - Severity: [Critical/Serious/Moderate/Minor]
 - WCAG: [Criterion number, e.g., 1.3.1]
 
 #### Screenshots/Video:
+
 [Attach evidence]
 
 #### Notes:
+
 [Additional observations]
 ```
 
@@ -469,6 +505,7 @@ Use this template for systematic testing:
 Use this checklist for comprehensive screen reader testing:
 
 ### Page Structure
+
 - [ ] Page title is descriptive and unique
 - [ ] Landmarks are present (header, nav, main, footer)
 - [ ] Heading hierarchy is logical (H1 → H2 → H3)
@@ -476,6 +513,7 @@ Use this checklist for comprehensive screen reader testing:
 - [ ] Document language is specified
 
 ### Navigation
+
 - [ ] All interactive elements are keyboard accessible
 - [ ] Focus order is logical
 - [ ] Focus indicators are visible
@@ -483,6 +521,7 @@ Use this checklist for comprehensive screen reader testing:
 - [ ] Tab order matches visual order
 
 ### Content
+
 - [ ] Headings describe following content
 - [ ] Links have descriptive text
 - [ ] Images have appropriate alt text
@@ -490,6 +529,7 @@ Use this checklist for comprehensive screen reader testing:
 - [ ] Lists are properly structured
 
 ### Forms
+
 - [ ] All inputs have labels
 - [ ] Required fields are indicated
 - [ ] Error messages are clear and associated with fields
@@ -497,12 +537,14 @@ Use this checklist for comprehensive screen reader testing:
 - [ ] Fieldsets group related inputs
 
 ### Dynamic Content
+
 - [ ] Status messages are announced
 - [ ] Live regions work correctly
 - [ ] Loading states are announced
 - [ ] Errors are announced immediately
 
 ### Custom Components
+
 - [ ] Widgets have appropriate ARIA roles
 - [ ] State changes are announced
 - [ ] Keyboard interactions work correctly
@@ -513,16 +555,19 @@ Use this checklist for comprehensive screen reader testing:
 ## Resources
 
 ### Official Documentation
+
 - [NVDA User Guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)
 - [JAWS Documentation](https://www.freedomscientific.com/training/jaws/)
 - [VoiceOver User Guide](https://help.apple.com/voiceover/mac/)
 
 ### Testing Guides
+
 - [WebAIM: Testing with Screen Readers](https://webaim.org/articles/screenreader_testing/)
 - [W3C: Using ARIA](https://www.w3.org/TR/using-aria/)
 - [Deque: Screen Reader Support](https://dequeuniversity.com/screenreaders/)
 
 ### Practice Sites
+
 - [NVDA Training](https://www.nvaccess.org/training/)
 - [WebAIM: Screen Reader Demo](https://webaim.org/simulations/screenreader)
 
@@ -541,4 +586,4 @@ Use this checklist for comprehensive screen reader testing:
 
 ---
 
-*Screen reader testing is essential for ensuring your application is truly accessible. Automated tools can only catch ~30% of accessibility issues - manual testing with screen readers is required for full WCAG compliance.*
+_Screen reader testing is essential for ensuring your application is truly accessible. Automated tools can only catch ~30% of accessibility issues - manual testing with screen readers is required for full WCAG compliance._

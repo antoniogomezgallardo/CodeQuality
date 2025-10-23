@@ -1,9 +1,11 @@
 # Claude AI Assistant Configuration
 
 ## Project Context
+
 This is a **Code Quality Documentation Project** that creates comprehensive documentation aligned with industry best practices for software development lifecycle management.
 
 ## Project Structure
+
 - **Theoretical Foundation**: Complete documentation covering requirements through deployment
 - **Industry Alignment**: ISO 25010, IEEE 829, ISTQB, DORA metrics, OWASP, WCAG 2.1
 - **Learning Path**: Progressive modules from foundations to continuous improvement
@@ -11,11 +13,13 @@ This is a **Code Quality Documentation Project** that creates comprehensive docu
 - **Comprehensive Examples**: Production-ready examples for all testing approaches and CI/CD patterns
 
 ## Key Commands
+
 - **Linting**: Check if project has specific linting setup (none configured yet)
 - **Testing**: Check if project has test framework (none configured yet)
 - **Build**: Check if project has build process (none configured yet)
 
 ## Documentation Standards
+
 When working on this project:
 
 1. **Follow IEEE 829** standards for test documentation
@@ -26,6 +30,7 @@ When working on this project:
 6. **Follow WCAG 2.1** for accessibility
 
 ## File Conventions
+
 - All documentation uses `.md` format
 - Each module has a `README.md` as entry point
 - Templates in `/templates` directory
@@ -34,6 +39,7 @@ When working on this project:
 - Testing examples cover all levels: unit, integration, E2E, component, contract, manual, exploratory
 
 ## Quality Gates
+
 - Documentation must be accurate against industry standards
 - All content should be practical and actionable
 - Cross-references between related topics required
@@ -42,6 +48,7 @@ When working on this project:
 - All code examples should be production-ready with proper error handling and edge cases
 
 ## Maintenance Notes
+
 - Review quarterly for industry standard updates
 - Update metrics formulas as practices evolve
 - Ensure all external references remain valid
@@ -51,6 +58,7 @@ When working on this project:
 - Add new testing approaches and patterns as they emerge in the industry
 
 ## Examples Directory Structure
+
 ```
 examples/
 ├── unit-tests/              # Jest, Vitest, mutation testing examples
@@ -72,6 +80,7 @@ Planned future additions:
 ```
 
 ## Version Control & CI/CD Methodologies
+
 This project now includes comprehensive documentation and examples for modern version control workflows optimized for CI/CD:
 
 - **Trunk-Based Development (TBD)**: Recommended for continuous deployment
@@ -80,6 +89,7 @@ This project now includes comprehensive documentation and examples for modern ve
 - **GitFlow**: Traditional workflow for scheduled releases
 
 All examples include:
+
 - Production-ready pipeline configurations
 - Feature flags implementation
 - Canary and blue-green deployment strategies

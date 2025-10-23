@@ -1,12 +1,15 @@
 # CI/CD Pipeline
 
 ## Purpose
+
 Design and implement robust Continuous Integration and Continuous Delivery pipelines that automate testing, security scanning, and deployment while maintaining high quality standards.
 
 ## Context
+
 CI/CD pipelines are the automation backbone of modern software delivery, enabling teams to integrate code changes frequently and deploy reliably while maintaining quality gates.
 
 ## Prerequisites
+
 - Understanding of [Version Control & GitFlow](../03-version-control/README.md)
 - Knowledge of [Testing Strategy](../04-testing-strategy/README.md)
 - Familiarity with automation concepts
@@ -34,6 +37,7 @@ graph LR
 ### CI Principles
 
 **Core Practices:**
+
 1. **Frequent Integration**: Multiple commits per day
 2. **Automated Build**: Every commit triggers build
 3. **Self-Testing**: Automated test execution
@@ -49,11 +53,11 @@ graph LR
 name: CI Pipeline
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
-    - cron: '0 2 * * *'  # Daily at 2 AM
+    - cron: '0 2 * * *' # Daily at 2 AM
 
 env:
   NODE_VERSION: '18'
@@ -71,7 +75,7 @@ build:
     - name: Checkout Code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  # Full history for SonarQube
+        fetch-depth: 0 # Full history for SonarQube
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -349,6 +353,7 @@ main-branch:
 ### CD Principles
 
 **Core Practices:**
+
 1. **Deployment Automation**: No manual deployment steps
 2. **Environment Parity**: Consistent environments
 3. **Rollback Capability**: Quick recovery mechanism
@@ -412,24 +417,24 @@ spec:
   replicas: 10
   strategy:
     canary:
-      maxSurge: "25%"
+      maxSurge: '25%'
       maxUnavailable: 0
       steps:
-      - setWeight: 10
-      - pause: {duration: 1m}
-      - analysis:
-          templates:
-          - templateName: success-rate
-          args:
-          - name: service-name
-            value: myapp-canary
-      - setWeight: 50
-      - pause: {duration: 2m}
-      - analysis:
-          templates:
-          - templateName: success-rate
-          - templateName: latency
-      - setWeight: 100
+        - setWeight: 10
+        - pause: { duration: 1m }
+        - analysis:
+            templates:
+              - templateName: success-rate
+            args:
+              - name: service-name
+                value: myapp-canary
+        - setWeight: 50
+        - pause: { duration: 2m }
+        - analysis:
+            templates:
+              - templateName: success-rate
+              - templateName: latency
+        - setWeight: 100
 
   selector:
     matchLabels:
@@ -440,10 +445,10 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myapp:stable
-        ports:
-        - containerPort: 8080
+        - name: myapp
+          image: myapp:stable
+          ports:
+            - containerPort: 8080
 ```
 
 #### Rolling Deployment
@@ -459,8 +464,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 2        # Allow 2 extra pods during update
-      maxUnavailable: 1  # Allow 1 pod to be unavailable
+      maxSurge: 2 # Allow 2 extra pods during update
+      maxUnavailable: 1 # Allow 1 pod to be unavailable
   selector:
     matchLabels:
       app: myapp
@@ -470,20 +475,20 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myapp:latest
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 30
+        - name: myapp
+          image: myapp:latest
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
 ```
 
 ### Environment Management
@@ -575,9 +580,9 @@ name: Complete CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop, 'feature/*' ]
+    branches: [main, develop, 'feature/*']
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 env:
   REGISTRY: ghcr.io
@@ -1056,7 +1061,7 @@ class QualityGate {
     this.results.coverage = {
       value: coverage.total,
       passed: coverage.total >= this.config.minCoverage,
-      threshold: this.config.minCoverage
+      threshold: this.config.minCoverage,
     };
   }
 
@@ -1065,7 +1070,7 @@ class QualityGate {
     this.results.complexity = {
       value: complexity.average,
       passed: complexity.average <= this.config.maxComplexity,
-      threshold: this.config.maxComplexity
+      threshold: this.config.maxComplexity,
     };
   }
 
@@ -1074,7 +1079,7 @@ class QualityGate {
     this.results.security = {
       value: vulnerabilities.high + vulnerabilities.critical,
       passed: vulnerabilities.high === 0 && vulnerabilities.critical === 0,
-      threshold: 0
+      threshold: 0,
     };
   }
 
@@ -1083,7 +1088,7 @@ class QualityGate {
     this.results.performance = {
       value: performance.p95ResponseTime,
       passed: performance.p95ResponseTime <= this.config.maxResponseTime,
-      threshold: this.config.maxResponseTime
+      threshold: this.config.maxResponseTime,
     };
   }
 
@@ -1092,7 +1097,7 @@ class QualityGate {
       this.checkCoverage(),
       this.checkComplexity(),
       this.checkSecurity(),
-      this.checkPerformance()
+      this.checkPerformance(),
     ]);
 
     const passed = Object.values(this.results).every(result => result.passed);
@@ -1100,7 +1105,7 @@ class QualityGate {
     return {
       passed,
       results: this.results,
-      summary: this.generateSummary()
+      summary: this.generateSummary(),
     };
   }
 
@@ -1112,7 +1117,7 @@ class QualityGate {
       total,
       passed,
       failed: total - passed,
-      passRate: (passed / total) * 100
+      passRate: (passed / total) * 100,
     };
   }
 }
@@ -1121,7 +1126,7 @@ class QualityGate {
 const qualityGate = new QualityGate({
   minCoverage: 80,
   maxComplexity: 10,
-  maxResponseTime: 500
+  maxResponseTime: 500,
 });
 
 const gateResult = await qualityGate.evaluate();
@@ -1165,13 +1170,13 @@ monitoring:
       condition: pipeline_success_rate < 0.8
       for: 5m
       severity: warning
-      message: "Pipeline success rate below 80%"
+      message: 'Pipeline success rate below 80%'
 
     - name: pipeline_duration_high
       condition: pipeline_duration > 30m
       for: 1m
       severity: critical
-      message: "Pipeline taking longer than 30 minutes"
+      message: 'Pipeline taking longer than 30 minutes'
 ```
 
 ### Application Health Monitoring
@@ -1183,7 +1188,7 @@ app.get('/health', async (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     version: process.env.APP_VERSION,
-    checks: {}
+    checks: {},
   };
 
   try {
@@ -1207,7 +1212,6 @@ app.get('/health', async (req, res) => {
       health.status = 'degraded';
       res.status(503);
     }
-
   } catch (error) {
     health.status = 'unhealthy';
     health.error = error.message;
@@ -1347,11 +1351,11 @@ performance_optimizations:
           node_version: 16
 
   resource_optimization:
-    runner_type: large  # Use larger runners for compute-intensive tasks
-    timeout: 30         # Prevent hanging jobs
+    runner_type: large # Use larger runners for compute-intensive tasks
+    timeout: 30 # Prevent hanging jobs
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true  # Cancel old runs
+      cancel-in-progress: true # Cancel old runs
 ```
 
 ### Build Optimization
@@ -1392,6 +1396,7 @@ CMD ["python", "-m", "backend.src.main"]
 ### CI/CD Implementation Checklist
 
 **CI Pipeline:**
+
 - [ ] Automated build on every commit
 - [ ] Comprehensive test suite execution
 - [ ] Code quality checks (linting, formatting)
@@ -1402,6 +1407,7 @@ CMD ["python", "-m", "backend.src.main"]
 - [ ] Artifact generation and storage
 
 **CD Pipeline:**
+
 - [ ] Automated deployment to staging
 - [ ] Integration testing in staging
 - [ ] Production deployment strategy defined
@@ -1412,6 +1418,7 @@ CMD ["python", "-m", "backend.src.main"]
 - [ ] Deployment approval process
 
 **Quality Gates:**
+
 - [ ] Coverage thresholds defined
 - [ ] Security vulnerability limits
 - [ ] Performance benchmarks
@@ -1421,6 +1428,7 @@ CMD ["python", "-m", "backend.src.main"]
 - [ ] Failed build notifications
 
 **Monitoring & Alerting:**
+
 - [ ] Pipeline metrics collection
 - [ ] Application health monitoring
 - [ ] Deployment success tracking
@@ -1432,6 +1440,7 @@ CMD ["python", "-m", "backend.src.main"]
 ## References
 
 ### CI/CD Platforms
+
 - **GitHub Actions** - GitHub-native CI/CD
 - **GitLab CI/CD** - Integrated DevOps platform
 - **Jenkins** - Open-source automation server
@@ -1440,6 +1449,7 @@ CMD ["python", "-m", "backend.src.main"]
 - **TeamCity** - JetBrains CI/CD server
 
 ### Deployment Tools
+
 - **Kubernetes** - Container orchestration
 - **Docker** - Containerization platform
 - **Helm** - Kubernetes package manager
@@ -1447,6 +1457,7 @@ CMD ["python", "-m", "backend.src.main"]
 - **Ansible** - Configuration management
 
 ### Books
+
 - "Continuous Delivery" - Jez Humble & David Farley
 - "The DevOps Handbook" - Gene Kim, et al.
 - "Accelerate" - Nicole Forsgren, et al.
@@ -1460,4 +1471,4 @@ CMD ["python", "-m", "backend.src.main"]
 
 ---
 
-*Next: [Build Automation](build-automation.md) - Deep dive into build processes*
+_Next: [Build Automation](build-automation.md) - Deep dive into build processes_

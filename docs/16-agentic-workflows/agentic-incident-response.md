@@ -1,12 +1,15 @@
 # Agentic Incident Response: Autonomous Production Issue Management
 
 ## Purpose
+
 Provide comprehensive guidance for building autonomous AI agent systems that detect, analyze, remediate, and learn from production incidents without human intervention, reducing Mean Time to Recovery (MTTR) and operational burden while maintaining safety and reliability.
 
 ## Context
+
 Traditional incident response requires on-call engineers to detect anomalies, correlate logs/metrics/traces, diagnose root causes, and implement fixes—often taking 30-60 minutes for routine issues. **Agentic incident response** deploys specialized AI agents that monitor systems 24/7, automatically investigate alerts, attempt safe remediations, and escalate only when necessary, resolving 70-80% of incidents autonomously.
 
 ## Prerequisites
+
 - Understanding of [Agentic Fundamentals](agentic-fundamentals.md)
 - Experience with [Multi-Agent Systems](multi-agent-systems.md)
 - Familiarity with observability platforms (Prometheus, Datadog, New Relic)
@@ -83,20 +86,20 @@ graph TB
 
 ### Agent Specializations
 
-| Agent | Primary Function | Tools | Autonomy Level | Risk Level |
-|-------|-----------------|-------|----------------|------------|
-| **Anomaly Detection** | ML-based pattern detection | Prometheus, Datadog API | Fully Autonomous | Low |
-| **Alert Correlation** | Combine related alerts | Time-series analysis | Fully Autonomous | Low |
-| **Severity Assessment** | Triage and prioritize | Impact analysis, SLA check | Fully Autonomous | Low |
-| **Log Analysis** | Parse and extract insights | Elasticsearch, regex | Fully Autonomous | Low |
-| **Metrics Analysis** | Query and analyze metrics | PromQL, SQL | Fully Autonomous | Low |
-| **Trace Analysis** | Distributed trace analysis | Jaeger, Tempo | Fully Autonomous | Low |
-| **Root Cause** | Correlate all findings | ML correlation, graph analysis | Supervised | Medium |
-| **Remediation** | Execute fixes | kubectl, API calls, scripts | Supervised | High |
-| **Communication** | Notify stakeholders | Slack, email, PagerDuty | Fully Autonomous | Low |
-| **Escalation** | Human handoff | Ticket creation, on-call ping | Fully Autonomous | Low |
-| **Postmortem** | Generate incident report | Template generation | Fully Autonomous | Low |
-| **Knowledge Base** | Store learnings | Vector DB, indexing | Fully Autonomous | Low |
+| Agent                   | Primary Function           | Tools                          | Autonomy Level   | Risk Level |
+| ----------------------- | -------------------------- | ------------------------------ | ---------------- | ---------- |
+| **Anomaly Detection**   | ML-based pattern detection | Prometheus, Datadog API        | Fully Autonomous | Low        |
+| **Alert Correlation**   | Combine related alerts     | Time-series analysis           | Fully Autonomous | Low        |
+| **Severity Assessment** | Triage and prioritize      | Impact analysis, SLA check     | Fully Autonomous | Low        |
+| **Log Analysis**        | Parse and extract insights | Elasticsearch, regex           | Fully Autonomous | Low        |
+| **Metrics Analysis**    | Query and analyze metrics  | PromQL, SQL                    | Fully Autonomous | Low        |
+| **Trace Analysis**      | Distributed trace analysis | Jaeger, Tempo                  | Fully Autonomous | Low        |
+| **Root Cause**          | Correlate all findings     | ML correlation, graph analysis | Supervised       | Medium     |
+| **Remediation**         | Execute fixes              | kubectl, API calls, scripts    | Supervised       | High       |
+| **Communication**       | Notify stakeholders        | Slack, email, PagerDuty        | Fully Autonomous | Low        |
+| **Escalation**          | Human handoff              | Ticket creation, on-call ping  | Fully Autonomous | Low        |
+| **Postmortem**          | Generate incident report   | Template generation            | Fully Autonomous | Low        |
+| **Knowledge Base**      | Store learnings            | Vector DB, indexing            | Fully Autonomous | Low        |
 
 ---
 
@@ -2642,7 +2645,7 @@ if __name__ == "__main__":
 
 ### Prometheus, Datadog, PagerDuty Webhooks
 
-```python
+````python
 """
 Observability platform integrations.
 Connect incident response agents to production monitoring systems.
@@ -2889,7 +2892,7 @@ async def list_incidents():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-```
+````
 
 ---
 
@@ -3208,7 +3211,7 @@ services:
   incident-response-agent:
     build: .
     ports:
-      - "8000:8000"
+      - '8000:8000'
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - PROMETHEUS_URL=http://prometheus:9090
@@ -3230,7 +3233,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - "9090:9090"
+      - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./alertmanager.yml:/etc/prometheus/alertmanager.yml
@@ -3243,17 +3246,17 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
     environment:
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ports:
-      - "9200:9200"
+      - '9200:9200'
     volumes:
       - es_data:/usr/share/elasticsearch/data
 
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
-      - "16686:16686"  # UI
-      - "14268:14268"  # Collector
+      - '16686:16686' # UI
+      - '14268:14268' # Collector
     environment:
       - COLLECTOR_ZIPKIN_HOST_PORT=:9411
 
@@ -3271,52 +3274,52 @@ volumes:
 ```yaml
 effectiveness_metrics:
   incident_resolution_rate:
-    description: "% of incidents resolved without human intervention"
-    target: "> 70%"
-    formula: "auto_resolved / total_incidents"
+    description: '% of incidents resolved without human intervention'
+    target: '> 70%'
+    formula: 'auto_resolved / total_incidents'
 
   mean_time_to_detect:
-    description: "Time from anomaly start to agent detection"
-    target: "< 60 seconds"
+    description: 'Time from anomaly start to agent detection'
+    target: '< 60 seconds'
 
   mean_time_to_recovery:
-    description: "Time from detection to resolution"
-    target: "< 15 minutes (vs. 45 min manual)"
+    description: 'Time from detection to resolution'
+    target: '< 15 minutes (vs. 45 min manual)'
 
   false_positive_rate:
-    description: "% of alerts that were not actual incidents"
-    target: "< 15%"
+    description: '% of alerts that were not actual incidents'
+    target: '< 15%'
 
   rca_accuracy:
-    description: "% of RCAs that correctly identified root cause"
-    target: "> 85%"
-    measurement: "Human verification on sample"
+    description: '% of RCAs that correctly identified root cause'
+    target: '> 85%'
+    measurement: 'Human verification on sample'
 
 efficiency_metrics:
   on_call_interruptions:
-    description: "Number of pages to on-call engineers"
-    target: "-60% reduction"
+    description: 'Number of pages to on-call engineers'
+    target: '-60% reduction'
 
   postmortem_generation_time:
-    description: "Time to complete postmortem"
-    target: "< 5 minutes (vs. 2 hours manual)"
+    description: 'Time to complete postmortem'
+    target: '< 5 minutes (vs. 2 hours manual)'
 
   cost_per_incident:
-    description: "LLM API costs per incident handled"
-    target: "< $0.50"
+    description: 'LLM API costs per incident handled'
+    target: '< $0.50'
 
 learning_metrics:
   knowledge_base_size:
-    description: "Number of incidents in learning database"
-    target: "Growing (100+ for good coverage)"
+    description: 'Number of incidents in learning database'
+    target: 'Growing (100+ for good coverage)'
 
   remediation_success_rate_improvement:
-    description: "Improvement in remediation success over time"
-    target: "+10% per quarter"
+    description: 'Improvement in remediation success over time'
+    target: '+10% per quarter'
 
   similar_incident_retrieval_accuracy:
-    description: "% of similar incidents correctly identified"
-    target: "> 80%"
+    description: '% of similar incidents correctly identified'
+    target: '> 80%'
 ```
 
 ---
@@ -3328,12 +3331,14 @@ learning_metrics:
 **Challenge**: 10,000+ microservices, 50+ production incidents/day, 70% were routine
 
 **Solution**: Multi-agent incident response system
+
 - Anomaly Detection: ML models on Prometheus metrics
 - RCA: Parallel log/metric/trace analysis
 - Remediation: Auto-scaling, cache clearing, traffic shifting
 - Learning: Vector database of 10,000+ past incidents
 
 **Results**:
+
 - 72% of incidents auto-resolved
 - MTTR: 45min → 12min (73% reduction)
 - On-call burden: -60%
@@ -3346,12 +3351,14 @@ learning_metrics:
 **Challenge**: Same root causes recurring, knowledge loss when engineers leave
 
 **Solution**: Incident learning agent with knowledge base
+
 - Embedded all 5,000 historical incidents
 - Similarity search for new incidents
 - Recommended remediations based on past success
 - Automatic preventive measure suggestions
 
 **Results**:
+
 - Recurring incidents: -45%
 - Time to find similar incidents: 30min → 10 seconds
 - Preventive measures implemented: 120+ in 6 months
@@ -3372,18 +3379,21 @@ learning_metrics:
 ## Next Steps
 
 ### Immediate (This Week)
+
 1. Set up anomaly detection agent monitoring 3 critical metrics
 2. Test RCA workflow on sample incident data
 3. Configure webhooks from your monitoring platform
 4. Deploy in non-production environment
 
 ### Short-term (This Month)
+
 1. Train multivariate anomaly detector on 30 days of metrics
 2. Implement safe remediation actions (LOW risk only)
 3. Integrate with Slack for notifications
 4. Build incident learning database from past 100 incidents
 
 ### Long-term (This Quarter)
+
 1. Deploy complete multi-agent system to production
 2. Enable MEDIUM risk remediations after 2 weeks of monitoring
 3. Achieve 50%+ auto-resolution rate
@@ -3404,6 +3414,7 @@ learning_metrics:
 6. **Continuous Learning**: System improves with every incident
 
 **Impact**:
+
 - 70-80% incidents resolved without human intervention
 - MTTR reduced by 60-75%
 - On-call burden cut in half
@@ -3414,6 +3425,6 @@ Start with anomaly detection and RCA, then add remediation and learning as confi
 
 ---
 
-*"The goal isn't to eliminate on-call engineers - it's to free them from routine incidents so they can focus on complex problems and preventive engineering."*
+_"The goal isn't to eliminate on-call engineers - it's to free them from routine incidents so they can focus on complex problems and preventive engineering."_
 
 **Ready to deploy?** Start with the [Complete Multi-Agent System](#6-complete-multi-agent-system) implementation and adapt to your infrastructure.

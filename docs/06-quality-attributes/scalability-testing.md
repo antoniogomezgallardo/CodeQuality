@@ -26,23 +26,25 @@ metadata:
   name: app
 spec:
   containers:
-  - name: app
-    image: myapp:latest
-    resources:
-      requests:
-        memory: "1Gi"
-        cpu: "500m"
-      limits:
-        memory: "4Gi"      # Scale up to 4GB
-        cpu: "2000m"       # Scale up to 2 CPUs
+    - name: app
+      image: myapp:latest
+      resources:
+        requests:
+          memory: '1Gi'
+          cpu: '500m'
+        limits:
+          memory: '4Gi' # Scale up to 4GB
+          cpu: '2000m' # Scale up to 2 CPUs
 ```
 
 **Pros:**
+
 - Simpler to implement
 - No code changes needed
 - Maintains data consistency
 
 **Cons:**
+
 - Hardware limits
 - Single point of failure
 - More expensive per unit
@@ -59,15 +61,15 @@ kind: Deployment
 metadata:
   name: app
 spec:
-  replicas: 3              # Start with 3 instances
+  replicas: 3 # Start with 3 instances
   selector:
     matchLabels:
       app: myapp
   template:
     spec:
       containers:
-      - name: app
-        image: myapp:latest
+        - name: app
+          image: myapp:latest
 
 ---
 # Horizontal Pod Autoscaler
@@ -83,27 +85,29 @@ spec:
   minReplicas: 3
   maxReplicas: 100
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
 ```
 
 **Pros:**
+
 - Nearly unlimited scaling
 - High availability
 - Better fault tolerance
 - Cost-effective
 
 **Cons:**
+
 - Complex architecture
 - Requires stateless design
 - Data consistency challenges
@@ -117,7 +121,7 @@ spec:
 // k6 - Establish baseline with minimal load
 export const options = {
   stages: [
-    { duration: '5m', target: 50 },    // 50 users
+    { duration: '5m', target: 50 }, // 50 users
     { duration: '10m', target: 50 },
   ],
   thresholds: {
@@ -139,13 +143,13 @@ export const options = {
 // Test if performance scales linearly with load
 export const options = {
   stages: [
-    { duration: '5m', target: 50 },     // 1x baseline
+    { duration: '5m', target: 50 }, // 1x baseline
     { duration: '10m', target: 50 },
-    { duration: '5m', target: 100 },    // 2x baseline
+    { duration: '5m', target: 100 }, // 2x baseline
     { duration: '10m', target: 100 },
-    { duration: '5m', target: 200 },    // 4x baseline
+    { duration: '5m', target: 200 }, // 4x baseline
     { duration: '10m', target: 200 },
-    { duration: '5m', target: 400 },    // 8x baseline
+    { duration: '5m', target: 400 }, // 8x baseline
     { duration: '10m', target: 400 },
   ],
 };
@@ -181,12 +185,12 @@ import http from 'k6/http';
 export const options = {
   stages: [
     // Trigger scale-up
-    { duration: '2m', target: 1000 },   // Sudden spike
-    { duration: '5m', target: 1000 },   // Sustain
+    { duration: '2m', target: 1000 }, // Sudden spike
+    { duration: '5m', target: 1000 }, // Sustain
 
     // Allow scale-down
-    { duration: '2m', target: 100 },    // Drop load
-    { duration: '10m', target: 100 },   // Sustain low load
+    { duration: '2m', target: 100 }, // Drop load
+    { duration: '10m', target: 100 }, // Sustain low load
 
     // Verify system recovered
   ],
@@ -212,43 +216,43 @@ const scalabilityMetrics = {
   scalingEfficiency: {
     baseline: {
       instances: 1,
-      throughput: 100,     // req/s
-      responseTime: 200    // ms
+      throughput: 100, // req/s
+      responseTime: 200, // ms
     },
     scaled: {
       instances: 10,
-      throughput: 850,     // req/s (should be ~1000)
-      responseTime: 220    // ms (acceptable < 10% increase)
+      throughput: 850, // req/s (should be ~1000)
+      responseTime: 220, // ms (acceptable < 10% increase)
     },
-    efficiency: 0.85       // 85% efficiency (850/1000)
+    efficiency: 0.85, // 85% efficiency (850/1000)
   },
 
   // Resource utilization
   resourceUtilization: {
     cpu: {
-      perInstance: 70,     // % (target: 60-80%)
-      total: 700           // % across 10 instances
+      perInstance: 70, // % (target: 60-80%)
+      total: 700, // % across 10 instances
     },
     memory: {
-      perInstance: 2.1,    // GB
-      total: 21            // GB across 10 instances
-    }
+      perInstance: 2.1, // GB
+      total: 21, // GB across 10 instances
+    },
   },
 
   // Scaling metrics
   scaling: {
-    scaleUpTime: 145,      // seconds (target: < 180s)
-    scaleDownTime: 320,    // seconds (target: > 300s)
+    scaleUpTime: 145, // seconds (target: < 180s)
+    scaleDownTime: 320, // seconds (target: > 300s)
     maxInstances: 50,
-    minInstances: 3
+    minInstances: 3,
   },
 
   // Cost efficiency
   costPerRequest: {
-    baseline: 0.0001,      // $ per request with 1 instance
-    scaled: 0.00009,       // $ per request with 10 instances
-    savings: 0.10          // 10% cost reduction per request
-  }
+    baseline: 0.0001, // $ per request with 1 instance
+    scaled: 0.00009, // $ per request with 10 instances
+    savings: 0.1, // 10% cost reduction per request
+  },
 };
 ```
 
@@ -264,7 +268,7 @@ class DatabaseScaling {
     this.replicas = [
       new DatabaseConnection('replica-1'),
       new DatabaseConnection('replica-2'),
-      new DatabaseConnection('replica-3')
+      new DatabaseConnection('replica-3'),
     ];
     this.currentReplica = 0;
   }
@@ -304,7 +308,7 @@ class ShardedDatabase {
       new DatabaseConnection('shard-0'),
       new DatabaseConnection('shard-1'),
       new DatabaseConnection('shard-2'),
-      new DatabaseConnection('shard-3')
+      new DatabaseConnection('shard-3'),
     ];
   }
 
@@ -321,9 +325,7 @@ class ShardedDatabase {
 
   // Cross-shard queries (expensive)
   async queryAll(sql, params) {
-    const promises = this.shards.map(shard =>
-      shard.execute(sql, params)
-    );
+    const promises = this.shards.map(shard => shard.execute(sql, params));
     const results = await Promise.all(promises);
     return results.flat();
   }
@@ -336,8 +338,8 @@ class ShardedDatabase {
 // Multi-layer caching strategy
 class CachingLayer {
   constructor() {
-    this.l1Cache = new Map();          // In-memory cache
-    this.l2Cache = new RedisClient();  // Distributed cache
+    this.l1Cache = new Map(); // In-memory cache
+    this.l2Cache = new RedisClient(); // Distributed cache
     this.database = new Database();
   }
 
@@ -350,7 +352,7 @@ class CachingLayer {
     // L2: Check Redis
     const cached = await this.l2Cache.get(key);
     if (cached) {
-      this.l1Cache.set(key, cached);  // Populate L1
+      this.l1Cache.set(key, cached); // Populate L1
       return cached;
     }
 
@@ -408,6 +410,7 @@ server {
 
 ```markdown
 **Before Testing:**
+
 - [ ] Establish baseline performance
 - [ ] Define scaling targets (users, throughput)
 - [ ] Set up monitoring (metrics, logs, traces)
@@ -415,6 +418,7 @@ server {
 - [ ] Prepare test environment (production-like)
 
 **During Testing:**
+
 - [ ] Monitor instance count changes
 - [ ] Track response times across load levels
 - [ ] Measure resource utilization (CPU, memory, network)
@@ -423,6 +427,7 @@ server {
 - [ ] Monitor costs during scaling
 
 **After Testing:**
+
 - [ ] Calculate scaling efficiency
 - [ ] Identify bottlenecks
 - [ ] Optimize auto-scaling parameters
@@ -470,4 +475,4 @@ server {
 
 ---
 
-*Part of: [Quality Attributes](README.md)*
+_Part of: [Quality Attributes](README.md)_

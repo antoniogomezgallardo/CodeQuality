@@ -13,19 +13,20 @@
 
 ## Incident Summary
 
-| Field | Details |
-|-------|---------|
-| **Incident ID** | INC-2024-001 |
-| **Date** | YYYY-MM-DD |
-| **Time (Start)** | HH:MM UTC |
-| **Time (End)** | HH:MM UTC |
-| **Duration** | X hours Y minutes |
-| **Severity** | Critical / High / Medium / Low |
-| **Status** | Resolved / Investigating / Monitoring |
-| **Incident Commander** | [Name] |
-| **Scribe** | [Name] |
+| Field                  | Details                               |
+| ---------------------- | ------------------------------------- |
+| **Incident ID**        | INC-2024-001                          |
+| **Date**               | YYYY-MM-DD                            |
+| **Time (Start)**       | HH:MM UTC                             |
+| **Time (End)**         | HH:MM UTC                             |
+| **Duration**           | X hours Y minutes                     |
+| **Severity**           | Critical / High / Medium / Low        |
+| **Status**             | Resolved / Investigating / Monitoring |
+| **Incident Commander** | [Name]                                |
+| **Scribe**             | [Name]                                |
 
 ### Quick Summary
+
 [2-3 sentence overview of what happened]
 
 **Example:**
@@ -36,18 +37,21 @@ On January 15, 2024, our payment processing system experienced a complete outage
 ## Impact Assessment
 
 ### User Impact
+
 - **Number of Users Affected:** [Quantity or percentage]
 - **Geographic Region:** [Specific regions or global]
 - **User Experience Impact:** [Describe how users were affected]
 - **Accessibility:** Could users access the service? What functionality was lost?
 
 ### Business Impact
+
 - **Revenue Impact:** $XX,XXX in lost transactions
 - **Reputation Impact:** [Social media mentions, support tickets, etc.]
 - **SLA Impact:** [Any SLA breaches]
 - **Compliance Impact:** [Any regulatory implications]
 
 ### Technical Impact
+
 - **Services Affected:**
   - Payment Processing Service (Complete outage)
   - Order Management Service (Degraded performance)
@@ -56,12 +60,13 @@ On January 15, 2024, our payment processing system experienced a complete outage
 - **Infrastructure Impact:** [Resource utilization, costs]
 
 ### Metrics
-| Metric | Normal | During Incident | Impact |
-|--------|--------|-----------------|--------|
-| Error Rate | 0.1% | 45% | +44.9% |
-| Response Time | 200ms | 5000ms | +2400% |
-| Availability | 99.9% | 0% | -99.9% |
-| Transactions/min | 500 | 0 | -100% |
+
+| Metric           | Normal | During Incident | Impact |
+| ---------------- | ------ | --------------- | ------ |
+| Error Rate       | 0.1%   | 45%             | +44.9% |
+| Response Time    | 200ms  | 5000ms          | +2400% |
+| Availability     | 99.9%  | 0%              | -99.9% |
+| Transactions/min | 500    | 0               | -100%  |
 
 ---
 
@@ -71,45 +76,45 @@ On January 15, 2024, our payment processing system experienced a complete outage
 
 ### Discovery Phase
 
-| Time | Event | Action Taken | Actor |
-|------|-------|--------------|-------|
-| 14:00 | Deployment v2.5.0 to production started | - | DevOps Team |
-| 14:15 | Deployment completed successfully | - | Automated Pipeline |
-| 14:30 | First alert: Payment API response time elevated | Acknowledged alert | On-call Engineer |
-| 14:32 | Error rate spike to 15% | Started investigating logs | Engineer A |
-| 14:35 | Multiple customer reports via support | Escalated to senior engineer | Support Team |
-| 14:37 | Complete service outage detected | Declared incident, paged team | Engineer A |
+| Time  | Event                                           | Action Taken                  | Actor              |
+| ----- | ----------------------------------------------- | ----------------------------- | ------------------ |
+| 14:00 | Deployment v2.5.0 to production started         | -                             | DevOps Team        |
+| 14:15 | Deployment completed successfully               | -                             | Automated Pipeline |
+| 14:30 | First alert: Payment API response time elevated | Acknowledged alert            | On-call Engineer   |
+| 14:32 | Error rate spike to 15%                         | Started investigating logs    | Engineer A         |
+| 14:35 | Multiple customer reports via support           | Escalated to senior engineer  | Support Team       |
+| 14:37 | Complete service outage detected                | Declared incident, paged team | Engineer A         |
 
 ### Response Phase
 
-| Time | Event | Action Taken | Actor |
-|------|-------|--------------|-------|
-| 14:40 | Incident Commander assigned | Started incident call | IC: Engineer B |
-| 14:42 | Database connection pool exhaustion identified | Attempted to increase pool size | DBA Team |
-| 14:45 | Pool increase had no effect | Started rollback procedure | DevOps Team |
-| 14:50 | Rollback initiated to v2.4.3 | - | DevOps Team |
-| 15:00 | Rollback completed | Service still unavailable | DevOps Team |
-| 15:05 | Stuck connections identified in database | Manually killing connections | DBA Team |
-| 15:15 | Connection pool clearing completed | - | DBA Team |
-| 15:20 | Service availability at 50% | Monitoring recovery | All Teams |
-| 15:30 | Service fully restored | Continued monitoring | All Teams |
+| Time  | Event                                          | Action Taken                    | Actor          |
+| ----- | ---------------------------------------------- | ------------------------------- | -------------- |
+| 14:40 | Incident Commander assigned                    | Started incident call           | IC: Engineer B |
+| 14:42 | Database connection pool exhaustion identified | Attempted to increase pool size | DBA Team       |
+| 14:45 | Pool increase had no effect                    | Started rollback procedure      | DevOps Team    |
+| 14:50 | Rollback initiated to v2.4.3                   | -                               | DevOps Team    |
+| 15:00 | Rollback completed                             | Service still unavailable       | DevOps Team    |
+| 15:05 | Stuck connections identified in database       | Manually killing connections    | DBA Team       |
+| 15:15 | Connection pool clearing completed             | -                               | DBA Team       |
+| 15:20 | Service availability at 50%                    | Monitoring recovery             | All Teams      |
+| 15:30 | Service fully restored                         | Continued monitoring            | All Teams      |
 
 ### Recovery Phase
 
-| Time | Event | Action Taken | Actor |
-|------|-------|--------------|-------|
-| 15:35 | All metrics returned to normal | - | - |
-| 15:45 | Customer notification sent | - | Communications Team |
-| 16:00 | Extended monitoring period | - | On-call Team |
-| 16:45 | Incident closed, monitoring continues | - | Incident Commander |
+| Time  | Event                                 | Action Taken | Actor               |
+| ----- | ------------------------------------- | ------------ | ------------------- |
+| 15:35 | All metrics returned to normal        | -            | -                   |
+| 15:45 | Customer notification sent            | -            | Communications Team |
+| 16:00 | Extended monitoring period            | -            | On-call Team        |
+| 16:45 | Incident closed, monitoring continues | -            | Incident Commander  |
 
 ### Post-Incident Phase
 
-| Time | Event | Action Taken | Actor |
-|------|-------|--------------|-------|
-| 17:00 | Postmortem meeting scheduled | - | Incident Commander |
-| 18:00 | Root cause analysis completed | - | Engineering Team |
-| Next Day | Postmortem document published | - | Scribe |
+| Time     | Event                         | Action Taken | Actor              |
+| -------- | ----------------------------- | ------------ | ------------------ |
+| 17:00    | Postmortem meeting scheduled  | -            | Incident Commander |
+| 18:00    | Root cause analysis completed | -            | Engineering Team   |
+| Next Day | Postmortem document published | -            | Scribe             |
 
 ---
 
@@ -135,9 +140,11 @@ On January 15, 2024, our payment processing system experienced a complete outage
    - Because we lack comprehensive test coverage for error paths and edge cases
 
 ### Root Cause
+
 **Primary Cause:** Connection leak introduced in v2.5.0 deployment in the payment processing error handler. When payment gateway API returned specific error codes, the application failed to close database connections in the finally block.
 
 **Contributing Factors:**
+
 1. **Insufficient Testing:** Integration tests did not simulate payment gateway error scenarios
 2. **Code Review Gap:** Connection management in error paths not specifically reviewed
 3. **Monitoring Gap:** No alerting on database connection pool utilization
@@ -168,6 +175,7 @@ On January 15, 2024, our payment processing system experienced a complete outage
 ## What Went Well
 
 ### Successes During the Incident
+
 - ✅ **Fast Detection:** Issue detected within 2 minutes of first symptoms via monitoring
 - ✅ **Clear Communication:** Incident call established quickly with all stakeholders
 - ✅ **Documentation:** Timeline was accurately documented by dedicated scribe
@@ -177,6 +185,7 @@ On January 15, 2024, our payment processing system experienced a complete outage
 - ✅ **Blameless Culture:** Team focused on problem-solving, not finger-pointing
 
 ### What Prevented Worse Outcomes
+
 - Database had connection timeout configured, preventing complete lock-up
 - Automated rollback capability existed (even though manual steps were needed)
 - On-call rotation was properly staffed
@@ -187,6 +196,7 @@ On January 15, 2024, our payment processing system experienced a complete outage
 ## What Went Wrong
 
 ### Issues Identified During the Incident
+
 - ❌ **Testing Gap:** Integration tests missed critical error scenarios
 - ❌ **Code Review Miss:** Connection management not verified in error paths
 - ❌ **Monitoring Gap:** No alerting on connection pool utilization metrics
@@ -196,6 +206,7 @@ On January 15, 2024, our payment processing system experienced a complete outage
 - ❌ **Detection Delay:** Relied on error rate alerts instead of proactive metrics
 
 ### Process Failures
+
 - No pre-deployment checklist for database resource management
 - No requirement for error path testing coverage
 - Deployment during high-traffic period without additional safeguards
@@ -206,18 +217,21 @@ On January 15, 2024, our payment processing system experienced a complete outage
 ## Lessons Learned
 
 ### Technical Lessons
+
 1. **Always close resources in finally blocks:** Even in error scenarios
 2. **Monitor connection pool metrics:** Add alerting before exhaustion occurs
 3. **Test error paths:** Integration tests must cover failure scenarios
 4. **Implement connection timeouts:** Ensure connections don't leak indefinitely
 
 ### Process Lessons
+
 1. **Canary deployments for risky changes:** Identify changes that affect critical paths
 2. **Enhanced code review checklist:** Add resource management verification
 3. **Deployment windows:** Avoid peak hours for high-risk deployments
 4. **Improved rollback procedures:** Ensure rollback is sufficient without manual steps
 
 ### Organizational Lessons
+
 1. **Blameless culture works:** Team collaborated effectively without fear
 2. **Documentation is crucial:** Real-time timeline documentation was invaluable
 3. **Cross-team training needed:** Not all engineers familiar with DB operations
@@ -229,41 +243,41 @@ On January 15, 2024, our payment processing system experienced a complete outage
 
 ### Immediate Actions (Within 24 Hours)
 
-| # | Action | Owner | Due Date | Status | Priority |
-|---|--------|-------|----------|--------|----------|
-| 1 | Fix connection leak in error handler | Engineering Lead | 2024-01-16 | ✅ Done | Critical |
-| 2 | Add connection pool monitoring alerts | SRE Team | 2024-01-16 | ✅ Done | Critical |
-| 3 | Deploy hotfix v2.5.1 with fix | DevOps Team | 2024-01-16 | ✅ Done | Critical |
-| 4 | Verify fix in production | QA Team | 2024-01-16 | ✅ Done | Critical |
+| #   | Action                                | Owner            | Due Date   | Status  | Priority |
+| --- | ------------------------------------- | ---------------- | ---------- | ------- | -------- |
+| 1   | Fix connection leak in error handler  | Engineering Lead | 2024-01-16 | ✅ Done | Critical |
+| 2   | Add connection pool monitoring alerts | SRE Team         | 2024-01-16 | ✅ Done | Critical |
+| 3   | Deploy hotfix v2.5.1 with fix         | DevOps Team      | 2024-01-16 | ✅ Done | Critical |
+| 4   | Verify fix in production              | QA Team          | 2024-01-16 | ✅ Done | Critical |
 
 ### Short-Term Actions (Within 1 Week)
 
-| # | Action | Owner | Due Date | Status | Priority |
-|---|--------|-------|----------|--------|----------|
-| 5 | Add integration tests for payment error scenarios | QA Engineer | 2024-01-22 | 🔄 In Progress | High |
-| 6 | Update code review checklist with resource management | Tech Lead | 2024-01-20 | 🔄 In Progress | High |
-| 7 | Create runbook for connection pool issues | SRE Team | 2024-01-21 | ⏳ Pending | High |
-| 8 | Review all error handlers for similar issues | Engineering Team | 2024-01-23 | ⏳ Pending | High |
-| 9 | Implement automated connection leak detection | DevOps Team | 2024-01-24 | ⏳ Pending | Medium |
+| #   | Action                                                | Owner            | Due Date   | Status         | Priority |
+| --- | ----------------------------------------------------- | ---------------- | ---------- | -------------- | -------- |
+| 5   | Add integration tests for payment error scenarios     | QA Engineer      | 2024-01-22 | 🔄 In Progress | High     |
+| 6   | Update code review checklist with resource management | Tech Lead        | 2024-01-20 | 🔄 In Progress | High     |
+| 7   | Create runbook for connection pool issues             | SRE Team         | 2024-01-21 | ⏳ Pending     | High     |
+| 8   | Review all error handlers for similar issues          | Engineering Team | 2024-01-23 | ⏳ Pending     | High     |
+| 9   | Implement automated connection leak detection         | DevOps Team      | 2024-01-24 | ⏳ Pending     | Medium   |
 
 ### Medium-Term Actions (Within 1 Month)
 
-| # | Action | Owner | Due Date | Status | Priority |
-|---|--------|-------|----------|--------|----------|
-| 10 | Implement canary deployment system | DevOps Team | 2024-02-15 | ⏳ Pending | High |
-| 11 | Enhance automated rollback capabilities | SRE Team | 2024-02-10 | ⏳ Pending | High |
-| 12 | Establish deployment windows policy | Engineering Manager | 2024-02-05 | ⏳ Pending | Medium |
-| 13 | Create comprehensive error testing framework | QA Team | 2024-02-20 | ⏳ Pending | Medium |
-| 14 | Conduct chaos engineering exercises | SRE Team | 2024-02-28 | ⏳ Pending | Medium |
+| #   | Action                                       | Owner               | Due Date   | Status     | Priority |
+| --- | -------------------------------------------- | ------------------- | ---------- | ---------- | -------- |
+| 10  | Implement canary deployment system           | DevOps Team         | 2024-02-15 | ⏳ Pending | High     |
+| 11  | Enhance automated rollback capabilities      | SRE Team            | 2024-02-10 | ⏳ Pending | High     |
+| 12  | Establish deployment windows policy          | Engineering Manager | 2024-02-05 | ⏳ Pending | Medium   |
+| 13  | Create comprehensive error testing framework | QA Team             | 2024-02-20 | ⏳ Pending | Medium   |
+| 14  | Conduct chaos engineering exercises          | SRE Team            | 2024-02-28 | ⏳ Pending | Medium   |
 
 ### Long-Term Actions (Within 3 Months)
 
-| # | Action | Owner | Due Date | Status | Priority |
-|---|--------|-------|----------|--------|----------|
-| 15 | Implement circuit breakers for all external APIs | Architecture Team | 2024-04-15 | ⏳ Pending | Medium |
-| 16 | Establish SLO/SLI framework for all services | SRE Team | 2024-04-30 | ⏳ Pending | Medium |
-| 17 | Cross-train engineers on database operations | DBA Team | 2024-04-30 | ⏳ Pending | Low |
-| 18 | Quarterly incident response drills | All Teams | 2024-04-30 | ⏳ Pending | Low |
+| #   | Action                                           | Owner             | Due Date   | Status     | Priority |
+| --- | ------------------------------------------------ | ----------------- | ---------- | ---------- | -------- |
+| 15  | Implement circuit breakers for all external APIs | Architecture Team | 2024-04-15 | ⏳ Pending | Medium   |
+| 16  | Establish SLO/SLI framework for all services     | SRE Team          | 2024-04-30 | ⏳ Pending | Medium   |
+| 17  | Cross-train engineers on database operations     | DBA Team          | 2024-04-30 | ⏳ Pending | Low      |
+| 18  | Quarterly incident response drills               | All Teams         | 2024-04-30 | ⏳ Pending | Low      |
 
 ---
 
@@ -279,13 +293,16 @@ On January 15, 2024, our payment processing system experienced a complete outage
 ```
 
 ### Metrics Graphs
+
 [Attach screenshots of monitoring dashboards showing:]
+
 - Error rate spike
 - Response time degradation
 - Connection pool utilization
 - Traffic patterns
 
 ### Code Diff
+
 [Include relevant code changes that caused the issue]
 
 ```java
@@ -329,22 +346,24 @@ public void processPayment(Payment payment) {
 
 ## Related Incidents
 
-| Incident ID | Date | Similarity | Lessons Applied? |
-|-------------|------|------------|------------------|
-| INC-2023-045 | 2023-08-12 | Connection pool issue | ⚠️ Partially |
-| INC-2023-078 | 2023-11-03 | Deployment during peak | ❌ No |
+| Incident ID  | Date       | Similarity             | Lessons Applied? |
+| ------------ | ---------- | ---------------------- | ---------------- |
+| INC-2023-045 | 2023-08-12 | Connection pool issue  | ⚠️ Partially     |
+| INC-2023-078 | 2023-11-03 | Deployment during peak | ❌ No            |
 
 ---
 
 ## Communication Log
 
 ### Internal Communications
+
 - **14:40 UTC:** Engineering team notified via PagerDuty
 - **14:45 UTC:** Incident Slack channel created (#incident-2024-001)
 - **15:00 UTC:** Leadership team notified
 - **15:30 UTC:** All-hands update on service restoration
 
 ### External Communications
+
 - **14:50 UTC:** Status page updated - "Investigating payment processing issues"
 - **15:15 UTC:** Status page updated - "Identified issue, working on resolution"
 - **15:45 UTC:** Status page updated - "Service restored, monitoring closely"
@@ -356,6 +375,7 @@ public void processPayment(Payment payment) {
 ## Prevention Measures
 
 ### Technical Improvements
+
 1. **Resource Management:**
    - Implement try-with-resources pattern for all database connections
    - Add static analysis rules to detect resource leaks
@@ -379,6 +399,7 @@ public void processPayment(Payment payment) {
    - Require load testing for database-intensive changes
 
 ### Process Improvements
+
 1. **Code Review:**
    - Add resource management checklist
    - Require two reviewers for critical path changes
@@ -405,12 +426,14 @@ public void processPayment(Payment payment) {
 
 **Date:** 2024-01-16
 **Attendees:**
+
 - Engineering Team (8 people)
 - SRE Team (3 people)
 - Product Management (2 people)
 - Support Team (2 people)
 
 **Meeting Notes:**
+
 - Reviewed timeline and root cause
 - Discussed each action item and assigned owners
 - Agreed on follow-up schedule
@@ -422,18 +445,19 @@ public void processPayment(Payment payment) {
 
 ## Sign-off
 
-| Role | Name | Date | Signature |
-|------|------|------|-----------|
-| Incident Commander | [Name] | YYYY-MM-DD | Approved |
-| Engineering Lead | [Name] | YYYY-MM-DD | Approved |
-| SRE Lead | [Name] | YYYY-MM-DD | Approved |
-| Product Manager | [Name] | YYYY-MM-DD | Approved |
+| Role               | Name   | Date       | Signature |
+| ------------------ | ------ | ---------- | --------- |
+| Incident Commander | [Name] | YYYY-MM-DD | Approved  |
+| Engineering Lead   | [Name] | YYYY-MM-DD | Approved  |
+| SRE Lead           | [Name] | YYYY-MM-DD | Approved  |
+| Product Manager    | [Name] | YYYY-MM-DD | Approved  |
 
 ---
 
 ## Distribution List
 
 **Internal:**
+
 - Engineering Team
 - SRE Team
 - Product Management
@@ -441,6 +465,7 @@ public void processPayment(Payment payment) {
 - Customer Support
 
 **External:**
+
 - [If applicable] Customers via blog post
 - [If applicable] Regulatory bodies
 
@@ -449,6 +474,7 @@ public void processPayment(Payment payment) {
 ## Appendix
 
 ### Glossary
+
 - **IC:** Incident Commander
 - **SRE:** Site Reliability Engineering
 - **SLA:** Service Level Agreement
@@ -456,12 +482,14 @@ public void processPayment(Payment payment) {
 - **RCA:** Root Cause Analysis
 
 ### References
+
 - Incident Response Playbook: [Link]
 - Database Connection Pool Documentation: [Link]
 - Deployment Procedures: [Link]
 - Related Postmortems: [Link]
 
 ### Tools Used
+
 - Monitoring: Prometheus + Grafana
 - Alerting: PagerDuty
 - Logging: ELK Stack
@@ -472,6 +500,7 @@ public void processPayment(Payment payment) {
 ## Continuous Improvement
 
 ### Postmortem Effectiveness
+
 - [ ] Action items reviewed at 1 week
 - [ ] Action items reviewed at 1 month
 - [ ] Postmortem shared with broader organization
@@ -479,6 +508,7 @@ public void processPayment(Payment payment) {
 - [ ] Similar incidents decreased in frequency
 
 ### Metrics to Track
+
 - Mean Time to Detect (MTTD)
 - Mean Time to Resolve (MTTR)
 - Frequency of similar incidents
@@ -487,7 +517,7 @@ public void processPayment(Payment payment) {
 
 ---
 
-*This postmortem follows blameless postmortem principles and focuses on learning and improvement rather than assigning blame. The goal is to make our systems more resilient and our team more prepared.*
+_This postmortem follows blameless postmortem principles and focuses on learning and improvement rather than assigning blame. The goal is to make our systems more resilient and our team more prepared._
 
 **Document Version:** 1.0
 **Last Updated:** YYYY-MM-DD

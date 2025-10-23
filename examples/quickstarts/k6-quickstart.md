@@ -9,17 +9,20 @@
 ### Option A: Direct Install
 
 **macOS:**
+
 ```bash
 brew install k6
 ```
 
 **Windows:**
+
 ```powershell
 choco install k6
 # Or download from https://k6.io/docs/get-started/installation/
 ```
 
 **Linux:**
+
 ```bash
 sudo gpg -k
 sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
@@ -29,6 +32,7 @@ sudo apt-get install k6
 ```
 
 ### Option B: Docker
+
 ```bash
 # No installation needed, use Docker
 docker pull grafana/k6:latest
@@ -54,13 +58,13 @@ import { check, sleep } from 'k6';
 // Test configuration
 export const options = {
   stages: [
-    { duration: '30s', target: 20 },  // Ramp up to 20 users
-    { duration: '1m', target: 20 },   // Stay at 20 users
-    { duration: '30s', target: 0 },   // Ramp down to 0 users
+    { duration: '30s', target: 20 }, // Ramp up to 20 users
+    { duration: '1m', target: 20 }, // Stay at 20 users
+    { duration: '30s', target: 0 }, // Ramp down to 0 users
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests under 500ms
-    http_req_failed: ['rate<0.01'],   // Error rate under 1%
+    http_req_failed: ['rate<0.01'], // Error rate under 1%
   },
 };
 
@@ -71,8 +75,8 @@ export default function () {
 
   // Verify response
   check(response, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 500ms': (r) => r.timings.duration < 500,
+    'status is 200': r => r.status === 200,
+    'response time < 500ms': r => r.timings.duration < 500,
   });
 
   // Think time between requests
@@ -100,6 +104,7 @@ k6 run --out cloud load-test.js
 ```
 
 **Expected Output:**
+
 ```
           /\      |‾‾| /‾‾/   /‾‾/
      /\  /  \     |  |/  /   /  /
@@ -137,6 +142,7 @@ default ✓ [======================================] 00/20 VUs  2m0s
 ### Load Test Patterns
 
 **Constant Load:**
+
 ```javascript
 export const options = {
   vus: 50,
@@ -145,27 +151,29 @@ export const options = {
 ```
 
 **Stress Test (Find Breaking Point):**
+
 ```javascript
 export const options = {
   stages: [
-    { duration: '2m', target: 100 },   // Ramp to 100 users
-    { duration: '5m', target: 100 },   // Stay at 100
-    { duration: '2m', target: 200 },   // Increase to 200
-    { duration: '5m', target: 200 },   // Stay at 200
-    { duration: '2m', target: 300 },   // Increase to 300
-    { duration: '5m', target: 300 },   // Stay at 300
-    { duration: '10m', target: 0 },    // Ramp down
+    { duration: '2m', target: 100 }, // Ramp to 100 users
+    { duration: '5m', target: 100 }, // Stay at 100
+    { duration: '2m', target: 200 }, // Increase to 200
+    { duration: '5m', target: 200 }, // Stay at 200
+    { duration: '2m', target: 300 }, // Increase to 300
+    { duration: '5m', target: 300 }, // Stay at 300
+    { duration: '10m', target: 0 }, // Ramp down
   ],
 };
 ```
 
 **Spike Test:**
+
 ```javascript
 export const options = {
   stages: [
     { duration: '10s', target: 100 },
     { duration: '1m', target: 100 },
-    { duration: '10s', target: 1400 },  // Spike!
+    { duration: '10s', target: 1400 }, // Spike!
     { duration: '3m', target: 1400 },
     { duration: '10s', target: 100 },
     { duration: '3m', target: 100 },
@@ -203,10 +211,13 @@ export function browseProducts() {
 }
 
 export function checkout() {
-  http.post('https://example.com/checkout', JSON.stringify({
-    productId: 123,
-    quantity: 1
-  }));
+  http.post(
+    'https://example.com/checkout',
+    JSON.stringify({
+      productId: 123,
+      quantity: 1,
+    })
+  );
   sleep(3);
 }
 ```
@@ -220,13 +231,13 @@ export default function () {
   const response = http.get('https://api.example.com/users');
 
   check(response, {
-    'status is 200': (r) => r.status === 200,
-    'has users': (r) => {
+    'status is 200': r => r.status === 200,
+    'has users': r => {
       const body = JSON.parse(r.body);
       return body.users && body.users.length > 0;
     },
-    'response time OK': (r) => r.timings.duration < 200,
-    'content type is JSON': (r) => r.headers['Content-Type'] === 'application/json',
+    'response time OK': r => r.timings.duration < 200,
+    'content type is JSON': r => r.headers['Content-Type'] === 'application/json',
   });
 }
 ```
@@ -272,7 +283,7 @@ export default function () {
 
   const response = http.post(url, payload, params);
   check(response, {
-    'login successful': (r) => r.status === 200,
+    'login successful': r => r.status === 200,
   });
 }
 ```
@@ -280,6 +291,7 @@ export default function () {
 ## 6. Troubleshooting
 
 ### Issue: "k6 command not found"
+
 ```bash
 # Verify installation
 k6 version
@@ -289,6 +301,7 @@ docker run grafana/k6 version
 ```
 
 ### Issue: High error rate
+
 ```javascript
 // Increase timeout
 export const options = {
@@ -303,6 +316,7 @@ sleep(Math.random() * 3 + 1); // 1-4 seconds
 ```
 
 ### Issue: Tests running too long
+
 ```javascript
 // Set maximum duration
 export const options = {
@@ -311,6 +325,7 @@ export const options = {
 ```
 
 ### Issue: Not enough VUs
+
 ```bash
 # Increase VUs from command line
 k6 run --vus 100 load-test.js
@@ -322,6 +337,7 @@ export const options = {
 ```
 
 ### Issue: Results not saving
+
 ```bash
 # Output to JSON
 k6 run --out json=results.json script.js

@@ -1,10 +1,13 @@
 # Visual Testing
 
 ## Purpose
+
 Comprehensive guide to visual testing—detecting visual regressions and ensuring consistent UI appearance across browsers, devices, and screen sizes through automated screenshot comparison.
 
 ## Overview
+
 Visual testing is:
+
 - Automated UI appearance validation
 - Screenshot comparison across versions
 - Cross-browser visual consistency
@@ -14,6 +17,7 @@ Visual testing is:
 ## What is Visual Testing?
 
 ### Definition
+
 Visual testing validates the visual appearance of user interfaces by capturing screenshots and comparing them against baseline images to detect unintended visual changes.
 
 ### Why Visual Testing Matters
@@ -77,13 +81,13 @@ module.exports = {
   version: 2,
   discovery: {
     disableCache: false,
-    networkIdleTimeout: 750
+    networkIdleTimeout: 750,
   },
   static: {
     // Static site configuration
     cleanUrls: true,
     include: ['**/*.html', '**/*.htm'],
-    exclude: []
+    exclude: [],
   },
   snapshot: {
     widths: [375, 768, 1280, 1920],
@@ -92,8 +96,8 @@ module.exports = {
       /* Hide dynamic content */
       .timestamp { display: none; }
       .random-content { visibility: hidden; }
-    `
-  }
+    `,
+  },
 };
 ```
 
@@ -118,21 +122,21 @@ test.describe('Homepage Visual Tests', () => {
   test('should match homepage on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await percySnapshot(page, 'Homepage - Mobile', {
-      widths: [375]
+      widths: [375],
     });
   });
 
   test('should match homepage on tablet', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await percySnapshot(page, 'Homepage - Tablet', {
-      widths: [768]
+      widths: [768],
     });
   });
 
   test('should match navigation menu', async ({ page }) => {
     await page.click('[data-testid="menu-button"]');
     await page.waitForSelector('[data-testid="menu-dropdown"]', {
-      state: 'visible'
+      state: 'visible',
     });
     await percySnapshot(page, 'Navigation Menu Open');
   });
@@ -140,7 +144,7 @@ test.describe('Homepage Visual Tests', () => {
   test('should match login modal', async ({ page }) => {
     await page.click('[data-testid="login-button"]');
     await page.waitForSelector('[data-testid="login-modal"]', {
-      state: 'visible'
+      state: 'visible',
     });
     await percySnapshot(page, 'Login Modal');
   });
@@ -181,7 +185,7 @@ describe('Product Page Visual Tests', () => {
   it('should match product gallery', () => {
     cy.get('[data-testid="product-gallery"]').should('be.visible');
     cy.percySnapshot('Product Gallery', {
-      widths: [375, 768, 1280]
+      widths: [375, 768, 1280],
     });
   });
 
@@ -205,7 +209,7 @@ describe('Product Page Visual Tests', () => {
   it('should match size selector', () => {
     cy.get('[data-testid="size-selector"]').should('be.visible');
     cy.percySnapshot('Size Selector', {
-      scope: '[data-testid="size-selector"]'
+      scope: '[data-testid="size-selector"]',
     });
   });
 });
@@ -219,15 +223,11 @@ describe('Product Page Visual Tests', () => {
 // .storybook/main.js
 module.exports = {
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-a11y'
-  ],
+  addons: ['@storybook/addon-essentials', '@storybook/addon-interactions', '@storybook/addon-a11y'],
   framework: {
     name: '@storybook/react-webpack5',
-    options: {}
-  }
+    options: {},
+  },
 };
 
 // .storybook/preview.js
@@ -236,15 +236,15 @@ export const parameters = {
   controls: {
     matchers: {
       color: /(background|color)$/i,
-      date: /Date$/
-    }
+      date: /Date$/,
+    },
   },
   chromatic: {
     // Chromatic configuration
     delay: 300,
     diffThreshold: 0.2,
-    viewports: [320, 768, 1280]
-  }
+    viewports: [320, 768, 1280],
+  },
 };
 ```
 
@@ -260,25 +260,25 @@ export default {
   component: Button,
   parameters: {
     chromatic: {
-      viewports: [320, 768, 1280]
-    }
-  }
+      viewports: [320, 768, 1280],
+    },
+  },
 };
 
 // Primary button
 export const Primary = {
   args: {
     variant: 'primary',
-    children: 'Primary Button'
-  }
+    children: 'Primary Button',
+  },
 };
 
 // Secondary button
 export const Secondary = {
   args: {
     variant: 'secondary',
-    children: 'Secondary Button'
-  }
+    children: 'Secondary Button',
+  },
 };
 
 // Disabled state
@@ -286,8 +286,8 @@ export const Disabled = {
   args: {
     variant: 'primary',
     children: 'Disabled Button',
-    disabled: true
-  }
+    disabled: true,
+  },
 };
 
 // Loading state
@@ -295,8 +295,8 @@ export const Loading = {
   args: {
     variant: 'primary',
     children: 'Loading...',
-    loading: true
-  }
+    loading: true,
+  },
 };
 
 // Different sizes
@@ -304,16 +304,16 @@ export const Small = {
   args: {
     variant: 'primary',
     size: 'small',
-    children: 'Small Button'
-  }
+    children: 'Small Button',
+  },
 };
 
 export const Large = {
   args: {
     variant: 'primary',
     size: 'large',
-    children: 'Large Button'
-  }
+    children: 'Large Button',
+  },
 };
 
 // With icon
@@ -321,39 +321,39 @@ export const WithIcon = {
   args: {
     variant: 'primary',
     children: 'Button with Icon',
-    icon: 'arrow-right'
-  }
+    icon: 'arrow-right',
+  },
 };
 
 // Long text
 export const LongText = {
   args: {
     variant: 'primary',
-    children: 'This is a very long button text that might wrap'
-  }
+    children: 'This is a very long button text that might wrap',
+  },
 };
 
 // Focus state
 export const Focused = {
   args: {
     variant: 'primary',
-    children: 'Focused Button'
+    children: 'Focused Button',
   },
   play: async ({ canvasElement }) => {
     const button = canvasElement.querySelector('button');
     button.focus();
-  }
+  },
 };
 
 // Hover state (using interaction testing)
 export const Hovered = {
   args: {
     variant: 'primary',
-    children: 'Hover State'
+    children: 'Hover State',
   },
   parameters: {
-    pseudo: { hover: true }
-  }
+    pseudo: { hover: true },
+  },
 };
 ```
 
@@ -370,33 +370,34 @@ export default {
   parameters: {
     layout: 'padded',
     chromatic: {
-      viewports: [375, 768, 1280]
-    }
-  }
+      viewports: [375, 768, 1280],
+    },
+  },
 };
 
-const Template = (args) => <Card {...args} />;
+const Template = args => <Card {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
   title: 'Card Title',
   description: 'This is a card description with some text content.',
   image: 'https://via.placeholder.com/300x200',
-  footer: 'Card Footer'
+  footer: 'Card Footer',
 };
 
 export const WithoutImage = Template.bind({});
 WithoutImage.args = {
   title: 'Card Without Image',
   description: 'This card has no image',
-  footer: 'Footer'
+  footer: 'Footer',
 };
 
 export const LongContent = Template.bind({});
 LongContent.args = {
   title: 'Card with Long Content',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
-  footer: 'Long Footer Text Here'
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+  footer: 'Long Footer Text Here',
 };
 
 export const Grid = () => (
@@ -407,7 +408,7 @@ export const Grid = () => (
   </div>
 );
 Grid.parameters = {
-  chromatic: { viewports: [1280] }
+  chromatic: { viewports: [1280] },
 };
 ```
 
@@ -460,23 +461,23 @@ module.exports = {
     {
       label: 'phone',
       width: 375,
-      height: 667
+      height: 667,
     },
     {
       label: 'tablet',
       width: 768,
-      height: 1024
+      height: 1024,
     },
     {
       label: 'desktop',
       width: 1280,
-      height: 800
+      height: 800,
     },
     {
       label: 'desktop-xl',
       width: 1920,
-      height: 1080
-    }
+      height: 1080,
+    },
   ],
   scenarios: [
     {
@@ -486,14 +487,8 @@ module.exports = {
       readyEvent: '',
       readySelector: '',
       delay: 1000,
-      hideSelectors: [
-        '.timestamp',
-        '.random-ad',
-        '[data-testid="live-chat"]'
-      ],
-      removeSelectors: [
-        '#analytics-pixel'
-      ],
+      hideSelectors: ['.timestamp', '.random-ad', '[data-testid="live-chat"]'],
+      removeSelectors: ['#analytics-pixel'],
       hoverSelector: '',
       clickSelector: '',
       postInteractionWait: 0,
@@ -501,7 +496,7 @@ module.exports = {
       selectorExpansion: true,
       expect: 0,
       misMatchThreshold: 0.1,
-      requireSameDimensions: true
+      requireSameDimensions: true,
     },
     {
       label: 'Navigation Menu',
@@ -509,7 +504,7 @@ module.exports = {
       clickSelector: '[data-testid="menu-button"]',
       postInteractionWait: 500,
       selectors: ['[data-testid="menu-dropdown"]'],
-      misMatchThreshold: 0.2
+      misMatchThreshold: 0.2,
     },
     {
       label: 'Product Page',
@@ -518,40 +513,40 @@ module.exports = {
       selectors: [
         '[data-testid="product-details"]',
         '[data-testid="product-gallery"]',
-        '[data-testid="product-reviews"]'
-      ]
+        '[data-testid="product-reviews"]',
+      ],
     },
     {
       label: 'Checkout Form',
       url: 'http://localhost:3000/checkout',
       onBeforeScript: 'puppet/onBefore.js',
       onReadyScript: 'puppet/onReady.js',
-      selectors: ['document']
+      selectors: ['document'],
     },
     {
       label: 'Button Hover State',
       url: 'http://localhost:3000',
       hoverSelector: '[data-testid="primary-button"]',
       postInteractionWait: 200,
-      selectors: ['[data-testid="primary-button"]']
-    }
+      selectors: ['[data-testid="primary-button"]'],
+    },
   ],
   paths: {
     bitmaps_reference: 'backstop_data/bitmaps_reference',
     bitmaps_test: 'backstop_data/bitmaps_test',
     engine_scripts: 'backstop_data/engine_scripts',
     html_report: 'backstop_data/html_report',
-    ci_report: 'backstop_data/ci_report'
+    ci_report: 'backstop_data/ci_report',
   },
   report: ['browser', 'CI'],
   engine: 'puppeteer',
   engineOptions: {
-    args: ['--no-sandbox']
+    args: ['--no-sandbox'],
   },
   asyncCaptureLimit: 5,
   asyncCompareLimit: 50,
   debug: false,
-  debugWindow: false
+  debugWindow: false,
 };
 ```
 
@@ -566,7 +561,7 @@ module.exports = async (page, scenario, viewport) => {
   await page.setCookie({
     name: 'user_consent',
     value: 'accepted',
-    domain: 'localhost'
+    domain: 'localhost',
   });
 
   // Set localStorage
@@ -597,9 +592,12 @@ module.exports = async (page, scenario, viewport, isReference, browserContext) =
     return Promise.all(
       Array.from(document.images)
         .filter(img => !img.complete)
-        .map(img => new Promise(resolve => {
-          img.onload = img.onerror = resolve;
-        }))
+        .map(
+          img =>
+            new Promise(resolve => {
+              img.onload = img.onerror = resolve;
+            })
+        )
     );
   });
 
@@ -656,7 +654,7 @@ const percySnapshot = require('@percy/playwright');
 const browsers = [
   { name: 'chromium', launch: chromium.launch },
   { name: 'firefox', launch: firefox.launch },
-  { name: 'webkit', launch: webkit.launch }
+  { name: 'webkit', launch: webkit.launch },
 ];
 
 describe('Cross-Browser Visual Tests', () => {
@@ -725,7 +723,7 @@ const deviceList = [
   'iPad Pro',
   'Pixel 5',
   'Galaxy S21',
-  'Desktop Chrome'
+  'Desktop Chrome',
 ];
 
 test.describe('Responsive Visual Tests', () => {
@@ -758,17 +756,17 @@ test.describe('Responsive Visual Tests', () => {
       { width: 768, height: 1024, name: 'Tablet Portrait' },
       { width: 1024, height: 768, name: 'Tablet Landscape' },
       { width: 1280, height: 800, name: 'Desktop' },
-      { width: 1920, height: 1080, name: 'Full HD' }
+      { width: 1920, height: 1080, name: 'Full HD' },
     ];
 
     for (const breakpoint of breakpoints) {
       await page.setViewportSize({
         width: breakpoint.width,
-        height: breakpoint.height
+        height: breakpoint.height,
       });
       await page.goto('http://localhost:3000');
       await percySnapshot(page, `Homepage - ${breakpoint.name}`, {
-        widths: [breakpoint.width]
+        widths: [breakpoint.width],
       });
     }
   });
@@ -793,7 +791,7 @@ test.describe('Dynamic Content Handling', () => {
         .timestamp { visibility: hidden; }
         [data-timestamp] { visibility: hidden; }
         time { visibility: hidden; }
-      `
+      `,
     });
   });
 
@@ -805,7 +803,7 @@ test.describe('Dynamic Content Handling', () => {
         .random-ad { display: none; }
         .live-chat { display: none; }
         [data-random] { display: none; }
-      `
+      `,
     });
   });
 
@@ -822,7 +820,7 @@ test.describe('Dynamic Content Handling', () => {
           transition-delay: 0s !important;
           transition-duration: 0s !important;
         }
-      `
+      `,
     });
 
     await percySnapshot(page, 'Animations Paused');
@@ -836,8 +834,8 @@ test.describe('Dynamic Content Handling', () => {
         contentType: 'application/json',
         body: JSON.stringify([
           { id: 1, name: 'Product 1', price: 100 },
-          { id: 2, name: 'Product 2', price: 200 }
-        ])
+          { id: 2, name: 'Product 2', price: 200 },
+        ]),
       });
     });
 
@@ -920,7 +918,7 @@ test.describe('Wait Strategies', () => {
 
     // Wait for loading spinner to disappear
     await page.waitForSelector('[data-testid="loading"]', {
-      state: 'hidden'
+      state: 'hidden',
     });
 
     // Wait for data to be displayed
@@ -1052,11 +1050,11 @@ const readline = require('readline');
 async function updateBaselines() {
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
-  return new Promise((resolve) => {
-    rl.question('Are you sure you want to update all baselines? (yes/no): ', (answer) => {
+  return new Promise(resolve => {
+    rl.question('Are you sure you want to update all baselines? (yes/no): ', answer => {
       rl.close();
 
       if (answer.toLowerCase() === 'yes') {
@@ -1090,12 +1088,12 @@ test.describe('Selective Visual Tests', () => {
     { name: 'button', url: '/storybook?path=/story/button' },
     { name: 'card', url: '/storybook?path=/story/card' },
     { name: 'modal', url: '/storybook?path=/story/modal' },
-    { name: 'form', url: '/storybook?path=/story/form' }
+    { name: 'form', url: '/storybook?path=/story/form' },
   ];
 
   components.forEach(component => {
-    const shouldRun = VISUAL_TEST_COMPONENTS.length === 0 ||
-                      VISUAL_TEST_COMPONENTS.includes(component.name);
+    const shouldRun =
+      VISUAL_TEST_COMPONENTS.length === 0 || VISUAL_TEST_COMPONENTS.includes(component.name);
 
     (shouldRun ? test : test.skip)(`should match ${component.name}`, async ({ page }) => {
       await page.goto(`http://localhost:6006${component.url}`);
@@ -1115,18 +1113,13 @@ module.exports = {
   asyncCompareLimit: 100, // Parallel comparison
 
   engineOptions: {
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu'
-    ]
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
   },
 
   // Reduce scenarios during development
-  scenarios: process.env.CI ?
-    require('./scenarios/all.json') :
-    require('./scenarios/critical.json')
+  scenarios: process.env.CI
+    ? require('./scenarios/all.json')
+    : require('./scenarios/critical.json'),
 };
 ```
 
@@ -1139,20 +1132,20 @@ const scenarios = [
     label: 'Logo',
     url: 'http://localhost:3000',
     selectors: ['[data-testid="logo"]'],
-    misMatchThreshold: 0.01 // Very strict - 0.01%
+    misMatchThreshold: 0.01, // Very strict - 0.01%
   },
   {
     label: 'User Generated Content',
     url: 'http://localhost:3000/ugc',
     selectors: ['[data-testid="comments"]'],
-    misMatchThreshold: 5 // More lenient - 5%
+    misMatchThreshold: 5, // More lenient - 5%
   },
   {
     label: 'Charts and Graphs',
     url: 'http://localhost:3000/analytics',
     selectors: ['[data-testid="chart"]'],
-    misMatchThreshold: 2 // Moderate - 2%
-  }
+    misMatchThreshold: 2, // Moderate - 2%
+  },
 ];
 ```
 
@@ -1180,7 +1173,7 @@ test.describe('Debug Visual Tests', () => {
     // Take full page screenshot
     await page.screenshot({
       path: 'debug-fullpage.png',
-      fullPage: true
+      fullPage: true,
     });
 
     await percySnapshot(page, 'Homepage Debug');
@@ -1204,14 +1197,14 @@ test.describe('Debug Visual Tests', () => {
     // Start tracing
     await page.context().tracing.start({
       screenshots: true,
-      snapshots: true
+      snapshots: true,
     });
 
     await page.click('[data-testid="button"]');
 
     // Stop tracing and save
     await page.context().tracing.stop({
-      path: 'trace.zip'
+      path: 'trace.zip',
     });
 
     await percySnapshot(page, 'With Trace');
@@ -1282,6 +1275,7 @@ Change Detection:
 ### Visual Testing Implementation Checklist
 
 **Setup:**
+
 - [ ] Choose visual testing tool
 - [ ] Configure viewports and devices
 - [ ] Set up baseline images
@@ -1290,6 +1284,7 @@ Change Detection:
 - [ ] Set up reporting
 
 **Test Coverage:**
+
 - [ ] Test all major pages
 - [ ] Test responsive layouts
 - [ ] Test interactive states
@@ -1299,6 +1294,7 @@ Change Detection:
 - [ ] Test error states
 
 **Dynamic Content:**
+
 - [ ] Hide timestamps
 - [ ] Stabilize animations
 - [ ] Mock API responses
@@ -1307,6 +1303,7 @@ Change Detection:
 - [ ] Freeze time-based data
 
 **Maintenance:**
+
 - [ ] Regular baseline updates
 - [ ] Review and approve changes
 - [ ] Document visual changes
@@ -1315,6 +1312,7 @@ Change Detection:
 - [ ] Clean up old baselines
 
 **Best Practices:**
+
 - [ ] Use semantic selectors
 - [ ] Implement wait strategies
 - [ ] Configure appropriate thresholds
@@ -1325,12 +1323,14 @@ Change Detection:
 ## References
 
 ### Standards and Guidelines
+
 - **WCAG 2.1** - Web Content Accessibility Guidelines
 - **ISO 9241** - Ergonomics of human-system interaction
 - **Material Design** - Design system guidelines
 - **Apple HIG** - Human Interface Guidelines
 
 ### Tools and Frameworks
+
 - **Percy** - Visual testing platform
 - **Chromatic** - Visual testing for Storybook
 - **BackstopJS** - Visual regression testing
@@ -1338,6 +1338,7 @@ Change Detection:
 - **Cypress** - E2E testing framework
 
 ### Books and Resources
+
 - "Visual Testing Handbook" - BrowserStack
 - "Component-Driven Development" - Tom Coleman
 - "Design Systems" - Alla Kholmatova
@@ -1351,4 +1352,4 @@ Change Detection:
 
 ---
 
-*Part of: [Test Levels](05-README.md)*
+_Part of: [Test Levels](05-README.md)_
