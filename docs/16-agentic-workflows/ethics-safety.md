@@ -3883,7 +3883,7 @@ autonomy_transitions:
 
 **Production Status**: [ ] READY [ ] NOT READY
 
-**Issues to Address**: **********\*\*\*\***********\_**********\*\*\*\***********
+**Issues to Address**: ****\*\*****\*\*\*\*****\*\*****\_****\*\*****\*\*\*\*****\*\*****
 ```
 
 ### 8.2 Ongoing Safety Monitoring

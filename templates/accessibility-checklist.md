@@ -789,12 +789,12 @@ After completing this checklist, consider creating an accessibility statement fo
 
 ## Sign-off
 
-**Tester Name**: ****\*\*\*\*****\_\_\_****\*\*\*\*****
-**Date**: ****\*\*\*\*****\_\_\_****\*\*\*\*****
+**Tester Name**: \***\*\*\*\*\*\*\***\_\_\_\***\*\*\*\*\*\*\***
+**Date**: \***\*\*\*\*\*\*\***\_\_\_\***\*\*\*\*\*\*\***
 **Overall Status**: [ ] Pass [ ] Pass with Minor Issues [ ] Fail
 **Conformance Level**: [ ] WCAG 2.1 Level A [ ] WCAG 2.1 Level AA [ ] WCAG 2.1 Level AAA
 
-**Signature**: ****\*\*\*\*****\_\_\_****\*\*\*\*****
+**Signature**: \***\*\*\*\*\*\*\***\_\_\_\***\*\*\*\*\*\*\***
 
 ---
 
